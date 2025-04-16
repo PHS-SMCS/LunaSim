@@ -622,12 +622,42 @@ function resetSimErrorPopup() {
     document.getElementById("simErrorPopupDismiss").innerHTML = "Dismiss"
 }*/
 
+function containsRefrence(equation){
+    const bracketVariableRegex = /\[([a-zA-Z_][a-zA-Z0-9_]*)\]/g;
+    const matches = [];
+    let match;
+
+    while ((match = bracketVariableRegex.exec(str)) !== null) {
+        matches.push(match[1]);
+    }
+
+    return matches;
+}
+
+
 function run() {
   
     loadTableToDiagram();
 
     var json = JSON.parse(myDiagram.model.toJson());
     var engineJson = translate(json);
+
+    for(var i = 0; i <engineJson.converters.length; i++){
+        var refrences = containsReference(engineJson.converters[i].equation);
+            for(var h =0; h<refrences.length; h++) {
+                var exists = false;
+                for (var j = 0; j < engineJson.influences.length; j++) {
+                    if(engineJson.influences[j].to === engineJson.converters[i].key && engineJson.influences[j].from == refences[h]) {
+                        exists = true;
+                    }
+                }
+                if(!exists) {
+                    document.getElementById("simErrorPopupDesc").innerHTML = "You are missing an influence to " + refences[h];
+                    showSimErrorPopup();
+                    return;
+                }
+            }
+    }
 
     // get information on the start time, end time, dt, and integration method and add it to the engine json
     var startTime = document.getElementById("startTime").value;

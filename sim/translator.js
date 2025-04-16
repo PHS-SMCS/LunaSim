@@ -7,7 +7,17 @@ export function translate(obj) {
     var res = {
         "stocks": {},
         "converters": {},
-    }; // the rest of the information (start and end times, dt, and integration method ae added lator in editor.js)
+        "influences":{},
+        "clouds":{},
+    };
+
+    class influence {
+        to;
+        toEq;
+        from;
+    }
+
+    // the rest of the information (start and end times, dt, and integration method ae added lator in editor.js)
 
     var stockKeyToName = {}; // used for checking of a stock exists in the model (specifically in the inflows and outflows)
 
@@ -47,7 +57,18 @@ export function translate(obj) {
         var link = obj.linkDataArray[i];
 
         if (link.category == "influence") {
-            continue;
+            var currentInfluence = new influence;
+
+            for (var h =0; h< obj.nodeDataArray.length; h++){
+                if(obj.nodeDataArray[h].key == link.to){
+                    currentInfluence.to = obj.nodeDataArray[h].key;
+                    currentInfluence.toEq = obj.nodeDataArray[h].equation;
+                }
+                if(obj.nodeDataArray[h].key == link.from){
+                    currentInfluence.from = nodeDataArray[h].key;
+                }
+            }
+            res.influences.push(currentInfluence);
         }
 
         if (link.category == "flow") {
