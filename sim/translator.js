@@ -7,7 +7,8 @@ export function translate(obj) {
     var res = {
         "stocks": {},
         "converters": {},
-        "influences":{},
+        "variables":[],
+        "influences":[],
         "clouds":{},
     };
 
@@ -16,6 +17,16 @@ export function translate(obj) {
         toEq;
         from;
     }
+
+    // class variable {
+    //     eq;
+    //     key;
+    //
+    //     constructor(key, eq) {
+    //         this.key = key;
+    //         this.eq = eq;
+    //     }
+    // }
 
     // the rest of the information (start and end times, dt, and integration method ae added lator in editor.js)
 
@@ -41,6 +52,9 @@ export function translate(obj) {
                 "outflows": {}
             };
         } else if (node.category == "variable") {
+
+            res.variables.push({equation: node.equation, label: node.label});
+
             if (node.label[0] === "$") {
                 continue;
             }
@@ -50,6 +64,8 @@ export function translate(obj) {
                 "equation": node.equation
             };
         }
+
+
     }
 
     // add all the flows to the res object
@@ -60,12 +76,12 @@ export function translate(obj) {
             var currentInfluence = new influence;
 
             for (var h =0; h< obj.nodeDataArray.length; h++){
-                if(obj.nodeDataArray[h].key == link.to){
-                    currentInfluence.to = obj.nodeDataArray[h].key;
+                if(obj.nodeDataArray[h].label == link.to){
+                    currentInfluence.to = obj.nodeDataArray[h].label;
                     currentInfluence.toEq = obj.nodeDataArray[h].equation;
                 }
-                if(obj.nodeDataArray[h].key == link.from){
-                    currentInfluence.from = nodeDataArray[h].key;
+                if(obj.nodeDataArray[h].label == link.from){
+                    currentInfluence.from = obj.nodeDataArray[h].label;
                 }
             }
             res.influences.push(currentInfluence);

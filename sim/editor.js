@@ -622,12 +622,13 @@ function resetSimErrorPopup() {
     document.getElementById("simErrorPopupDismiss").innerHTML = "Dismiss"
 }*/
 
-function containsRefrence(equation){
-    const bracketVariableRegex = /\[([a-zA-Z_][a-zA-Z0-9_]*)\]/g;
+function containsReference(equation){
     const matches = [];
-    let match;
 
-    while ((match = bracketVariableRegex.exec(str)) !== null) {
+    const regex = /\[(.*?)\]/g;
+    const allMatches = equation.matchAll(regex);
+
+    for (const match of allMatches) {
         matches.push(match[1]);
     }
 
@@ -636,28 +637,38 @@ function containsRefrence(equation){
 
 
 function run() {
-  
+
     loadTableToDiagram();
 
     var json = JSON.parse(myDiagram.model.toJson());
     var engineJson = translate(json);
 
-    for(var i = 0; i <engineJson.converters.length; i++){
-        var refrences = containsReference(engineJson.converters[i].equation);
-            for(var h =0; h<refrences.length; h++) {
+
+    for(var i = 0; i < engineJson.variables.length; i++){
+        var correctInfluences = [];
+        var references = containsReference(engineJson.variables[i].equation);
+            for(var h = 0; h < references.length; h++) {
                 var exists = false;
                 for (var j = 0; j < engineJson.influences.length; j++) {
-                    if(engineJson.influences[j].to === engineJson.converters[i].key && engineJson.influences[j].from == refences[h]) {
+                    if(engineJson.influences[j].to == engineJson.variables[i].label && engineJson.influences[j].from == references[h]) {
                         exists = true;
+                    }
+                    if (engineJson.influences[j].to === engineJson.variables[i].label &&
+                        !references.includes(engineJson.influences[j].from)) {
+                        document.getElementById("simErrorPopupDesc").innerHTML =
+                            "Incorrect influence from " + engineJson.influences[j].from + " to " + engineJson.influences[j].to;
+                        showSimErrorPopup();
+                        return;
                     }
                 }
                 if(!exists) {
-                    document.getElementById("simErrorPopupDesc").innerHTML = "You are missing an influence to " + refences[h];
+                    document.getElementById("simErrorPopupDesc").innerHTML ="Missing an influence from " + references[h] + " to " + engineJson.variables[i].label;
                     showSimErrorPopup();
                     return;
                 }
             }
     }
+
 
     // get information on the start time, end time, dt, and integration method and add it to the engine json
     var startTime = document.getElementById("startTime").value;
