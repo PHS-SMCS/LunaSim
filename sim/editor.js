@@ -670,6 +670,8 @@ function run() {
     }
 
 
+
+
     // get information on the start time, end time, dt, and integration method and add it to the engine json
     var startTime = document.getElementById("startTime").value;
     var endTime = document.getElementById("endTime").value;
