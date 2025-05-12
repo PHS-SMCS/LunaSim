@@ -9,7 +9,7 @@ export function translate(obj) {
         "converters": {},
         "variables":[],
         "influences":[],
-        "valves":[]
+        "valves":[],
     };
 
     class influence {
@@ -17,6 +17,7 @@ export function translate(obj) {
         toEq;
         from;
     }
+    var valves = obj.nodeDataArray.filter(node => node.category === "valve");
 
     // the rest of the information (start and end times, dt, and integration method ae added lator in editor.js)
 
@@ -57,7 +58,7 @@ export function translate(obj) {
         }
 
         if (node.category == "valve") {
-            res.valves.push({equation: node.equation, label: node.label});
+            res.valves.push({equation: node.equation, label: node.label, key: node.key});
         }
 
 
@@ -71,8 +72,8 @@ export function translate(obj) {
             var currentInfluence = new influence;
 
             for (var h =0; h< obj.nodeDataArray.length; h++){
-                if(obj.nodeDataArray[h].label == link.to){
-                    currentInfluence.to = obj.nodeDataArray[h].label;
+                if(obj.nodeDataArray[h].key == link.to){
+                    currentInfluence.to = obj.nodeDataArray[h].key;
                     currentInfluence.toEq = obj.nodeDataArray[h].equation;
                 }
                 if(obj.nodeDataArray[h].label == link.from){

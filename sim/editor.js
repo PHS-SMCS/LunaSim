@@ -645,12 +645,12 @@ function run() {
 
 
     for(var i = 0; i < engineJson.variables.length; i++){
-        var correctInfluences = [];
         var references = containsReference(engineJson.variables[i].equation);
-            for(var h = 0; h < references.length; h++) {
+        if(references.length>0) {
+            for (var h = 0; h < references.length; h++) {
                 var exists = false;
                 for (var j = 0; j < engineJson.influences.length; j++) {
-                    if(engineJson.influences[j].to == engineJson.variables[i].label && engineJson.influences[j].from == references[h]) {
+                    if (engineJson.influences[j].to == engineJson.variables[i].label && engineJson.influences[j].from == references[h]) {
                         exists = true;
                     }
                     if (engineJson.influences[j].to === engineJson.variables[i].label &&
@@ -661,13 +661,92 @@ function run() {
                         return;
                     }
                 }
-                if(!exists) {
-                    document.getElementById("simErrorPopupDesc").innerHTML ="Missing an influence from " + references[h] + " to " + engineJson.variables[i].label;
+                if (!exists) {
+                    document.getElementById("simErrorPopupDesc").innerHTML = "Missing an influence from " + references[h] + " to " + engineJson.variables[i].label;
                     showSimErrorPopup();
                     return;
                 }
             }
+        } else {
+            for (var j = 0; j < engineJson.influences.length; j++) {
+                if (engineJson.influences[j].to === engineJson.variables[i].label) {
+                    document.getElementById("simErrorPopupDesc").innerHTML =
+                        "No references in equation for " + engineJson.variables[i].label + ", but influence from " + engineJson.influences[j].from + " exists.";
+                    showSimErrorPopup();
+                    return;
+                }
+            }
+        }
     }
+
+    for(var i =0; i<engineJson.valves.length; i++){
+        var references = containsReference(engineJson.valves[i].equation);
+        if(references.length>0) {
+            for(var j =0; j<references.length; j++){
+                var exists = false;
+                for(var h =0; h < engineJson.influences.length; h++){
+                    if (engineJson.influences[h].to == engineJson.valves[i].key && engineJson.influences[h].from == references[j]) {
+                        exists = true;
+                    }
+                    if (engineJson.influences[h].to === engineJson.valves[i].key &&
+                        !references.includes(engineJson.influences[h].from)) {
+                        document.getElementById("simErrorPopupDesc").innerHTML =
+                            "Incorrect influence from " + engineJson.influences[h].from + " to " + engineJson.influences[h].to;
+                        showSimErrorPopup();
+                        return;
+                    }
+
+                }
+                if (!exists) {
+                    document.getElementById("simErrorPopupDesc").innerHTML = "Missing an influence from " + references[j] + " to " + engineJson.valves[i].label;
+                    showSimErrorPopup();
+                    return;
+                }
+            }
+        }else {
+            for (var j = 0; j < engineJson.influences.length; j++) {
+                console.log(engineJson.influences);
+                if (engineJson.influences[j].to === engineJson.valves[i].key) {
+                    document.getElementById("simErrorPopupDesc").innerHTML =
+                        "No references in equation for " + engineJson.valves[i].label + ", but influence from " + engineJson.influences[j].from + " exists.";
+                    showSimErrorPopup();
+                    return;
+                }
+            }
+        }
+
+    }
+
+    // const valves = engineJson.valves;
+    //
+    // for (let i = 0; i < valves.length; i++) {
+    //     const valve = valves[i];
+    //     const references = containsReference(valve.equation); // e.g. ["stock1", "variable2"]
+    //     const incomingInfluences = engineJson.influences.filter(inf => inf.to === valve.label);
+    //
+    //     // Track all sources of incoming influences to this valve
+    //     const influenceFroms = incomingInfluences.map(inf => inf.from);
+    //
+    //     // 🔍 1. Check for missing influences (referenced but not connected)
+    //     for (let r = 0; r < references.length; r++) {
+    //         if (influenceFroms.includes(references[r])) {
+    //             document.getElementById("simErrorPopupDesc").innerHTML =
+    //                 `Missing an influence from ${references[r]} to valve ${valve.label}`;
+    //             showSimErrorPopup();
+    //             return;
+    //         }
+    //     }
+    //
+    //     // 🔍 2. Check for extra influences (connected but not referenced)
+    //     for (let f = 0; f < influenceFroms.length; f++) {
+    //         if (references.includes(influenceFroms[f])) {
+    //             document.getElementById("simErrorPopupDesc").innerHTML =
+    //                 `Incorrect influence from ${influenceFroms[f]} to valve ${valve.label}`;
+    //             showSimErrorPopup();
+    //             return;
+    //         }
+    //     }
+    // }
 
 
 
