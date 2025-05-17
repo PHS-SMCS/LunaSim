@@ -29,7 +29,33 @@ export class Simulation {
     safeEval(expression) {
         // if there are two -- or two ++, remove one
         expression = expression.replaceAll("--", "+");
-        expression = expression.replaceAll("++", "+");
+        expression = expression
+            // Inverse hyperbolic trig
+            .replaceAll(/(?<!Math\.)\basinh\b/gi, 'Math.asinh')
+            .replaceAll(/(?<!Math\.)\bacosh\b/gi, 'Math.acosh')
+            .replaceAll(/(?<!Math\.)\batanh\b/gi, 'Math.atanh')
+            // Hyperbolic trig
+            .replaceAll(/(?<!Math\.)\bsinh\b/gi, 'Math.sinh')
+            .replaceAll(/(?<!Math\.)\bcosh\b/gi, 'Math.cosh')
+            .replaceAll(/(?<!Math\.)\btanh\b/gi, 'Math.tanh')
+            // Inverse trig
+            .replaceAll(/(?<!Math\.)\basin\b/gi, 'Math.asin')
+            .replaceAll(/(?<!Math\.)\bacos\b/gi, 'Math.acos')
+            .replaceAll(/(?<!Math\.)\batan\b/gi, 'Math.atan')
+            // Basic trig
+            .replaceAll(/(?<!Math\.)\bsin\b/gi, 'Math.sin')
+            .replaceAll(/(?<!Math\.)\bcos\b/gi, 'Math.cos')
+            .replaceAll(/(?<!Math\.)\btan\b/gi, 'Math.tan')
+            // Roots
+            .replaceAll(/(?<!Math\.)\bsqrt\b/gi, 'Math.sqrt')
+            .replaceAll(/(?<!Math\.)\bcbrt\b/gi, 'Math.cbrt')
+            // Min/Max
+            .replaceAll(/(?<!Math\.)\bmax\b/gi, 'Math.max')
+            .replaceAll(/(?<!Math\.)\bmin\b/gi, 'Math.min')
+            // Constants
+            .replaceAll(/(?<!Math\.)\bpi\b/gi, 'Math.PI')
+            .replaceAll(/(?<!Math\.)\be\b/gi, 'Math.E');
+
 
         try {
             return eval?.(expression);
@@ -79,6 +105,8 @@ export class Simulation {
     Combines parseObject and safeEval to parse and evaluate an equation. It alerts the user if the equation is invalid.
     */
     parseAndEval(equation, history = []) {
+
+
         // Check for circular definitions
         if (history.includes(equation)) {
             history.push(equation);
