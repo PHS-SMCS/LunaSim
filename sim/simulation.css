@@ -444,15 +444,19 @@ canvas {
 }
 
 .eqStockBox {
-  background-color: #ffcc99;
+  background-color: transparent; /* optional: removes background color */
+  border: 2px solid #ffcc99;
+
 }
 
 .eqFlowBox {
-  background-color: #99ccff;
+  background-color: transparent; /* optional: removes background color */
+  border: 2px solid #99ccff;
 }
 
 .eqVariableBox {
-  background-color: #99ff99;
+  background-color: transparent; /* optional: removes background color */
+  border: 2px solid #99ff99;
 }
 
 
@@ -690,3 +694,36 @@ input[type=radio] {
   height: 20px;
   width: 20px;
 }
+
+.autocomplete-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.math-autocomplete {
+  position: relative;
+  background: transparent;
+  color: black;
+  font-size: inherit;
+  font-family: inherit;
+  width: 100%;
+  z-index: 2;
+}
+
+.ghost {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: gray;
+  pointer-events: none;
+  white-space: pre;
+  font-size: inherit;
+  font-family: inherit;
+  width: 100%;
+  z-index: 1;
+  padding-left: 0.9em; /* 👈 Offsets ghost text to the right */
+  padding-top: 0.189em;
+  box-sizing: border-box;
+
+}
+

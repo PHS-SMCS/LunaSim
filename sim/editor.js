@@ -30,7 +30,7 @@ var unsavedEdits = false;
 var hasExportedYet = false;
 function updateSaveStatus() {
     let current = new Date();
-    document.getElementById("saveStatus").innerHTML = 
+    document.getElementById("saveStatus").innerHTML =
     `${unsavedEdits ? "Unsaved Edits!" : "No Unsaved Edits"} (Last Edit: ${formatDeltaTime(current - lastEditDate)})<br>` +
     `Last Exported: ${hasExportedYet ? formatDeltaTime(current - lastExportDate) : "-"}`;
 }
@@ -38,7 +38,7 @@ function formatDeltaTime(ms) {
     let seconds = ms / 1000;
     if (seconds < 60) return `Just Now`;
     if (seconds < 3600) return `${Math.floor(seconds/60)}m ago`;
-    
+
     let minutes = Math.floor(seconds / 60);
     let hours = Math.floor(minutes / 60);
     minutes %= 60;
@@ -48,7 +48,7 @@ function formatDeltaTime(ms) {
 updateSaveStatus();
 setInterval(updateSaveStatus, 10000);
 
-function init() {    
+function init() {
     // Since 2.2 you can also author concise templates with method chaining instead of GraphObject.make
     // For details, see https://gojs.net/latest/intro/buildingObjects.html
     const $ = go.GraphObject.make;
@@ -135,7 +135,7 @@ function init() {
     myDiagram.addModelChangedListener(e => {
         // ignore unimportant Transaction events
         if (!e.isTransactionFinished) return;
-        
+
         // check for each ghost if there is a corresponding non-ghost, if not, remove the ghost
         for (var i = 0; i < myDiagram.model.nodeDataArray.length; i++) {
             if (myDiagram.model.nodeDataArray[i].category === "cloud") { // clouds don't have labels, and don't have ghosts
@@ -340,7 +340,7 @@ function buildTemplates() {
             $(go.Shape,
                 {
                     stroke: "#3489eb",
-                    strokeWidth: 5 
+                    strokeWidth: 5
                 }),
             $(go.Shape,
                 // add a binding to adjust if this shape is visible based on isBiflow function
@@ -399,7 +399,7 @@ function setMode(mode, itemType) {
 // populates model json with table information (not just for saving model in the end, instead gets called every time the table is updated)
 function loadTableToDiagram() {
     // get the json from the GoJS model
-    var data = myDiagram.model.toJson();  
+    var data = myDiagram.model.toJson();
     var json = JSON.parse(data);
 
     var $tbody = $('#eqTableBody');
@@ -825,7 +825,7 @@ function run() {
             document.getElementById("simErrorPopupDesc").innerHTML = "This simulation contains 1000+ steps; as such, running it may lead to lag or the website freezing. Please adjust dt or enable high step-count simulations.<br><br>If you proceed with the simulation, it may be wise to export your LunaSim project in case the website crashes.";
             showSimErrorPopup();
             return;
-        }       
+        }
     }
 
     // Looks all good!
@@ -833,7 +833,7 @@ function run() {
     engineJson.end_time = parseFloat(endTime);
     engineJson.dt = parseFloat(dt);
     engineJson.integration_method = integrationMethod;
-    
+
     sim.setData(engineJson);
 
     if (PERFORMANCE_MODE == true)
@@ -846,7 +846,7 @@ function run() {
     }
 
     console.log(data);
-  
+
     sim.reset();
 
     // Hopefully, the simulation should have successfully completed; scroll to top of page
@@ -939,7 +939,7 @@ function loadModel(evt) {
             // .Pc is where the list of "objects" in the model is stored
             // Checked via console.log testing
             // This *probably* isn't good standard but it seems to be consistent across platforms & models
-            
+
             let confirmBlankLoad = confirm("This model appears to be blank! Are you sure you want to load it?");
             if (!confirmBlankLoad) return;
         }
@@ -958,7 +958,7 @@ function loadModel(evt) {
             document.getElementById("endTime").value = 10;
             document.getElementById("dt").value = 0.1;
             document.getElementById("integrationMethod").value = "rk4";
-        }        
+        }
 
         // clear the diagram
         myDiagram.model = go.Model.fromJson("{ \"class\": \"GraphLinksModel\", \"linkLabelKeysProperty\": \"labelKeys\", \"nodeDataArray\": [],\"linkDataArray\": [] }");
@@ -1071,7 +1071,7 @@ document.getElementById("clearButton").addEventListener("click", function() {
     if (confirmNewModel) {
         let doubleConfirm = confirm("Are you REALLY sure? If you want to save the project you are currently working on, press CANCEL and export it first; otherwise, the data will be cleared. You've been warned!");
         if (!doubleConfirm) return;
-        
+
         // Reset Model
         document.getElementById("startTime").value = 0;
         document.getElementById("endTime").value = 10;
@@ -1089,7 +1089,7 @@ document.getElementById("clearButton").addEventListener("click", function() {
         lastExportDate = new Date();
         hasExportedYet = false;
         updateSaveStatus();
-    } 
+    }
 });
 
 // reload/close warning
@@ -1100,3 +1100,110 @@ window.addEventListener('beforeunload', function (e) {
 
 // Exporting myDiagram
 export {data};
+const JAVA_MATH_FUNCTIONS = [
+    'sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'atan2', 'sinh', 'cosh', 'tanh',
+    'exp', 'log', 'log10', 'sqrt', 'cbrt', 'abs', 'ceil', 'floor', 'round', 'pow', 'max', 'min',
+    'signum', 'toRadians', 'toDegrees', 'random', 'hypot', 'expm1', 'log1p', 'copySign', 'nextUp',
+    'nextDown', 'ulp', 'IEEEremainder', 'rint', 'getExponent', 'scalb', 'fma'
+];
+
+let currentMatch = '';
+
+function enhanceEquationInput(input) {
+    if (input.classList.contains('autocomplete-bound')) return;
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'autocomplete-wrapper';
+    input.parentNode.insertBefore(wrapper, input);
+    wrapper.appendChild(input);
+
+    const ghost = document.createElement('div');
+    ghost.className = 'ghost';
+    wrapper.appendChild(ghost);
+
+    input.classList.add('math-autocomplete');
+    input.classList.add('autocomplete-bound');
+
+    input.addEventListener('input', () => {
+        const value = input.value.slice(0, input.selectionStart);
+        const match = value.match(/([a-zA-Z_][a-zA-Z0-9_]*)$/);
+        if (match) {
+            const word = match[1];
+            const suggestion = JAVA_MATH_FUNCTIONS.find(fn => fn.startsWith(word) && fn !== word);
+            if (suggestion) {
+                const untyped = suggestion.slice(word.length);
+                ghost.textContent = untyped;
+                currentMatch = suggestion;
+
+                // Adjust ghost positioning
+                const textBefore = value.slice(0, match.index + word.length);
+                const span = document.createElement('span');
+                span.textContent = textBefore;
+                span.style.visibility = 'hidden';
+                span.style.whiteSpace = 'pre';
+                span.style.font = getComputedStyle(input).font;
+                wrapper.appendChild(span);
+
+                const width = span.getBoundingClientRect().width;
+                ghost.style.paddingLeft = width + 'px';
+
+                wrapper.removeChild(span);
+            } else {
+                ghost.textContent = '';
+                ghost.style.paddingLeft = '0';
+                currentMatch = '';
+            }
+        } else {
+            ghost.textContent = '';
+            ghost.style.paddingLeft = '0';
+            currentMatch = '';
+        }
+    });
+
+
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Tab' && currentMatch) {
+            e.preventDefault();
+            const value = input.value;
+            const start = input.selectionStart;
+            const match = value.slice(0, start).match(/([a-zA-Z_][a-zA-Z0-9_]*)$/);
+            if (match) {
+                const word = match[1];
+                const wordStart = start - word.length;
+                input.value = value.slice(0, wordStart) + currentMatch + '()' + value.slice(start);
+                input.selectionStart = input.selectionEnd = wordStart + currentMatch.length + 1;
+            }
+            ghost.textContent = '';
+            currentMatch = '';
+        }
+    });
+
+    input.addEventListener('blur', () => {
+        ghost.textContent = '';
+        currentMatch = '';
+    });
+}
+
+// Auto-enhance inputs in the 3rd column (Equation)
+function enhanceExistingInputs() {
+    document.querySelectorAll('#eqTableBody tr').forEach(row => {
+        const equationCell = row.children[2];
+        if (equationCell) {
+            const input = equationCell.querySelector('input');
+            if (input) enhanceEquationInput(input);
+        }
+    });
+}
+
+// Watch for new rows in the equation editor
+const observer = new MutationObserver(() => {
+    enhanceExistingInputs();
+});
+
+observer.observe(document.getElementById('eqTableBody'), {
+    childList: true,
+    subtree: true
+});
+
+// Enhance any inputs already present
+enhanceExistingInputs();
