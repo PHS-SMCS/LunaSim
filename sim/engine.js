@@ -54,9 +54,8 @@ export class Simulation {
             .replaceAll(/(?<!Math\.)\bmin\b/gi, 'Math.min')
             // Constants
             .replaceAll(/(?<!Math\.)\bpi\b/gi, 'Math.PI')
-            .replaceAll(/(?<!Math\.)\be\b/gi, 'Math.E')
-            // Absolute value
-            .replace(/\|([^|]+?)\|/g, (match, expr) => `Math.abs(${expr.trim()})`);
+            .replaceAll(/(?<!Math\.)\be\b/gi, 'Math.E');
+
 
         try {
             return eval?.(expression);
