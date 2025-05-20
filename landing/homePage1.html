@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LunaSim Launch</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      overflow-x: hidden;
+     
+    }
+
+    .hero {
+      position: relative;
+      height: 100vh;
+      color: white;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background-color: #1e3a5f; /* fallback */
+    }
+
+    .background-slider {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .background-slider img {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out;
+    }
+
+    .background-slider img.active {
+      opacity: 1;
+    }
+
+    .blue-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(2, 81, 161, 0.9);
+      background: linear-gradient(60deg,rgba(79, 107, 184, 0.9) 0%, rgba(79, 165, 189, 0.9) 100%);
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero h1 {
+      font-size: 40px;
+      margin-bottom: 20px;
+    }
+
+    .launch-btn {
+      position: relative;
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      background-color: #ffffff;
+      color: #1e3a5f;
+      border: 2px solid #4f6bb8;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: color 0.3s ease;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .launch-btn::after {
+      content: '';
+      position: absolute;
+      bottom: 8px;
+      left: 15px;
+      height: 2px;
+      width: 0;
+      background: linear-gradient(60deg, rgba(79, 107, 184, 1) 0%, rgba(79, 165, 189, 1) 100%);
+      border-radius: 1px;
+      transition: width 0.4s ease;
+    }
+
+    .launch-btn:hover::after {
+      width: calc(100% - 30px);
+    }
+
+    .dots {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      gap: 10px;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: white;
+      opacity: 0.5;
+      cursor: pointer;
+      transition: opacity 0.3s;
+    }
+
+    .dot.active {
+      opacity: 1;
+    }
+
+    .content {
+      padding: 60px 20px;
+      background-color: #f4f4f4;
+      font-size: 1.1rem;
+      color: #333;
+    }
+
+    .intro-text {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: #cddafd;
+    }
+
+    .fade-in-text {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 2s ease forwards;
+      animation-delay: 0.5s; 
+      font-size: 150px;
+      color: #bfeefe;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <div class="background-slider">
+      <img src="../img/modelView.png" class="active" alt="Slide 1">
+      <img src="../img/GraphView1.png" alt="Slide 2">
+      <img src="../img/GraphView2.png" alt="Slide 3">
+      <img src="../img/TableView3.png" alt="Slide 4">
+    </div>
+    <div class="blue-overlay"></div>
+    <div class="hero-content">
+      <h1 class="intro-text">Design and run powerful simulations with<br><span class="fade-in-text">LunaSim</span></h1>
+      <button class="launch-btn" onclick="launchLunaSim()">Click here to launch</button>
+    </div>
+   
+    <div class="dots">
+      <div class="dot active" onclick="setSlide(0)"></div>
+      <div class="dot" onclick="setSlide(1)"></div>
+      <div class="dot" onclick="setSlide(2)"></div>
+      <div class="dot" onclick="setSlide(3)"></div>
+    </div>
+  </div>
+
+
+  < class="content">
+    <h1>What LunaSim Offers</h1>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris. Nulla facilisi. Pellentesque et justo at lacus placerat finibus. Proin rutrum enim id libero posuere pretium. Mauris tempor, risus at hendrerit dignissim, ipsum massa malesuada leo, et viverra justo est at magna. Suspendisse potenti. Sed fringilla, nulla sed mattis ornare, lorem est commodo odio, non feugiat risus erat ut velit.</p>
+    <p>Curabitur at tincidunt lorem. Fusce nec purus vitae turpis ultrices rutrum. Suspendisse potenti. Curabitur nec magna quis massa fermentum malesuada. Integer eget libero eget elit viverra sollicitudin in a nunc. Quisque et justo nec eros feugiat fermentum sed nec urna.</p>
+  </div>
+
+
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.background-slider img');
+    const dots = document.querySelectorAll('.dot');
+
+
+    function setSlide(index) {
+      slides.forEach((slide, i) => {
+        slide.classList.toggle('active', i === index);
+        dots[i].classList.toggle('active', i === index);
+      });
+      currentSlide = index;
+    }
+
+
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % slides.length;
+      setSlide(currentSlide);
+    }
+
+
+    setInterval(nextSlide, 8000);
+
+
+    function launchLunaSim() {
+      window.location.href = "../../sim/systemDynamics1.html";
+    }
+  </script>
+</body>
+</html>
+

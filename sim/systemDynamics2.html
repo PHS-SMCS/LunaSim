@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<!---
+  Authors: Sienna Simms, Karthik S. Vedula, Aditya Patil, William J. Park
+-->
+
+
+<html lang="en">
+
+
+<head>
+  <title>LunaSim</title>
+  <meta id="vp" name="viewport" content="width=device-width">
+  <meta name="description" content="Design and run powerful simulations, all in the browser with LunaSim.">
+  <script>
+    // set the viewport width to no less than minimum
+    window.onload = function () {
+      if (screen.width < 600) {
+        var mvp = document.getElementById('vp');
+        mvp.setAttribute('content', 'minimum-scale=1,width=600');
+      }
+    }
+  </script>
+  <!-- style sheets -->
+  <link rel="stylesheet" href="simulation2.css" id="lightThemeCSS">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="icon" href="../img/lunaLogo.svg">
+  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+
+
+  <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.7.2/css/all.css">
+  <link rel="stylesheet" data-purpose="Layout StyleSheet" href="/css/app-wa-4605c815f1874757bc9ac33aa114fb0f.css?vsn=d">
+</head>
+<body>
+  <script src="https://unpkg.com/gojs@2.3.3/release/go.js"></script>
+  <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+  <div id="allSampleContent" class="p-4 w-full">
+    <script src="https://unpkg.com/gojs@2.3.3/extensions/Figures.js"></script>
+    <script src="https://unpkg.com/gojs@2.3.3/extensions/NodeLabelDraggingTool.js"></script>
+    <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator.min.css" rel="stylesheet">
+    <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
+    <!-- Override CSS w/ Dark Mode Theme -->
+    <link rel="stylesheet" href="simulation_dark.css" disabled="disabled" id="darkThemeCSS">
+ 
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script id="code" type="module" src="editor.js"></script>
+    <script id="code2" type="module" src="translator.js"></script>
+    <script id="code3" type="module" src="engine.js"></script>
+    <script id="code4" type="module" src="tabsManagement.js"></script>
+
+
+    <div id="sample">
+
+
+      <div class="modelViewer">
+        <!-- Tool Bar -->
+        <div class="toolbar">
+          <ul>
+            <li>
+              <a href="#">
+                <i class="fa-regular fa-arrow-pointer"></i>
+                <span>Pointer</span>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <i class="fa-regular fa-rectangle"></i>
+                <span>Stock</span>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <i class="fa-regular fa-cloud"></i>
+                <span>Cloud</span>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <i class="fa-regular fa-circle"></i>
+                <span>Variable</span>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <i class="fa-regular fa-arrows-left-right"></i>
+                <span>Flow</span>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <i class="fa-regular fa-repeat"></i>
+                <span>Influence</span>
+              </a>
+            </li>
+            <li>  
+              <a href="../UserDocs.html">
+                <i class="fa-regular fa-question"></i>
+                <span>Help</span>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <i class="fa-regular fa-gear"></i>
+                <span>Settings</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+
+        <div class="modelCanvas" id="modalView">
+          <div id="myDiagram">
+            <canvas width="598" height="498">This text is displayed if your browser does not support the Canvas HTML
+              element.</canvas>
+          </div>
+        </div>
+
+
+        <div class="equationEditor">
+          <!-- Content for your new box -->
+          <p>Equation Editor</p>
+        </div>
+
+
+
+
+
+
+      </div>
+    </div>
+  </div>
+</body>
+
+
+</html>
+
+
+
+
+
