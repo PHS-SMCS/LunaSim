@@ -24,7 +24,7 @@
   <link rel="stylesheet" href="simulation2.css" id="lightThemeCSS">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="icon" href="../img/lunaLogo.svg">
-  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 
   <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.7.2/css/all.css">
@@ -36,21 +36,22 @@
   <div id="allSampleContent" class="p-4 w-full">
     <script src="https://unpkg.com/gojs@2.3.3/extensions/Figures.js"></script>
     <script src="https://unpkg.com/gojs@2.3.3/extensions/NodeLabelDraggingTool.js"></script>
-    <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator.min.css" rel="stylesheet">
-    <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
-    <!-- Override CSS w/ Dark Mode Theme -->
-    <link rel="stylesheet" href="simulation_dark.css" disabled="disabled" id="darkThemeCSS">
- 
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator.min.css" rel="stylesheet">
+  <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
+  <!-- Override CSS w/ Dark Mode Theme -->
+  <link rel="stylesheet" href="simulation_dark.css" disabled="disabled" id="darkThemeCSS">
+  
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script id="code" type="module" src="editor.js"></script>
     <script id="code2" type="module" src="translator.js"></script>
     <script id="code3" type="module" src="engine.js"></script>
     <script id="code4" type="module" src="tabsManagement.js"></script>
-
-
+    
     <div id="sample">
 
-
+      <div class="tabBar">
+        
+      </div>
       <div class="modelViewer">
         <!-- Tool Bar -->
         <div class="toolbar">
@@ -109,7 +110,7 @@
 
         <div class="modelCanvas" id="modalView">
           <div id="myDiagram">
-            <canvas width="598" height="498">This text is displayed if your browser does not support the Canvas HTML
+            <canvas width="800" height="498">This text is displayed if your browser does not support the Canvas HTML
               element.</canvas>
           </div>
         </div>
@@ -119,15 +120,108 @@
           <!-- Content for your new box -->
           <p>Equation Editor</p>
         </div>
-
-
-
-
-
-
       </div>
+
+      <div class="chartViewer">
+        <!-- Tool Bar -->
+        <div class="chartSidebar">
+          <ul>
+            <li>
+              <a href="#">
+                <i class="fa-regular fa-chart-sine"></i>
+                <span>Chart1</span>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <i class="fa-regular fa-chart-sine"></i>
+                <span>Chart2</span>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <i class="fa-regular fa-table"></i>
+                <span>Table1</span>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <i class="fa-regular fa-table"></i>
+                <span>Table2</span>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <i class="fa-regular fa-chart-scatter"></i>
+                <span>Chart3</span>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <i class="fa-regular fa-table"></i>
+                <span>Table3</span>
+              </a>
+            </li>
+            <li>  
+              <a href="../UserDocs.html">
+                <i class="fa-regular fa-question"></i>
+                <span>Help</span>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <i class="fa-regular fa-gear"></i>
+                <span>Settings</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+
+        <div class="chartCanvas">
+          
+        </div>
+
+
+        <div class="chartEditor">
+          <!-- Content for your new box -->
+          <p>Chart Editor Goes Here</p>
+        </div>
+      </div>
+      
+
     </div>
   </div>
+<!--<script>
+  document.addEventListener("keydown", function(event) {
+    if (event.key === "m" || event.key === "M") {
+      document.querySelectorAll('.modelView').forEach(el => {
+        el.modelViewer.remove('hidden');
+        el.modelViewer.add('visible');
+      });
+
+      document.querySelectorAll('.chartView').forEach(el => {
+        el.chartViewer.remove('visible');
+        el.chartViewer.add('hidden');
+      });
+    }
+
+    if (event.key === "C" || event.key === "C") {
+      document.querySelectorAll('.modelView').forEach(el => {
+        el.chartViewer.remove('hidden');
+        el.chartViewer.add('visible');
+      });
+
+      document.querySelectorAll('.chartView').forEach(el => {
+        el.modelViewer.remove('visible');
+        el.modelViewer.add('hidden');
+      });
+    }
+
+  });
+</script>-->
+
+
 </body>
 
 

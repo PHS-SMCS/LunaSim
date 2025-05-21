@@ -26,11 +26,28 @@ body {
   left: 1vw; 
   display: flex;
   gap: 1vw; 
+  /*
+  background-color: rgba(38, 50, 83, 0.95);
+  padding: 1rem;
+  border-radius: 10px;*/
+  visibility: hidden; 
 }
 
+.chartViewer {
+  position: absolute;
+  top: 10vh; 
+  left: 1vw; 
+  display: flex;
+  gap: 1vw; 
+  /*
+  background-color: rgba(38, 50, 83, 0.95);
+  padding: 1rem;
+  border-radius: 10px;*/
+  visibility: visible;
+}
 
 .toolbar {
-  position: relative;
+  position: fixed;
   width: 72px;
 }
 
@@ -49,8 +66,14 @@ body {
   box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
 }
 
+.modelViewer li:nth-child(7) {
+  margin-top: 8rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #374875;
+}
 
-li:nth-child(7) {
+
+.chartViewer li:nth-child(7) {
   margin-top: 8rem;
   padding-top: 1.25rem;
   border-top: 1px solid #374875;
@@ -134,23 +157,25 @@ a span:before {
   }
 }
 
+.chartSidebar {
+  position: relative;
+  width: 72px;
+}
 
-.equationEditor {
-  background-color: rgba(38, 50, 83, 0.95);
+
+.chartSidebar ul {
+  list-style: none;
+  margin: 0;
+  padding: 0.75rem;
   height: calc(90vh - 1vw);
-  width: calc(100vw - 8.7vw - 60vw);
+  width: 72px;
+  background-color: rgba(38, 50, 83, 0.95);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   border-radius: 10px;
   box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
-  padding: 1rem;
-  color: white;
 }
-
-
-.equationEditor p {
-  margin: 0px;
-  font-size: 20px;
-}
-
 
 .modelCanvas {
   position: relative; 
@@ -176,5 +201,81 @@ a span:before {
   z-index: 5;
 }
 
+.equationEditor {
+  background-color: rgba(38, 50, 83, 0.95);
+  height: calc(90vh - 1vw);
+  width: calc(100vw - 8.7vw - 60vw);
+  border-radius: 10px;
+  box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
+  padding: 1rem;
+  color: white;
+}
+
+.equationEditor p {
+  margin: 0px;
+  font-size: 20px;
+}
+
+.chartCanvas {
+  position: relative; 
+  background-color: #ffffff;
+  height: calc(90vh - 1vw);
+  width: 60vw;
+  border-radius: 10px;
+  box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
+  padding: 1rem;
+  color: white;
+  overflow: hidden;
+}
+
+.chartEditor {
+  background-color: rgba(38, 50, 83, 0.95);
+  height: calc(90vh - 1vw);
+  width: calc(100vw - 8.7vw - 60vw);
+  border-radius: 10px;
+  box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
+  padding: 1rem;
+  color: white;
+}
+
+.chartEditor p {
+  margin: 0px;
+  font-size: 20px;
+}
+
+.tabContent {
+  background-color: #35829fff;
+  position: relative;
+
+  width: 100% - 50px;
+  height: 600px;
+  
+  top: 25px;
+  padding-bottom: 20px;
+  margin-left: 25px;
+  margin-right: 25px;
+}
+
+
+#myDiagram {
+  width: 90%;
+  height: 94%;
+  border: 1px solid black;
+  background-color: white;
+  position: absolute;
+  right: 20px;
+  top: 15px;
+}
+
+canvas {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  z-index: 2;
+  user-select: none;
+  touch-action: none;
+  width: 598px;
+  height: 498px;
+}
 
 
