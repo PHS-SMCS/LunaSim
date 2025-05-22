@@ -10,6 +10,8 @@ export function translate(obj) {
         "variables":[],
         "influences":[],
         "valves":[],
+        "varNames":[],
+        "stockNames": []
     };
 
     class influence {
@@ -28,6 +30,7 @@ export function translate(obj) {
         var node = obj.nodeDataArray[i];
 
         if (node.category == "stock") {
+            res.stockNames.push(node.label);
             stockKeyToName[node.key] = node.label;
 
             if (node.label[0] === "$") {
@@ -46,6 +49,7 @@ export function translate(obj) {
         if (node.category == "variable") {
 
             res.variables.push({equation: node.equation, label: node.label});
+            res.varNames.push(node.label);
 
             if (node.label[0] === "$") {
                 continue;
@@ -56,7 +60,6 @@ export function translate(obj) {
                 "equation": node.equation
             };
         }
-
         if (node.category == "valve") {
             res.valves.push({equation: node.equation, label: node.label, key: node.key});
         }
