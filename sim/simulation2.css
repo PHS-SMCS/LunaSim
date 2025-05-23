@@ -30,7 +30,7 @@ body {
   background-color: rgba(38, 50, 83, 0.95);
   padding: 1rem;
   border-radius: 10px;*/
-  visibility: hidden; 
+  visibility: visible; 
 }
 
 .chartViewer {
@@ -43,11 +43,11 @@ body {
   background-color: rgba(38, 50, 83, 0.95);
   padding: 1rem;
   border-radius: 10px;*/
-  visibility: visible;
+  visibility: hidden;
 }
 
 .toolbar {
-  position: fixed;
+  position: relative;
   width: 72px;
 }
 
@@ -243,6 +243,7 @@ a span:before {
   font-size: 20px;
 }
 
+/*
 .tabContent {
   background-color: #35829fff;
   position: relative;
@@ -276,7 +277,7 @@ canvas {
   touch-action: none;
   width: 598px;
   height: 498px;
-}
+}*/
 
 #overlay {
   position: fixed;       /* Stays in place even if page scrolls */
@@ -284,9 +285,12 @@ canvas {
   left: 0;
   width: 100vw;          /* Full viewport width */
   height: 100vh;         /* Full viewport height */
-  background-color: rgba(0, 0, 0, 0.9); /* Black with 50% opacity */
+  background-color: rgba(0, 0, 0, 0.6); /* Black with 50% opacity */
   z-index: 999;          /* High z-index so it appears above most elements */
-  /*display: none;*/
+}
+
+#overlay.hidden {
+  display: none;
 }
 
 .settings-popup {
@@ -306,9 +310,30 @@ canvas {
   flex-direction: column;
 }
 
-/*.settings-popup.hidden {
+.settings-popup.hidden {
   display: none;
-}*/
+}
+
+.charts-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #283458; /* Dark-themed popup background */
+  color: #ffffff;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  width: 90vw;
+  max-width: 400px;
+  z-index: 1001;
+  box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
+  display: flex;
+  flex-direction: column;
+}
+
+.charts-popup.hidden {
+  display: none;
+}
 
 .settings-header {
   display: flex;
@@ -332,7 +357,7 @@ canvas {
 }
 
 .close-btn:hover {
-  color: #627bc0; /* Slightly red hover effect */
+  color: #627bc0; 
 }
 
 .setting-group {
@@ -381,7 +406,6 @@ canvas {
   margin: 1.5rem 0;
 }
 
-/* Toggle Switch */
 .toggle-switch {
   position: relative;
   display: inline-block;
@@ -444,11 +468,33 @@ canvas {
   border-radius: 0.5rem;
   color: #ffffff;
   font-size: 1rem;
+  transition: background 0.3s ease-out;
+  cursor: pointer;
 }
 
 .setting-button:hover {
   background-color: #627bc0;
-  border: 1px solid #1d253d;
-  
 }
 
+/*.dotted-underline {
+  position: relative;
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+}
+
+.dotted-underline::after {
+  bottom: -10px;
+}*/
+
+.tabButton {
+  margin-top: 1.1rem;
+  width: 100%;
+  padding: 0.5rem;
+  background-color: #1d253d;
+  border: 1px solid #627bc0;
+  border-radius: 0.5rem;
+  color: #ffffff;
+  font-size: 1rem;
+  transition: background 0.3s ease-out;
+  cursor: pointer;
+}

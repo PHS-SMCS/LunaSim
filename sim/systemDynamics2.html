@@ -50,7 +50,8 @@
     <div id="sample">
 
       <div class="tabBar">
-        
+        <buton class="tabButton" id="modelTab">Model View</buton>
+        <buton class="tabButton" id="chartTab">Charts/Tables</buton>        
       </div>
       <div class="modelViewer">
         <!-- Tool Bar -->
@@ -101,7 +102,7 @@
             <li>
               <li>
                 <a href="#" id="openSettingsBtn">
-                  <i class="fa-solid fa-gear"></i>
+                  <i class="fa-regular fa-gear"></i>
                   <span>Settings</span>
                 </a>
               </li>
@@ -194,14 +195,14 @@
 
       <div id="overlay" class="overlay hidden"></div>
 
-      <!--<div id="settingsPopup" class="settings-popup hidden">
+      <div id="settingsPopup" class="settings-popup hidden">
         <div class="settings-header">
           <h2>Simulation Settings</h2>
           <button class="close-btn" onclick="closeSettings()">&times;</button>
         </div>
         <div class="setting-group">
 
-          <label for="simParams">Start Time</label>
+          <label for="simParams" class="dotted-underline">Start Time</label>
           <input type="text" id="simParams" class="settings-input" placeholder="Enter start time..." value="0" style="width: 70%;">
 
           <label for="simParams">End Time</label>
@@ -235,16 +236,14 @@
             <option>Dark</option>
           </select>
         </div>
+        <button class="setting-button" onclick="closeSettings()">Apply Settings</button>
 
+      </div>
 
-        <button class="setting-button">Apply Settings</button>
-
-      </div>-->
-
-      <div id="settingsPopup" class="settings-popup hidden">
+      <div id="charts-popup" class="charts-popup hidden">
         <div class="settings-header">
           <h2>Edit Chart/Table</h2>
-          <button class="close-btn" onclick="closeSettings()">&times;</button>
+          <button class="close-btn" onclick="closeSettings()"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <div class="setting-group">
           <label for="chartSelect">Type:</label>
@@ -292,19 +291,26 @@
             </label>
           </label>
         </div>
+        <button class="setting-button">Create Table/Chart</button>
+      </div>
       </div>
 
     </div>
   </div>
 <script>
-  document.addEventListener('keydown', function(event) {
-    console.log(event.key.toLowerCase());
-    if (event.key.toLowerCase() === 'e') {
-      const overlay = document.getElementById('overlay');
-
-      overlay.classList.toggle('hide');
-    }
+  // Open popup
+  document.getElementById("openSettingsBtn").addEventListener("click", function (event) {
+    event.preventDefault(); // Prevent page jump
+    document.getElementById("settingsPopup").classList.remove("hidden");
+    document.getElementById("overlay").classList.remove("hidden");
   });
+
+  // Optional: Close popup function if you haven't added it yet
+  function closeSettings() {
+    document.getElementById("settingsPopup").classList.add("hidden");
+    document.getElementById("overlay").classList.add("hidden");
+  }
+  
 </script>
 </body>
 
