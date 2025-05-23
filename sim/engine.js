@@ -65,34 +65,6 @@ export class Simulation {
         }
     }
 
-    bracketWords(str, list1, list2) {
-        const targetWords = new Set([...list1, ...list2]);
-        const words = str.split(/\b/); // Split while keeping punctuation
-
-        for (const word of words) {
-            // Skip if it's already bracketed or not a word (like spaces or punctuation)
-            if (/^\[.*\]$/.test(word) || !/\w+/.test(word)) continue;
-
-            if (!targetWords.has(word)) {
-                // Show error and exit the function
-                document.getElementById("simErrorPopupDesc").innerHTML =
-                    "get fucked buddy";
-                showSimErrorPopup();
-                return; // Exit without modifying the string
-            }
-        }
-
-        // If all words are valid, bracket them where needed
-        const result = words.map(word => {
-            if (/^\[.*\]$/.test(word) || !targetWords.has(word)) return word;
-            return `[${word}]`;
-        }).join('');
-        console.log(targetWords);
-        console.log(result);
-
-        return result;
-    }
-
     /* 
     Replaces names in equation with values.
     Example: 'converter1*converter2+stock1' --> '(1)*(2)+(3)'
@@ -135,9 +107,6 @@ export class Simulation {
     parseAndEval(equation, history = []) {
 
 
-       equation = this.bracketWords(equation, this.data.varNames, this.data.stockNames);
-
-       console.log(equation);
         // Check for circular definitions
         if (history.includes(equation)) {
             history.push(equation);
