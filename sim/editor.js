@@ -655,6 +655,15 @@ function run() {
                     }
                     if (engineJson.influences[j].to === engineJson.variables[i].label &&
                         !references.includes(engineJson.influences[j].from)) {
+                        const infl = engineJson.influences[j];
+                        engineJson.influences.splice(j, 1);
+                        const link = myDiagram.model.linkDataArray.find(l =>
+                            l.from === infl.from && l.to === infl.to && l.category === "influence"
+                        );
+                        if (link) {
+                            myDiagram.model.removeLinkData(link);
+                        }
+                        j--;
                         document.getElementById("simErrorPopupDesc").innerHTML =
                             "Incorrect influence from " + engineJson.influences[j].from + " to " + engineJson.influences[j].to;
                         showSimErrorPopup();
@@ -662,6 +671,27 @@ function run() {
                     }
                 }
                 if (!exists) {
+                    const from = references[h];
+                    const to = engineJson.variables[i].label;
+
+                    let toEq = null;
+                    for (let n = 0; n < engineJson.variables.length; n++) {
+                        if (engineJson.variables[n].label === to) {
+                            toEq = engineJson.variables[n].equation;
+                            break;
+                        }
+                    }
+
+                    engineJson.influences.push({ from, to, toEq });
+
+                    myDiagram.model.addLinkData({
+                        category: "influence",
+                        text: "influence",
+                        from: from,
+                        to: to,
+                        labelKeys: []
+                    });
+
                     document.getElementById("simErrorPopupDesc").innerHTML = "Missing an influence from " + references[h] + " to " + engineJson.variables[i].label;
                     showSimErrorPopup();
                     return;
@@ -672,6 +702,15 @@ function run() {
                 if (engineJson.influences[j].to === engineJson.variables[i].label) {
                     document.getElementById("simErrorPopupDesc").innerHTML =
                         "No references in equation for " + engineJson.variables[i].label + ", but influence from " + engineJson.influences[j].from + " exists.";
+                        const infl = engineJson.influences[j];
+                        engineJson.influences.splice(j, 1);
+                        const link = myDiagram.model.linkDataArray.find(l =>
+                            l.from === infl.from && l.to === infl.to
+                        );
+                        if (link) {
+                            myDiagram.model.removeLinkData(link);
+                        }
+                        j--;
                     showSimErrorPopup();
                     return;
                 }
@@ -716,37 +755,6 @@ function run() {
         }
 
     }
-
-    // const valves = engineJson.valves;
-    //
-    // for (let i = 0; i < valves.length; i++) {
-    //     const valve = valves[i];
-    //     const references = containsReference(valve.equation); // e.g. ["stock1", "variable2"]
-    //     const incomingInfluences = engineJson.influences.filter(inf => inf.to === valve.label);
-    //
-    //     // Track all sources of incoming influences to this valve
-    //     const influenceFroms = incomingInfluences.map(inf => inf.from);
-    //
-    //     // 🔍 1. Check for missing influences (referenced but not connected)
-    //     for (let r = 0; r < references.length; r++) {
-    //         if (influenceFroms.includes(references[r])) {
-    //             document.getElementById("simErrorPopupDesc").innerHTML =
-    //                 `Missing an influence from ${references[r]} to valve ${valve.label}`;
-    //             showSimErrorPopup();
-    //             return;
-    //         }
-    //     }
-    //
-    //     // 🔍 2. Check for extra influences (connected but not referenced)
-    //     for (let f = 0; f < influenceFroms.length; f++) {
-    //         if (references.includes(influenceFroms[f])) {
-    //             document.getElementById("simErrorPopupDesc").innerHTML =
-    //                 `Incorrect influence from ${influenceFroms[f]} to valve ${valve.label}`;
-    //             showSimErrorPopup();
-    //             return;
-    //         }
-    //     }
-    // }
 
 
 
