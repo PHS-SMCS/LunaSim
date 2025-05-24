@@ -48,10 +48,9 @@
     <script id="code4" type="module" src="tabsManagement.js"></script>
     
     <div id="sample">
-
       <div class="tabBar">
-        <buton class="tabButton" id="modelTab">Model View</buton>
-        <buton class="tabButton" id="chartTab">Charts/Tables</buton>        
+          <button class="tabButton" id="modelTab">Model View</button>
+          <button class="tabButton" id="chartTab" onclick="openChartTab()">Charts/Tables</button>        
       </div>
       <div class="modelViewer">
         <!-- Tool Bar -->
@@ -100,13 +99,10 @@
               </a>
             </li>
             <li>
-              <li>
-                <a href="#" id="openSettingsBtn">
-                  <i class="fa-regular fa-gear"></i>
-                  <span>Settings</span>
-                </a>
-              </li>
-
+              <a href="#" id="openSettingsBtn">
+                <i class="fa-regular fa-gear"></i>
+                <span>Settings</span>
+              </a>
             </li>
           </ul>
         </div>
@@ -309,6 +305,16 @@
   function closeSettings() {
     document.getElementById("settingsPopup").classList.add("hidden");
     document.getElementById("overlay").classList.add("hidden");
+  }
+
+  function openChartTab() {
+    document.getElementById("modelViewer").classList.remove("hidden");
+    document.getElementById("chartViewer").classList.add("hidden");
+  }
+
+  function openChartTab() {
+    document.getElementById("modelViewer").classList.add("hidden");
+    document.getElementById("chartViewer").classList.remove("hidden");
   }
   
 </script>
