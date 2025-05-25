@@ -6,9 +6,9 @@
 var PERFORMANCE_MODE = false; // For testing runtime
 export {PERFORMANCE_MODE};
 
-import { Simulation } from "./engine.js";
-import { translate } from "./translator.js";
-import { CurvedLinkReshapingTool } from "./CurvedLinkReshapingTool.js";
+import {Simulation} from "./engine.js";
+import {translate} from "./translator.js";
+import {CurvedLinkReshapingTool} from "./CurvedLinkReshapingTool.js";
 
 // SD is a global variable, to avoid polluting global namespace and to make the global
 // nature of the individual variables obvious.
@@ -1101,10 +1101,10 @@ window.addEventListener('beforeunload', function (e) {
 // Exporting myDiagram
 export {data};
 const JAVA_MATH_FUNCTIONS = [
-    'sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'atan2', 'sinh', 'cosh', 'tanh',
-    'exp', 'log', 'log10', 'sqrt', 'cbrt', 'abs', 'ceil', 'floor', 'round', 'pow', 'max', 'min',
-    'signum', 'toRadians', 'toDegrees', 'random', 'hypot', 'expm1', 'log1p', 'copySign', 'nextUp',
-    'nextDown', 'ulp', 'IEEEremainder', 'rint', 'getExponent', 'scalb', 'fma'
+    'sin()', 'cos()', 'tan()', 'asin()', 'acos()', 'atan()', 'atan2()', 'sinh()', 'cosh()', 'tanh()',
+    'exp()', 'log()', 'log10()', 'sqrt()', 'cbrt()', 'abs()', 'ceil()', 'floor()', 'round()', 'pow()',
+    'max()', 'min()', 'signum()', 'toRadians()', 'toDegrees()', 'random()', 'hypot()', 'expm1()', 'log1p()',
+    'copySign()', 'nextUp()', 'nextDown()', 'ulp()', 'IEEEremainder()', 'rint()', 'getExponent()', 'scalb()', 'fma()'
 ];
 
 let currentMatch = '';
@@ -1170,7 +1170,7 @@ function enhanceEquationInput(input) {
             if (match) {
                 const word = match[1];
                 const wordStart = start - word.length;
-                input.value = value.slice(0, wordStart) + currentMatch + '()' + value.slice(start);
+                input.value = value.slice(0, wordStart) + currentMatch + value.slice(start);
                 input.selectionStart = input.selectionEnd = wordStart + currentMatch.length + 1;
             }
             ghost.textContent = '';
@@ -1207,3 +1207,90 @@ observer.observe(document.getElementById('eqTableBody'), {
 
 // Enhance any inputs already present
 enhanceExistingInputs();
+
+function getTopMathMatches(input) {
+    const lowerInput = input.toLowerCase();
+    return JAVA_MATH_FUNCTIONS
+        .filter(func => func.toLowerCase().startsWith(lowerInput))
+        .slice(0, 3);
+}
+
+function setupAutocompleteForInputs() {
+    const $tbody = $('#eqTableBody');
+
+    $tbody.on('input', 'input[name="equation"]', function () {
+        showAutocomplete($(this));
+    });
+
+    $tbody.on('keydown', 'input[name="equation"]', function (e) {
+        const dropdown = $('.autocomplete-list');
+        const items = dropdown.find('.autocomplete-item');
+        let selected = items.filter('.selected');
+
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            if (selected.length === 0) {
+                items.first().addClass('selected');
+            } else {
+                const next = selected.removeClass('selected').next();
+                (next.length ? next : items.first()).addClass('selected');
+            }
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            if (selected.length === 0) {
+                items.last().addClass('selected');
+            } else {
+                const prev = selected.removeClass('selected').prev();
+                (prev.length ? prev : items.last()).addClass('selected');
+            }
+        } else if (e.key === 'Enter') {
+            if (selected.length) {
+                e.preventDefault();
+                $(this).val(selected.text());
+                $('.autocomplete-list').remove();
+
+            }
+        }
+    });
+
+    $(document).on('mousedown', function (e) {
+        if (!$(e.target).closest('.autocomplete-list, input[name="equation"]').length) {
+            $('.autocomplete-list').remove();
+        }
+    });
+}
+
+function showAutocomplete($input) {
+    const inputVal = $input.val();
+    $('.autocomplete-list').remove();
+
+    if (!inputVal) return;
+
+    const matches = getTopMathMatches(inputVal);
+    if (matches.length === 0) return;
+
+    const dropdown = $('<div class="autocomplete-list"></div>');
+    matches.forEach(match => {
+        const item = $('<div class="autocomplete-item"></div>').text(match);
+        item.on('mousedown', function (e) {
+            e.preventDefault();
+            $input.val(match);
+            $('.autocomplete-list').remove();
+        });
+        dropdown.append(item);
+    });
+
+    const offset = $input.offset();
+    dropdown.css({
+        position: "absolute",
+        top: offset.top + $input.outerHeight(),
+        left: offset.left,
+        width: $input.outerWidth()
+    });
+
+    $('body').append(dropdown);
+}
+
+$(document).ready(() => {
+    setupAutocompleteForInputs();
+});
