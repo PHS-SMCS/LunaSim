@@ -22,13 +22,13 @@ body {
 
 .modelViewer {
   position: absolute;
-  top: calc(10vh + 1vw); 
+  top: calc(5vh + 1vw); 
+  width: 100%;
   left: 0vw; 
   display: flex;
   gap: 1vw; 
   background: rgba(60, 84, 148, 1);
   padding: 1vw;
-  border-radius: 10px;
   /*
   background-color: rgba(38, 50, 83, 0.95);
   padding: 1rem;
@@ -42,13 +42,13 @@ body {
 
 .chartViewer {
   position: absolute;
-  top: calc(10vh + 1vw); 
+  top: calc(5vh + 1vw); 
   left: 0vw; 
+  width: 100%;
   display: flex;
   gap: 1vw; 
   background: rgba(60, 84, 148, 1);
   padding: 1vw;
-  border-radius: 10px;
   /*
   background-color: rgba(38, 50, 83, 0.95);
   padding: 1rem;
@@ -68,7 +68,7 @@ body {
   list-style: none;
   margin: 0;
   padding: 0.75rem;
-  height: calc(90vh - 3vw);
+  height: calc(95vh - 3vw);
   width: 4.7vw;
   background-color: rgba(38, 50, 83, 0.95);
   display: flex;
@@ -180,7 +180,7 @@ a.active {
   list-style: none;
   margin: 0;
   padding: 0.75rem;
-  height: calc(90vh - 3vw);
+  height: calc(95vh - 3vw);
   width: 4.7vw;
   background-color: rgba(38, 50, 83, 0.95);
   display: flex;
@@ -193,7 +193,7 @@ a.active {
 .modelCanvas {
   position: relative; 
   background-color: #ffffff;
-  height: calc(90vh - 3vw);
+  height: calc(95vh - 3vw);
   width: 58vw;
   border-radius: 10px;
   box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
@@ -217,7 +217,7 @@ a.active {
 .chartCanvas {
   position: relative; 
   background-color: #ffffff;
-  height: calc(90vh - 3vw);
+  height: calc(95vh - 3vw);
   width: 58vw;
   border-radius: 10px;
   box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
@@ -228,7 +228,7 @@ a.active {
 
 .chartEditor {
   background-color: rgba(38, 50, 83, 0.95);
-  height: calc(90vh - 3vw);
+  height: calc(95vh - 3vw);
   width: calc(100vw - 8.7vw - 58vw);
   border-radius: 10px;
   box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
@@ -542,7 +542,7 @@ canvas {
 
 .tabBar {
   position: absolute;
-  top: calc(10vh - (3rem / 2)); /* same vertical offset as model/chart viewers */
+  top: calc(5vh - 1.8rem); /* same vertical offset as model/chart viewers */
   left: 0;
   display: flex;
   gap: 0rem;
@@ -561,6 +561,7 @@ canvas {
   color: white;
   background-color: rgba(60, 84, 148, 0.5);
   box-shadow: none;
+  scale: 0.95;
 
   /* Remove width and add padding */
   padding: 0.6rem 1.2rem;
@@ -583,7 +584,7 @@ canvas {
 
 .equationEditor {
   background-color: rgba(38, 50, 83, 0.95);
-  height: calc(90vh - 3vw);
+  height: calc(95vh - 3vw);
   width: calc(100vw - 8.7vw - 58vw);
   border-radius: 10px;
   box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
@@ -616,8 +617,8 @@ canvas {
 
 }
 
-.eq-col-type { width: 15%; }
-.eq-col-name { width: 20%; }
+.eq-col-type { width: 18%; }
+.eq-col-name { width: 22%; }
 .eq-col-equation { width: 65%; }
 .eq-col-toggle { width: 5%; }
 
@@ -735,19 +736,112 @@ canvas {
   color: white;
 }
 
-/* Project Name */
-
+/* Project Name Input */
 .projectNameInput {
   position: absolute;
   top: 1vh;
-  right: 1vw;
+  right: calc(1vw + 40px); /* Leaves room for logo (approx width) + spacing */
   height: 5vh;
-  width: 7vw;
+  width: 25vw;
   padding: 0.5svh 1svw;
   font-size: 1rem;
   border-radius: 8px;
   background-color: rgba(38, 50, 83, 0.95);
   border: 1px solid #627bc0;
   color: white;
-  z-index: 1000;
+  z-index: 500;
+}
+
+/* LunaSim Logo */
+#logoImage {
+  position: absolute;
+  top: calc(1vh + 3px);
+  right: 1vw;
+  height: 4vh;
+  z-index: 500;
+  cursor: pointer;
+}
+/* Action Buttons */
+.projectActions {
+  position: absolute;
+  top: 1vh;
+  right: calc(1vw + 25vw + 40px + 0.5vw); /* logo + input + spacing */
+  display: flex;
+  gap: 0.5vw;
+  z-index: 500;
+}
+
+.actionButton {
+  height: 5vh;
+  padding: 0.5svh 1svw;
+  font-size: 1rem;
+  width: 8vw;
+  border-radius: 8px;
+  background-color: rgba(60, 84, 148, 0.5);
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.actionButton:hover {
+  background-color: rgba(60, 84, 148, 1);
+}
+
+.actionButton i {
+  margin-right: 0.7em;
+}
+
+/* Fonts */
+input, button, select {
+  font-family: "Golos Text", sans-serif;
+}
+
+#runButton {
+  background: rgba(45, 114, 82, 0.9);
+}
+
+#runButton:hover {
+  background-color: rgba(26, 73, 51, 0.9);
+}
+
+#importButton {
+  background: rgba(59, 45, 114, 0.9);
+}
+
+#importButton:hover {
+  background: rgba(32, 24, 64, 0.9);
+}
+
+#exportButton {
+  background: rgba(59, 45, 114, 0.9);
+}
+
+#exportButton:hover {
+  background: rgba(32, 24, 64, 0.9);
+}
+
+#clearButton {
+  background: rgba(114, 45, 45, 0.9);
+}
+
+#clearButton:hover {
+  background: rgba(59, 21, 21, 0.9);
+}
+
+.projectStatus {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 5vh;
+  font-size: 0.7rem;
+  font-style: italic;
+  color: white;
+  text-align: right;
+  padding-right: 0.5vw;
+  line-height: 1.2;
+}
+
+.statusLine {
+  white-space: nowrap;
 }

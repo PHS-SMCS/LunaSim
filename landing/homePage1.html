@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LunaSim Launch</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@300;400;500;600;700;800;900&display=swap');
+
     body, html {
       margin: 0;
       padding: 0;
@@ -83,6 +85,7 @@
       transition: color 0.3s ease;
       overflow: hidden;
       z-index: 0;
+      font-family: "Golos Text", sans-serif;
     }
 
     .launch-btn::after {
@@ -135,7 +138,8 @@
     .intro-text {
       font-size: 1.5rem;
       margin-bottom: 0.5rem;
-      color: #cddafd;
+      color: rgba(51, 73, 120, 0.9);
+      font-family: "Golos Text", sans-serif;
     }
 
     .fade-in-text {
@@ -145,7 +149,8 @@
       animation: fadeInUp 2s ease forwards;
       animation-delay: 0.5s; 
       font-size: 150px;
-      color: #bfeefe;
+      color: rgb(51, 73, 120);
+      font-family: "Golos Text", sans-serif;
     }
 
     @keyframes fadeInUp {
@@ -166,7 +171,7 @@
     </div>
     <div class="blue-overlay"></div>
     <div class="hero-content">
-      <h1 class="intro-text">Design and run powerful simulations with<br><span class="fade-in-text">LunaSim</span></h1>
+      <h1 class="intro-text">Design and Run All-Powerful Simulations With:<br><span class="fade-in-text">LunaSim</span></h1>
       <button class="launch-btn" onclick="launchLunaSim()">Click here to launch</button>
     </div>
    

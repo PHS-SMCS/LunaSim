@@ -48,7 +48,31 @@
     <script id="code4" type="module" src="tabsManagement.js"></script>
     
     <div id="sample">
-      <input class="projectNameInput" type="text" placeholder="Project Name" />
+      <div class="projectActions">
+        <div class="projectStatus">
+          <div class="statusLine">No Unsaved Edits (Last Edit: 19m ago)</div>
+          <div class="statusLine">Last Exported: -</div>
+        </div>
+
+        <button class="actionButton" id="runButton">
+          <i class="fa-regular fa-play"></i> Run 
+        </button>
+        <button class="actionButton" id="importButton">
+          <i class="fa-regular fa-file-import"></i> Import
+        </button>
+        <button class="actionButton" id="exportButton">
+          <i class="fa-regular fa-file-export"></i> Export
+        </button>
+        <button class="actionButton" id="clearButton">
+          <i class="fa-regular fa-trash"></i> Clear
+        </button>
+      </div>
+
+      <input class="projectNameInput" type="text" placeholder="Project Name" value="New Project" />
+
+      <img id="logoImage" src="../img/lunaLogo.svg" alt="LunaSim Logo" />
+      
+
       <div class="tabBar">
           <button class="tabButton" id="modelBtn">Model View</button>
           <button class="tabButton" id="chartBtn" onclick="openChartTab()">Charts/Tables</button>        
@@ -274,7 +298,7 @@
       <div id="settingsPopup" class="settings-popup hidden">
         <div class="settings-header">
           <h2>Simulation Settings</h2>
-          <button class="close-btn" onclick="closeSettings()"><i class="fa-solid fa-xmark"></i></button>
+          <button class="close-btn" onclick="closeSettings()"><i class="fa-regular fa-xmark"></i></button>
         </div>
         <div class="setting-group">
 
@@ -319,7 +343,7 @@
       <div id="charts-popup" class="charts-popup hidden">
         <div class="settings-header">
           <h2>Edit Chart/Table</h2>
-          <button class="close-btn" onclick="closeSettings()"><i class="fa-solid fa-xmark"></i></button>
+          <button class="close-btn" onclick="closeSettings()"><i class="fa-regular fa-xmark"></i></button>
         </div>
         <div class="setting-group">
           <label for="chartSelect">Type:</label>
@@ -375,7 +399,7 @@
         <div class="equation-editor-popup-content">
           <div class="equation-editor-popup-header">
             <p class="equation-editor-title">Equation Editor</p>
-            <i class="fa-solid fa-xmark close-icon" onclick="closePopup()"></i>
+            <i class="fa-regular fa-xmark close-icon" onclick="closePopup()"></i>
           </div>
           <div id="equationEditorPopupContent"></div>
         </div>
@@ -384,6 +408,7 @@
 
       </div>
     </div>
+<!-- Opening the settings popup -->
 <script>
   const popup = document.getElementById("settingsPopup");
   const overlay = document.getElementById("overlay");
@@ -427,7 +452,7 @@
   });
 </script>
 
-
+<!-- Switching between tabs  -->
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const modelViewer = document.querySelector('.modelViewer');
@@ -479,7 +504,7 @@
     });
   });
 </script>
-
+<!-- Tooltips  -->
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   // Select all toolbar and chartSidebar buttons except those with 'no-active' class
@@ -529,6 +554,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 </script>
+<!-- Opening the equation editor popup screen -->
 <script>
   function openEquationEditorPopup() {
     const table = document.querySelector(".equation-editor-table");
@@ -588,6 +614,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 </script>
+<!-- When you clickk on image it goes to home page -->
+<script>
+  document.getElementById('logoImage').addEventListener('click', function () {
+    window.location.href = '../landing/homePage1.html';
+  });
+</script>
+
 
 
 
