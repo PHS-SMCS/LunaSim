@@ -54,7 +54,7 @@ export class Simulation {
             .replaceAll(/(?<!Math\.)\bmin\b/gi, 'Math.min')
             // Constants
             .replaceAll(/(?<!Math\.)\bpi\b/gi, 'Math.PI')
-            .replaceAll(/(?<!Math\.)\be\b/gi, 'Math.E');
+            .replaceAll(/(?<!Math\.)\be\b/gi, 'Math.E')
 
 
         try {
