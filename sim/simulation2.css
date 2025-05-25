@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@300;400;500;600;700;800;900&display=swap');
 
 
 *, *:after, *:before {
@@ -7,7 +7,7 @@
 
 
 body {
-  font-family: "Inter", sans-serif;
+  font-family: "Golos Text", sans-serif;
   margin: 0px;
   line-height: 1.5;
   min-height: 100vh;
@@ -22,19 +22,18 @@ body {
 
 .modelViewer {
   position: absolute;
-  top: calc(10vh - 1vw); 
+  top: calc(10vh + 1vw); 
   left: 0vw; 
   display: flex;
   gap: 1vw; 
-  background: rgba(60, 84, 148, 0.5);
+  background: rgba(60, 84, 148, 1);
   padding: 1vw;
-  padding-top: 3vw;
   border-radius: 10px;
   /*
   background-color: rgba(38, 50, 83, 0.95);
   padding: 1rem;
   border-radius: 10px;*/
-  /*visibility: visible; */
+  /*visibility: hidden;*/
 }
 
 .modelViewer.hidden {
@@ -43,22 +42,27 @@ body {
 
 .chartViewer {
   position: absolute;
-  top: 10vh; 
-  left: 1vw; 
+  top: calc(10vh + 1vw); 
+  left: 0vw; 
   display: flex;
   gap: 1vw; 
+  background: rgba(60, 84, 148, 1);
+  padding: 1vw;
+  border-radius: 10px;
   /*
   background-color: rgba(38, 50, 83, 0.95);
   padding: 1rem;
   border-radius: 10px;*/
-  visibility: hidden;
+}
+
+.chartViewer.hidden {
+  display: none;
 }
 
 .toolbar {
   position: relative;
   width: 72px;
 }
-
 
 .toolbar ul {
   list-style: none;
@@ -103,20 +107,17 @@ a {
   height: 3rem;
   border-radius: 8px;
   position: relative;
+  transition: background-color 0.3s ease; /* smooth transition */
 }
 
-
 a:hover,
-a:focus,
-a.active {
+a:focus {
   background-color: #374875;
   outline: 0;
 }
 
-
 a:hover span,
-a:focus span,
-a.active span {
+a:focus span{
   transform: scale(1);
   opacity: 1;
 }
@@ -129,7 +130,7 @@ a i {
 
 a span {
   position: absolute;
-  background-color: #374875;
+  background-color: #46598e;
   white-space: nowrap;
   padding: 0.5rem 1rem;
   border-radius: 6px;
@@ -148,13 +149,17 @@ a span:before {
   width: 12px;
   height: 12px;
   position: absolute;
-  background-color: #374875;
+  background-color: #46598e;
   left: -5px;
   top: 50%;
   transform: translateY(-50%) rotate(45deg);
   border-radius: 3px;
 }
 
+a.active {
+  background-color: #46598e; /* brighter color for selected */
+  outline: none;
+}
 
 @keyframes scale {
   0% {
@@ -175,8 +180,8 @@ a span:before {
   list-style: none;
   margin: 0;
   padding: 0.75rem;
-  height: calc(90vh - 1vw);
-  width: 72px;
+  height: calc(90vh - 3vw);
+  width: 4.7vw;
   background-color: rgba(38, 50, 83, 0.95);
   display: flex;
   flex-direction: column;
@@ -209,26 +214,11 @@ a span:before {
   z-index: 5;
 }
 
-.equationEditor {
-  background-color: rgba(38, 50, 83, 0.95);
-  height: calc(90vh - 3vw);
-  width: calc(100vw - 8.7vw - 58vw);
-  border-radius: 10px;
-  box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
-  padding: 1rem;
-  color: white;
-}
-
-.equationEditor p {
-  margin: 0px;
-  font-size: 20px;
-}
-
 .chartCanvas {
   position: relative; 
   background-color: #ffffff;
-  height: calc(90vh - 1vw);
-  width: 60vw;
+  height: calc(90vh - 3vw);
+  width: 58vw;
   border-radius: 10px;
   box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
   padding: 1rem;
@@ -238,8 +228,8 @@ a span:before {
 
 .chartEditor {
   background-color: rgba(38, 50, 83, 0.95);
-  height: calc(90vh - 1vw);
-  width: calc(100vw - 8.7vw - 60vw);
+  height: calc(90vh - 3vw);
+  width: calc(100vw - 8.7vw - 58vw);
   border-radius: 10px;
   box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
   padding: 1rem;
@@ -288,25 +278,29 @@ canvas {
 }*/
 
 #overlay {
-  position: fixed;       /* Stays in place even if page scrolls */
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;          /* Full viewport width */
-  height: 100vh;         /* Full viewport height */
-  background-color: rgba(0, 0, 0, 0.6); /* Black with 50% opacity */
-  z-index: 999;          /* High z-index so it appears above most elements */
+  width: 100vw;    
+  height: 100vh;      
+  background-color: rgba(0, 0, 0, 0.85); 
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
 }
 
-#overlay.hidden {
-  display: none;
+#overlay.show {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .settings-popup {
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #283458; /* Dark-themed popup background */
+  transform: translate(-50%, -50%) scale(0.95);
+  background-color: #283458;
   color: #ffffff;
   border-radius: 1rem;
   padding: 1.5rem;
@@ -316,18 +310,29 @@ canvas {
   box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
   display: flex;
   flex-direction: column;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
 }
 
-.settings-popup.hidden {
-  display: none;
+.settings-popup.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  pointer-events: auto;
 }
+
+.settings-popup.hidden,
+#overlay.hidden {
+  display: none; /* Fallback if JS needs to hide instantly */
+}
+
 
 .charts-popup {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #283458; /* Dark-themed popup background */
+  background-color: #283458;
   color: #ffffff;
   border-radius: 1rem;
   padding: 1.5rem;
@@ -484,6 +489,7 @@ canvas {
   background-color: #627bc0;
 }
 
+
 /*.dotted-underline {
   position: relative;
   text-decoration-line: underline;
@@ -493,3 +499,255 @@ canvas {
 .dotted-underline::after {
   bottom: -10px;
 }*/
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.fade-out {
+  animation: fadeOut 0.3s ease-in forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0;; }
+  to { opacity: 1;; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1;; }
+  to { opacity: 0;; }
+}
+
+@keyframes fadeScaleIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes fadeScaleOut {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.95);
+  }
+}
+
+.tabBar {
+  position: absolute;
+  top: calc(10vh - (3rem / 2)); /* same vertical offset as model/chart viewers */
+  left: 0;
+  display: flex;
+  gap: 0rem;
+  z-index: 0; /* above the viewer boxes */
+  height: 3rem;
+  margin: 0;
+}
+
+.tabButton {
+  cursor: pointer;
+  border: none;
+  border-radius: 10px 10px 0 0;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  color: white;
+  background-color: rgba(60, 84, 148, 0.5);
+  box-shadow: none;
+
+  /* Remove width and add padding */
+  padding: 0.6rem 1.2rem;
+  /* Or if you want fixed width, remove padding */
+  width: 10rem;
+
+  /* Optional: to make buttons fill equally */
+  flex-grow: 1;
+  text-align: center;
+}
+
+
+.tabButton.active {
+  background-color: rgba(60, 84, 148, 1); /* brighter, matching modelViewer bg */
+  transform: scale(1.1);
+  box-shadow: 0 4px 15px rgba(79, 107, 184, 0.7);
+}
+
+/* Equation Editor */
+
+.equationEditor {
+  background-color: rgba(38, 50, 83, 0.95);
+  height: calc(90vh - 3vw);
+  width: calc(100vw - 8.7vw - 58vw);
+  border-radius: 10px;
+  box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
+  padding: 1rem;
+  color: white;
+}
+
+.equation-editor-title {
+  font-size: 1.25rem;
+  margin: 0;
+  font-weight: 600;
+}
+
+.equation-editor-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.equation-editor-table td {
+  text-align: center;
+  vertical-align: middle;
+  padding: 0.15rem;
+}
+
+.equation-editor-table th {
+  text-align: center;
+  vertical-align: middle;
+  padding-bottom: 0.5rem;
+  font-size: 1rem;
+
+}
+
+.eq-col-type { width: 15%; }
+.eq-col-name { width: 20%; }
+.eq-col-equation { width: 65%; }
+.eq-col-toggle { width: 5%; }
+
+.equation-editor-input {
+  width: 100%;
+  padding: 0.5rem;
+  background-color: #1d253d;
+  border: 1px solid #627bc0;
+  border-radius: 0.5rem;
+  color: #ffffff;
+  font-size: 1rem;
+  font-size: 0.85rem;
+}
+
+.equation-editor-checkbox {
+  width: 1.2rem;
+  height: 1.2rem;
+  accent-color: #627bc0;      /* Color when checked */
+  cursor: pointer;
+  background-color: #2a3350;  /* Custom unchecked background color */
+  border: 1px solid #627bc0;  /* Border color */
+  border-radius: 3px;
+  appearance: none;            /* Remove default checkbox style */
+  -webkit-appearance: none;
+  outline: none;
+  position: relative;
+  vertical-align: middle;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.equation-editor-checkbox:checked {
+  background-color: #627bc0;
+  border-color: #627bc0;
+}
+
+/* Create the checkmark */
+.equation-editor-checkbox:checked::after {
+  content: "";
+  position: absolute;
+  left: 0.35rem;
+  top: 0.1rem;
+  width: 0.3rem;
+  height: 0.6rem;
+  border: solid white;
+  border-width: 0 0.2rem 0.2rem 0;
+  transform: rotate(45deg);
+}
+
+.equation-editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+}
+
+.equation-editor-zoom-icon {
+  font-size: 1rem;
+  cursor: pointer;
+  color: #ffffff;
+  transition: color 0.3s ease;
+}
+
+.equation-editor-zoom-icon:hover {
+  color: #627bc0;
+}
+
+.equation-editor-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.85); 
+  display: none;
+  z-index: 998;
+  transition: opacity 0.3s ease;
+}
+
+.equation-editor-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  background-color: #283458;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+  z-index: 999;
+  display: none;
+  width: 95vw;
+  max-height: 90vh;
+  overflow: auto;
+}
+
+.equation-editor-popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+}
+
+.close-icon {
+  font-size: 1.3rem;
+  color: #ffffff;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.close-icon:hover {
+  color: #627bc0;
+}
+
+.equation-editor-popup, 
+.equation-editor-popup * {
+  color: white;
+}
+
+/* Project Name */
+
+.projectNameInput {
+  position: absolute;
+  top: 1vh;
+  right: 1vw;
+  height: 5vh;
+  width: 7vw;
+  padding: 0.5svh 1svw;
+  font-size: 1rem;
+  border-radius: 8px;
+  background-color: rgba(38, 50, 83, 0.95);
+  border: 1px solid #627bc0;
+  color: white;
+  z-index: 1000;
+}

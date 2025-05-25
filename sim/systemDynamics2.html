@@ -48,9 +48,10 @@
     <script id="code4" type="module" src="tabsManagement.js"></script>
     
     <div id="sample">
+      <input class="projectNameInput" type="text" placeholder="Project Name" />
       <div class="tabBar">
-          <button class="tabButton" id="modelTab">Model View</button>
-          <button class="tabButton" id="chartTab" onclick="openChartTab()">Charts/Tables</button>        
+          <button class="tabButton" id="modelBtn">Model View</button>
+          <button class="tabButton" id="chartBtn" onclick="openChartTab()">Charts/Tables</button>        
       </div>
       <div class="modelViewer">
         <!-- Tool Bar -->
@@ -93,13 +94,13 @@
               </a>
             </li>
             <li>  
-              <a href="../UserDocs.html">
+              <a href="../UserDocs.html" class="no-active">
                 <i class="fa-regular fa-question"></i>
                 <span>Help</span>
               </a>
             </li>
             <li>
-              <a href="#" id="openSettingsBtn">
+              <a href="#" id="openSettingsBtn" class="no-active">
                 <i class="fa-regular fa-gear"></i>
                 <span>Settings</span>
               </a>
@@ -117,8 +118,87 @@
 
 
         <div class="equationEditor">
-          <!-- Content for your new box -->
-          <p>Equation Editor</p>
+          <div class="equation-editor-header">
+            <p class="equation-editor-title">Equation Editor</p>
+            <i class="fa-solid fa-up-right-and-down-left-from-center equation-editor-zoom-icon" onclick="openEquationEditorPopup()"></i>
+          </div>
+          <table class="equation-editor-table">
+            <thead>
+              <tr>
+                <th class="eq-col-type">Type</th>
+                <th class="eq-col-name">Name</th>
+                <th class="eq-col-equation">Equation</th>
+                <th class="eq-col-checkbox">NN/Uni</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><input type="text" class="equation-editor-input" placeholder="type" value="stock" style="border: 1px solid #847640;"></td>
+                <td><input type="text" class="equation-editor-input" placeholder="name" value="stock1" style="border: 1px solid #847640;"></td>
+                <td><input type="text" class="equation-editor-input" placeholder="equation" style="border: 1px solid #847640;"></td>
+                <td class="eq-checkbox-cell">
+                  <input type="checkbox" class="equation-editor-checkbox" />
+                </td>
+              </tr>
+              <tr>
+                <td><input type="text" class="equation-editor-input" placeholder="type" value="flow"></td>
+                <td><input type="text" class="equation-editor-input" placeholder="name" value="flow1"></td>
+                <td><input type="text" class="equation-editor-input" placeholder="equation"></td>
+                <td class="eq-checkbox-cell">
+                  <input type="checkbox" class="equation-editor-checkbox" />
+                </td>
+              </tr>
+              <tr>
+                <td><input type="text" class="equation-editor-input" placeholder="type" value="variable" style="border: 1px solid #3b773d;"></td>
+                <td><input type="text" class="equation-editor-input" placeholder="name" value="variable1" style="border: 1px solid #3b773d;"></td>
+                <td><input type="text" class="equation-editor-input" placeholder="equation" style="border: 1px solid #3b773d;"></td>
+                <td class="eq-checkbox-cell">
+                  <input type="checkbox" class="equation-editor-checkbox" />
+                </td>
+              </tr>
+              <tr>
+                <td><input type="text" class="equation-editor-input" placeholder="type" value="stock" style="border: 1px solid #847640;"></td>
+                <td><input type="text" class="equation-editor-input" placeholder="name" value="stock2" style="border: 1px solid #847640;"></td>
+                <td><input type="text" class="equation-editor-input" placeholder="equation" style="border: 1px solid #847640;"></td>
+                <td class="eq-checkbox-cell">
+                  <input type="checkbox" class="equation-editor-checkbox" />
+                </td>
+              </tr>
+              <tr>
+                <td><input type="text" class="equation-editor-input" placeholder="type" value="stock" style="border: 1px solid #847640;"></td>
+                <td><input type="text" class="equation-editor-input" placeholder="name" value="stock3" style="border: 1px solid #847640;"></td>
+                <td><input type="text" class="equation-editor-input" placeholder="equation" style="border: 1px solid #847640;"></td>
+                <td class="eq-checkbox-cell">
+                  <input type="checkbox" class="equation-editor-checkbox" />
+                </td>
+              </tr>
+              <tr>
+                <td><input type="text" class="equation-editor-input" placeholder="type" value="flow"></td>
+                <td><input type="text" class="equation-editor-input" placeholder="name" value="flow2"></td>
+                <td><input type="text" class="equation-editor-input" placeholder="equation"></td>
+                <td class="eq-checkbox-cell">
+                  <input type="checkbox" class="equation-editor-checkbox" />
+                </td>
+              </tr>
+              <tr>
+                <td><input type="text" class="equation-editor-input" placeholder="type" value="variable" style="border: 1px solid #3b773d;"></td>
+                <td><input type="text" class="equation-editor-input" placeholder="name" value="variable2" style="border: 1px solid #3b773d;"></td>
+                <td><input type="text" class="equation-editor-input" placeholder="equation" style="border: 1px solid #3b773d;"></td>
+                <td class="eq-checkbox-cell">
+                  <input type="checkbox" class="equation-editor-checkbox" />
+                </td>
+              </tr>
+              <tr>
+                <td><input type="text" class="equation-editor-input" placeholder="type" value="variable" style="border: 1px solid #3b773d;"></td>
+                <td><input type="text" class="equation-editor-input" placeholder="name" value="variable3" style="border: 1px solid #3b773d;"></td>
+                <td><input type="text" class="equation-editor-input" placeholder="equation" style="border: 1px solid #3b773d;"></td>
+                <td class="eq-checkbox-cell">
+                  <input type="checkbox" class="equation-editor-checkbox" />
+                </td>
+              </tr>
+              
+            </tbody>
+          </table>
         </div>
       </div>
 
@@ -189,12 +269,12 @@
         </div>
       </div>
 
-      <div id="overlay" class="overlay hidden"></div>
+      <div id="overlay" class="overlay hidden" onclick="closeSettings()"></div>
 
       <div id="settingsPopup" class="settings-popup hidden">
         <div class="settings-header">
           <h2>Simulation Settings</h2>
-          <button class="close-btn" onclick="closeSettings()">&times;</button>
+          <button class="close-btn" onclick="closeSettings()"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <div class="setting-group">
 
@@ -289,35 +369,229 @@
         </div>
         <button class="setting-button">Create Table/Chart</button>
       </div>
+
+      <div id="equationEditorOverlay" class="equation-editor-overlay" onclick="closePopup()"></div>
+      <div id="equationEditorPopup" class="equation-editor-popup">
+        <div class="equation-editor-popup-content">
+          <div class="equation-editor-popup-header">
+            <p class="equation-editor-title">Equation Editor</p>
+            <i class="fa-solid fa-xmark close-icon" onclick="closePopup()"></i>
+          </div>
+          <div id="equationEditorPopupContent"></div>
+        </div>
       </div>
 
+
+      </div>
     </div>
-  </div>
 <script>
-  // Open popup
-  document.getElementById("openSettingsBtn").addEventListener("click", function (event) {
-    event.preventDefault(); // Prevent page jump
-    document.getElementById("settingsPopup").classList.remove("hidden");
-    document.getElementById("overlay").classList.remove("hidden");
+  const popup = document.getElementById("settingsPopup");
+  const overlay = document.getElementById("overlay");
+  const openBtn = document.getElementById("openSettingsBtn");
+
+  // Function to open the popup with transition
+  function openSettings(event) {
+    event.preventDefault();
+    popup.classList.remove("hidden");
+    overlay.classList.remove("hidden");
+
+    // Trigger transition on next frame
+    requestAnimationFrame(() => {
+      popup.classList.add("show");
+      overlay.classList.add("show");
+    });
+  }
+
+  // Function to close the popup with transition
+  function closeSettings() {
+    popup.classList.remove("show");
+    overlay.classList.remove("show");
+
+    // After transition ends, hide elements
+    setTimeout(() => {
+      popup.classList.add("hidden");
+      overlay.classList.add("hidden");
+    }, 300); // duration matches CSS transition
+  }
+
+  // Open popup on button click
+  openBtn.addEventListener("click", openSettings);
+
+  // Close popup when clicking on overlay
+  overlay.addEventListener("click", closeSettings);
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !popup.classList.contains("hidden")) {
+      closeSettings();
+    }
+  });
+</script>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const modelViewer = document.querySelector('.modelViewer');
+    const chartViewer = document.querySelector('.chartViewer');
+    const modelBtn = document.getElementById('modelBtn');
+    const chartBtn = document.getElementById('chartBtn');
+
+    // Initial state: show modelViewer, hide chartViewer, modelBtn active
+    modelViewer.classList.remove('hidden');
+    chartViewer.classList.add('hidden');
+    modelBtn.classList.add('active');
+
+    function showViewer(viewerToShow, viewerToHide) {
+      viewerToHide.classList.add('fade-out');
+      viewerToShow.classList.remove('hidden');
+      viewerToShow.classList.add('fade-in');
+
+      setTimeout(() => {
+        viewerToHide.classList.add('hidden');
+        viewerToHide.classList.remove('fade-out');
+        viewerToShow.classList.remove('fade-in');
+      }, 300); // match the CSS transition duration
+    }
+
+    function activateModelView() {
+      if (modelViewer.classList.contains('hidden')) {
+        showViewer(modelViewer, chartViewer);
+        modelBtn.classList.add('active');
+        chartBtn.classList.remove('active');
+      }
+    }
+
+    function activateChartView() {
+      if (chartViewer.classList.contains('hidden')) {
+        showViewer(chartViewer, modelViewer);
+        chartBtn.classList.add('active');
+        modelBtn.classList.remove('active');
+      }
+    }
+
+    modelBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      activateModelView();
+    });
+
+    chartBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      activateChartView();
+    });
+  });
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Select all toolbar and chartSidebar buttons except those with 'no-active' class
+  const buttons = document.querySelectorAll('.toolbar a:not(.no-active), .chartSidebar a:not(.no-active)');
+
+  buttons.forEach(button => {
+    // Click toggles active mode
+    button.addEventListener('click', (e) => {
+      e.preventDefault(); // prevent link default behavior on mode buttons
+      // Remove active class from all buttons
+      buttons.forEach(btn => btn.classList.remove('active'));
+      // Add active class to clicked button
+      button.classList.add('active');
+
+      // Hide tooltip immediately on click
+      const tooltip = button.querySelector('span');
+      if (tooltip) {
+        tooltip.style.transform = 'scale(0)';
+        tooltip.style.opacity = '0';
+      }
+    });
+
+    // Show tooltip on hover only if NOT active
+    button.addEventListener('mouseenter', () => {
+      if (!button.classList.contains('active')) {
+        const tooltip = button.querySelector('span');
+        if (tooltip) {
+          tooltip.style.transform = 'scale(1)';
+          tooltip.style.opacity = '1';
+        }
+      }
+    });
+
+    // Hide tooltip on mouse leave only if NOT active
+    button.addEventListener('mouseleave', () => {
+      if (!button.classList.contains('active')) {
+        const tooltip = button.querySelector('span');
+        if (tooltip) {
+          tooltip.style.transform = 'scale(0)';
+          tooltip.style.opacity = '0';
+        }
+      }
+    });
   });
 
-  // Optional: Close popup function if you haven't added it yet
-  function closeSettings() {
-    document.getElementById("settingsPopup").classList.add("hidden");
-    document.getElementById("overlay").classList.add("hidden");
-  }
+  // Help/settings buttons with 'no-active' class behave normally (no JS needed)
+});
 
-  function openChartTab() {
-    document.getElementById("modelViewer").classList.remove("hidden");
-    document.getElementById("chartViewer").classList.add("hidden");
-  }
-
-  function openChartTab() {
-    document.getElementById("modelViewer").classList.add("hidden");
-    document.getElementById("chartViewer").classList.remove("hidden");
-  }
-  
 </script>
+<script>
+  function openEquationEditorPopup() {
+    const table = document.querySelector(".equation-editor-table");
+    const popup = document.getElementById("equationEditorPopup");
+    const overlay = document.getElementById("equationEditorOverlay");
+    const popupContent = document.getElementById("equationEditorPopupContent");
+
+    popupContent.innerHTML = "";
+    popupContent.appendChild(table.cloneNode(true));
+
+    popup.classList.remove("fade-out");
+    overlay.classList.remove("fade-out");
+
+    popup.style.display = "block";
+    overlay.style.display = "block";
+
+    popup.classList.add("fade-in");
+    overlay.classList.add("fade-in");
+  }
+
+  function closePopup() {
+    // Sync before starting to close
+    syncEquationEditors();
+
+    const popup = document.getElementById("equationEditorPopup");
+    const overlay = document.getElementById("equationEditorOverlay");
+
+    popup.classList.remove("fade-in");
+    overlay.classList.remove("fade-in");
+
+    popup.classList.add("fade-out");
+    overlay.classList.add("fade-out");
+
+    setTimeout(() => {
+      popup.style.display = "none";
+      overlay.style.display = "none";
+      popup.classList.remove("fade-out");
+      overlay.classList.remove("fade-out");
+    }, 300);
+  }
+
+  function syncEquationEditors() {
+    const popupRows = document.querySelectorAll('#equationEditorPopupContent tbody tr');
+    const mainRows = document.querySelectorAll('.equation-editor-table tbody tr');
+
+    popupRows.forEach((popupRow, index) => {
+      const popupInputs = popupRow.querySelectorAll('input');
+      const mainInputs = mainRows[index].querySelectorAll('input');
+
+      popupInputs.forEach((popupInput, i) => {
+        if (popupInput.type === 'checkbox') {
+          mainInputs[i].checked = popupInput.checked;
+        } else {
+          mainInputs[i].value = popupInput.value;
+        }
+      });
+    });
+  }
+</script>
+
+
+
+
 </body>
 
 
