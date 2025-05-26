@@ -1107,82 +1107,6 @@ const JAVA_MATH_FUNCTIONS = [
     'copySign()', 'nextUp()', 'nextDown()', 'ulp()', 'IEEEremainder()', 'rint()', 'getExponent()', 'scalb()', 'fma()'
 ];
 
-let currentMatch = '';
-
-function enhanceEquationInput(input) {
-    if (input.classList.contains('autocomplete-bound')) return;
-
-    const wrapper = document.createElement('div');
-    wrapper.className = 'autocomplete-wrapper';
-    input.parentNode.insertBefore(wrapper, input);
-    wrapper.appendChild(input);
-
-    const ghost = document.createElement('div');
-    ghost.className = 'ghost';
-    wrapper.appendChild(ghost);
-
-    input.classList.add('math-autocomplete');
-    input.classList.add('autocomplete-bound');
-
-    input.addEventListener('input', () => {
-        const value = input.value.slice(0, input.selectionStart);
-        const match = value.match(/([a-zA-Z_][a-zA-Z0-9_]*)$/);
-        if (match) {
-            const word = match[1];
-            const suggestion = JAVA_MATH_FUNCTIONS.find(fn => fn.startsWith(word) && fn !== word);
-            if (suggestion) {
-                const untyped = suggestion.slice(word.length);
-                ghost.textContent = untyped;
-                currentMatch = suggestion;
-
-                // Adjust ghost positioning
-                const textBefore = value.slice(0, match.index + word.length);
-                const span = document.createElement('span');
-                span.textContent = textBefore;
-                span.style.visibility = 'hidden';
-                span.style.whiteSpace = 'pre';
-                span.style.font = getComputedStyle(input).font;
-                wrapper.appendChild(span);
-
-                const width = span.getBoundingClientRect().width;
-                ghost.style.paddingLeft = width + 'px';
-
-                wrapper.removeChild(span);
-            } else {
-                ghost.textContent = '';
-                ghost.style.paddingLeft = '0';
-                currentMatch = '';
-            }
-        } else {
-            ghost.textContent = '';
-            ghost.style.paddingLeft = '0';
-            currentMatch = '';
-        }
-    });
-
-
-    input.addEventListener('keydown', (e) => {
-        if (e.key === 'Tab' && currentMatch) {
-            e.preventDefault();
-            const value = input.value;
-            const start = input.selectionStart;
-            const match = value.slice(0, start).match(/([a-zA-Z_][a-zA-Z0-9_]*)$/);
-            if (match) {
-                const word = match[1];
-                const wordStart = start - word.length;
-                input.value = value.slice(0, wordStart) + currentMatch + value.slice(start);
-                input.selectionStart = input.selectionEnd = wordStart + currentMatch.length + 1;
-            }
-            ghost.textContent = '';
-            currentMatch = '';
-        }
-    });
-
-    input.addEventListener('blur', () => {
-        ghost.textContent = '';
-        currentMatch = '';
-    });
-}
 
 // Auto-enhance inputs in the 3rd column (Equation)
 function enhanceExistingInputs() {
@@ -1212,7 +1136,7 @@ function getTopMathMatches(input) {
     const lowerInput = input.toLowerCase();
     return JAVA_MATH_FUNCTIONS
         .filter(func => func.toLowerCase().startsWith(lowerInput))
-        .slice(0, 3);
+        .slice(0, 5);
 }
 
 function setupAutocompleteForInputs() {
@@ -1243,30 +1167,68 @@ function setupAutocompleteForInputs() {
                 const prev = selected.removeClass('selected').prev();
                 (prev.length ? prev : items.last()).addClass('selected');
             }
-        } else if (e.key === 'Enter') {
-            if (selected.length) {
-                e.preventDefault();
-                $(this).val(selected.text());
-                $('.autocomplete-list').remove();
+        } else if (e.key === 'Tab' && selected.length) {
+            e.preventDefault();
 
-            }
+            const $input = $(this); // scope-safe reference
+            const cursorPos = $input[0].selectionStart;
+            const fullText = $input.val();
+
+            const match = fullText.slice(0, cursorPos).match(/(?:^|\W)(\w+)$/);
+            const currentFragment = match ? match[1] : "";
+            const fragmentStart = cursorPos - currentFragment.length;
+
+            const before = fullText.slice(0, fragmentStart);
+            const after = fullText.slice(cursorPos);
+            const updated = before + selected.text() + after;
+
+            $input.val(updated);
+            const newCursor = before.length + selected.text().length;
+            $input[0].setSelectionRange(newCursor, newCursor);
+
+            $('.autocomplete-list').remove();
+
         }
     });
 
-    $(document).on('mousedown', function (e) {
-        if (!$(e.target).closest('.autocomplete-list, input[name="equation"]').length) {
-            $('.autocomplete-list').remove();
-        }
+    item.on('mousedown', function (e) {
+        e.preventDefault();
+        e.stopPropagation(); // <- Prevent document handler from firing
+
+        const cursorPos = $input[0].selectionStart;
+        const fullText = $input.val();
+
+        const match = fullText.slice(0, cursorPos).match(/(?:^|\W)(\w+)$/);
+        const currentFragment = match ? match[1] : "";
+
+        const fragmentStart = cursorPos - currentFragment.length;
+        const before = fullText.slice(0, fragmentStart);
+        const after = fullText.slice(cursorPos);
+
+        const replacement = item.text();
+        const updated = before + replacement + after;
+
+        $input.val(updated);
+        const newCursor = before.length + replacement.length;
+        $input[0].setSelectionRange(newCursor, newCursor);
+
+        $('.autocomplete-list').remove();
     });
 }
 
 function showAutocomplete($input) {
-    const inputVal = $input.val();
-    $('.autocomplete-list').remove();
+    const cursorPos = $input[0].selectionStart;
+    const fullText = $input.val();
 
-    if (!inputVal) return;
+    // Match the last function fragment anywhere before the cursor (even after space/parens)
+    const match = fullText.slice(0, cursorPos).match(/(?:^|\W)(\w+)$/);
+    const currentFragment = match ? match[1] : "";
 
-    const matches = getTopMathMatches(inputVal);
+    $('.autocomplete-list').remove(); // remove any existing dropdown
+
+    if (!currentFragment) return;
+
+    const matches = getTopMathMatches(currentFragment);
     if (matches.length === 0) return;
 
     const dropdown = $('<div class="autocomplete-list"></div>');
@@ -1274,7 +1236,15 @@ function showAutocomplete($input) {
         const item = $('<div class="autocomplete-item"></div>').text(match);
         item.on('mousedown', function (e) {
             e.preventDefault();
-            $input.val(match);
+
+            const before = fullText.slice(0, cursorPos).replace(/(\w+)$/, match);
+            const after = fullText.slice(cursorPos);
+            const updated = before + after;
+
+            $input.val(updated);
+            const newCursor = before.length;
+            $input[0].setSelectionRange(newCursor, newCursor);
+
             $('.autocomplete-list').remove();
         });
         dropdown.append(item);
@@ -1290,6 +1260,7 @@ function showAutocomplete($input) {
 
     $('body').append(dropdown);
 }
+
 
 $(document).ready(() => {
     setupAutocompleteForInputs();
