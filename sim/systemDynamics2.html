@@ -3,10 +3,7 @@
   Authors: Sienna Simms, Karthik S. Vedula, Aditya Patil, William J. Park
 -->
 
-
 <html lang="en">
-
-
 <head>
   <title>LunaSim</title>
   <meta id="vp" name="viewport" content="width=device-width">
@@ -54,18 +51,10 @@
           <div class="statusLine">Last Exported: -</div>
         </div>
 
-        <button class="actionButton" id="runButton">
-          <i class="fa-regular fa-play"></i> Run 
-        </button>
-        <button class="actionButton" id="importButton">
-          <i class="fa-regular fa-file-import"></i> Import
-        </button>
-        <button class="actionButton" id="exportButton">
-          <i class="fa-regular fa-file-export"></i> Export
-        </button>
-        <button class="actionButton" id="clearButton">
-          <i class="fa-regular fa-trash"></i> Clear
-        </button>
+        <button class="actionButton" id="runButton"><i class="fa-regular fa-play"></i></button>
+        <button class="actionButton" id="importButton"><i class="fa-regular fa-file-import"></i></button>
+        <button class="actionButton" id="exportButton"><i class="fa-regular fa-file-export"></i></button>
+        <button class="actionButton" id="clearButton"><i class="fa-regular fa-trash"></i></button>
       </div>
 
       <input class="projectNameInput" type="text" placeholder="Project Name" value="New Project" />
@@ -267,13 +256,13 @@
               </a>
             </li>
             <li>  
-              <a href="../UserDocs.html">
+              <a href="../UserDocs.html" class="no-active">
                 <i class="fa-regular fa-question"></i>
                 <span>Help</span>
               </a>
             </li>
             <li>
-              <a href="#">
+              <a href="#" id="openSettingsBtn2" class="no-active">
                 <i class="fa-regular fa-gear"></i>
                 <span>Settings</span>
               </a>
@@ -408,11 +397,12 @@
 
       </div>
     </div>
-<!-- Opening the settings popup -->
 <script>
+  // ================== Opening the settings popup ==================
   const popup = document.getElementById("settingsPopup");
   const overlay = document.getElementById("overlay");
   const openBtn = document.getElementById("openSettingsBtn");
+  const openBtn2 = document.getElementById("openSettingsBtn2");
 
   // Function to open the popup with transition
   function openSettings(event) {
@@ -437,23 +427,25 @@
       popup.classList.add("hidden");
       overlay.classList.add("hidden");
     }, 300); // duration matches CSS transition
-  }
+  } //charts-popup
 
   // Open popup on button click
   openBtn.addEventListener("click", openSettings);
+  openBtn2.addEventListener("click", openSettings);
 
   // Close popup when clicking on overlay
-  overlay.addEventListener("click", closeSettings);
+  overlay.addEventListener("click", () => {
+    closeSettings();
+    closePopup();
+  });
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && !popup.classList.contains("hidden")) {
       closeSettings();
     }
   });
-</script>
 
-<!-- Switching between tabs  -->
-<script>
+  // ================== Switching between tabs ==================
   document.addEventListener("DOMContentLoaded", () => {
     const modelViewer = document.querySelector('.modelViewer');
     const chartViewer = document.querySelector('.chartViewer');
@@ -503,59 +495,56 @@
       activateChartView();
     });
   });
-</script>
-<!-- Tooltips  -->
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  // Select all toolbar and chartSidebar buttons except those with 'no-active' class
-  const buttons = document.querySelectorAll('.toolbar a:not(.no-active), .chartSidebar a:not(.no-active)');
 
-  buttons.forEach(button => {
-    // Click toggles active mode
-    button.addEventListener('click', (e) => {
-      e.preventDefault(); // prevent link default behavior on mode buttons
-      // Remove active class from all buttons
-      buttons.forEach(btn => btn.classList.remove('active'));
-      // Add active class to clicked button
-      button.classList.add('active');
+  // ================== Tooltips ==================
+  document.addEventListener('DOMContentLoaded', () => {
+    // Select all toolbar and chartSidebar buttons except those with 'no-active' class
+    const buttons = document.querySelectorAll('.toolbar a:not(.no-active), .chartSidebar a:not(.no-active)');
 
-      // Hide tooltip immediately on click
-      const tooltip = button.querySelector('span');
-      if (tooltip) {
-        tooltip.style.transform = 'scale(0)';
-        tooltip.style.opacity = '0';
-      }
-    });
+    buttons.forEach(button => {
+      // Click toggles active mode
+      button.addEventListener('click', (e) => {
+        e.preventDefault(); // prevent link default behavior on mode buttons
+        // Remove active class from all buttons
+        buttons.forEach(btn => btn.classList.remove('active'));
+        // Add active class to clicked button
+        button.classList.add('active');
 
-    // Show tooltip on hover only if NOT active
-    button.addEventListener('mouseenter', () => {
-      if (!button.classList.contains('active')) {
-        const tooltip = button.querySelector('span');
-        if (tooltip) {
-          tooltip.style.transform = 'scale(1)';
-          tooltip.style.opacity = '1';
-        }
-      }
-    });
-
-    // Hide tooltip on mouse leave only if NOT active
-    button.addEventListener('mouseleave', () => {
-      if (!button.classList.contains('active')) {
+        // Hide tooltip immediately on click
         const tooltip = button.querySelector('span');
         if (tooltip) {
           tooltip.style.transform = 'scale(0)';
           tooltip.style.opacity = '0';
         }
-      }
+      });
+
+      // Show tooltip on hover only if NOT active
+      button.addEventListener('mouseenter', () => {
+        if (!button.classList.contains('active')) {
+          const tooltip = button.querySelector('span');
+          if (tooltip) {
+            tooltip.style.transform = 'scale(1)';
+            tooltip.style.opacity = '1';
+          }
+        }
+      });
+
+      // Hide tooltip on mouse leave only if NOT active
+      button.addEventListener('mouseleave', () => {
+        if (!button.classList.contains('active')) {
+          const tooltip = button.querySelector('span');
+          if (tooltip) {
+            tooltip.style.transform = 'scale(0)';
+            tooltip.style.opacity = '0';
+          }
+        }
+      });
     });
+
+    // Help/settings buttons with 'no-active' class behave normally (no JS needed)
   });
 
-  // Help/settings buttons with 'no-active' class behave normally (no JS needed)
-});
-
-</script>
-<!-- Opening the equation editor popup screen -->
-<script>
+  // ================== Opening the equation editor popup screen ==================
   function openEquationEditorPopup() {
     const table = document.querySelector(".equation-editor-table");
     const popup = document.getElementById("equationEditorPopup");
@@ -613,13 +602,13 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   }
-</script>
-<!-- When you clickk on image it goes to home page -->
-<script>
+
+  // ================== When you click on image it goes to home page ==================
   document.getElementById('logoImage').addEventListener('click', function () {
     window.location.href = '../landing/homePage1.html';
   });
 </script>
+
 
 
 

@@ -1,10 +1,10 @@
+/* Imports */
 @import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@300;400;500;600;700;800;900&display=swap');
 
-
+/* Universal Styling */
 *, *:after, *:before {
   box-sizing: border-box;
 }
-
 
 body {
   font-family: "Golos Text", sans-serif;
@@ -19,7 +19,187 @@ body {
   background: linear-gradient(60deg, rgba(79, 107, 184, 1) 0%, rgba(79, 165, 189, 1) 100%);
 }
 
+input, button, select {
+  font-family: "Golos Text", sans-serif;
+}
 
+
+/* Animations */
+@keyframes scale {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.fade-out {
+  animation: fadeOut 0.3s ease-in forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0;; }
+  to { opacity: 1;; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1;; }
+  to { opacity: 0;; }
+}
+
+/* Top Action Bar */
+
+/* LunaSim Logo */
+#logoImage {
+  position: absolute;
+  top: calc(1vh + 3px);
+  right: 1vw;
+  height: 4vh;
+  z-index: 500;
+  cursor: pointer;
+}
+
+/* Project Name Input */
+.projectNameInput {
+  position: absolute;
+  top: 1vh;
+  right: calc(1vw + 40px);
+  height: 5vh;
+  width: 25vw;
+  padding: 0.5svh 1svw;
+  font-size: 1rem;
+  border-radius: 8px;
+  background-color: rgba(38, 50, 83, 0.95);
+  border: 1px solid #627bc0;
+  color: white;
+  z-index: 500;
+}
+
+/* Action Buttons Row */
+.projectActions {
+  position: absolute;
+  top: 1vh;
+  right: calc(1vw + 25vw + 40px + 0.5vw); /* logo + input + spacing */
+  display: flex;
+  gap: 0.5vw;
+  z-index: 500;
+}
+
+/* Action Buttons Overall */
+.actionButton {
+  height: 5vh;
+  padding: 0.5svh 1svw;
+  font-size: 1rem;
+  width: 4vw;
+  border-radius: 8px;
+  background-color: rgba(60, 84, 148, 0.5);
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.actionButton:hover {
+  background-color: rgba(60, 84, 148, 1);
+}
+
+/* Run Button */
+#runButton {
+  background: rgba(45, 114, 82, 0.9);
+}
+
+#runButton:hover {
+  background-color: rgba(26, 73, 51, 0.9);
+}
+
+/* Import Button */
+#importButton {
+  background: rgba(59, 45, 114, 0.9);
+}
+
+#importButton:hover {
+  background: rgba(32, 24, 64, 0.9);
+}
+
+/* Export Button */
+#exportButton {
+  background: rgba(59, 45, 114, 0.9);
+}
+
+#exportButton:hover {
+  background: rgba(32, 24, 64, 0.9);
+}
+
+/* Clear Button */
+#clearButton {
+  background: rgba(114, 45, 45, 0.9);
+}
+
+#clearButton:hover {
+  background: rgba(59, 21, 21, 0.9);
+}
+
+/* Project Status */
+.projectStatus {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 5vh;
+  font-size: 0.7rem;
+  font-style: italic;
+  color: white;
+  text-align: right;
+  padding-right: 0.5vw;
+  line-height: 1.2;
+}
+
+.statusLine {
+  white-space: nowrap;
+}
+
+/* Tab Bar (Model Viewer / Chart Viewer) */
+.tabBar {
+  position: absolute;
+  top: calc(5vh - 1.8rem);
+  left: 0;
+  display: flex;
+  gap: 0rem;
+  z-index: 0;
+  height: 3rem;
+  margin: 0;
+}
+
+/* Tab Button */
+.tabButton {
+  cursor: pointer;
+  border: none;
+  border-radius: 10px 10px 0 0;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  color: white;
+  background-color: rgba(60, 84, 148, 0.5);
+  box-shadow: none;
+  scale: 0.95;
+  padding: 0.6rem 1.2rem;
+  width: 10rem;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.tabButton.active {
+  background-color: rgba(60, 84, 148, 1); /* brighter, matching modelViewer bg */
+  transform: scale(1.1);
+  box-shadow: 0 4px 15px rgba(79, 107, 184, 0.7);
+}
+
+/* Model Viewer */
+/* Model Viewer - Box*/
 .modelViewer {
   position: absolute;
   top: calc(5vh + 1vw); 
@@ -29,36 +209,13 @@ body {
   gap: 1vw; 
   background: rgba(60, 84, 148, 1);
   padding: 1vw;
-  /*
-  background-color: rgba(38, 50, 83, 0.95);
-  padding: 1rem;
-  border-radius: 10px;*/
-  /*visibility: hidden;*/
 }
 
 .modelViewer.hidden {
   display: none; 
 }
 
-.chartViewer {
-  position: absolute;
-  top: calc(5vh + 1vw); 
-  left: 0vw; 
-  width: 100%;
-  display: flex;
-  gap: 1vw; 
-  background: rgba(60, 84, 148, 1);
-  padding: 1vw;
-  /*
-  background-color: rgba(38, 50, 83, 0.95);
-  padding: 1rem;
-  border-radius: 10px;*/
-}
-
-.chartViewer.hidden {
-  display: none;
-}
-
+/* Model Viewer - Toolbar */
 .toolbar {
   position: relative;
   width: 72px;
@@ -78,24 +235,16 @@ body {
   box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
 }
 
-.modelViewer li:nth-child(7) {
+/* Universal Sidebar Styling (Applies to Toolbar and Chart Sidebar) */
+li:nth-child(7) {
   margin-top: 8rem;
   padding-top: 1.25rem;
   border-top: 1px solid #374875;
 }
-
-
-.chartViewer li:nth-child(7) {
-  margin-top: 8rem;
-  padding-top: 1.25rem;
-  border-top: 1px solid #374875;
-}
-
 
 li + li {
   margin-top: 0.5rem;
 }
-
 
 a {
   color: #FFF;
@@ -107,7 +256,7 @@ a {
   height: 3rem;
   border-radius: 8px;
   position: relative;
-  transition: background-color 0.3s ease; /* smooth transition */
+  transition: background-color 0.3s ease;
 }
 
 a:hover,
@@ -122,11 +271,9 @@ a:focus span{
   opacity: 1;
 }
 
-
 a i {
   font-size: 1.375rem;
 }
-
 
 a span {
   position: absolute;
@@ -142,7 +289,6 @@ a span {
   z-index: 5;
 }
 
-
 a span:before {
   content: "";
   display: block;
@@ -157,24 +303,163 @@ a span:before {
 }
 
 a.active {
-  background-color: #46598e; /* brighter color for selected */
+  background-color: #46598e;
   outline: none;
 }
 
-@keyframes scale {
-  0% {
-    transform: scale(0);
-  }
-  100% {
-    transform: scale(1);
-  }
+/* Model Viewer - Canvas */
+.modelCanvas {
+  position: relative; 
+  background-color: #ffffff;
+  height: calc(95vh - 3vw);
+  width: 58vw;
+  border-radius: 10px;
+  box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
+  padding: 1rem;
+  color: white;
+  overflow: hidden;
 }
 
+.modelCanvas canvas {
+  position: relative;  
+  width: 100% !important; 
+  height: 100% !important;
+  border-radius: 10px; 
+  display: block; 
+  user-select: none;
+  touch-action: none;
+  z-index: 5;
+}
+
+/* Model Viewer - Equation Editor */
+/* Equation Editor Box */
+.equationEditor {
+  background-color: rgba(38, 50, 83, 0.95);
+  height: calc(95vh - 3vw);
+  width: calc(100vw - 8.7vw - 58vw);
+  border-radius: 10px;
+  box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
+  padding: 1rem;
+  color: white;
+}
+
+/* Equation Editor Header */
+.equation-editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+}
+
+.equation-editor-title {
+  font-size: 1.25rem;
+  margin: 0;
+  font-weight: 600;
+}
+
+.equation-editor-zoom-icon {
+  font-size: 1rem;
+  cursor: pointer;
+  color: #ffffff;
+  transition: color 0.3s ease;
+}
+
+.equation-editor-zoom-icon:hover {
+  color: #627bc0;
+}
+
+/* Equation Editor Table */
+.equation-editor-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.eq-col-type { width: 18%; }
+.eq-col-name { width: 22%; }
+.eq-col-equation { width: 65%; }
+.eq-col-toggle { width: 5%; }
+
+.equation-editor-table td {
+  text-align: center;
+  vertical-align: middle;
+  padding: 0.15rem;
+}
+
+.equation-editor-table th {
+  text-align: center;
+  vertical-align: middle;
+  padding-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+/* Equation Editor Input Box */
+.equation-editor-input {
+  width: 100%;
+  padding: 0.5rem;
+  background-color: #1d253d;
+  border: 1px solid #627bc0;
+  border-radius: 0.5rem;
+  color: #ffffff;
+  font-size: 1rem;
+  font-size: 0.85rem;
+}
+
+/* Equation Editor Checkbox */
+.equation-editor-checkbox {
+  width: 1.2rem;
+  height: 1.2rem;
+  accent-color: #627bc0;
+  cursor: pointer;
+  background-color: #2a3350;
+  border: 1px solid #627bc0;
+  border-radius: 3px;
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  position: relative;
+  vertical-align: middle;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.equation-editor-checkbox:checked {
+  background-color: #627bc0;
+  border-color: #627bc0;
+}
+
+.equation-editor-checkbox:checked::after {
+  content: "";
+  position: absolute;
+  left: 0.35rem;
+  top: 0.1rem;
+  width: 0.3rem;
+  height: 0.6rem;
+  border: solid white;
+  border-width: 0 0.2rem 0.2rem 0;
+  transform: rotate(45deg);
+}
+
+/* Chart Viewer */
+/* Chart Viewer - Box */
+.chartViewer {
+  position: absolute;
+  top: calc(5vh + 1vw); 
+  left: 0vw; 
+  width: 100%;
+  display: flex;
+  gap: 1vw; 
+  background: rgba(60, 84, 148, 1);
+  padding: 1vw;
+}
+
+.chartViewer.hidden {
+  display: none;
+}
+
+/* Chart Viewer - Sidebar */
 .chartSidebar {
   position: relative;
   width: 72px;
 }
-
 
 .chartSidebar ul {
   list-style: none;
@@ -190,30 +475,7 @@ a.active {
   box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
 }
 
-.modelCanvas {
-  position: relative; 
-  background-color: #ffffff;
-  height: calc(95vh - 3vw);
-  width: 58vw;
-  border-radius: 10px;
-  box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
-  padding: 1rem;
-  color: white;
-  overflow: hidden;
-}
-
-
-.modelCanvas canvas {
-  position: relative;  
-  width: 100% !important; 
-  height: 100% !important;
-  border-radius: 10px; 
-  display: block; 
-  user-select: none;
-  touch-action: none;
-  z-index: 5;
-}
-
+/* Chart Viewer - Canvas */
 .chartCanvas {
   position: relative; 
   background-color: #ffffff;
@@ -226,6 +488,7 @@ a.active {
   overflow: hidden;
 }
 
+/* Chart Viewer - Chart Editor */
 .chartEditor {
   background-color: rgba(38, 50, 83, 0.95);
   height: calc(95vh - 3vw);
@@ -241,42 +504,8 @@ a.active {
   font-size: 20px;
 }
 
-/*
-.tabContent {
-  background-color: #35829fff;
-  position: relative;
-
-  width: 100% - 50px;
-  height: 600px;
-  
-  top: 25px;
-  padding-bottom: 20px;
-  margin-left: 25px;
-  margin-right: 25px;
-}
-
-
-#myDiagram {
-  width: 90%;
-  height: 94%;
-  border: 1px solid black;
-  background-color: white;
-  position: absolute;
-  right: 20px;
-  top: 15px;
-}
-
-canvas {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  z-index: 2;
-  user-select: none;
-  touch-action: none;
-  width: 598px;
-  height: 498px;
-}*/
-
+/* Popups */
+/* Overlay Effect */
 #overlay {
   position: fixed;
   top: 0;
@@ -295,59 +524,9 @@ canvas {
   pointer-events: auto;
 }
 
-.settings-popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.95);
-  background-color: #283458;
-  color: #ffffff;
-  border-radius: 1rem;
-  padding: 1.5rem;
-  width: 90vw;
-  max-width: 400px;
-  z-index: 1001;
-  box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
-  display: flex;
-  flex-direction: column;
-  opacity: 0;
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  pointer-events: none;
-}
+/* Default Settings Popup CSS */
 
-.settings-popup.show {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-  pointer-events: auto;
-}
-
-.settings-popup.hidden,
-#overlay.hidden {
-  display: none; /* Fallback if JS needs to hide instantly */
-}
-
-
-.charts-popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #283458;
-  color: #ffffff;
-  border-radius: 1rem;
-  padding: 1.5rem;
-  width: 90vw;
-  max-width: 400px;
-  z-index: 1001;
-  box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
-  display: flex;
-  flex-direction: column;
-}
-
-.charts-popup.hidden {
-  display: none;
-}
-
+/* Header */
 .settings-header {
   display: flex;
   justify-content: space-between;
@@ -361,6 +540,7 @@ canvas {
   color: #ffffff;
 }
 
+/* Close Button */
 .close-btn {
   background: none;
   border: none;
@@ -373,6 +553,7 @@ canvas {
   color: #627bc0; 
 }
 
+/* Setting Group */
 .setting-group {
   display: flex;
   justify-content: space-between;
@@ -382,6 +563,15 @@ canvas {
   color: #ffffff;
 }
 
+/* Setting Label */
+.switch-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+/* Setting Input Box */
 .settings-input {
   width: 100%;
   padding: 0.5rem;
@@ -392,6 +582,7 @@ canvas {
   font-size: 1rem;
 }
 
+/* Setting Dropdown */
 .settings-dropdown {
   width: 100%;
   padding: 0.5rem;
@@ -427,6 +618,7 @@ canvas {
   margin: 0px;
 }
 
+/* Setting Toggle Switch */
 .toggle-switch input {
   opacity: 0;
   width: 0;
@@ -465,13 +657,7 @@ canvas {
   transform: translateX(1.1rem);
 }
 
-.switch-label {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
-
+/* Settings Button */
 .setting-button {
   margin-top: 1.1rem;
   width: 100%;
@@ -489,202 +675,61 @@ canvas {
   background-color: #627bc0;
 }
 
-
-/*.dotted-underline {
-  position: relative;
-  text-decoration-line: underline;
-  text-decoration-style: dotted;
-}
-
-.dotted-underline::after {
-  bottom: -10px;
-}*/
-
-.fade-in {
-  animation: fadeIn 0.3s ease-out forwards;
-}
-
-.fade-out {
-  animation: fadeOut 0.3s ease-in forwards;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0;; }
-  to { opacity: 1;; }
-}
-
-@keyframes fadeOut {
-  from { opacity: 1;; }
-  to { opacity: 0;; }
-}
-
-@keyframes fadeScaleIn {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
-}
-
-@keyframes fadeScaleOut {
-  from {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.95);
-  }
-}
-
-.tabBar {
-  position: absolute;
-  top: calc(5vh - 1.8rem); /* same vertical offset as model/chart viewers */
-  left: 0;
-  display: flex;
-  gap: 0rem;
-  z-index: 0; /* above the viewer boxes */
-  height: 3rem;
-  margin: 0;
-}
-
-.tabButton {
-  cursor: pointer;
-  border: none;
-  border-radius: 10px 10px 0 0;
-  font-weight: 600;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  color: white;
-  background-color: rgba(60, 84, 148, 0.5);
-  box-shadow: none;
-  scale: 0.95;
-
-  /* Remove width and add padding */
-  padding: 0.6rem 1.2rem;
-  /* Or if you want fixed width, remove padding */
-  width: 10rem;
-
-  /* Optional: to make buttons fill equally */
-  flex-grow: 1;
-  text-align: center;
-}
-
-
-.tabButton.active {
-  background-color: rgba(60, 84, 148, 1); /* brighter, matching modelViewer bg */
-  transform: scale(1.1);
-  box-shadow: 0 4px 15px rgba(79, 107, 184, 0.7);
-}
-
-/* Equation Editor */
-
-.equationEditor {
-  background-color: rgba(38, 50, 83, 0.95);
-  height: calc(95vh - 3vw);
-  width: calc(100vw - 8.7vw - 58vw);
-  border-radius: 10px;
+/* Settings Popup */
+.settings-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  background-color: #283458;
+  color: #ffffff;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  width: 90vw;
+  max-width: 400px;
+  z-index: 1001;
   box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
-  padding: 1rem;
-  color: white;
-}
-
-.equation-editor-title {
-  font-size: 1.25rem;
-  margin: 0;
-  font-weight: 600;
-}
-
-.equation-editor-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.equation-editor-table td {
-  text-align: center;
-  vertical-align: middle;
-  padding: 0.15rem;
-}
-
-.equation-editor-table th {
-  text-align: center;
-  vertical-align: middle;
-  padding-bottom: 0.5rem;
-  font-size: 1rem;
-
-}
-
-.eq-col-type { width: 18%; }
-.eq-col-name { width: 22%; }
-.eq-col-equation { width: 65%; }
-.eq-col-toggle { width: 5%; }
-
-.equation-editor-input {
-  width: 100%;
-  padding: 0.5rem;
-  background-color: #1d253d;
-  border: 1px solid #627bc0;
-  border-radius: 0.5rem;
-  color: #ffffff;
-  font-size: 1rem;
-  font-size: 0.85rem;
-}
-
-.equation-editor-checkbox {
-  width: 1.2rem;
-  height: 1.2rem;
-  accent-color: #627bc0;      /* Color when checked */
-  cursor: pointer;
-  background-color: #2a3350;  /* Custom unchecked background color */
-  border: 1px solid #627bc0;  /* Border color */
-  border-radius: 3px;
-  appearance: none;            /* Remove default checkbox style */
-  -webkit-appearance: none;
-  outline: none;
-  position: relative;
-  vertical-align: middle;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
-}
-
-.equation-editor-checkbox:checked {
-  background-color: #627bc0;
-  border-color: #627bc0;
-}
-
-/* Create the checkmark */
-.equation-editor-checkbox:checked::after {
-  content: "";
-  position: absolute;
-  left: 0.35rem;
-  top: 0.1rem;
-  width: 0.3rem;
-  height: 0.6rem;
-  border: solid white;
-  border-width: 0 0.2rem 0.2rem 0;
-  transform: rotate(45deg);
-}
-
-.equation-editor-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.4rem;
+  flex-direction: column;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
 }
 
-.equation-editor-zoom-icon {
-  font-size: 1rem;
-  cursor: pointer;
+.settings-popup.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  pointer-events: auto;
+}
+
+.settings-popup.hidden,
+#overlay.hidden {
+  display: none;
+}
+
+/* Chart Creator Popup */
+.charts-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #283458;
   color: #ffffff;
-  transition: color 0.3s ease;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  width: 90vw;
+  max-width: 400px;
+  z-index: 1001;
+  box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
+  display: flex;
+  flex-direction: column;
 }
 
-.equation-editor-zoom-icon:hover {
-  color: #627bc0;
+.charts-popup.hidden {
+  display: none;
 }
 
+/* Equation Editor Overlay */
 .equation-editor-overlay {
   position: fixed;
   top: 0;
@@ -697,6 +742,7 @@ canvas {
   transition: opacity 0.3s ease;
 }
 
+/* Equation Editor Popup */
 .equation-editor-popup {
   position: fixed;
   top: 50%;
@@ -734,114 +780,4 @@ canvas {
 .equation-editor-popup, 
 .equation-editor-popup * {
   color: white;
-}
-
-/* Project Name Input */
-.projectNameInput {
-  position: absolute;
-  top: 1vh;
-  right: calc(1vw + 40px); /* Leaves room for logo (approx width) + spacing */
-  height: 5vh;
-  width: 25vw;
-  padding: 0.5svh 1svw;
-  font-size: 1rem;
-  border-radius: 8px;
-  background-color: rgba(38, 50, 83, 0.95);
-  border: 1px solid #627bc0;
-  color: white;
-  z-index: 500;
-}
-
-/* LunaSim Logo */
-#logoImage {
-  position: absolute;
-  top: calc(1vh + 3px);
-  right: 1vw;
-  height: 4vh;
-  z-index: 500;
-  cursor: pointer;
-}
-/* Action Buttons */
-.projectActions {
-  position: absolute;
-  top: 1vh;
-  right: calc(1vw + 25vw + 40px + 0.5vw); /* logo + input + spacing */
-  display: flex;
-  gap: 0.5vw;
-  z-index: 500;
-}
-
-.actionButton {
-  height: 5vh;
-  padding: 0.5svh 1svw;
-  font-size: 1rem;
-  width: 8vw;
-  border-radius: 8px;
-  background-color: rgba(60, 84, 148, 0.5);
-  border: none;
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.actionButton:hover {
-  background-color: rgba(60, 84, 148, 1);
-}
-
-.actionButton i {
-  margin-right: 0.7em;
-}
-
-/* Fonts */
-input, button, select {
-  font-family: "Golos Text", sans-serif;
-}
-
-#runButton {
-  background: rgba(45, 114, 82, 0.9);
-}
-
-#runButton:hover {
-  background-color: rgba(26, 73, 51, 0.9);
-}
-
-#importButton {
-  background: rgba(59, 45, 114, 0.9);
-}
-
-#importButton:hover {
-  background: rgba(32, 24, 64, 0.9);
-}
-
-#exportButton {
-  background: rgba(59, 45, 114, 0.9);
-}
-
-#exportButton:hover {
-  background: rgba(32, 24, 64, 0.9);
-}
-
-#clearButton {
-  background: rgba(114, 45, 45, 0.9);
-}
-
-#clearButton:hover {
-  background: rgba(59, 21, 21, 0.9);
-}
-
-.projectStatus {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 5vh;
-  font-size: 0.7rem;
-  font-style: italic;
-  color: white;
-  text-align: right;
-  padding-right: 0.5vw;
-  line-height: 1.2;
-}
-
-.statusLine {
-  white-space: nowrap;
 }
