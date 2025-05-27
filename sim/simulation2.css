@@ -23,6 +23,15 @@ input, button, select {
   font-family: "Golos Text", sans-serif;
 }
 
+* {
+  scrollbar-width: none;         /* Firefox */
+  -ms-overflow-style: none;      /* IE and Edge */
+}
+
+/* For WebKit browsers like Chrome, Safari */
+*::-webkit-scrollbar {
+  display: none;
+}
 
 /* Animations */
 @keyframes scale {
@@ -122,20 +131,20 @@ input, button, select {
 }
 
 /* Import Button */
-#importButton {
+#loadButton {
   background: rgba(59, 45, 114, 0.9);
 }
 
-#importButton:hover {
+#loadButton:hover {
   background: rgba(32, 24, 64, 0.9);
 }
 
 /* Export Button */
-#exportButton {
+#expButton {
   background: rgba(59, 45, 114, 0.9);
 }
 
-#exportButton:hover {
+#expButton:hover {
   background: rgba(32, 24, 64, 0.9);
 }
 
@@ -149,7 +158,8 @@ input, button, select {
 }
 
 /* Project Status */
-.projectStatus {
+
+#saveStatus {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -160,11 +170,21 @@ input, button, select {
   text-align: right;
   padding-right: 0.5vw;
   line-height: 1.2;
+  white-space: nowrap;
+  margin: 0px;
 }
 
-.statusLine {
-  white-space: nowrap;
+@media (max-width: 900px) {
+  #clearButton,
+  #expButton,
+  #loadButton,
+  #logoImage,
+  #saveStatus {
+    display: none !important;
+  }
 }
+
+
 
 /* Tab Bar (Model Viewer / Chart Viewer) */
 .tabBar {
@@ -231,6 +251,7 @@ input, button, select {
   padding: 0.75rem;
   height: calc(95vh - 3vw);
   width: 4.7vw;
+  min-width: 72px;
   background-color: rgba(38, 50, 83, 0.95);
   display: flex;
   flex-direction: column;
@@ -290,7 +311,7 @@ a span {
   transform: scale(0);
   opacity: 0;
   transition: 0.15s ease;
-  z-index: 5;
+  z-index: 501;
 }
 
 a span:before {
@@ -304,6 +325,7 @@ a span:before {
   top: 50%;
   transform: translateY(-50%) rotate(45deg);
   border-radius: 3px;
+  z-index: 501;
 }
 
 a.active {
@@ -319,9 +341,9 @@ a.active {
   width: 58vw;
   border-radius: 10px;
   box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
-  padding: 1rem;
   color: white;
   overflow: hidden;
+  
 }
 
 .modelCanvas canvas {
@@ -334,6 +356,23 @@ a.active {
   touch-action: none;
   z-index: 5;
 }
+
+#myDiagram {
+  width: 100%;
+  height: 100%;
+  border: 1px solid black;
+  background-color: white;
+  position: absolute;
+  z-index:500;
+  overflow: auto; /* Allow scrolling */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+#myDiagram::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
 
 /* Model Viewer - Equation Editor */
 /* Equation Editor Box */
@@ -905,24 +944,6 @@ input.settings-input.invalid:focus {
   display: none;
 }
 
-#myDiagram {
-  width: 90%;
-  height: 94%;
-  border: 1px solid black;
-  background-color: white;
-  position: absolute;
-  right: 20px;
-  top: 15px;
-  z-index:500;
-}
-
-canvas {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  z-index: 2;
-  user-select: none;
-  touch-action: none;
-  width: 598px;
-  height: 498px;
+.weirdStuff {
+  display: none;
 }

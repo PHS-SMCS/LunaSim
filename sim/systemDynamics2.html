@@ -46,25 +46,23 @@
     
     <div id="sample">
       <div class="projectActions">
-        <div class="projectStatus">
-          <div class="statusLine">No Unsaved Edits (Last Edit: 19m ago)</div>
-          <div class="statusLine">Last Exported: -</div>
-        </div>
+        <p id="saveStatus">Last Cloud Save: -<br>Last Export: -</p>
+
 
         <button class="actionButton" id="runButton"><i class="fa-regular fa-play"></i> Run</button>
         <button class="actionButton" id="loadButton"><i class="fa-regular fa-file-import"></i> Load</button>
-        <button class="actionButton" id="exportButton" onclick="openSettings(event, 'exportPopup')"><i class="fa-regular fa-file-export"></i> Export</button>
+        <button class="actionButton" id="expButton" onclick="openSettings(event, 'exportPopup')"><i class="fa-regular fa-file-export"></i> Export</button>
         <button class="actionButton" id="clearButton"><i class="fa-regular fa-trash"></i> Clear</button>
       </div>
 
-      <input class="projectNameInput" type="text" placeholder="Project Name" value="New Project" />
+      <input class="projectNameInput" type="text" id="model_name" name="model_name" placeholder="Model Name" value="New Project" />
 
       <img id="logoImage" src="../img/lunaLogo.svg" alt="LunaSim Logo" />
       
 
       <div class="tabBar">
           <button class="tabButton" id="modelBtn">Model View</button>
-          <button class="tabButton" id="chartBtn" onclick="openChartTab()">Charts/Tables</button>        
+          <button class="tabButton" id="chartBtn">Charts/Tables</button>        
       </div>
       <div class="modelViewer">
         <!-- Tool Bar -->
@@ -124,7 +122,7 @@
 
         <div class="modelCanvas" id="modalView">
           <div id="myDiagram">
-            <canvas width="800" height="498">This text is displayed if your browser does not support the Canvas HTML
+            <canvas width="100%" height="100%">This text is displayed if your browser does not support the Canvas HTML
               element.</canvas>
           </div>
         </div>
@@ -319,7 +317,7 @@
           <label for="simParams">dt (Time Increment)</label>
           <input type="text" id="dt" class="settings-input" placeholder="Enter dt..." value="0.1" style="width: 50%;">
 
-          <label for="themeSelect">Integration Method</label>
+          <label for="themeSelect" id="integrationMethod">Integration Method</label>
           <select id="themeSelect" class="settings-dropdown" style="width: 50%;">
             <option>Runge-Kutta 4</option>
             <option>Euler</option>
@@ -406,30 +404,33 @@
 
       <!-- ================== Export Popup ================== -->
       <div id="exportPopup" class="export-popup hidden">
-        <div class="settings-header">
-          <h2>Export Settings</h2>
-          <button class="close-btn" onclick="closeSettings('exportPopup')"><i class="fa-regular fa-xmark"></i></button>
-        </div>
-        <div class="setting-group">
-          <label for="fileSelect">File Type</label>
-          <select id="fileSelect" class="settings-dropdown" style="width: 72%;">
-            <option selected>.luna</option>
-            <option>.png</option>
-            <option>.jpg</option>
-          </select>
-        </div>
-
-        <div id="imageSettingsSection" style="display: none;">
-          <hr class="settings-divider">
-
-          <div class="setting-group">
-            <label for="simParams" class="dotted-underline">Margin</label>
-            <input type="text" id="simParams" class="settings-input" placeholder="Enter margin...." value="10" style="width: 70%;">
-          </div>
-        </div>
-
-        <button class="setting-button" onclick="closeSettings('exportPopup')">Export</button>
+      <div class="settings-header">
+        <h2>Export Settings</h2>
+        <button class="close-btn" onclick="closeSettings('exportPopup')"><i class="fa-regular fa-xmark"></i></button>
       </div>
+
+      <div class="setting-group">
+        <label for="fileSelect">File Type</label>
+        <select id="fileSelect" class="settings-dropdown" style="width: 72%;">
+          <option selected>.luna</option>
+          <option>.png</option>
+          <option>.jpg</option>
+          <option>.tiff</option>
+        </select>
+      </div>
+
+      <div id="imageSettingsSection" style="display: none;">
+        <hr class="settings-divider">
+        <div class="setting-group">
+          <label for="simParams" class="dotted-underline">Margin</label>
+          <input type="text" id="simParams" class="settings-input" placeholder="Enter margin..." value="10" style="width: 70%;">
+        </div>
+        <button id="downloadImageButton" class="setting-button" onclick="closeSettings('exportPopup')">Download Image</button>
+      </div>
+
+      <button id="exportButton" class="setting-button" onclick="closeSettings('exportPopup')">Download File</button>
+    </div>
+
 
       
 
@@ -446,24 +447,39 @@
       </div>
 
 
-      <!-- Popup Notification -->
-      <div id="popupNotif">
-        <p id="popupNotifText">Refresh to apply all changes</p>
-        <button id="popupNotifClose"><b>X</b></button>
+      <!-- Weird Stuff To Deal With Later -->
+      <div class="weirdStuff">
+        <div id="popupNotif">
+          <p id="popupNotifText"></p>
+          <button id="popupNotifClose"><b></b></button>
+        </div>
+        <div id="simErrorPopup">
+          <p id="simErrorPopupTitle"><b></b></p>
+          <p id="simErrorPopupDesc"></p>
+          <button id="simErrorPopupDismiss"></button>
+        </div>
+        <div id="saveStatus"></div>
+        <div id="switchThemeButton"></div>
+        <button class="tablinks" id="defaultOpen">Model View</button>
+        <button class="tablinks" id="secondaryOpen">Charts/Tables</button>
+        <input type="file" id="load-actual-button" accept=".luna, .txt" hidden/>
+        <div id="eqEditor">
+        <p id="eqEditorTitle"><b>Equation Editor</b></p>
+        <div id="eqTableDiv">
+          <table id="eqTable" class="eqTable">
+            <tr>
+              <th class="eqTableHeader">Type</th>
+              <th class="eqTableHeader">Name</th>
+              <th class="eqTableHeader"style="width: 90%">Equation</th>
+              <th class="eqTableHeader" id="nnUniHeader">NN/Uni?<span id="nnUniTooltip">Non-negative/Uniflow</span></th>
+            </tr>
+            <tbody id="eqTableBody">
+            </tbody>
+          </table>
+        </div>
+        <br>
       </div>
-
-
-      <!-- Simulation Error Popup -->
-      <div id="simErrorPopup">
-        <p id="simErrorPopupTitle"><b>Simulation Error!</b></p>
-        <p id="simErrorPopupDesc">Placeholder Message</p>
-        <button id="simErrorPopupDismiss">Dismiss</button>
       </div>
-
-      <!-- Weird Stuff To Have -->
-      <div id="saveStatus"></div>
-      <div id="switchThemeButton"></div>
-      <!-- Popup Notification -->
 
       </div>
     </div>
@@ -687,25 +703,32 @@
   });
 </script>
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const fileSelect = document.getElementById("fileSelect");
-    const imageSettingsSection = document.getElementById("imageSettingsSection");
+document.addEventListener("DOMContentLoaded", () => {
+  const fileSelect = document.getElementById("fileSelect");
+  const imageSettingsSection = document.getElementById("imageSettingsSection");
+  const downloadFileButton = document.getElementById("downloadFileButton");
+  const downloadImageButton = document.getElementById("downloadImageButton");
 
-    function updateExportOptions() {
-      const selected = fileSelect.value;
-      if (selected === ".png" || selected === ".jpg") {
-        imageSettingsSection.style.display = "block";
-      } else {
-        imageSettingsSection.style.display = "none";
-      }
+  function updateExportOptions() {
+    const selected = fileSelect.value;
+    if (selected === ".png" || selected === ".jpg" || selected === ".tiff") {
+      imageSettingsSection.style.display = "block";
+      downloadImageButton.style.display = "inline-block";
+      exportButton.style.display = "none";
+    } else {
+      imageSettingsSection.style.display = "none";
+      downloadImageButton.style.display = "none";
+      exportButton.style.display = "inline-block";
     }
+  }
 
-    // Run on load
-    updateExportOptions();
+  // Run on page load
+  updateExportOptions();
 
-    // Run whenever dropdown changes
-    fileSelect.addEventListener("change", updateExportOptions);
-  });
+  // Update when the dropdown changes
+  fileSelect.addEventListener("change", updateExportOptions);
+});
+
 </script>
 <script>
   const inputIds = ["startTime", "endTime", "dt"];
