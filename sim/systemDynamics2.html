@@ -51,10 +51,10 @@
           <div class="statusLine">Last Exported: -</div>
         </div>
 
-        <button class="actionButton" id="runButton"><i class="fa-regular fa-play"></i></button>
-        <button class="actionButton" id="importButton"><i class="fa-regular fa-file-import"></i></button>
-        <button class="actionButton" id="exportButton"><i class="fa-regular fa-file-export"></i></button>
-        <button class="actionButton" id="clearButton"><i class="fa-regular fa-trash"></i></button>
+        <button class="actionButton" id="runButton"><i class="fa-regular fa-play"></i> Run</button>
+        <button class="actionButton" id="loadButton"><i class="fa-regular fa-file-import"></i> Load</button>
+        <button class="actionButton" id="exportButton" onclick="openSettings(event, 'exportPopup')"><i class="fa-regular fa-file-export"></i> Export</button>
+        <button class="actionButton" id="clearButton"><i class="fa-regular fa-trash"></i> Clear</button>
       </div>
 
       <input class="projectNameInput" type="text" placeholder="Project Name" value="New Project" />
@@ -71,37 +71,37 @@
         <div class="toolbar">
           <ul>
             <li>
-              <a href="#">
+              <a href="#" id="pointer_button" class="pointer_selected tool">
                 <i class="fa-regular fa-arrow-pointer"></i>
                 <span>Pointer</span>
               </a>
             </li>
             <li>
-              <a href="#">
+              <a href="#" id="stock_button" class="node_normal tool">
                 <i class="fa-regular fa-rectangle"></i>
                 <span>Stock</span>
               </a>
             </li>
             <li>
-              <a href="#">
+              <a href="#" id="cloud_button" class="node_normal tool">
                 <i class="fa-regular fa-cloud"></i>
                 <span>Cloud</span>
               </a>
             </li>
             <li>
-              <a href="#">
+              <a href="#" id="variable_button" class="node_normal tool">
                 <i class="fa-regular fa-circle"></i>
                 <span>Variable</span>
               </a>
             </li>
             <li>
-              <a href="#">
+              <a href="#" id="flow_button" class="link_normal tool">
                 <i class="fa-regular fa-arrows-left-right"></i>
                 <span>Flow</span>
               </a>
             </li>
             <li>
-              <a href="#">
+              <a href="#" id="influence_button" class="link_normal tool">
                 <i class="fa-regular fa-repeat"></i>
                 <span>Influence</span>
               </a>
@@ -113,7 +113,7 @@
               </a>
             </li>
             <li>
-              <a href="#" id="openSettingsBtn" class="no-active">
+              <a href="#" onclick="openSettings(event, 'settingsPopup')" class="no-active">
                 <i class="fa-regular fa-gear"></i>
                 <span>Settings</span>
               </a>
@@ -262,7 +262,7 @@
               </a>
             </li>
             <li>
-              <a href="#" id="openSettingsBtn2" class="no-active">
+              <a href="#" onclick="openSettings(event, 'settingsPopup')" class="no-active">
                 <i class="fa-regular fa-gear"></i>
                 <span>Settings</span>
               </a>
@@ -277,28 +277,47 @@
 
 
         <div class="chartEditor">
-          <!-- Content for your new box -->
-          <p>Chart Editor Goes Here</p>
+          <p class="chart-title">Chart Editor</p>
+          <!-- Top Section -->
+          <div class="chartEditor-top">
+            <button class="chart-btn full-width"  onclick="openSettings(event, 'chartsPopup')">Create New Chart</button>
+            <button class="chart-btn full-width">Create New Table</button>
+            <hr>
+          </div>
+
+          <!-- Middle Section (empty for now) -->
+          <div class="chartEditor-middle">
+            <!-- Reserved for dynamic content -->
+          </div>
+
+          <!-- Bottom Section -->
+          <div class="chartEditor-bottom">
+            <hr>
+            <button class="chart-btn full-width">Download Graph</button>
+            <button class="chart-btn full-width">Delete Graph</button>
+          </div>
         </div>
+
       </div>
 
-      <div id="overlay" class="overlay hidden" onclick="closeSettings()"></div>
+      <div id="overlay" class="overlay hidden"></div>
 
+      <!-- ================== Settings Popup ================== -->
       <div id="settingsPopup" class="settings-popup hidden">
         <div class="settings-header">
           <h2>Simulation Settings</h2>
-          <button class="close-btn" onclick="closeSettings()"><i class="fa-regular fa-xmark"></i></button>
+          <button class="close-btn" onclick="closeSettings('settingsPopup')"><i class="fa-regular fa-xmark"></i></button>
         </div>
         <div class="setting-group">
 
           <label for="simParams" class="dotted-underline">Start Time</label>
-          <input type="text" id="simParams" class="settings-input" placeholder="Enter start time..." value="0" style="width: 70%;">
+          <input type="text" id="startTime" class="settings-input" placeholder="Enter start time..." value="0" style="width: 70%;">
 
           <label for="simParams">End Time</label>
-          <input type="text" id="simParams" class="settings-input" placeholder="Enter end time..." value="10" style="width: 70%;">
+          <input type="text" id="endTime" class="settings-input" placeholder="Enter end time..." value="10" style="width: 70%;">
 
           <label for="simParams">dt (Time Increment)</label>
-          <input type="text" id="simParams" class="settings-input" placeholder="Enter dt..." value="0.1" style="width: 50%;">
+          <input type="text" id="dt" class="settings-input" placeholder="Enter dt..." value="0.1" style="width: 50%;">
 
           <label for="themeSelect">Integration Method</label>
           <select id="themeSelect" class="settings-dropdown" style="width: 50%;">
@@ -313,7 +332,6 @@
               <span class="slider"></span>
             </label>
           </label>
-
         </div>
         <hr class="settings-divider">
 
@@ -325,17 +343,20 @@
             <option>Dark</option>
           </select>
         </div>
-        <button class="setting-button" onclick="closeSettings()">Apply Settings</button>
+        <button class="setting-button" onclick="closeSettings('settingsPopup')">Apply Settings</button>
+        <p id="validationMessage" class="validation-message hidden">* Please only type in numerical inputs</p>
+
 
       </div>
 
-      <div id="charts-popup" class="charts-popup hidden">
+      <!-- ================== Charts Popup ================== -->
+      <div id="chartsPopup" class="charts-popup hidden">
         <div class="settings-header">
           <h2>Edit Chart/Table</h2>
-          <button class="close-btn" onclick="closeSettings()"><i class="fa-regular fa-xmark"></i></button>
+          <button class="close-btn" onclick="closeSettings('chartsPopup')"><i class="fa-regular fa-xmark"></i></button>
         </div>
         <div class="setting-group">
-          <label for="chartSelect">Type:</label>
+          <label for="chartSelect">Type</label>
           <select id="chartSelect" class="settings-dropdown" style="width: 75%;">
             <option>Chart</option>
             <option>Table</option>
@@ -344,7 +365,7 @@
         <hr class="settings-divider">
 
         <div class="setting-group">
-          <label for="xaxisSelect">X-Axis:</label>
+          <label for="xaxisSelect">X-Axis</label>
           <select id="xaxisSelect" class="settings-dropdown" style="width: 75%;">
             <option>Time</option>
             <option>Stock1</option>
@@ -355,7 +376,7 @@
         <hr class="settings-divider">
 
         <div class="setting-group">
-          <span>Y-Axis:</span>
+          <span>Y-Axis</span>
           <label class="switch-label">
             <span>Stock1</span>
             <label class="toggle-switch">
@@ -380,9 +401,39 @@
             </label>
           </label>
         </div>
-        <button class="setting-button">Create Table/Chart</button>
+        <button class="setting-button" onclick="closeSettings('chartsPopup')">Create Table/Chart</button>
       </div>
 
+      <!-- ================== Export Popup ================== -->
+      <div id="exportPopup" class="export-popup hidden">
+        <div class="settings-header">
+          <h2>Export Settings</h2>
+          <button class="close-btn" onclick="closeSettings('exportPopup')"><i class="fa-regular fa-xmark"></i></button>
+        </div>
+        <div class="setting-group">
+          <label for="fileSelect">File Type</label>
+          <select id="fileSelect" class="settings-dropdown" style="width: 72%;">
+            <option selected>.luna</option>
+            <option>.png</option>
+            <option>.jpg</option>
+          </select>
+        </div>
+
+        <div id="imageSettingsSection" style="display: none;">
+          <hr class="settings-divider">
+
+          <div class="setting-group">
+            <label for="simParams" class="dotted-underline">Margin</label>
+            <input type="text" id="simParams" class="settings-input" placeholder="Enter margin...." value="10" style="width: 70%;">
+          </div>
+        </div>
+
+        <button class="setting-button" onclick="closeSettings('exportPopup')">Export</button>
+      </div>
+
+      
+
+      <!-- ================== Equation Editor Popup ================== -->
       <div id="equationEditorOverlay" class="equation-editor-overlay" onclick="closePopup()"></div>
       <div id="equationEditorPopup" class="equation-editor-popup">
         <div class="equation-editor-popup-content">
@@ -395,17 +446,35 @@
       </div>
 
 
+      <!-- Popup Notification -->
+      <div id="popupNotif">
+        <p id="popupNotifText">Refresh to apply all changes</p>
+        <button id="popupNotifClose"><b>X</b></button>
+      </div>
+
+
+      <!-- Simulation Error Popup -->
+      <div id="simErrorPopup">
+        <p id="simErrorPopupTitle"><b>Simulation Error!</b></p>
+        <p id="simErrorPopupDesc">Placeholder Message</p>
+        <button id="simErrorPopupDismiss">Dismiss</button>
+      </div>
+
+      <!-- Weird Stuff To Have -->
+      <div id="saveStatus"></div>
+      <div id="switchThemeButton"></div>
+      <!-- Popup Notification -->
+
       </div>
     </div>
 <script>
   // ================== Opening the settings popup ==================
   const popup = document.getElementById("settingsPopup");
   const overlay = document.getElementById("overlay");
-  const openBtn = document.getElementById("openSettingsBtn");
-  const openBtn2 = document.getElementById("openSettingsBtn2");
 
   // Function to open the popup with transition
-  function openSettings(event) {
+  function openSettings(event, popupWindow) {
+    const popup = document.getElementById(popupWindow);
     event.preventDefault();
     popup.classList.remove("hidden");
     overlay.classList.remove("hidden");
@@ -418,7 +487,10 @@
   }
 
   // Function to close the popup with transition
-  function closeSettings() {
+  function closeSettings(popupWindow) {
+    if (popupWindow === "settingsPopup" && !validateAllInputs()) return;
+
+    const popup = document.getElementById(popupWindow);
     popup.classList.remove("show");
     overlay.classList.remove("show");
 
@@ -427,17 +499,24 @@
       popup.classList.add("hidden");
       overlay.classList.add("hidden");
     }, 300); // duration matches CSS transition
-  } //charts-popup
+  } //chartsPopup
 
   // Open popup on button click
-  openBtn.addEventListener("click", openSettings);
-  openBtn2.addEventListener("click", openSettings);
 
   // Close popup when clicking on overlay
   overlay.addEventListener("click", () => {
-    closeSettings();
+    // Only close settingsPopup if inputs are valid
+    if(!validateAllInputs()) {
+      return;
+    }
+
+    closeSettings("settingsPopup");
+    closeSettings("chartsPopup");
+    closeSettings("exportPopup");
+
     closePopup();
   });
+
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && !popup.classList.contains("hidden")) {
@@ -602,12 +681,84 @@
       });
     });
   }
-
   // ================== When you click on image it goes to home page ==================
   document.getElementById('logoImage').addEventListener('click', function () {
     window.location.href = '../landing/homePage1.html';
   });
 </script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const fileSelect = document.getElementById("fileSelect");
+    const imageSettingsSection = document.getElementById("imageSettingsSection");
+
+    function updateExportOptions() {
+      const selected = fileSelect.value;
+      if (selected === ".png" || selected === ".jpg") {
+        imageSettingsSection.style.display = "block";
+      } else {
+        imageSettingsSection.style.display = "none";
+      }
+    }
+
+    // Run on load
+    updateExportOptions();
+
+    // Run whenever dropdown changes
+    fileSelect.addEventListener("change", updateExportOptions);
+  });
+</script>
+<script>
+  const inputIds = ["startTime", "endTime", "dt"];
+
+  function isNumeric(value) {
+    return !isNaN(value) && value.trim() !== "";
+  }
+
+  function validateInputField(input) {
+    if (!isNumeric(input.value)) {
+      input.style.border = "1px solid red";
+      return false;
+    } else {
+      input.style.border = "";
+      return true;
+    }
+  }
+
+  function validateAllInputs() {
+    const inputs = document.querySelectorAll('#settingsPopup .settings-input');
+    const warning = document.getElementById("validationMessage");
+    let allValid = true;
+
+    inputs.forEach(input => {
+      const value = input.value.trim();
+      const isValid = /^-?\d*\.?\d+$/.test(value); // Numbers only (supports negatives and decimals)
+
+      if (!isValid) {
+        input.classList.add("invalid");
+        allValid = false;
+      } else {
+        input.classList.remove("invalid");
+      }
+    });
+
+    // Show or hide the warning based on overall validity
+    warning.classList.toggle("hidden", allValid);
+    return allValid;
+  }
+
+
+
+  window.addEventListener("DOMContentLoaded", () => {
+    inputIds.forEach(id => {
+      const input = document.getElementById(id);
+      input.addEventListener("blur", () => {
+        validateInputField(input);
+      });
+    });
+  });
+</script>
+
+
 
 
 
