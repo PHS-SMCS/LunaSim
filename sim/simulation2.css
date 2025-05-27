@@ -376,7 +376,7 @@ a.active {
 
 /* Model Viewer - Equation Editor */
 /* Equation Editor Box */
-.equationEditor {
+#eqEditor {
   background-color: rgba(38, 50, 83, 0.95);
   height: calc(95vh - 3vw);
   width: calc(100vw - 8.7vw - 58vw);
@@ -436,7 +436,7 @@ a.active {
 }
 
 /* Equation Editor Input Box */
-.equation-editor-input {
+.eqTableInputBox {
   width: 100%;
   padding: 0.5rem;
   background-color: #1d253d;
@@ -446,6 +446,45 @@ a.active {
   font-size: 1rem;
   font-size: 0.85rem;
 }
+
+.eqStockBox input {
+  border: 1px solid #847640;
+}
+
+.eqVariableBox input {
+  border: 1px solid #3b773d;
+}
+
+.eqFlowBox input {
+  border: 1px solid #627bc0;
+}
+
+/* Equation Editor Specials */
+
+/* Scrollable Table Section */
+#eqTableDiv {
+  max-height: calc(100% - 3.2rem); /* Leave space for header */
+  overflow-y: auto;
+}
+
+/* Sticky Header Row */
+.equation-editor-table thead th {
+  position: sticky;
+  top: 0;
+  background-color: rgba(38, 50, 83, 0.95);
+  z-index: 2;
+}
+
+/* Optional: Improve scroll aesthetics */
+#eqTableDiv::-webkit-scrollbar {
+  width: 8px;
+}
+#eqTableDiv::-webkit-scrollbar-thumb {
+  background: #627bc0;
+  border-radius: 4px;
+}
+
+
 
 /* Equation Editor Checkbox */
 .equation-editor-checkbox {
@@ -946,4 +985,66 @@ input.settings-input.invalid:focus {
 
 .weirdStuff {
   display: none;
+}
+
+/* Autocomplete */
+
+.autocomplete-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.math-autocomplete {
+  position: relative;
+  background: transparent;
+  color: black;
+  font-size: inherit;
+  font-family: inherit;
+  width: 100%;
+  z-index: 2;
+}
+
+.ghost {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: gray;
+  pointer-events: none;
+  white-space: pre;
+  font-size: inherit;
+  font-family: inherit;
+  width: 100%;
+  z-index: 1;
+  transform: translateX(0.1975em); /* 👈 shift only the ghost text */
+  padding-top: 0.175em;
+  box-sizing: border-box;
+
+}
+
+.autocomplete-list {
+  background-color: #1d253d;
+  border: 1px solid #627bc0;
+  color: white;
+  border-radius: 8px;
+  z-index: 650;
+  max-height: 150px;
+  overflow-y: auto;
+  font-size: 14px;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+}
+
+.autocomplete-item {
+  padding: 6px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid #283251;
+}
+
+.autocomplete-item:last-child {
+  border-bottom: none;
+}
+
+.autocomplete-item.selected,
+.autocomplete-item:hover {
+  background-color: #283251;
+  font-weight: bold;
 }

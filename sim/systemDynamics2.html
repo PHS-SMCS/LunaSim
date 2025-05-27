@@ -71,37 +71,37 @@
             <li>
               <a href="#" id="pointer_button" class="pointer_selected tool">
                 <i class="fa-regular fa-arrow-pointer"></i>
-                <span>Pointer</span>
+                <span>Pointer [P]</span>
               </a>
             </li>
             <li>
               <a href="#" id="stock_button" class="node_normal tool">
                 <i class="fa-regular fa-rectangle"></i>
-                <span>Stock</span>
+                <span>Stock [S]</span>
               </a>
             </li>
             <li>
               <a href="#" id="cloud_button" class="node_normal tool">
                 <i class="fa-regular fa-cloud"></i>
-                <span>Cloud</span>
+                <span>Cloud [C]</span>
               </a>
             </li>
             <li>
               <a href="#" id="variable_button" class="node_normal tool">
                 <i class="fa-regular fa-circle"></i>
-                <span>Variable</span>
+                <span>Variable [V]</span>
               </a>
             </li>
             <li>
               <a href="#" id="flow_button" class="link_normal tool">
                 <i class="fa-regular fa-arrows-left-right"></i>
-                <span>Flow</span>
+                <span>Flow [F]</span>
               </a>
             </li>
             <li>
               <a href="#" id="influence_button" class="link_normal tool">
                 <i class="fa-regular fa-repeat"></i>
-                <span>Influence</span>
+                <span>Influence [I]</span>
               </a>
             </li>
             <li>  
@@ -127,89 +127,66 @@
           </div>
         </div>
 
+        <!--<div id="eqEditor">
+        <p id="eqEditorTitle"><b>Equation Editor</b></p>
+        <div id="eqTableDiv">
+          <table id="eqTable" class="eqTable">
+            <tr>
+              <th class="eqTableHeader">Type</th>
+              <th class="eqTableHeader">Name</th>
+              <th class="eqTableHeader"style="width: 90%">Equation</th>
+              <th class="eqTableHeader" id="nnUniHeader">NN/Uni?<span id="nnUniTooltip">Non-negative/Uniflow</span></th>
+            </tr>
+            <tbody id="eqTableBody">
+            </tbody>
+          </table>
+        </div>
+        <br>
+      </div>
+      <tr>
+        <td><input type="text" class="equation-editor-input" placeholder="type" value="stock" style="border: 1px solid #847640;"></td>
+        <td><input type="text" class="equation-editor-input" placeholder="name" value="stock1" style="border: 1px solid #847640;"></td>
+        <td><input type="text" class="equation-editor-input" placeholder="equation" style="border: 1px solid #847640;"></td>
+        <td class="eq-checkbox-cell">
+          <input type="checkbox" class="equation-editor-checkbox" />
+        </td>
+      </tr>
+      <tr>
+        <td><input type="text" class="equation-editor-input" placeholder="type" value="flow"></td>
+        <td><input type="text" class="equation-editor-input" placeholder="name" value="flow1"></td>
+        <td><input type="text" class="equation-editor-input" placeholder="equation"></td>
+        <td class="eq-checkbox-cell">
+          <input type="checkbox" class="equation-editor-checkbox" />
+        </td>
+      </tr>
+      <tr>
+        <td><input type="text" class="equation-editor-input" placeholder="type" value="variable" style="border: 1px solid #3b773d;"></td>
+        <td><input type="text" class="equation-editor-input" placeholder="name" value="variable1" style="border: 1px solid #3b773d;"></td>
+        <td><input type="text" class="equation-editor-input" placeholder="equation" style="border: 1px solid #3b773d;"></td>
+        <td class="eq-checkbox-cell">
+          <input type="checkbox" class="equation-editor-checkbox" />
+        </td>
+      </tr>-->
 
-        <div class="equationEditor">
+        <div id="eqEditor">
           <div class="equation-editor-header">
             <p class="equation-editor-title">Equation Editor</p>
             <i class="fa-solid fa-up-right-and-down-left-from-center equation-editor-zoom-icon" onclick="openEquationEditorPopup()"></i>
           </div>
-          <table class="equation-editor-table">
-            <thead>
-              <tr>
-                <th class="eq-col-type">Type</th>
-                <th class="eq-col-name">Name</th>
-                <th class="eq-col-equation">Equation</th>
-                <th class="eq-col-checkbox">NN/Uni</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><input type="text" class="equation-editor-input" placeholder="type" value="stock" style="border: 1px solid #847640;"></td>
-                <td><input type="text" class="equation-editor-input" placeholder="name" value="stock1" style="border: 1px solid #847640;"></td>
-                <td><input type="text" class="equation-editor-input" placeholder="equation" style="border: 1px solid #847640;"></td>
-                <td class="eq-checkbox-cell">
-                  <input type="checkbox" class="equation-editor-checkbox" />
-                </td>
-              </tr>
-              <tr>
-                <td><input type="text" class="equation-editor-input" placeholder="type" value="flow"></td>
-                <td><input type="text" class="equation-editor-input" placeholder="name" value="flow1"></td>
-                <td><input type="text" class="equation-editor-input" placeholder="equation"></td>
-                <td class="eq-checkbox-cell">
-                  <input type="checkbox" class="equation-editor-checkbox" />
-                </td>
-              </tr>
-              <tr>
-                <td><input type="text" class="equation-editor-input" placeholder="type" value="variable" style="border: 1px solid #3b773d;"></td>
-                <td><input type="text" class="equation-editor-input" placeholder="name" value="variable1" style="border: 1px solid #3b773d;"></td>
-                <td><input type="text" class="equation-editor-input" placeholder="equation" style="border: 1px solid #3b773d;"></td>
-                <td class="eq-checkbox-cell">
-                  <input type="checkbox" class="equation-editor-checkbox" />
-                </td>
-              </tr>
-              <tr>
-                <td><input type="text" class="equation-editor-input" placeholder="type" value="stock" style="border: 1px solid #847640;"></td>
-                <td><input type="text" class="equation-editor-input" placeholder="name" value="stock2" style="border: 1px solid #847640;"></td>
-                <td><input type="text" class="equation-editor-input" placeholder="equation" style="border: 1px solid #847640;"></td>
-                <td class="eq-checkbox-cell">
-                  <input type="checkbox" class="equation-editor-checkbox" />
-                </td>
-              </tr>
-              <tr>
-                <td><input type="text" class="equation-editor-input" placeholder="type" value="stock" style="border: 1px solid #847640;"></td>
-                <td><input type="text" class="equation-editor-input" placeholder="name" value="stock3" style="border: 1px solid #847640;"></td>
-                <td><input type="text" class="equation-editor-input" placeholder="equation" style="border: 1px solid #847640;"></td>
-                <td class="eq-checkbox-cell">
-                  <input type="checkbox" class="equation-editor-checkbox" />
-                </td>
-              </tr>
-              <tr>
-                <td><input type="text" class="equation-editor-input" placeholder="type" value="flow"></td>
-                <td><input type="text" class="equation-editor-input" placeholder="name" value="flow2"></td>
-                <td><input type="text" class="equation-editor-input" placeholder="equation"></td>
-                <td class="eq-checkbox-cell">
-                  <input type="checkbox" class="equation-editor-checkbox" />
-                </td>
-              </tr>
-              <tr>
-                <td><input type="text" class="equation-editor-input" placeholder="type" value="variable" style="border: 1px solid #3b773d;"></td>
-                <td><input type="text" class="equation-editor-input" placeholder="name" value="variable2" style="border: 1px solid #3b773d;"></td>
-                <td><input type="text" class="equation-editor-input" placeholder="equation" style="border: 1px solid #3b773d;"></td>
-                <td class="eq-checkbox-cell">
-                  <input type="checkbox" class="equation-editor-checkbox" />
-                </td>
-              </tr>
-              <tr>
-                <td><input type="text" class="equation-editor-input" placeholder="type" value="variable" style="border: 1px solid #3b773d;"></td>
-                <td><input type="text" class="equation-editor-input" placeholder="name" value="variable3" style="border: 1px solid #3b773d;"></td>
-                <td><input type="text" class="equation-editor-input" placeholder="equation" style="border: 1px solid #3b773d;"></td>
-                <td class="eq-checkbox-cell">
-                  <input type="checkbox" class="equation-editor-checkbox" />
-                </td>
-              </tr>
-              
-            </tbody>
-          </table>
+          <div id = "eqTableDiv">
+            <table class="equation-editor-table" id="eqTable">
+              <thead>
+                <tr>
+                  <th class="eq-col-type">Type</th>
+                  <th class="eq-col-name">Name</th>
+                  <th class="eq-col-equation">Equation</th>
+                  <th class="eq-col-checkbox">NN/Uni</th>
+                </tr>
+              </thead>
+              <tbody id="eqTableBody">
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
@@ -421,9 +398,17 @@
 
       <div id="imageSettingsSection" style="display: none;">
         <hr class="settings-divider">
-        <div class="setting-group">
-          <label for="simParams" class="dotted-underline">Margin</label>
-          <input type="text" id="simParams" class="settings-input" placeholder="Enter margin..." value="10" style="width: 70%;">
+        <div class="setting-group">    
+          <label for="simParams" class="dotted-underline">Image Margin</label>
+          <input type="text" id="imageMargin" class="px-visual-input settings-input" placeholder="Enter margin..." value="15" style="width: 65%;">
+
+          <label for="simParams" class="dotted-underline">Image Width</label>
+          <input type="text" id="imageWidth" class="px-visual-input settings-input" placeholder="Enter margin..." value="400" style="width: 65%;">
+
+          <label for="simParams" class="dotted-underline">Image Height</label>
+          <input type="text" id="imageHeight" class="px-visual-input settings-input" placeholder="Enter margin..." value="400" style="width: 65%;">
+
+          
         </div>
         <button id="downloadImageButton" class="setting-button" onclick="closeSettings('exportPopup')">Download Image</button>
       </div>
@@ -463,22 +448,6 @@
         <button class="tablinks" id="defaultOpen">Model View</button>
         <button class="tablinks" id="secondaryOpen">Charts/Tables</button>
         <input type="file" id="load-actual-button" accept=".luna, .txt" hidden/>
-        <div id="eqEditor">
-        <p id="eqEditorTitle"><b>Equation Editor</b></p>
-        <div id="eqTableDiv">
-          <table id="eqTable" class="eqTable">
-            <tr>
-              <th class="eqTableHeader">Type</th>
-              <th class="eqTableHeader">Name</th>
-              <th class="eqTableHeader"style="width: 90%">Equation</th>
-              <th class="eqTableHeader" id="nnUniHeader">NN/Uni?<span id="nnUniTooltip">Non-negative/Uniflow</span></th>
-            </tr>
-            <tbody id="eqTableBody">
-            </tbody>
-          </table>
-        </div>
-        <br>
-      </div>
       </div>
 
       </div>
@@ -780,6 +749,122 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 </script>
+<script>
+  function stripPx(value) {
+    return value.replace(/px\s*$/, '');
+  }
+
+  function formatPxInputs() {
+    const inputs = document.querySelectorAll(".px-visual-input");
+
+    inputs.forEach(input => {
+      // Ensure default visual value shows "px"
+      if (input.value !== "" && !input.value.endsWith("px")) {
+        input.value = input.value + "px";
+      }
+
+      // On focus: strip px
+      input.addEventListener("focus", () => {
+        input.value = stripPx(input.value);
+      });
+
+      // On blur: add px back
+      input.addEventListener("blur", () => {
+        const val = stripPx(input.value);
+        if (!isNaN(val) && val !== "") {
+          input.value = val + "px";
+        }
+      });
+
+      // Optional live cleanup
+      input.addEventListener("input", () => {
+        input.value = stripPx(input.value);
+      });
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", formatPxInputs);
+
+  // Helper to get numeric value later
+  function getRawValue(inputEl) {
+    return parseInt(stripPx(inputEl.value), 10);
+  }
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const buttons = document.querySelectorAll('.toolbar a:not(.no-active), .chartSidebar a:not(.no-active)');
+
+    buttons.forEach(button => {
+      // Mouse click logic (already working)
+      button.addEventListener("click", (e) => {
+        e.preventDefault();
+        activateButton(button);
+      });
+
+      // Hover logic (tooltip)
+      button.addEventListener("mouseenter", () => {
+        if (!button.classList.contains("active")) {
+          const tooltip = button.querySelector("span");
+          if (tooltip) {
+            tooltip.style.transform = "scale(1)";
+            tooltip.style.opacity = "1";
+          }
+        }
+      });
+
+      button.addEventListener("mouseleave", () => {
+        if (!button.classList.contains("active")) {
+          const tooltip = button.querySelector("span");
+          if (tooltip) {
+            tooltip.style.transform = "scale(0)";
+            tooltip.style.opacity = "0";
+          }
+        }
+      });
+    });
+
+    // Activation logic shared by mouse and keyboard
+    function activateButton(button) {
+      buttons.forEach(btn => {
+        btn.classList.remove("active");
+        const tooltip = btn.querySelector("span");
+        if (tooltip) {
+          tooltip.style.transform = "scale(0)";
+          tooltip.style.opacity = "0";
+        }
+      });
+      button.classList.add("active");
+      button.click(); // Trigger the button’s click handler (if any custom behavior is attached)
+    }
+
+    // Keyboard shortcut handling
+    document.addEventListener("keydown", (event) => {
+      const tag = document.activeElement.tagName.toLowerCase();
+      if (tag === "input" || tag === "textarea") return;
+
+      const keyMap = {
+        p: "pointer_button",
+        s: "stock_button",
+        v: "variable_button",
+        c: "cloud_button",
+        i: "influence_button",
+        f: "flow_button"
+      };
+
+      const key = event.key.toLowerCase();
+      const buttonId = keyMap[key];
+      if (!buttonId) return;
+
+      const button = document.getElementById(buttonId);
+      if (button) {
+        activateButton(button);
+      }
+    });
+  });
+</script>
+
+
+
 
 
 
