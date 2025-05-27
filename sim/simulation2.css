@@ -262,7 +262,7 @@ input, button, select {
 
 /* Universal Sidebar Styling (Applies to Toolbar and Chart Sidebar) */
 li:nth-child(7) {
-  margin-top: 8rem;
+  margin-top: 6rem;
   padding-top: 1.25rem;
   border-top: 1px solid #374875;
 }
@@ -901,6 +901,52 @@ a.active {
   display: none;
 }
 
+/* Simulation Error Popup */
+#simErrorPopup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  background: rgba(114, 45, 45, 0.9);
+  border: 1px solid rgb(65, 27, 27);
+  color: #ffffff;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  width: 90vw;
+  max-width: 400px;
+  z-index: 1001;
+  box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+}
+
+#simErrorPopup.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  pointer-events: auto;
+}
+
+#simErrorPopup.hidden {
+  display: none;
+}
+
+#simErrorPopupTitle, #simErrorPopupDesc {
+  color: white;
+}
+
+#simErrorPopupDismiss:hover {
+  background: rgb(52, 20, 20);
+  border: 1px solid rgb(45, 18, 18);
+}
+
+#simErrorPopupDismiss {
+  background: rgb(80, 34, 34);
+  border: 1px solid rgb(65, 27, 27);
+}
+
 /* Equation Editor Overlay */
 .equation-editor-overlay {
   position: fixed;
@@ -924,7 +970,7 @@ a.active {
   padding: 1rem;
   border-radius: 10px;
   box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
-  z-index: 999;
+  z-index: 2000;
   display: none;
   width: 95vw;
   max-height: 90vh;

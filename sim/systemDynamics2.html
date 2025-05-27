@@ -49,7 +49,7 @@
         <p id="saveStatus">Last Cloud Save: -<br>Last Export: -</p>
 
 
-        <button class="actionButton" id="runButton"><i class="fa-regular fa-play"></i> Run</button>
+        <button class="actionButton" id="runButton" onclick="openSettings(event, 'simErrorPopup')"><i class="fa-regular fa-play"></i> Run</button>
         <button class="actionButton" id="loadButton"><i class="fa-regular fa-file-import"></i> Load</button>
         <button class="actionButton" id="expButton" onclick="openSettings(event, 'exportPopup')"><i class="fa-regular fa-file-export"></i> Export</button>
         <button class="actionButton" id="clearButton"><i class="fa-regular fa-trash"></i> Clear</button>
@@ -256,7 +256,6 @@
           <!-- Top Section -->
           <div class="chartEditor-top">
             <button class="chart-btn full-width"  onclick="openSettings(event, 'chartsPopup')">Create New Chart</button>
-            <button class="chart-btn full-width">Create New Table</button>
             <hr>
           </div>
 
@@ -381,40 +380,52 @@
 
       <!-- ================== Export Popup ================== -->
       <div id="exportPopup" class="export-popup hidden">
-      <div class="settings-header">
-        <h2>Export Settings</h2>
-        <button class="close-btn" onclick="closeSettings('exportPopup')"><i class="fa-regular fa-xmark"></i></button>
-      </div>
-
-      <div class="setting-group">
-        <label for="fileSelect">File Type</label>
-        <select id="fileSelect" class="settings-dropdown" style="width: 72%;">
-          <option selected>.luna</option>
-          <option>.png</option>
-          <option>.jpg</option>
-          <option>.tiff</option>
-        </select>
-      </div>
-
-      <div id="imageSettingsSection" style="display: none;">
-        <hr class="settings-divider">
-        <div class="setting-group">    
-          <label for="simParams" class="dotted-underline">Image Margin</label>
-          <input type="text" id="imageMargin" class="px-visual-input settings-input" placeholder="Enter margin..." value="15" style="width: 65%;">
-
-          <label for="simParams" class="dotted-underline">Image Width</label>
-          <input type="text" id="imageWidth" class="px-visual-input settings-input" placeholder="Enter margin..." value="400" style="width: 65%;">
-
-          <label for="simParams" class="dotted-underline">Image Height</label>
-          <input type="text" id="imageHeight" class="px-visual-input settings-input" placeholder="Enter margin..." value="400" style="width: 65%;">
-
-          
+        <div class="settings-header">
+          <h2>Export Settings</h2>
+          <button class="close-btn" onclick="closeSettings('exportPopup')"><i class="fa-regular fa-xmark"></i></button>
         </div>
-        <button id="downloadImageButton" class="setting-button" onclick="closeSettings('exportPopup')">Download Image</button>
+
+        <div class="setting-group">
+          <label for="fileSelect">File Type</label>
+          <select id="fileSelect" class="settings-dropdown" style="width: 72%;">
+            <option selected>.luna</option>
+            <option>.png</option>
+            <option>.jpg</option>
+            <option>.tiff</option>
+          </select>
+        </div>
+
+        <div id="imageSettingsSection" style="display: none;">
+          <hr class="settings-divider">
+          <div class="setting-group">    
+            <label for="simParams" class="dotted-underline">Image Margin</label>
+            <input type="text" id="imageMargin" class="px-visual-input settings-input" placeholder="Enter margin..." value="15" style="width: 65%;">
+
+            <label for="simParams" class="dotted-underline">Image Width</label>
+            <input type="text" id="imageWidth" class="px-visual-input settings-input" placeholder="Enter margin..." value="400" style="width: 65%;">
+
+            <label for="simParams" class="dotted-underline">Image Height</label>
+            <input type="text" id="imageHeight" class="px-visual-input settings-input" placeholder="Enter margin..." value="400" style="width: 65%;">
+
+            
+          </div>
+          <button id="downloadImageButton" class="setting-button" onclick="closeSettings('exportPopup')">Download Image</button>
+        </div>
+
+        <button id="exportButton" class="setting-button" onclick="closeSettings('exportPopup')">Download File</button>
       </div>
 
-      <button id="exportButton" class="setting-button" onclick="closeSettings('exportPopup')">Download File</button>
-    </div>
+      <!-- ================== Simulation Error Popup ================== -->
+      <div id="simErrorPopup" class="sims-popup hidden">
+        <div class="settings-header">
+          <h2 id="simErrorPopupTitle">Simulation Error!</h2>
+          <button class="close-btn" onclick="closeSettings('simErrorPopup')"><i class="fa-regular fa-xmark"></i></button>
+        </div>
+        <div class="setting-group">
+          <p id="simErrorPopupDesc">If you're seeing this, I guess you just suck.</p>
+        </div>
+        <button id="simErrorPopupDismiss" class="setting-button" onclick="closeSettings('simErrorPopup')">Dismiss</button>
+      </div>
 
 
       
@@ -437,11 +448,6 @@
         <div id="popupNotif">
           <p id="popupNotifText"></p>
           <button id="popupNotifClose"><b></b></button>
-        </div>
-        <div id="simErrorPopup">
-          <p id="simErrorPopupTitle"><b></b></p>
-          <p id="simErrorPopupDesc"></p>
-          <button id="simErrorPopupDismiss"></button>
         </div>
         <div id="saveStatus"></div>
         <div id="switchThemeButton"></div>
@@ -498,6 +504,7 @@
     closeSettings("settingsPopup");
     closeSettings("chartsPopup");
     closeSettings("exportPopup");
+    closeSettings("simErrorPopup");
 
     closePopup();
   });
