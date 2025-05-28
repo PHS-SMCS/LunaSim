@@ -214,6 +214,18 @@ function init() {
     myDiagram.model = go.Model.fromJson("{ \"class\": \"GraphLinksModel\", \"linkLabelKeysProperty\": \"labelKeys\", \"nodeDataArray\": [],\"linkDataArray\": [] }"); // default if no model is loaded
 }
 
+function refreshGoJsModel() {
+    var newModelData = JSON.parse(myDiagram.model.toJson());
+    if (!myDiagram || !newModelData) {
+        console.error("Diagram or new model data is missing.");
+        return;
+    }
+    myDiagram.startTransaction("refresh model");
+    const newModel = go.Model.fromJson(newModelData);
+    myDiagram.model = newModel;
+    myDiagram.commitTransaction("refresh model");
+}
+
 function buildTemplates() {
     // COLORS (Switches depending on theme)
     var fillColor = "#f0f0f0";
