@@ -111,8 +111,10 @@ function init() {
                 this.archetypeNodeData = {
                     key: newNodeId,
                     category: SD.itemType,
-                    label: newNodeId
+                    label: newNodeId,
+                    color: getDefaultColor(SD.itemType)
                 };
+
                 return go.ClickCreatingTool.prototype.insertPart.call(this, loc);
             }
         });
@@ -266,16 +268,17 @@ function buildTemplates() {
     myDiagram.nodeTemplateMap.add("stock",
         $(go.Node, nodeStyle(),
             $(go.Shape, shapeStyle(),
-                new go.Binding("fill", "label", function (label) { return isGhost(label) ? "#ffffff" : fillColor;}), // change color if ghost ($ in front of label)
-                { desiredSize: new go.Size(50, 30),
-                    fill: "#ffcc99"
+                new go.Binding("fill", "color").makeTwoWay(),
+                {
+                    desiredSize: new go.Size(50, 30),
+                    fill: "#ffcc99" // default
                 }),
             $(go.TextBlock, textStyle(),
                 {
-                    _isNodeLabel: true,  // declare draggable by NodeLabelDraggingTool
-                    alignment: new go.Spot(0.5, 0.5, 0, 30),    // initial value
+                    _isNodeLabel: true,
+                    alignment: new go.Spot(0.5, 0.5, 0, 30),
                     isMultiline: false,
-                    textValidation: labelValidator, // make sure the label is unique
+                    textValidation: labelValidator
                 },
                 new go.Binding("alignment", "label_offset", go.Spot.parse).makeTwoWay(go.Spot.stringify))
         ));
@@ -283,9 +286,11 @@ function buildTemplates() {
     myDiagram.nodeTemplateMap.add("cloud",
         $(go.Node, nodeStyle(),
             $(go.Shape, shapeStyle(),
+                new go.Binding("fill", "color").makeTwoWay(),
                 {
                     figure: "Cloud",
-                    desiredSize: new go.Size(30, 30)
+                    desiredSize: new go.Size(30, 30),
+                    fill: "#cccccc" // default
                 })
         ));
 
@@ -297,40 +302,45 @@ function buildTemplates() {
                 alignmentFocus: go.Spot.None
             },
             $(go.Shape, shapeStyle(),
-                new go.Binding("fill", "label", function (label) {return isGhost(label) ? "#ffffff" : "#3489eb";}), // change color if ghost ($ in front of label)
-                new go.Binding("figure", "label", function (label) {return isGhost(label) ? "Circle" : "Diamond";}), // change shape if ghost ($ in front of label)
+                new go.Binding("fill", "color").makeTwoWay(),
+                new go.Binding("figure", "label", function(label) {
+                    return isGhost(label) ? "Circle" : "Diamond";
+                }),
                 {
                     figure: "Diamond",
                     desiredSize: new go.Size(15, 15),
-                    fill: "#3489eb"
+                    fill: "#3489eb" // default
                 }),
             $(go.TextBlock, textStyle(),
                 {
-                    _isNodeLabel: true,  // declare draggable by NodeLabelDraggingTool
-                    alignment: new go.Spot(0.5, 0.5, 0, 20),    // initial value
+                    _isNodeLabel: true,
+                    alignment: new go.Spot(0.5, 0.5, 0, 20),
                     isMultiline: false,
-                    textValidation: labelValidator, // make sure the label is unique
+                    textValidation: labelValidator
                 },
                 new go.Binding("alignment", "label_offset", go.Spot.parse).makeTwoWay(go.Spot.stringify))
         ));
 
+
     myDiagram.nodeTemplateMap.add("variable",
         $(go.Node, nodeStyle(),
             $(go.Shape, shapeStyle(),
-            new go.Binding("fill", "label", function (label) {return isGhost(label) ? "#ffffff" : fillColor;}), // change color if ghost ($ in front of label)
+                new go.Binding("fill", "color").makeTwoWay(),
                 {
                     figure: "Ellipse",
-                    desiredSize: new go.Size(25, 25)
+                    desiredSize: new go.Size(25, 25),
+                    fill: "#99ff99" // default
                 }),
             $(go.TextBlock, textStyle(),
                 {
-                    _isNodeLabel: true,  // declare draggable by NodeLabelDraggingTool
-                    alignment: new go.Spot(0.5, 0.5, 0, 30),    // initial value
+                    _isNodeLabel: true,
+                    alignment: new go.Spot(0.5, 0.5, 0, 30),
                     isMultiline: false,
-                    textValidation: labelValidator, // make sure the label is unique
+                    textValidation: labelValidator
                 },
                 new go.Binding("alignment", "label_offset", go.Spot.parse).makeTwoWay(go.Spot.stringify))
         ));
+
 
     // Link templates
     myDiagram.linkTemplateMap.add("flow",
@@ -338,42 +348,44 @@ function buildTemplates() {
             { toShortLength: 10 },
             new go.Binding("curviness", "curviness").makeTwoWay(),
             $(go.Shape,
+                new go.Binding("stroke", "color").makeTwoWay(),
                 {
                     stroke: "#3489eb",
                     strokeWidth: 5
                 }),
             $(go.Shape,
-                // add a binding to adjust if this shape is visible based on isBiflow function
                 new go.Binding("visible", "", isBiflow),
                 {
                     fill: "#ffffff",
                     stroke: "#3489eb",
                     fromArrow: "Backward",
-                    scale: 2.0,
+                    scale: 2.0
                 }),
             $(go.Shape,
+                new go.Binding("stroke", "color").makeTwoWay(),
+                new go.Binding("fill", "color").makeTwoWay(),
                 {
-                    fill: "#3489eb",
-                    stroke: "#3489eb",
                     toArrow: "Standard",
                     scale: 2.0
                 })
         ));
+
 
     myDiagram.linkTemplateMap.add("influence",
         $(go.Link,
             { curve: go.Link.Bezier, toShortLength: 8, reshapable: true },
             new go.Binding("curviness", "curviness").makeTwoWay(),
             $(go.Shape,
+                new go.Binding("stroke", "color").makeTwoWay(),
                 { stroke: "orange", strokeWidth: 1.5 }),
             $(go.Shape,
+                new go.Binding("fill", "color").makeTwoWay(),
                 {
-                    fill: "orange",
-                    stroke: null,
                     toArrow: "Standard",
                     scale: 1.5
                 })
         ));
+
 }
 
 // set the mode (adding stock vs adding flow vs pointer etc) based on which button is clicked
@@ -1142,11 +1154,15 @@ function getTopMathMatches(input) {
 function setupAutocompleteForInputs() {
     const $tbody = $('#eqTableBody');
 
-    $tbody.on('input', 'input[name="equation"]', function () {
+    // Show suggestions as the user types
+    $tbody.on('input', 'input[name="equation"]', function (e) {
+        if (e.originalEvent && ["ArrowUp", "ArrowDown", "Enter"].includes(e.originalEvent.key)) return;
         showAutocomplete($(this));
     });
 
+    // Handle arrow keys and Enter
     $tbody.on('keydown', 'input[name="equation"]', function (e) {
+        const $input = $(this);
         const dropdown = $('.autocomplete-list');
         const items = dropdown.find('.autocomplete-item');
         let selected = items.filter('.selected');
@@ -1159,7 +1175,10 @@ function setupAutocompleteForInputs() {
                 const next = selected.removeClass('selected').next();
                 (next.length ? next : items.first()).addClass('selected');
             }
-        } else if (e.key === 'ArrowUp') {
+            return;
+        }
+
+        if (e.key === 'ArrowUp') {
             e.preventDefault();
             if (selected.length === 0) {
                 items.last().addClass('selected');
@@ -1167,52 +1186,48 @@ function setupAutocompleteForInputs() {
                 const prev = selected.removeClass('selected').prev();
                 (prev.length ? prev : items.last()).addClass('selected');
             }
-        } else if (e.key === 'Tab' && selected.length) {
-            e.preventDefault();
+            return;
+        }
 
-            const $input = $(this); // scope-safe reference
+        if (e.key === 'Enter' && selected.length > 0) {
+            e.preventDefault();
+            e.stopPropagation();
+
             const cursorPos = $input[0].selectionStart;
             const fullText = $input.val();
 
-            const match = fullText.slice(0, cursorPos).match(/(?:^|\W)(\w+)$/);
+            const match = fullText.slice(0, cursorPos).match(/(?:^|\\W)(\\w+)$/);
             const currentFragment = match ? match[1] : "";
             const fragmentStart = cursorPos - currentFragment.length;
 
             const before = fullText.slice(0, fragmentStart);
             const after = fullText.slice(cursorPos);
-            const updated = before + selected.text() + after;
+            const replacement = selected.text();
+            const updated = before + replacement + after;
 
             $input.val(updated);
-            const newCursor = before.length + selected.text().length;
+            const newCursor = before.length + replacement.length;
             $input[0].setSelectionRange(newCursor, newCursor);
 
             $('.autocomplete-list').remove();
-
+            return;
         }
     });
 
-    item.on('mousedown', function (e) {
-        e.preventDefault();
-        e.stopPropagation(); // <- Prevent document handler from firing
+    // ✅ NEW: Hide dropdown when the input field loses focus
+    $tbody.on('blur', 'input[name="equation"]', function () {
+        setTimeout(() => {
+            if (!$(':hover').hasClass('autocomplete-item')) {
+                $('.autocomplete-list').remove();
+            }
+        }, 150);
+    });
 
-        const cursorPos = $input[0].selectionStart;
-        const fullText = $input.val();
-
-        const match = fullText.slice(0, cursorPos).match(/(?:^|\W)(\w+)$/);
-        const currentFragment = match ? match[1] : "";
-
-        const fragmentStart = cursorPos - currentFragment.length;
-        const before = fullText.slice(0, fragmentStart);
-        const after = fullText.slice(cursorPos);
-
-        const replacement = item.text();
-        const updated = before + replacement + after;
-
-        $input.val(updated);
-        const newCursor = before.length + replacement.length;
-        $input[0].setSelectionRange(newCursor, newCursor);
-
-        $('.autocomplete-list').remove();
+    // Also remove on clicks outside
+    $(document).on('mousedown', function (e) {
+        if (!$(e.target).closest('.autocomplete-list, input[name="equation"]').length) {
+            $('.autocomplete-list').remove();
+        }
     });
 }
 
@@ -1265,3 +1280,12 @@ function showAutocomplete($input) {
 $(document).ready(() => {
     setupAutocompleteForInputs();
 });
+
+function getDefaultColor(type) {
+    switch (type) {
+        case "stock": return "#1457d1";
+        case "variable": return "#ae28b3";
+        case "valve": return "#ff3b0e";
+        default: return "#08fadd";
+    }
+}
