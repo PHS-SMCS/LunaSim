@@ -655,15 +655,6 @@ function run() {
                     }
                     if (engineJson.influences[j].to === engineJson.variables[i].label &&
                         !references.includes(engineJson.influences[j].from)) {
-                        const infl = engineJson.influences[j];
-                        engineJson.influences.splice(j, 1);
-                        const link = myDiagram.model.linkDataArray.find(l =>
-                            l.from === infl.from && l.to === infl.to && l.category === "influence"
-                        );
-                        if (link) {
-                            myDiagram.model.removeLinkData(link);
-                        }
-                        j--;
                         document.getElementById("simErrorPopupDesc").innerHTML =
                             "Incorrect influence from " + engineJson.influences[j].from + " to " + engineJson.influences[j].to;
                         showSimErrorPopup();
@@ -671,27 +662,6 @@ function run() {
                     }
                 }
                 if (!exists) {
-                    const from = references[h];
-                    const to = engineJson.variables[i].label;
-
-                    let toEq = null;
-                    for (let n = 0; n < engineJson.variables.length; n++) {
-                        if (engineJson.variables[n].label === to) {
-                            toEq = engineJson.variables[n].equation;
-                            break;
-                        }
-                    }
-
-                    engineJson.influences.push({ from, to, toEq });
-
-                    myDiagram.model.addLinkData({
-                        category: "influence",
-                        text: "influence",
-                        from: from,
-                        to: to,
-                        labelKeys: []
-                    });
-
                     document.getElementById("simErrorPopupDesc").innerHTML = "Missing an influence from " + references[h] + " to " + engineJson.variables[i].label;
                     showSimErrorPopup();
                     return;
@@ -702,15 +672,6 @@ function run() {
                 if (engineJson.influences[j].to === engineJson.variables[i].label) {
                     document.getElementById("simErrorPopupDesc").innerHTML =
                         "No references in equation for " + engineJson.variables[i].label + ", but influence from " + engineJson.influences[j].from + " exists.";
-                        const infl = engineJson.influences[j];
-                        engineJson.influences.splice(j, 1);
-                        const link = myDiagram.model.linkDataArray.find(l =>
-                            l.from === infl.from && l.to === infl.to
-                        );
-                        if (link) {
-                            myDiagram.model.removeLinkData(link);
-                        }
-                        j--;
                     showSimErrorPopup();
                     return;
                 }
