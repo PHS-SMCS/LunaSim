@@ -494,20 +494,22 @@ function buildTemplates() {
 
     myDiagram.linkTemplateMap.add("influence",
         $(go.Link,
-            { curve: go.Link.Bezier, toShortLength: 8, reshapable: true },
-            new go.Binding("curviness", "curviness").makeTwoWay(),
-            $(go.Shape,
-                new go.Binding("stroke", "color").makeTwoWay(),
-                { stroke: "orange", strokeWidth: 1.5 }),
-            $(go.Shape,
-                new go.Binding("fill", "color").makeTwoWay(),
-                {
-                    toArrow: "Standard",
-                    scale: 1.5
-                })
-        ));
-
-}
+    { curve: go.Link.Bezier,
+        toShortLength: 8, reshapable: true },
+    new go.Binding("curviness", "curviness").makeTwoWay(),
+        $(go.Shape,
+        {strokeWidth: 1.5 },
+        new go.Binding("stroke", "isSelected", sel => sel ? "#3489eb" : "orange").ofObject()
+),
+    $(go.Shape,
+        {
+            stroke: null,
+            toArrow: "Standard",
+            scale: 1.5
+},
+new go.Binding("fill", "isSelected", sel => sel ? "#3489eb" : "orange").ofObject()
+)
+));}
 
 // set the mode (adding stock vs adding flow vs pointer etc) based on which button is clicked
 function setMode(mode, itemType) {
