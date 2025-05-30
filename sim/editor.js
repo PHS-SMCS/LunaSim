@@ -256,42 +256,33 @@ function init() {
     });
     // Auto-remove flow links and label nodes when parent nodes are deleted
     myDiagram.addDiagramListener("SelectionDeleted", function(e) {
-        const removedParts = e.subject.toArray();
-        const toDeleteLinks = new Set();
-        const toDeleteValves = new Set();
+        const deletedParts = e.subject.toArray();
+        const deletedValveKeys = deletedParts
+            .filter(p => p instanceof go.Node && p.data.category === "valve")
+            .map(p => p.data.key);
 
-        removedParts.forEach(part => {
-            if (!(part instanceof go.Node)) return;
+        if (deletedValveKeys.length === 0) return;
 
-            const deletedNodeKey = part.data.key;
+        const linksToDelete = [];
 
-            // Check all links for connections to deleted node
-            myDiagram.links.each(link => {
-                const data = link.data;
-
-                // If this link is attached to the deleted node
-                if (data.from === deletedNodeKey || data.to === deletedNodeKey) {
-                    toDeleteLinks.add(data);
-
-                    // If link has valve label node
-                    if (data.labelKeys && data.labelKeys.length > 0) {
-                        const valveKey = data.labelKeys[0];
-                        const valveNode = myDiagram.findNodeForKey(valveKey);
-                        if (valveNode) {
-                            toDeleteValves.add(valveNode.data);
-                        }
-                    }
+        myDiagram.model.linkDataArray.forEach(link => {
+            if (link.category === "flow" && link.labelKeys) {
+                const hasDeletedValve = link.labelKeys.some(labelKey =>
+                    deletedValveKeys.includes(labelKey)
+                );
+                if (hasDeletedValve) {
+                    linksToDelete.push(link);
                 }
-            });
+            }
         });
 
-        if (toDeleteLinks.size > 0 || toDeleteValves.size > 0) {
-            myDiagram.model.startTransaction("clean orphaned flow links");
-            toDeleteLinks.forEach(link => myDiagram.model.removeLinkData(link));
-            toDeleteValves.forEach(node => myDiagram.model.removeNodeData(node));
-            myDiagram.model.commitTransaction("clean orphaned flow links");
+        if (linksToDelete.length > 0) {
+            myDiagram.model.startTransaction("delete flow links for removed valves");
+            linksToDelete.forEach(link => myDiagram.model.removeLinkData(link));
+            myDiagram.model.commitTransaction("delete flow links for removed valves");
         }
     });
+
 
     buildTemplates();
 
@@ -423,6 +414,8 @@ function buildTemplates() {
             {
                 movable: false,
                 layerName: "Foreground",
+                selectable: false,
+                pickable: false,
                 alignmentFocus: go.Spot.None
             },
             $(go.Shape, shapeStyle(),
