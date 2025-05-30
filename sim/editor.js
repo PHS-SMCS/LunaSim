@@ -254,6 +254,44 @@ function init() {
             loadTableToDiagram(); // update diagram with new table data
         }
     });
+    // Auto-remove flow links and label nodes when parent nodes are deleted
+    myDiagram.addDiagramListener("SelectionDeleted", function(e) {
+        const removedParts = e.subject.toArray();
+        const toDeleteLinks = new Set();
+        const toDeleteValves = new Set();
+
+        removedParts.forEach(part => {
+            if (!(part instanceof go.Node)) return;
+
+            const deletedNodeKey = part.data.key;
+
+            // Check all links for connections to deleted node
+            myDiagram.links.each(link => {
+                const data = link.data;
+
+                // If this link is attached to the deleted node
+                if (data.from === deletedNodeKey || data.to === deletedNodeKey) {
+                    toDeleteLinks.add(data);
+
+                    // If link has valve label node
+                    if (data.labelKeys && data.labelKeys.length > 0) {
+                        const valveKey = data.labelKeys[0];
+                        const valveNode = myDiagram.findNodeForKey(valveKey);
+                        if (valveNode) {
+                            toDeleteValves.add(valveNode.data);
+                        }
+                    }
+                }
+            });
+        });
+
+        if (toDeleteLinks.size > 0 || toDeleteValves.size > 0) {
+            myDiagram.model.startTransaction("clean orphaned flow links");
+            toDeleteLinks.forEach(link => myDiagram.model.removeLinkData(link));
+            toDeleteValves.forEach(node => myDiagram.model.removeNodeData(node));
+            myDiagram.model.commitTransaction("clean orphaned flow links");
+        }
+    });
 
     buildTemplates();
 
