@@ -230,10 +230,15 @@ function buildTemplates() {
     // COLORS (Switches depending on theme)
     var fillColor = "#f0f0f0";
     var textColor = "black";
-    if (sessionStorage.getItem("darkMode") == "true") {
+    var backgroundColor = "white";
+
+    if (sessionStorage.getItem("darkMode") === "true") {
         fillColor = "#888888";
         textColor = "white";
+        backgroundColor = "#1e1e1e";
     }
+
+    myDiagram.background = backgroundColor;
 
     // Since 2.2 you can also author concise templates with method chaining instead of GraphObject.make
     // For details, see https://gojs.net/latest/intro/buildingObjects.html
@@ -988,8 +993,10 @@ function loadModel(evt) {
 
 // Themes
 function switch_theme(orig) {
-    var dark = document.getElementById("darkThemeCSS");
-    if (dark.disabled) {
+    const dark = document.getElementById("darkThemeCSS");
+    const newDarkMode = dark.disabled;
+
+    if (newDarkMode) {
         dark.disabled = false;
         sessionStorage.setItem("darkMode", true);
     } else {
@@ -997,13 +1004,20 @@ function switch_theme(orig) {
         sessionStorage.setItem("darkMode", false);
     }
 
+    // Refresh the diagram to update color bindings
+    const modelData = myDiagram.model.toJson();
+    myDiagram.div.innerHTML = ""; // clear div to force redraw
+    init(); // re-initialize diagram
+    myDiagram.model = go.Model.fromJson(modelData);
+
     if (!orig) {
-        var popupNotif = document.getElementById("popupNotif");
-        var popupNotifText = document.getElementById("popupNotifText");
+        const popupNotif = document.getElementById("popupNotif");
+        const popupNotifText = document.getElementById("popupNotifText");
         popupNotifText.innerHTML = "Refresh to apply all theme changes";
         popupNotif.style.visibility = "visible";
     }
 }
+
 
 document.getElementById("switchThemeButton").addEventListener("click", function() { switch_theme(false) });
 document.getElementById("popupNotifClose").addEventListener("click", function() {
@@ -1177,7 +1191,7 @@ function setupAutocompleteForInputs() {
             const cursorPos = $input[0].selectionStart;
             const fullText = $input.val();
 
-            const match = fullText.slice(0, cursorPos).match(/(?:^|\\W)(\\w+)$/);
+            const match = fullText.slice(0, cursorPos).match(/(\w+)$/);
             const currentFragment = match ? match[1] : "";
             const fragmentStart = cursorPos - currentFragment.length;
 
@@ -1193,6 +1207,7 @@ function setupAutocompleteForInputs() {
             $('.autocomplete-list').remove();
             return;
         }
+
     });
 
     // ✅ NEW: Hide dropdown when the input field loses focus
