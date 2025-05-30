@@ -1426,6 +1426,44 @@ function saveDiagramAsPng(diagram, filename = "diagram.png", margin = 15) {
         }
     });
 }
+function saveDiagramAsJpg(diagram, filename = "diagram.jpg", margin = 15) {
+    diagram.makeImageData({
+        background: "white",
+        scale: 1,
+        padding: margin,         // adds margin (in pixels) around the diagram
+        returnType: "blob",
+        callback: function(blob) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.style.display = "none";
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    });
+}
+function saveDiagramAsTiff(diagram, filename = "diagram.tiff", margin = 15) {
+    diagram.makeImageData({
+        background: "white",
+        scale: 1,
+        padding: margin,         // adds margin (in pixels) around the diagram
+        returnType: "blob",
+        callback: function(blob) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.style.display = "none";
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    });
+}
 
 
 $(document).ready(() => {
