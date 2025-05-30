@@ -45,19 +45,20 @@
     <script id="code4" type="module" src="tabsManagement.js"></script>
     
     <div id="sample">
-      <div class="projectActions">
-        <p id="saveStatus">Last Cloud Save: -<br>Last Export: -</p>
+      <div id ="header">
+        <div class="actions">
+          <p id="saveStatus">Last Cloud Save: -<br>Last Export: -</p>
+          <button class="actionButton" id="runButton" onclick="openSettings(event, 'simErrorPopup')"><i class="fa-regular fa-play"></i> Run</button>
+          <input type="file" id="load-actual-button" accept=".luna, .txt" hidden/>
+          <button class="actionButton" id="loadButton"><i class="fa-regular fa-file-import"></i> Load</button>
+          <button class="actionButton" id="expButton" onclick="openSettings(event, 'exportPopup')"><i class="fa-regular fa-file-export"></i> Export</button>
+          <button class="actionButton" id="clearButton"><i class="fa-regular fa-trash"></i> Clear</button>
+        </div>
 
+        <input class="projectNameInput" type="text" id="model_name" name="model_name" placeholder="Model Name" value="New Project"/>
 
-        <button class="actionButton" id="runButton" onclick="openSettings(event, 'simErrorPopup')"><i class="fa-regular fa-play"></i> Run</button>
-        <button class="actionButton" id="loadButton"><i class="fa-regular fa-file-import"></i> Load</button>
-        <button class="actionButton" id="expButton" onclick="openSettings(event, 'exportPopup')"><i class="fa-regular fa-file-export"></i> Export</button>
-        <button class="actionButton" id="clearButton"><i class="fa-regular fa-trash"></i> Clear</button>
+        <img id="logoImage" src="../img/lunaLogo.svg" alt="LunaSim Logo" />
       </div>
-
-      <input class="projectNameInput" type="text" id="model_name" name="model_name" placeholder="Model Name" value="New Project" />
-
-      <img id="logoImage" src="../img/lunaLogo.svg" alt="LunaSim Logo" />
       
 
       <div class="tabBar">
@@ -111,7 +112,7 @@
               </a>
             </li>
             <li>
-              <a href="#" onclick="openSettings(event, 'settingsPopup')" class="no-active">
+              <a href="#" onclick="openSettings(event, 'themePopup')" class="no-active">
                 <i class="fa-regular fa-gear"></i>
                 <span>Settings</span>
               </a>
@@ -126,47 +127,6 @@
               element.</canvas>
           </div>
         </div>
-
-        <!--<div id="eqEditor">
-        <p id="eqEditorTitle"><b>Equation Editor</b></p>
-        <div id="eqTableDiv">
-          <table id="eqTable" class="eqTable">
-            <tr>
-              <th class="eqTableHeader">Type</th>
-              <th class="eqTableHeader">Name</th>
-              <th class="eqTableHeader"style="width: 90%">Equation</th>
-              <th class="eqTableHeader" id="nnUniHeader">NN/Uni?<span id="nnUniTooltip">Non-negative/Uniflow</span></th>
-            </tr>
-            <tbody id="eqTableBody">
-            </tbody>
-          </table>
-        </div>
-        <br>
-      </div>
-      <tr>
-        <td><input type="text" class="equation-editor-input" placeholder="type" value="stock" style="border: 1px solid #847640;"></td>
-        <td><input type="text" class="equation-editor-input" placeholder="name" value="stock1" style="border: 1px solid #847640;"></td>
-        <td><input type="text" class="equation-editor-input" placeholder="equation" style="border: 1px solid #847640;"></td>
-        <td class="eq-checkbox-cell">
-          <input type="checkbox" class="equation-editor-checkbox" />
-        </td>
-      </tr>
-      <tr>
-        <td><input type="text" class="equation-editor-input" placeholder="type" value="flow"></td>
-        <td><input type="text" class="equation-editor-input" placeholder="name" value="flow1"></td>
-        <td><input type="text" class="equation-editor-input" placeholder="equation"></td>
-        <td class="eq-checkbox-cell">
-          <input type="checkbox" class="equation-editor-checkbox" />
-        </td>
-      </tr>
-      <tr>
-        <td><input type="text" class="equation-editor-input" placeholder="type" value="variable" style="border: 1px solid #3b773d;"></td>
-        <td><input type="text" class="equation-editor-input" placeholder="name" value="variable1" style="border: 1px solid #3b773d;"></td>
-        <td><input type="text" class="equation-editor-input" placeholder="equation" style="border: 1px solid #3b773d;"></td>
-        <td class="eq-checkbox-cell">
-          <input type="checkbox" class="equation-editor-checkbox" />
-        </td>
-      </tr>-->
 
         <div id="eqEditor">
           <div class="equation-editor-header">
@@ -247,8 +207,13 @@
 
 
         <div class="chartCanvas">
-          
+          <div id="display">
+            <div id="chartContainer" style="width: 85%"></div>
+            <div id = "datatable">
+            </div>
+          </div>
         </div>
+        
 
 
         <div class="chartEditor">
@@ -293,8 +258,8 @@
           <label for="simParams">dt (Time Increment)</label>
           <input type="text" id="dt" class="settings-input" placeholder="Enter dt..." value="0.1" style="width: 50%;">
 
-          <label for="themeSelect" id="integrationMethod">Integration Method</label>
-          <select id="themeSelect" class="settings-dropdown" style="width: 50%;">
+          <label for="integrationMethod">Integration Method</label>
+          <select id="integrationMethod" class="settings-dropdown" style="width: 50%;">
             <option>Runge-Kutta 4</option>
             <option>Euler</option>
           </select>
@@ -307,8 +272,17 @@
             </label>
           </label>
         </div>
-        <hr class="settings-divider">
+        
+        <button class="setting-button" onclick="closeSettings('settingsPopup')">Apply Settings</button>
+        <p id="validationMessage" class="validation-message hidden">* Please only type in numerical inputs</p>
+      </div>
 
+      <!-- ================== Theme Popup ================== -->
+       <div id="themePopup" class="theme-popup hidden">
+        <div class="settings-header">
+          <h2>Theme Settings</h2>
+          <button class="close-btn" onclick="closeSettings('themePopup')"><i class="fa-regular fa-xmark"></i></button>
+        </div>
         <div class="setting-group">
           <label for="themeSelect">Theme</label>
           <select id="themeSelect" class="settings-dropdown" style="width: 80%;">
@@ -317,10 +291,58 @@
             <option>Dark</option>
           </select>
         </div>
-        <button class="setting-button" onclick="closeSettings('settingsPopup')">Apply Settings</button>
+        <hr class="settings-divider">
+
+        <div class="setting-group">
+
+          <label for="fontSelect">Font</label>
+          <select id="fontSelect" class="settings-dropdown" style="width: 80%;">
+            <option>Arial</option>
+            <option>Helvetica</option>
+            <option>Verdana</option>
+            <option>Trebuchet MS</option>
+            <option>Times New Roman</option>
+            <option>Inter</option>
+            <option>Lexend</option>
+            <option>Golos Text</option>
+          </select>
+        </div>
+        <hr class="settings-divider">
+        <div class="setting-group">
+          <label for="simParams" class="dotted-underline">Stock</label>
+          <input type="text" id="startTime" class="settings-input" placeholder="#000000" value="000000" style="width: 30%;">
+
+          <label for="simParams" class="dotted-underline">Cloud</label>
+          <input type="text" id="startTime" class="settings-input" placeholder="#000000" value="000000" style="width: 30%;">
+
+          <label for="simParams" class="dotted-underline">Variable</label>
+          <input type="text" id="startTime" class="settings-input" placeholder="#000000" value="000000" style="width: 30%;">
+
+          <label for="simParams" class="dotted-underline">Flow Body</label>
+          <input type="text" id="startTime" class="settings-input" placeholder="#000000" value="000000" style="width: 30%;">
+          
+          <label for="simParams" class="dotted-underline">FlowM</label>
+          <input type="text" id="startTime" class="settings-input" placeholder="#000000" value="000000" style="width: 30%;">
+
+          <label for="simParams" class="dotted-underline">Inflow1</label>
+          <input type="text" id="startTime" class="settings-input" placeholder="#000000" value="000000" style="width: 30%;">
+
+          <label for="simParams" class="dotted-underline">Inflow2</label>
+          <input type="text" id="startTime" class="settings-input" placeholder="#000000" value="000000" style="width: 30%;">
+
+          <label for="simParams" class="dotted-underline">Outflow</label>
+          <input type="text" id="startTime" class="settings-input" placeholder="#000000" value="000000" style="width: 30%;">
+
+          <label for="simParams" class="dotted-underline">Influ.</label>
+          <input type="text" id="startTime" class="settings-input" placeholder="#000000" value="000000" style="width: 30%;">
+
+          <label for="simParams" class="dotted-underline">Text</label>
+          <input type="text" id="startTime" class="settings-input" placeholder="#000000" value="000000" style="width: 30%;">
+        </div>
+        <hr class="settings-divider">
+
+        <button class="setting-button" onclick="closeSettings('themePopup')">Apply Settings</button>
         <p id="validationMessage" class="validation-message hidden">* Please only type in numerical inputs</p>
-
-
       </div>
 
       <!-- ================== Charts Popup ================== -->
@@ -442,7 +464,6 @@
         </div>
       </div>
 
-
       <!-- Weird Stuff To Deal With Later -->
       <div class="weirdStuff">
         <div id="popupNotif">
@@ -451,9 +472,55 @@
         </div>
         <div id="saveStatus"></div>
         <div id="switchThemeButton"></div>
+        
         <button class="tablinks" id="defaultOpen">Model View</button>
         <button class="tablinks" id="secondaryOpen">Charts/Tables</button>
-        <input type="file" id="load-actual-button" accept=".luna, .txt" hidden/>
+        <div id ="tabName"></div>
+        <div id="nav">
+        <div class="webTabs">
+        </div>
+        </div>
+        <div class="tabContent" id="chartsTables">
+        <div id="tabManager">
+          <button id="addTab">
+            <i id="addTabButton" class="fa fa-plus-square"></i></button>
+          <div id="tabsList">
+            <!-- Tabs added dynamically -->
+          </div>
+        </div>
+        <div id="display">
+          <div id="chartContainer" style="width: 85%"></div>
+          <div id = "datatable">
+          </div>
+        </div>
+        <button id="submitModel">Create New Tab</button>
+        <button id="closeNewTabPopup"><b>X</b></button>
+        <div id="popForm">
+        <form id="tabConfig" name = "tabConfig" onsubmit="return false"> <!-- Will not refresh page -->
+          <div>
+            <p>Table or chart:</p>
+            <input type="radio" id="table" name="model_type" value="table" required>
+            <label for="table">Table</label><br>
+            <input type="radio" id="chartType" name="model_type" value="chart" required>
+            <label for="chartType">Chart</label>
+          </div>
+          <div>
+            <p>X-Axis:</p>
+            <select name="xAxis" id="xAxis" style="font-size: inherit;" required>
+              <!-- Options initialized dynamically -->
+            </select>
+          </div>
+          <div >
+            <p>Y-Axis:</p>
+            <table id="yAxis">
+              <!-- Multiple checkboxes initialized dynamically -->
+            </table>
+          </div>
+          <button id="submitModel">Create New Tab</button>
+          <button id="closeNewTabPopup"><b>X</b></button>
+        </form>
+      </div>
+      </div>
       </div>
 
       </div>
@@ -505,6 +572,7 @@
     closeSettings("chartsPopup");
     closeSettings("exportPopup");
     closeSettings("simErrorPopup");
+    closeSettings("themePopup");
 
     closePopup();
   });
@@ -869,23 +937,5 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 </script>
-
-
-
-
-
-
-
-
-
-
-
 </body>
-
-
 </html>
-
-
-
-
-
