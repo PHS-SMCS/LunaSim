@@ -123,10 +123,56 @@ function init() {
     myDiagram.toolManager.mouseMoveTools.insertAt(0, new NodeLabelDraggingTool());
 
     // add panning
-    myDiagram.toolManager.panningTool.isEnabled = true;
+    myDiagram.toolManager.dragSelectingTool.canStart = function() {
+        const e = myDiagram.lastInput;
+        return e.control && this.diagram.lastInput.left; // only pan when holding Ctrl + left mouse
+    };
     // store the last mouse-down event's position
     // disable drag selection
-    myDiagram.toolManager.dragSelectingTool.isEnabled = false;
+    myDiagram.toolManager.dragSelectingTool.isEnabled = true;
+
+    myDiagram.toolManager.dragSelectingTool.box =
+        $(go.Part,
+            { layerName: "Tool" },
+            $(go.Shape, "Rectangle",
+                {
+                    fill: null,  // light gray with transparency
+                    stroke: "#808080",
+                    strokeWidth: 1
+                })
+        );
+
+    myDiagram.toolManager.dragSelectingTool.doActivate = function() {
+        this.diagram.currentCursor = "crosshair";  // set cursor to crosshair
+        go.DragSelectingTool.prototype.doActivate.call(this);
+    };
+
+    myDiagram.toolManager.dragSelectingTool.doDeactivate = function() {
+        this.diagram.currentCursor = "";  // reset to default
+        go.DragSelectingTool.prototype.doDeactivate.call(this);
+    };
+
+
+    myDiagram.toolManager.dragSelectingTool.box =
+        $(go.Part,
+            { layerName: "Tool" },
+            $(go.Shape, "Rectangle",
+                {
+                    fill: null,  // light gray with transparency
+                    stroke: "#808080",
+                    strokeWidth: 1
+                })
+        );
+
+    myDiagram.toolManager.dragSelectingTool.doActivate = function() {
+        this.diagram.currentCursor = "crosshair";  // set cursor to crosshair
+        go.DragSelectingTool.prototype.doActivate.call(this);
+    };
+
+    myDiagram.toolManager.dragSelectingTool.doDeactivate = function() {
+        this.diagram.currentCursor = "";  // reset to default
+        go.DragSelectingTool.prototype.doDeactivate.call(this);
+    };
 
     // when the document is modified, add a "*" to the title
     myDiagram.addDiagramListener("Modified", e => {
@@ -278,7 +324,21 @@ function buildTemplates() {
 
     // Node templates
     myDiagram.nodeTemplateMap.add("stock",
-        $(go.Node, nodeStyle(),
+        $(go.Node, nodeStyle(),{
+                selectionAdornmentTemplate:
+                    $(go.Adornment, "Auto",
+                        $(go.Shape,
+                            {
+                                figure: "rectangle",
+                                fill: null,
+                                stroke: "dodgerblue",
+                                strokeWidth: 5,
+                                scale: 0.9,
+                                desiredSize: new go.Size(50, 30)
+                            }),
+                        $(go.Placeholder)
+                    )
+            },
             $(go.Shape, shapeStyle(),
                 new go.Binding("fill", "color").makeTwoWay(),
                 {
@@ -296,7 +356,21 @@ function buildTemplates() {
         ));
 
     myDiagram.nodeTemplateMap.add("cloud",
-        $(go.Node, nodeStyle(),
+        $(go.Node, nodeStyle(),{
+                selectionAdornmentTemplate:
+                    $(go.Adornment, "Auto",
+                        $(go.Shape,
+                            {
+                                figure: "Cloud",
+                                fill: null,
+                                stroke: "dodgerblue",
+                                strokeWidth: 3,
+                                scale: 0.9,
+                                desiredSize: new go.Size(30, 30)
+                            }),
+                        $(go.Placeholder)
+                    )
+            },
             $(go.Shape, shapeStyle(),
                 new go.Binding("fill", "color").makeTwoWay(),
                 {
@@ -315,13 +389,11 @@ function buildTemplates() {
             },
             $(go.Shape, shapeStyle(),
                 new go.Binding("fill", "color").makeTwoWay(),
-                new go.Binding("figure", "label", function(label) {
-                    return isGhost(label) ? "Circle" : "Diamond";
-                }),
                 {
-                    figure: "Diamond",
-                    desiredSize: new go.Size(15, 15),
-                    fill: "#3489eb" // default
+                    figure: "Circle",        // Always a circle
+                    desiredSize: new go.Size(18, 18),
+                    fill: "#3489eb",         // default fill color
+                    stroke: null             // no border (borderless)
                 }),
             $(go.TextBlock, textStyle(),
                 {
@@ -334,8 +406,22 @@ function buildTemplates() {
         ));
 
 
+
     myDiagram.nodeTemplateMap.add("variable",
         $(go.Node, nodeStyle(),
+            {
+                selectionAdornmentTemplate:
+                    $(go.Adornment, "Spot",
+                        $(go.Shape, "Ellipse",
+                            {
+                                fill: null,
+                                stroke: "dodgerblue",
+                                strokeWidth: 15,
+                                scale: 0.25
+                            }),
+                        $(go.Placeholder)
+                    )
+            },
             $(go.Shape, shapeStyle(),
                 new go.Binding("fill", "color").makeTwoWay(),
                 {
@@ -352,34 +438,57 @@ function buildTemplates() {
                 },
                 new go.Binding("alignment", "label_offset", go.Spot.parse).makeTwoWay(go.Spot.stringify))
         ));
-
-
-    // Link templates
     myDiagram.linkTemplateMap.add("flow",
         $(go.Link,
-            { toShortLength: 10 },
+            {
+                toShortLength: 12,
+                layerName: "Foreground",
+                selectionAdornmentTemplate:
+                    $(go.Adornment,
+                        $(go.Shape,
+                            {
+                                isPanelMain: true,
+                                stroke: "#3489eb",   // highlight color
+                                strokeWidth: 7,      // slightly larger than normal stroke
+                            })
+                    )
+            },
             new go.Binding("curviness", "curviness").makeTwoWay(),
+
+            new go.Binding("fromShortLength", "", function(data) {
+                return isBiflow(data) ? 8 : 0;
+            }),
+
+            // Main link path shape
             $(go.Shape,
-                new go.Binding("stroke", "color").makeTwoWay(),
                 {
                     stroke: "#3489eb",
                     strokeWidth: 5
                 }),
+
+            // Forward arrow - now blue (previously gray)
+            $(go.Shape,
+                {
+                    fill: "#3489eb",
+                    stroke: "#3489eb",
+                    toArrow: "Standard",
+                    scale: 2.0,
+                }),
+
+            // Backward arrow - gray normally, blue when selected
             $(go.Shape,
                 new go.Binding("visible", "", isBiflow),
                 {
-                    fill: "#ffffff",
-                    stroke: "#3489eb",
                     fromArrow: "Backward",
                     scale: 2.0
-                }),
-            $(go.Shape,
-                new go.Binding("stroke", "color").makeTwoWay(),
-                new go.Binding("fill", "color").makeTwoWay(),
-                {
-                    toArrow: "Standard",
-                    scale: 2.0
-                })
+                },
+                new go.Binding("fill", "isSelected", function(sel) {
+                    return sel ? "#3489eb" : "#808080";
+                }).ofObject(),
+                new go.Binding("stroke", "isSelected", function(sel) {
+                    return sel ? "#3489eb" : "#808080";
+                }).ofObject()
+            )
         ));
 
 
