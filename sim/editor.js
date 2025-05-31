@@ -1278,11 +1278,11 @@ function setupAutocompleteForInputs() {
 
     // Show suggestions as the user types
     $tbody.on('input', 'input[name="equation"]', function (e) {
-        if (e.originalEvent && ["ArrowUp", "ArrowDown", "Enter"].includes(e.originalEvent.key)) return;
+        if (e.originalEvent && ["ArrowUp", "ArrowDown", "Tab"].includes(e.originalEvent.key)) return;
         showAutocomplete($(this));
     });
 
-    // Handle arrow keys and Enter
+    // Handle arrow keys and Tab
     $tbody.on('keydown', 'input[name="equation"]', function (e) {
         const $input = $(this);
         const dropdown = $('.autocomplete-list');
@@ -1311,14 +1311,14 @@ function setupAutocompleteForInputs() {
             return;
         }
 
-        if (e.key === 'Enter' && selected.length > 0) {
+        if (e.key === 'Tab' && selected.length > 0) {
             e.preventDefault();
             e.stopPropagation();
 
             const cursorPos = $input[0].selectionStart;
             const fullText = $input.val();
 
-            const match = fullText.slice(0, cursorPos).match(/(?:^|\\W)(\\w+)$/);
+            const match = fullText.slice(0, cursorPos).match(/(\w+)$/);
             const currentFragment = match ? match[1] : "";
             const fragmentStart = cursorPos - currentFragment.length;
 
@@ -1328,8 +1328,9 @@ function setupAutocompleteForInputs() {
             const updated = before + replacement + after;
 
             $input.val(updated);
-            const newCursor = before.length + replacement.length;
+            const newCursor = before.length + replacement.indexOf("()") + 1; // 👈 Move cursor between parentheses
             $input[0].setSelectionRange(newCursor, newCursor);
+
 
             $('.autocomplete-list').remove();
             return;
@@ -1370,6 +1371,8 @@ function showAutocomplete($input) {
 
     const dropdown = $('<div class="autocomplete-list"></div>');
     matches.forEach(match => {
+        // Automatically select the first item
+        dropdown.find('.autocomplete-item').first().addClass('selected');
         const item = $('<div class="autocomplete-item"></div>').text(match);
         item.on('mousedown', function (e) {
             e.preventDefault();
