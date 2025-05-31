@@ -1242,14 +1242,14 @@ const JAVA_MATH_FUNCTIONS = [
     'copySign()', 'nextUp()', 'nextDown()', 'ulp()', 'IEEEremainder()', 'rint()', 'getExponent()', 'scalb()', 'fma()'
 ];
 
-
+/*
 // Auto-enhance inputs in the 3rd column (Equation)
 function enhanceExistingInputs() {
     document.querySelectorAll('#eqTableBody tr').forEach(row => {
         const equationCell = row.children[2];
         if (equationCell) {
             const input = equationCell.querySelector('input');
-            if (input) enhanceEquationInput(input);
+            if (input) enhanceExistingInputs(input);
         }
     });
 }
@@ -1258,14 +1258,13 @@ function enhanceExistingInputs() {
 const observer = new MutationObserver(() => {
     enhanceExistingInputs();
 });
-
 observer.observe(document.getElementById('eqTableBody'), {
     childList: true,
     subtree: true
 });
-
+*/
 // Enhance any inputs already present
-enhanceExistingInputs();
+// enhanceExistingInputs();
 
 function getTopMathMatches(input) {
     const lowerInput = input.toLowerCase();

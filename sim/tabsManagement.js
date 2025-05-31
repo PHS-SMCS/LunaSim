@@ -262,9 +262,17 @@ function configTabs(){
       if (tabInfo.type == "chart") {
         if (PERFORMANCE_MODE == true)
           console.time('Chart Render Time'); // Measuring chart render time
-        
-        document.getElementById('chart').hidden = false;
-        document.getElementById('datatable').hidden = true;
+
+        const chartEl = document.getElementById('chart');
+        const tableEl = document.getElementById('datatable');
+
+        if (!chartEl || !tableEl) {
+          showPopup("Chart or table container not found in DOM.");
+          return;
+        }
+
+        chartEl.hidden = false;
+        tableEl.hidden = true;
         
         var options = {
           series: [
