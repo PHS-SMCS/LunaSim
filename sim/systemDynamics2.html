@@ -111,7 +111,7 @@
               </a>
             </li>
             <li>
-              <a href="#" onclick="openSettings(event, 'themePopup')" class="no-active">
+              <a href="#" onclick="openSettings(event, 'settingsPopup')" class="no-active">
                 <i class="fa-regular fa-gear"></i>
                 <span>Settings</span>
               </a>
@@ -437,7 +437,7 @@
       </div>
 
       <!-- ================== Simulation Error Popup ================== -->
-      <div class="simErrorPopup" class="sims-popup hidden">
+      <div id="simErrorPopup" class="sims-popup hidden">
         <div class="settings-header">
           <h2 id="simErrorPopupTitle">Simulation Error!</h2>
           <button class="close-btn" onclick="closeSettings('simErrorPopup')"><i class="fa-regular fa-xmark"></i></button>
@@ -564,7 +564,6 @@
     closeSettings("chartsPopup");
     closeSettings("exportPopup");
     closeSettings("simErrorPopup");
-    closeSettings("themePopup");
 
     closePopup();
   });

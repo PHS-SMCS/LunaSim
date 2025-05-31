@@ -934,7 +934,7 @@ a.active {
 }
 
 /* Simulation Error Popup */
-.simErrorPopup {
+#simErrorPopup {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -955,13 +955,13 @@ a.active {
   pointer-events: none;
 }
 
-.simErrorPopup.show {
+#simErrorPopup.show {
   opacity: 1;
   transform: translate(-50%, -50%) scale(1);
   pointer-events: auto;
 }
 
-.simErrorPopup.hidden {
+#simErrorPopup.hidden {
   display: none;
 }
 
