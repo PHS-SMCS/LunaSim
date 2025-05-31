@@ -415,7 +415,7 @@ function buildTemplates() {
                 movable: false,
                 layerName: "Foreground",
                 selectable: false,
-                pickable: false,
+                pickable: true,
                 alignmentFocus: go.Spot.None
             },
             $(go.Shape, shapeStyle(),
