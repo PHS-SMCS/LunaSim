@@ -1341,7 +1341,7 @@ function setupAutocompleteForInputs() {
             return;
         }
 
-        if (e.key === 'Tab' && selected.length > 0) {
+        if ((e.key === 'Tab' || e.key === 'Enter') && selected.length > 0) {
             e.preventDefault();
             e.stopPropagation();
 
