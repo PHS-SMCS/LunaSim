@@ -84,64 +84,47 @@ export function translate(obj) {
         }
 
         if (link.category == "flow") {
-            // get the flow equation from the link (in the corresponding valve in node data array)
-            var flowEq;
-            var flowName;
-            var isUniflow;
-            for (var j = 0; j < obj.nodeDataArray.length; j++) { // find the corresponding valve
-                if (obj.nodeDataArray[j].key == link.labelKeys[0]) {
-                    flowEq = obj.nodeDataArray[j].equation;
-                    flowName = obj.nodeDataArray[j].label.toString();
-                    isUniflow = obj.nodeDataArray[j].checkbox;
-                    break;
-                }
+            if (!link.labelKeys || link.labelKeys.length === 0) continue;
+
+            const valveKey = link.labelKeys[0];
+            const valveNode = obj.nodeDataArray.find(n => n.key === valveKey);
+            if (!valveNode) {
+                console.warn(`⚠️ Flow link with valveKey ${valveKey} not found. Skipping.`);
+                continue;
             }
 
+            let flowEq = valveNode.equation;
+            let flowName = valveNode.label.toString();
+            let isUniflow = valveNode.checkbox;
+
+            // Ghost valve? Use its non-ghost counterpart
             if (flowName[0] === "$") {
-                // get the corresponding info on flowEq and isUniflow from the non-ghost flow
-                for (var j = 0; j < obj.nodeDataArray.length; j++) {
-                    if (obj.nodeDataArray[j].label == flowName.substring(1)) {
-                        flowEq = obj.nodeDataArray[j].equation;
-                        flowName = obj.nodeDataArray[j].label.toString();
-                        isUniflow = obj.nodeDataArray[j].checkbox;
-                        break;
-                    }
+                const ghostRef = obj.nodeDataArray.find(n => n.label === flowName.substring(1));
+                if (ghostRef) {
+                    flowEq = ghostRef.equation;
+                    flowName = ghostRef.label.toString();
+                    isUniflow = ghostRef.checkbox;
                 }
             }
 
-            // add a '#' to the flow equation if it is a uniflow (processed in engine.js)
             if (isUniflow) {
                 flowEq = "Math.max(0," + flowEq + ")";
             }
 
-            // check if the from is a stock
-            var stockName = stockKeyToName[link.from];
-            if (stockName !== undefined) {
-                if (stockName[0] === "$") {
-                    stockName = stockName.substring(1);
-                }
-
-                // add the flow to the outflows of the source
-                res.stocks[stockName].outflows[flowName] = {
-                    "equation": flowEq,
-                    "values": []
-                }
+            // add to stock outflows/inflows
+            let stockName = stockKeyToName[link.from];
+            if (stockName) {
+                if (stockName[0] === "$") stockName = stockName.substring(1);
+                res.stocks[stockName].outflows[flowName] = { equation: flowEq, values: [] };
             }
 
-            // check if the to is a stock
             stockName = stockKeyToName[link.to];
-            if (stockName !== undefined) {
-                if (stockName[0] === "$") {
-                    stockName = stockName.substring(1);
-                }
-
-                // add the flow to the inflows of the destination
-                res.stocks[stockName].inflows[flowName] = {
-                    "equation": flowEq,
-                    "values": []
-                }
+            if (stockName) {
+                if (stockName[0] === "$") stockName = stockName.substring(1);
+                res.stocks[stockName].inflows[flowName] = { equation: flowEq, values: [] };
             }
         }
+
     }
 
     return res;
