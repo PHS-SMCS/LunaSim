@@ -1,5 +1,5 @@
 /* Authors: Karthik S. Vedula, Sienna Simms, adapted from https://gojs.net/latest/samples/systemDynamics.html
- * This file uses the GoJS library to create a system dynamics editor.  Additionally, there is an equation editing table, 
+ * This file uses the GoJS library to create a system dynamics editor.  Additionally, there is an equation editing table,
  * which allows the user to edit the equations and characteristics of the objects in the model.
  */
 
@@ -18,6 +18,9 @@ var SD = {
     itemType: "pointer",    // Set when user clicks on a node or link button.
     nodeCounter: { stock: 0, cloud: 0, variable: 0, valve: 0 }
 };
+
+let GOJS_ELEMENT_LABELS = [];       // All labels in creation order
+let GOJS_ELEMENT_LABELS_SET = new Set();  // Ensure uniqueness
 
 var myDiagram;   // Declared as global
 var sim = new Simulation();
@@ -625,7 +628,10 @@ function updateTable(load = false) {
         if (isGhost(item.label)) {
             return;
         }
-
+        if (!GOJS_ELEMENT_LABELS_SET.has(item.label)) {
+            GOJS_ELEMENT_LABELS.push(item.label);
+            GOJS_ELEMENT_LABELS_SET.add(item.label);
+        }
         // check if item already exists in table, if not add it
         var exists = false;
         $tbody.find('tr').each(function () {
@@ -651,7 +657,7 @@ function updateTable(load = false) {
             ).appendTo($tbody);
 
             if (category === "stock" || category === "flow") {
-                // append a checkbox 
+                // append a checkbox
                 $('<td>').append(
                     // this checkbox determines if the stock is non-negative or if the flow is uniflow
                     // also has an event listener that calls the save function when the checkbox is changed (to update arrows on flows)
@@ -701,6 +707,10 @@ function updateTable(load = false) {
             $(this).remove();
         }
     });
+    GOJS_ELEMENT_LABELS = myDiagram.model.nodeDataArray
+        .filter(n => n.label && !n.label.startsWith('$')) // no ghost nodes
+        .map(n => n.label)
+        .slice(0, 5); // limit to first 5 created
 }
 
 // This function is used to determine if a flow is a uniflow or a biflow given the link data and the node data,
@@ -1031,7 +1041,7 @@ function exportData() {
         "integrationMethod": document.getElementById("integrationMethod").value == "euler" ? "euler" : "rk4"
     };
 
-    // download it 
+    // download it
     download(`${filename}.luna`, JSON.stringify(json));
 
     // update export date
@@ -1060,7 +1070,7 @@ function loadModel(evt) {
     var reader = new FileReader();
 
     reader.onload = function (evt) {
-        // Check if the file is valid JSON       
+        // Check if the file is valid JSON
         var json;
         try {
             json = JSON.parse(evt.target.result);
@@ -1120,7 +1130,7 @@ function loadModel(evt) {
     /*
     // This doesn't actually appear to be firing on an error, so I commented it out and wrote my own error handler.
     // Add back in if I didn't read the documentation properly and it actually works.
-    
+
     reader.addEventListener("error", function (evt) {
         alert("error reading file");
     });*/
@@ -1273,6 +1283,27 @@ function getTopMathMatches(input) {
         .slice(0, 5);
 }
 
+function isCursorInsideBrackets(text, cursorPos) {
+    const before = text.slice(0, cursorPos);
+    const open = before.lastIndexOf("[");
+    const close = before.lastIndexOf("]");
+    return open > close; // True if last unmatched bracket is open
+}
+
+function getTopBracketMatches(fragment) {
+    const lower = fragment.toLowerCase();
+
+    if (fragment === "") {
+        // Initial bracket "[" typed, show first 5 created
+        return GOJS_ELEMENT_LABELS.slice(0, 5);
+    }
+
+    return GOJS_ELEMENT_LABELS
+        .filter(label => label.toLowerCase().startsWith(lower))
+        .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
+        .slice(0, 5);
+}
+
 function setupAutocompleteForInputs() {
     const $tbody = $('#eqTableBody');
 
@@ -1282,7 +1313,6 @@ function setupAutocompleteForInputs() {
         showAutocomplete($(this));
     });
 
-    // Handle arrow keys and Tab
     $tbody.on('keydown', 'input[name="equation"]', function (e) {
         const $input = $(this);
         const dropdown = $('.autocomplete-list');
@@ -1318,24 +1348,38 @@ function setupAutocompleteForInputs() {
             const cursorPos = $input[0].selectionStart;
             const fullText = $input.val();
 
-            const match = fullText.slice(0, cursorPos).match(/(\w+)$/);
-            const currentFragment = match ? match[1] : "";
-            const fragmentStart = cursorPos - currentFragment.length;
-
-            const before = fullText.slice(0, fragmentStart);
+            const isInBrackets = isCursorInsideBrackets(fullText, cursorPos);
+            let before = fullText.slice(0, cursorPos);
             const after = fullText.slice(cursorPos);
             const replacement = selected.text();
-            const updated = before + replacement + after;
+            let updated, newCursor;
+
+            if (isInBrackets) {
+                // ✅ Add closing bracket and move cursor after it
+                before = before.replace(/\[([^\[\]]*)$/, `[${replacement}]`);
+                updated = before + after;
+                newCursor = before.length;
+            } else {
+                const match = before.match(/(\w+)$/);
+                const currentFragment = match ? match[1] : "";
+                const fragmentStart = cursorPos - currentFragment.length;
+
+                const funcName = selected.text();
+                const withParens = funcName.endsWith("()") ? funcName : funcName + "()";
+
+                before = fullText.slice(0, fragmentStart);
+                updated = before + withParens + after;
+                newCursor = before.length + withParens.indexOf("()") + 1; // inside the ()
+            }
+
 
             $input.val(updated);
-            const newCursor = before.length + replacement.indexOf("()") + 1; // 👈 Move cursor between parentheses
             $input[0].setSelectionRange(newCursor, newCursor);
-
-
             $('.autocomplete-list').remove();
             return;
         }
     });
+
 
     // ✅ NEW: Hide dropdown when the input field loses focus
     $tbody.on('blur', 'input[name="equation"]', function () {
@@ -1358,33 +1402,54 @@ function showAutocomplete($input) {
     const cursorPos = $input[0].selectionStart;
     const fullText = $input.val();
 
-    // Match the last function fragment anywhere before the cursor (even after space/parens)
-    const match = fullText.slice(0, cursorPos).match(/(?:^|\W)(\w+)$/);
-    const currentFragment = match ? match[1] : "";
+    const isInBrackets = isCursorInsideBrackets(fullText, cursorPos);
 
-    $('.autocomplete-list').remove(); // remove any existing dropdown
+    let currentFragment = "";
+    if (isInBrackets) {
+        const match = fullText.slice(0, cursorPos).match(/\[([^\[\]]*)$/);
+        currentFragment = match ? match[1] : "";
+    } else {
+        const match = fullText.slice(0, cursorPos).match(/(?:^|\W)(\w+)$/);
+        currentFragment = match ? match[1] : "";
+    }
 
-    if (!currentFragment) return;
+    $('.autocomplete-list').remove();
 
-    const matches = getTopMathMatches(currentFragment);
+    if (!currentFragment && !isInBrackets) return;
+
+    const matches = isInBrackets
+        ? getTopBracketMatches(currentFragment)
+        : getTopMathMatches(currentFragment);
+
     if (matches.length === 0) return;
 
     const dropdown = $('<div class="autocomplete-list"></div>');
     matches.forEach(match => {
-        // Automatically select the first item
-        dropdown.find('.autocomplete-item').first().addClass('selected');
         const item = $('<div class="autocomplete-item"></div>').text(match);
         item.on('mousedown', function (e) {
             e.preventDefault();
 
-            const before = fullText.slice(0, cursorPos).replace(/(\w+)$/, match);
-            const after = fullText.slice(cursorPos);
-            const updated = before + after;
+            let before = fullText.slice(0, cursorPos);
+            let after = fullText.slice(cursorPos);
+            let updated, newCursor;
 
-            $input.val(updated);
-            const newCursor = before.length;
+            if (isInBrackets) {
+                // ✅ Add closing bracket and move cursor after it
+                before = before.replace(/\[([^\[\]]*)$/, `[${match}]`);
+                updated = before + after;
+                newCursor = before.length;
+            } else {
+            // Replace function name, add (), move cursor inside
+            const funcName = match;
+            const withParens = funcName.endsWith("()") ? funcName : funcName + "()";
+            before = before.replace(/(\w+)$/, withParens);
+            updated = before + after;
+            newCursor = before.length - 1; // cursor inside ()
+        }
+
+
+        $input.val(updated);
             $input[0].setSelectionRange(newCursor, newCursor);
-
             $('.autocomplete-list').remove();
         });
         dropdown.append(item);
@@ -1399,7 +1464,18 @@ function showAutocomplete($input) {
     });
 
     $('body').append(dropdown);
+
+    setTimeout(() => {
+        const firstItem = dropdown.find('.autocomplete-item').first();
+        if (firstItem.length) {
+            $('.autocomplete-item').removeClass('selected');
+            firstItem.addClass('selected');
+        }
+    }, 0);
 }
+
+
+
 
 
 function saveDiagramAsPng(diagram, filename = "diagram.png", margin = 15) {
