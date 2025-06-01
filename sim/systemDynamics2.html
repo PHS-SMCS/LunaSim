@@ -54,7 +54,7 @@
           <button class="actionButton" id="clearButton"><i class="fa-regular fa-trash"></i> Clear</button>
         </div>
 
-        <input class="projectNameInput" type="text" id="model_name" name="model_name" placeholder="Model Name" value="New Project"/>
+        <input type="text" id="model_name" name="model_name" placeholder="Model Name" value="New Project">
 
         <img id="logoImage" src="../img/lunaLogo.svg" alt="LunaSim Logo" />
       </div>
@@ -68,59 +68,27 @@
         <!-- Tool Bar -->
         <div class="toolbar">
           <ul>
-            <li>
-              <a href="#" id="pointer_button" class="pointer_selected tool">
-                <i class="fa-regular fa-arrow-pointer"></i>
-                <span>Pointer [P]</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" id="stock_button" class="node_normal tool">
-                <i class="fa-regular fa-rectangle"></i>
-                <span>Stock [S]</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" id="cloud_button" class="node_normal tool">
-                <i class="fa-regular fa-cloud"></i>
-                <span>Cloud [C]</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" id="variable_button" class="node_normal tool">
-                <i class="fa-regular fa-circle"></i>
-                <span>Variable [V]</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" id="flow_button" class="link_normal tool">
-                <i class="fa-regular fa-arrows-left-right"></i>
-                <span>Flow [F]</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" id="influence_button" class="link_normal tool">
-                <i class="fa-regular fa-repeat"></i>
-                <span>Influence [I]</span>
-              </a>
-            </li>
-            <li>  
-              <a href="../UserDocs.html" class="no-active">
-                <i class="fa-regular fa-question"></i>
-                <span>Help</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" onclick="openSettings(event, 'settingsPopup')" class="no-active">
-                <i class="fa-regular fa-gear"></i>
-                <span>Settings</span>
-              </a>
-            </li>
+            <div class="tool-section">
+              <li><a href="#" id="pointer_button" class="pointer_selected tool"><i class="fa-regular fa-arrow-pointer"></i><span>Pointer [P]</span></a></li>
+              <li><a href="#" id="stock_button" class="node_normal tool"><i class="fa-regular fa-rectangle"></i><span>Stock [S]</span></a></li>
+              <li><a href="#" id="cloud_button" class="node_normal tool"><i class="fa-regular fa-cloud"></i><span>Cloud [C]</span></a></li>
+              <li><a href="#" id="variable_button" class="node_normal tool"><i class="fa-regular fa-circle"></i><span>Variable [V]</span></a></li>
+              <li><a href="#" id="flow_button" class="link_normal tool"><i class="fa-regular fa-arrows-left-right"></i><span>Flow [F]</span></a></li>
+              <li><a href="#" id="influence_button" class="link_normal tool"><i class="fa-regular fa-repeat"></i><span>Influence [I]</span></a></li>
+            </div>
+
+            <div class="settings-section">
+              <li><a href="#" onclick="openSettings(event, 'themePopup')" class="no-active"><i class="fa-regular fa-paint-roller"></i><span>Theme</span></a></li>
+              <li><a href="../UserDocs.html" class="no-active"><i class="fa-regular fa-question"></i><span>Help</span></a></li>
+              <li><a href="#" onclick="openSettings(event, 'settingsPopup')" class="no-active"><i class="fa-regular fa-gear"></i><span>Settings</span></a></li>
+            </div>
           </ul>
         </div>
 
 
+
         <div class="modelCanvas" id="modalView">
+          <i class="fa-solid fa-up-right-and-down-left-from-center model-zoom-icon" onclick="openModelCanvasPopup()"></i>
           <div id="myDiagram">
             <canvas width="100%" height="100%">This text is displayed if your browser does not support the Canvas HTML
               element.</canvas>
@@ -150,59 +118,35 @@
       </div>
 
       <div class="chartViewer">
-        <!-- Tool Bar -->
+        <!-- Chart Sidebar -->
         <div class="chartSidebar">
           <ul>
-            <li>
-              <a href="#">
-                <i class="fa-regular fa-chart-sine"></i>
-                <span>Chart1</span>
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <i class="fa-regular fa-chart-sine"></i>
-                <span>Chart2</span>
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <i class="fa-regular fa-table"></i>
-                <span>Table1</span>
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <i class="fa-regular fa-table"></i>
-                <span>Table2</span>
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <i class="fa-regular fa-chart-scatter"></i>
-                <span>Chart3</span>
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <i class="fa-regular fa-table"></i>
-                <span>Table3</span>
-              </a>
-            </li>
-            <li>  
-              <a href="../UserDocs.html" class="no-active">
-                <i class="fa-regular fa-question"></i>
-                <span>Help</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" onclick="openSettings(event, 'settingsPopup')" class="no-active">
-                <i class="fa-regular fa-gear"></i>
-                <span>Settings</span>
-              </a>
-            </li>
+            <!-- Chart Area Scrollable -->
+            <div class="chart-section">
+              <li><a href="#"><i class="fa-regular fa-chart-sine"></i><span>Chart1</span></a></li>
+              <li><a href="#"><i class="fa-regular fa-chart-sine"></i><span>Chart2</span></a></li>
+              <li><a href="#"><i class="fa-regular fa-table"></i><span>Table1</span></a></li>
+              <li><a href="#"><i class="fa-regular fa-table"></i><span>Table2</span></a></li>
+              <li><a href="#"><i class="fa-regular fa-chart-scatter"></i><span>Chart3</span></a></li>
+              <li><a href="#"><i class="fa-regular fa-table"></i><span>Table3</span></a></li>
+              <li><a href="#"><i class="fa-regular fa-table"></i><span>Table3</span></a></li>
+              <li><a href="#"><i class="fa-regular fa-table"></i><span>Table3</span></a></li>
+              <li><a href="#"><i class="fa-regular fa-table"></i><span>Table3</span></a></li>
+              <li><a href="#"><i class="fa-regular fa-table"></i><span>Table3</span></a></li>
+              <li><a href="#"><i class="fa-regular fa-table"></i><span>Table3</span></a></li>
+              <li><a href="#"><i class="fa-regular fa-table"></i><span>Table3</span></a></li>
+              <li><a href="#" ><i class="fa-regular fa-table"></i><span>Table3</span></a></li>
+            </div>
+
+            <!-- Settings Area Fixed -->
+            <div class="settings-section">
+              <li><a href="#" onclick="openSettings(event, 'themePopup')" class="no-active"><i class="fa-regular fa-paint-roller"></i><span>Theme</span></a></li>
+              <li><a href="../UserDocs.html" class="no-active"><i class="fa-regular fa-question"></i><span>Help</span></a></li>
+              <li><a href="#" onclick="openSettings(event, 'settingsPopup')" class="no-active"><i class="fa-regular fa-gear"></i><span>Settings</span></a></li>
+            </div>
           </ul>
         </div>
+
 
 
         <div class="chartCanvas">
@@ -259,25 +203,25 @@
 
           <label for="integrationMethod">Integration Method</label>
           <select id="integrationMethod" class="settings-dropdown" style="width: 50%;">
-            <option>Runge-Kutta 4</option>
-            <option>Euler</option>
+            <option value="rk4">Runge-Kutta 4</option>
+            <option value="euler">Euler</option>
           </select>
 
           <label class="switch-label">
           <span>Enable High Step Count Simulations</span>
             <label class="toggle-switch">
-              <input type="checkbox">
+              <input type="checkbox" id="simParamHighStepCount">
               <span class="slider"></span>
             </label>
           </label>
         </div>
         
         <button class="setting-button" onclick="closeSettings('settingsPopup')">Apply Settings</button>
-        <p id="validationMessage" class="validation-message hidden">* Please only type in numerical inputs</p>
+        <p id="validationMessage" class="validation-message hidden">* Please don't leave boxes empty</p>
       </div>
 
       <!-- ================== Theme Popup ================== -->
-      <!--<div id="themePopup" class="theme-popup hidden">
+      <div id="themePopup" class="theme-popup hidden">
         <div class="settings-header">
           <h2>Theme Settings</h2>
           <button class="close-btn" onclick="closeSettings('themePopup')"><i class="fa-regular fa-xmark"></i></button>
@@ -286,14 +230,9 @@
           <label for="themeSelect">Theme</label>
           <select id="themeSelect" class="settings-dropdown" style="width: 80%;">
             <option>Normal</option>
-            <option>Light</option>
+            <option>Classic</option>
             <option>Dark</option>
           </select>
-        </div>
-        <hr class="settings-divider">
-
-        <div class="setting-group">
-
           <label for="fontSelect">Font</label>
           <select id="fontSelect" class="settings-dropdown" style="width: 80%;">
             <option>Arial</option>
@@ -306,43 +245,10 @@
             <option>Golos Text</option>
           </select>
         </div>
-        <hr class="settings-divider">
-        <div class="setting-group">
-          <label for="simParams" class="dotted-underline">Stock</label>
-          <input type="text" id="startTime" class="settings-input" placeholder="#000000" value="000000" style="width: 30%;">
-
-          <label for="simParams" class="dotted-underline">Cloud</label>
-          <input type="text" id="startTime" class="settings-input" placeholder="#000000" value="000000" style="width: 30%;">
-
-          <label for="simParams" class="dotted-underline">Variable</label>
-          <input type="text" id="startTime" class="settings-input" placeholder="#000000" value="000000" style="width: 30%;">
-
-          <label for="simParams" class="dotted-underline">Flow Body</label>
-          <input type="text" id="startTime" class="settings-input" placeholder="#000000" value="000000" style="width: 30%;">
-          
-          <label for="simParams" class="dotted-underline">FlowM</label>
-          <input type="text" id="startTime" class="settings-input" placeholder="#000000" value="000000" style="width: 30%;">
-
-          <label for="simParams" class="dotted-underline">Inflow1</label>
-          <input type="text" id="startTime" class="settings-input" placeholder="#000000" value="000000" style="width: 30%;">
-
-          <label for="simParams" class="dotted-underline">Inflow2</label>
-          <input type="text" id="startTime" class="settings-input" placeholder="#000000" value="000000" style="width: 30%;">
-
-          <label for="simParams" class="dotted-underline">Outflow</label>
-          <input type="text" id="startTime" class="settings-input" placeholder="#000000" value="000000" style="width: 30%;">
-
-          <label for="simParams" class="dotted-underline">Influ.</label>
-          <input type="text" id="startTime" class="settings-input" placeholder="#000000" value="000000" style="width: 30%;">
-
-          <label for="simParams" class="dotted-underline">Text</label>
-          <input type="text" id="startTime" class="settings-input" placeholder="#000000" value="000000" style="width: 30%;">
-        </div>
-        <hr class="settings-divider">
 
         <button class="setting-button" onclick="closeSettings('themePopup')">Apply Settings</button>
         <p id="validationMessage" class="validation-message hidden">* Please only type in numerical inputs</p>
-      </div>-->
+      </div>
 
       <!-- ================== Charts Popup ================== -->
       <div id="chartsPopup" class="charts-popup hidden">
@@ -421,14 +327,6 @@
           <div class="setting-group">    
             <label for="imageMargin" class="dotted-underline">Image Margin</label>
             <input type="text" id="imageMargin" class="px-visual-input settings-input" placeholder="Enter margin..." value="15" style="width: 65%;">
-
-            <label for="imageWidth" class="dotted-underline">Image Width</label>
-            <input type="text" id="imageWidth" class="px-visual-input settings-input" placeholder="Enter margin..." value="400" style="width: 65%;">
-
-            <label for="imageHeight" class="dotted-underline">Image Height</label>
-            <input type="text" id="imageHeight" class="px-visual-input settings-input" placeholder="Enter margin..." value="400" style="width: 65%;">
-
-            
           </div>
           <button id="downloadImageButton" class="setting-button" onclick="closeSettings('exportPopup')">Download Image</button>
         </div>
@@ -445,7 +343,7 @@
         <div class="setting-group">
           <p id="simErrorPopupDesc">If you're seeing this, I guess you just suck.</p>
         </div>
-        <button id="simErrorPopupDismiss" class="setting-button" onclick="closeSettings('simErrorPopup')">Dismiss</button>
+        <button id="simErrorPopupCancel" class="setting-button" onclick="closeSettings('simErrorPopup')">Dismiss</button>
       </div>
 
 
@@ -463,8 +361,15 @@
         </div>
       </div>
 
+      <div id="modelCanvasPopupOverlay" class="popup-overlay" style="display: none;">
+        <div class="popup-content" id="popupContent"></div>
+        <i class="fa-solid fa-xmark close-popup" onclick="closeModelCanvasPopup()"></i>
+      </div>
+
+
       <!-- Weird Stuff To Deal With Later -->
       <div class="weirdStuff">
+        <div id="simErrorPopupDismiss"></div>
         <div id="popupNotif">
           <p id="popupNotifText"></p>
           <button id="popupNotifClose"><b></b></button>
@@ -564,6 +469,7 @@
     closeSettings("chartsPopup");
     closeSettings("exportPopup");
     closeSettings("simErrorPopup");
+    closeSettings("themePopup");
 
     closePopup();
   });
@@ -772,50 +678,111 @@ document.addEventListener("DOMContentLoaded", () => {
     return !isNaN(value) && value.trim() !== "";
   }
 
-  function validateInputField(input) {
-    if (!isNumeric(input.value)) {
-      input.style.border = "1px solid red";
-      return false;
-    } else {
-      input.style.border = "";
-      return true;
-    }
+  function highlightInputs(ids, color = "1px solid red") {
+    ids.forEach(id => {
+      const input = document.getElementById(id);
+      input.style.border = color;
+    });
+  }
+
+  function clearAllInputBorders() {
+    inputIds.forEach(id => {
+      document.getElementById(id).style.border = "";
+    });
   }
 
   function validateAllInputs() {
-    const inputs = document.querySelectorAll('#settingsPopup .settings-input');
     const warning = document.getElementById("validationMessage");
     let allValid = true;
+    let errorMessages = [];
 
-    inputs.forEach(input => {
-      const value = input.value.trim();
-      const isValid = /^-?\d*\.?\d+$/.test(value); // Numbers only (supports negatives and decimals)
+    const startTimeEl = document.getElementById("startTime");
+    const endTimeEl = document.getElementById("endTime");
+    const dtEl = document.getElementById("dt");
+    const highStepCheckbox = document.getElementById("simParamHighStepCount");
 
-      if (!isValid) {
-        input.classList.add("invalid");
+    const startTime = startTimeEl.value.trim();
+    const endTime = endTimeEl.value.trim();
+    const dt = dtEl.value.trim();
+
+    clearAllInputBorders(); // Reset all borders first
+
+    // Validate numeric input first
+    for (const id of inputIds) {
+      const el = document.getElementById(id);
+      if (!isNumeric(el.value)) {
+        el.style.border = "1px solid red";
         allValid = false;
-      } else {
-        input.classList.remove("invalid");
       }
-    });
+    }
 
-    // Show or hide the warning based on overall validity
-    warning.classList.toggle("hidden", allValid);
+    if (!isNumeric(startTime) || !isNumeric(endTime) || !isNumeric(dt)) {
+      errorMessages.push("Please only type in numerical inputs");
+      allValid = false;
+    } else {
+      const s = Number(startTime);
+      const e = Number(endTime);
+      const d = Number(dt);
+      const duration = e - s;
+
+      if (s >= e) {
+        highlightInputs(["startTime", "endTime"]);
+        errorMessages.push("Please ensure end time is greater than start time");
+        allValid = false;
+      }
+
+      if (d <= 0) {
+        highlightInputs(["dt"]);
+        errorMessages.push("Please ensure dt is positive");
+        allValid = false;
+      }
+
+      if (d > duration) {
+        highlightInputs(["startTime", "endTime", "dt"]);
+        errorMessages.push("Please ensure dt must be less than or equal to the duration");
+        allValid = false;
+      }
+
+      if ((Number(endTime) - Number(startTime)) / Number(dt) >= 1000 && !highStepCheckbox.checked) {
+        highlightInputs(["startTime", "endTime", "dt"]);
+        errorMessages.push("This simulation contains 1000+ steps; as such, running it may lead to lag or the website freezing. Please adjust dt or enable high step-count simulations.");
+        allValid = false;
+      }
+    }
+
+    // Display errors
+    if (errorMessages.length > 0) {
+      warning.innerHTML = errorMessages.map(msg => `• ${msg}`).join("<br>");
+      warning.classList.remove("hidden");
+    } else {
+      warning.classList.add("hidden");
+    }
+
     return allValid;
   }
-
-
 
   window.addEventListener("DOMContentLoaded", () => {
     inputIds.forEach(id => {
       const input = document.getElementById(id);
       input.addEventListener("blur", () => {
-        validateInputField(input);
+        validateAllInputs(); // Validate on blur
       });
+    });
+
+    const applyButton = document.querySelector('#settingsPopup .setting-button');
+    applyButton.addEventListener("click", (e) => {
+      if (!validateAllInputs()) {
+        e.stopPropagation(); // Prevent closing if invalid
+        return;
+      }
+
+      closeSettings('settingsPopup'); // Only close if valid
     });
   });
 </script>
-<script>
+
+
+<!--<script>
   function stripPx(value) {
     return value.replace(/px\s*$/, '');
   }
@@ -855,7 +822,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function getRawValue(inputEl) {
     return parseInt(stripPx(inputEl.value), 10);
   }
-</script>
+</script>-->
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const buttons = document.querySelectorAll('.toolbar a:not(.no-active), .chartSidebar a:not(.no-active)');
@@ -928,6 +895,63 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 </script>
+<!-- Save Images -->
+ <!--<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const fileSelect = document.getElementById("fileSelect");
+  const imageSettingsSection = document.getElementById("imageSettingsSection");
+  const exportButton = document.getElementById("exportButton");
+  const downloadImageButton = document.getElementById("downloadImageButton");
+  const imageMarginInput = document.getElementById("imageMargin");
+
+  function updateExportOptions() {
+    const selected = fileSelect.value;
+    if (selected === ".png" || selected === ".jpg" || selected === ".tiff") {
+      imageSettingsSection.style.display = "block";
+      downloadImageButton.style.display = "inline-block";
+      exportButton.style.display = "none";
+    } else {
+      imageSettingsSection.style.display = "none";
+      downloadImageButton.style.display = "none";
+      exportButton.style.display = "inline-block";
+    }
+  }
+
+  exportButton.addEventListener("click", () => {
+    closeSettings("exportPopup");
+    const blob = new Blob(["LunaSim project data"], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "project.luna";
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  downloadImageButton.addEventListener("click", () => {
+    closeSettings("exportPopup");
+    const selected = fileSelect.value;
+    const margin = parseInt(imageMarginInput.value) || 15;
+
+    const diagram = window.myDiagram; // Ensure your GoJS diagram is assigned to this
+
+    switch (selected) {
+      case ".png":
+        saveDiagramAsPng(diagram, "project.png", margin);
+        break;
+      case ".jpg":
+        saveDiagramAsJpg(diagram, "project.jpg", margin);
+        break;
+      case ".tiff":
+        saveDiagramAsTiff(diagram, "project.tiff", margin);
+        break;
+    }
+  });
+
+  updateExportOptions();
+  fileSelect.addEventListener("change", updateExportOptions);
+});
+ </script>-->
 
 </body>
 </html>

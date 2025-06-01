@@ -24,11 +24,10 @@ input, button, select {
 }
 
 * {
-  scrollbar-width: none;         /* Firefox */
-  -ms-overflow-style: none;      /* IE and Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-/* For WebKit browsers like Chrome, Safari */
 *::-webkit-scrollbar {
   display: none;
 }
@@ -74,7 +73,7 @@ input, button, select {
 }
 
 /* Project Name Input */
-.projectNameInput {
+#model_name {
   position: absolute;
   top: 1vh;
   right: calc(1vw + 40px);
@@ -248,24 +247,23 @@ input, button, select {
 .toolbar ul {
   list-style: none;
   margin: 0;
-  padding: 0.75rem;
+  padding: 0.75rem 0;
   height: calc(95vh - 3vw);
-  width: 4.7vw;
-  min-width: 72px;
+  width: 72px;
   background-color: rgba(38, 50, 83, 0.95);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   border-radius: 10px;
   box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
+  overflow: visible; /* Prevent overall overflow */
 }
 
 /* Universal Sidebar Styling (Applies to Toolbar and Chart Sidebar) */
-li:nth-child(7) {
-  margin-top: 6rem;
+/*.toolbar ul li:nth-last-child(3) {
+  margin-top: 3rem;
   padding-top: 1.25rem;
   border-top: 1px solid #374875;
-}
+}*/
 
 li + li {
   margin-top: 0.5rem;
@@ -541,20 +539,46 @@ a.active {
 .chartSidebar {
   position: relative;
   width: 72px;
+  overflow: visible;  /* Ensure tooltips can escape */
+  z-index: 502;        /* On top of other elements */
 }
 
 .chartSidebar ul {
   list-style: none;
   margin: 0;
-  padding: 0.75rem;
+  padding: 0.75rem 0;
   height: calc(95vh - 3vw);
-  width: 4.7vw;
+  width: 72px;
   background-color: rgba(38, 50, 83, 0.95);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   border-radius: 10px;
   box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
+  overflow: visible;  /* Allow tooltips to escape */
+}
+
+.chart-section,
+.tool-section {
+  overflow-y: auto;     /* Enable vertical scroll */
+  overflow-x: visible;  /* Allow horizontal overflow for tooltips */
+  position: relative;   /* Anchor tooltips correctly */
+  z-index: 1;           /* Lower than tooltip z-index */
+  isolation: isolate;   /* Create new stacking context */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0 0.75rem;
+}
+
+.settings-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0 0.75rem 0.75rem 0.75rem;
+  margin-top: 1rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #374875;
 }
 
 /* Chart Viewer - Canvas */
@@ -850,7 +874,7 @@ a.active {
   border-radius: 1rem;
   padding: 1.5rem;
   width: 90vw;
-  max-width: 600px;
+  max-width: 400px;
   z-index: 1001;
   box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
   display: flex;
@@ -969,12 +993,12 @@ a.active {
   color: white;
 }
 
-#simErrorPopupDismiss:hover {
+#simErrorPopupCancel:hover {
   background: rgb(52, 20, 20);
   border: 1px solid rgb(45, 18, 18);
 }
 
-#simErrorPopupDismiss {
+#simErrorPopupCancel {
   background: rgb(80, 34, 34);
   border: 1px solid rgb(65, 27, 27);
 }
@@ -1129,4 +1153,53 @@ input.settings-input.invalid:focus {
 
 /* Stupid Stuff */
 
+.model-zoom-icon {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.2rem;
+  color: rgb(255, 255, 255);
+  background-color: rgba(38, 50, 83, 0.95);
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  z-index: 990;
+  transition: background-color 0.3s ease;
+}
+
+.model-zoom-icon:hover {
+  background-color: #46598e;
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(10, 10, 30, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.popup-content {
+  display: flex;
+  width: 95vw;
+  height: 95vh;
+  background-color: #1c2541;
+  border-radius: 10px;
+  overflow: hidden;
+  padding: 1rem;
+}
+
+.close-popup {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  color: white;
+  cursor: pointer;
+}
 
