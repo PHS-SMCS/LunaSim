@@ -708,9 +708,13 @@ function updateTable(load = false) {
         }
     });
     GOJS_ELEMENT_LABELS = myDiagram.model.nodeDataArray
-        .filter(n => n.label && !n.label.startsWith('$')) // no ghost nodes
-        .map(n => n.label)
-        .slice(0, 5); // limit to first 5 created
+        .filter(n =>
+            n.label &&
+            !n.label.startsWith('$') && // skip ghosts
+            n.category !== "cloud"      // skip clouds ✅
+        )
+        .map(n => n.label);
+
 }
 
 // This function is used to determine if a flow is a uniflow or a biflow given the link data and the node data,
@@ -1294,15 +1298,15 @@ function getTopBracketMatches(fragment) {
     const lower = fragment.toLowerCase();
 
     if (fragment === "") {
-        // Initial bracket "[" typed, show first 5 created
+        // Show first 5 elements in creation order
         return GOJS_ELEMENT_LABELS.slice(0, 5);
     }
 
     return GOJS_ELEMENT_LABELS
         .filter(label => label.toLowerCase().startsWith(lower))
-        .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
-        .slice(0, 5);
+        .slice(0, 5); // best 5 matches
 }
+
 
 function setupAutocompleteForInputs() {
     const $tbody = $('#eqTableBody');
