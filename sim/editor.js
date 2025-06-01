@@ -802,18 +802,32 @@ function resetSimErrorPopup() {
     document.getElementById("simErrorPopupDismiss").innerHTML = "Dismiss"
 }*/
 
-function containsReference(equation){
+function containsReference(equation, nodeDataArray) {
     const matches = [];
-
     const regex = /\[(.*?)\]/g;
     const allMatches = equation.matchAll(regex);
 
+    // Create a label-to-key map
+    const labelToKey = {};
+    for (const node of nodeDataArray) {
+        if (node.label !== undefined) {
+            labelToKey[node.label] = node.key;
+        }
+    }
+
+    // Replace labels with corresponding keys
     for (const match of allMatches) {
-        matches.push(match[1]);
+        const label = match[1];
+        if (labelToKey.hasOwnProperty(label)) {
+            matches.push(labelToKey[label]);
+        } else {
+            matches.push(label); // fallback: keep the label if key not found
+        }
     }
 
     return matches;
 }
+
 
 
 function run() {
@@ -824,16 +838,17 @@ function run() {
     var engineJson = translate(json);
 
 
-    for(var i = 0; i < engineJson.variables.length; i++){
-        var references = containsReference(engineJson.variables[i].equation);
-        if(references.length>0) {
+    for (var i = 0; i < engineJson.variables.length; i++) {
+        var variable = engineJson.variables[i];
+        var references = containsReference(variable.equation, engineJson.nodeDataArray);
+        if (references.length > 0) {
             for (var h = 0; h < references.length; h++) {
                 var exists = false;
                 for (var j = 0; j < engineJson.influences.length; j++) {
-                    if (engineJson.influences[j].to == engineJson.variables[i].label && engineJson.influences[j].from == references[h]) {
+                    if (engineJson.influences[j].to === variable.key && engineJson.influences[j].from === references[h]) {
                         exists = true;
                     }
-                    if (engineJson.influences[j].to === engineJson.variables[i].label &&
+                    if (engineJson.influences[j].to === variable.key &&
                         !references.includes(engineJson.influences[j].from)) {
                         document.getElementById("simErrorPopupDesc").innerHTML =
                             "Incorrect influence from " + engineJson.influences[j].from + " to " + engineJson.influences[j].to;
@@ -842,16 +857,17 @@ function run() {
                     }
                 }
                 if (!exists) {
-                    document.getElementById("simErrorPopupDesc").innerHTML = "Missing an influence from " + references[h] + " to " + engineJson.variables[i].label;
+                    document.getElementById("simErrorPopupDesc").innerHTML =
+                        "Missing an influence from " + references[h] + " to " + variable.key;
                     showSimErrorPopup();
                     return;
                 }
             }
         } else {
             for (var j = 0; j < engineJson.influences.length; j++) {
-                if (engineJson.influences[j].to === engineJson.variables[i].label) {
+                if (engineJson.influences[j].to === variable.key) {
                     document.getElementById("simErrorPopupDesc").innerHTML =
-                        "No references in equation for " + engineJson.variables[i].label + ", but influence from " + engineJson.influences[j].from + " exists.";
+                        "No references in equation for " + variable.key + ", but influence from " + engineJson.influences[j].from + " exists.";
                     showSimErrorPopup();
                     return;
                 }
@@ -859,43 +875,117 @@ function run() {
         }
     }
 
-    for(var i =0; i<engineJson.valves.length; i++){
-        var references = containsReference(engineJson.valves[i].equation);
-        if(references.length>0) {
-            for(var j =0; j<references.length; j++){
+    for (var i = 0; i < engineJson.valves.length; i++) {
+        var valve = engineJson.valves[i];
+        var references = containsReference(valve.equation, engineJson.nodeDataArray);
+        if (references.length > 0) {
+            for (var j = 0; j < references.length; j++) {
                 var exists = false;
-                for(var h =0; h < engineJson.influences.length; h++){
-                    if (engineJson.influences[h].to == engineJson.valves[i].key && engineJson.influences[h].from == references[j]) {
+                for (var h = 0; h < engineJson.influences.length; h++) {
+                    if (engineJson.influences[h].to === valve.key && engineJson.influences[h].from === references[j]) {
                         exists = true;
                     }
-                    if (engineJson.influences[h].to === engineJson.valves[i].key &&
+                    if (engineJson.influences[h].to === valve.key &&
                         !references.includes(engineJson.influences[h].from)) {
                         document.getElementById("simErrorPopupDesc").innerHTML =
                             "Incorrect influence from " + engineJson.influences[h].from + " to " + engineJson.influences[h].to;
                         showSimErrorPopup();
                         return;
                     }
-
                 }
                 if (!exists) {
-                    document.getElementById("simErrorPopupDesc").innerHTML = "Missing an influence from " + references[j] + " to " + engineJson.valves[i].label;
+                    document.getElementById("simErrorPopupDesc").innerHTML =
+                        "Missing an influence from " + references[j] + " to " + valve.key;
                     showSimErrorPopup();
                     return;
                 }
             }
-        }else {
+        } else {
             for (var j = 0; j < engineJson.influences.length; j++) {
-                console.log(engineJson.influences);
-                if (engineJson.influences[j].to === engineJson.valves[i].key) {
+                if (engineJson.influences[j].to === valve.key) {
                     document.getElementById("simErrorPopupDesc").innerHTML =
-                        "No references in equation for " + engineJson.valves[i].label + ", but influence from " + engineJson.influences[j].from + " exists.";
+                        "No references in equation for " + valve.key + ", but influence from " + engineJson.influences[j].from + " exists.";
                     showSimErrorPopup();
                     return;
                 }
             }
         }
-
     }
+
+
+
+    // for(var i = 0; i < engineJson.variables.length; i++){
+    //     var references = containsReference(engineJson.variables[i].equation);
+    //     if(references.length>0) {
+    //         for (var h = 0; h < references.length; h++) {
+    //             var exists = false;
+    //             for (var j = 0; j < engineJson.influences.length; j++) {
+    //                 if (engineJson.influences[j].to == engineJson.variables[i].label && engineJson.influences[j].from == references[h]) {
+    //                     exists = true;
+    //                 }
+    //                 if (engineJson.influences[j].to === engineJson.variables[i].label &&
+    //                     !references.includes(engineJson.influences[j].from)) {
+    //                     document.getElementById("simErrorPopupDesc").innerHTML =
+    //                         "Incorrect influence from " + engineJson.influences[j].from + " to " + engineJson.influences[j].to;
+    //                     showSimErrorPopup();
+    //                     return;
+    //                 }
+    //             }
+    //             if (!exists) {
+    //                 document.getElementById("simErrorPopupDesc").innerHTML = "Missing an influence from " + references[h] + " to " + engineJson.variables[i].label;
+    //                 showSimErrorPopup();
+    //                 return;
+    //             }
+    //         }
+    //     } else {
+    //         for (var j = 0; j < engineJson.influences.length; j++) {
+    //             if (engineJson.influences[j].to === engineJson.variables[i].label) {
+    //                 document.getElementById("simErrorPopupDesc").innerHTML =
+    //                     "No references in equation for " + engineJson.variables[i].label + ", but influence from " + engineJson.influences[j].from + " exists.";
+    //                 showSimErrorPopup();
+    //                 return;
+    //             }
+    //         }
+    //     }
+    // }
+    //
+    // for(var i =0; i<engineJson.valves.length; i++){
+    //     var references = containsReference(engineJson.valves[i].equation);
+    //     if(references.length>0) {
+    //         for(var j =0; j<references.length; j++){
+    //             var exists = false;
+    //             for(var h =0; h < engineJson.influences.length; h++){
+    //                 if (engineJson.influences[h].to == engineJson.valves[i].key && engineJson.influences[h].from == references[j]) {
+    //                     exists = true;
+    //                 }
+    //                 if (engineJson.influences[h].to === engineJson.valves[i].key &&
+    //                     !references.includes(engineJson.influences[h].from)) {
+    //                     document.getElementById("simErrorPopupDesc").innerHTML =
+    //                         "Incorrect influence from " + engineJson.influences[h].from + " to " + engineJson.influences[h].to;
+    //                     showSimErrorPopup();
+    //                     return;
+    //                 }
+    //
+    //             }
+    //             if (!exists) {
+    //                 document.getElementById("simErrorPopupDesc").innerHTML = "Missing an influence from " + references[j] + " to " + engineJson.valves[i].label;
+    //                 showSimErrorPopup();
+    //                 return;
+    //             }
+    //         }
+    //     }else {
+    //         for (var j = 0; j < engineJson.influences.length; j++) {
+    //             console.log(engineJson.influences);
+    //             if (engineJson.influences[j].to === engineJson.valves[i].key) {
+    //                 document.getElementById("simErrorPopupDesc").innerHTML =
+    //                     "No references in equation for " + engineJson.valves[i].label + ", but influence from " + engineJson.influences[j].from + " exists.";
+    //                 showSimErrorPopup();
+    //                 return;
+    //             }
+    //         }
+    //     }
+    //
+    // }
 
 
 
