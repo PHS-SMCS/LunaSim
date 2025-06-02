@@ -417,7 +417,7 @@ function buildTemplates() {
             {
                 movable: false,
                 layerName: "Foreground",
-                selectable: false,
+                selectable: true,
                 pickable: true,
                 alignmentFocus: go.Spot.None
             },
