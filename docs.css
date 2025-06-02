@@ -13,7 +13,6 @@ body {
     box-sizing: border-box;
 }
 
-
 .sidebar {
     width: 15%;
     position: fixed;
@@ -156,13 +155,30 @@ body {
     margin-bottom: 12px;
 }
 
+.tutorialInfo h3 {
+    font-size: 19px;
+    font-weight: 600;
+    color: #176481ff;
+    margin-top: 9px;
+    margin-bottom: 9px;
+}
+
+.tutorialInfo h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #176481ff;
+    margin-top: 6px;
+    margin-bottom: 4px;
+}
+
+
 
 .tutorialInfo p {
     font-size: 16px; /* 16*/
     font-weight: 400;
     color: #4c4a4a;
     line-height: 1.5;
-    margin-bottom: 10px;
+    margin-bottom: 4px;
     margin-top: 4px;
     line-height: 2;
 }

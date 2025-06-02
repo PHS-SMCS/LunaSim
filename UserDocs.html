@@ -17,259 +17,517 @@
 <body>
 
 
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <p>Overview</p>
-    <ul class="program-list">
-      <li><a href="#overview">Video Overview</a></li>
-      <li><a href="#systemDynamics">System Dynamics</a></li>
-      <li><a href="#eulersMethod">Euler's Method</a></li>
-      <li><a href="#websiteParts">Parts of the Website</a></li>
-      <li><a href="#nodeLinkReference">Node/Link Reference</a></li>
-    </ul>
-    <p>Features</p>
-    <ul class="program-list">
-      <li><a href="#stocks">Stocks</a></li>
-      <li><a href="#clouds">Clouds</a></li>
-      <li><a href="#variables">Variables</a></li>
-      <li><a href="#flows">Flows</a></li>
-      <li><a href="#influences">Influences</a></li>
-      <li><a href="#equations">Equation Editor</a></li>
-      <li><a href="#math">Java Math Class</a></li>
-      <li><a href="#parameters">Simulation Parameters</a></li>
-      <li><a href="#ghosting">Ghosting</a></li>
-      <li><a href="#charts">Creating Charts</a></li>
-      <li><a href="#tables">Creating Tables</a></li>
-      <li><a href="#importExport">Import/Export</a></li>
-    </ul>
-    <p>Sample Projects</p>
-    <ul class="program-list">
-      <li><a href="#sample1">Water Flow</a></li>
-      <li><a href="#sample2">Spring Oscillation</a></li>
-      <li><a href="#sample3">Rocket Motion</a></li>
-      <li><a href="#sample4">Population Growth</a></li>
-    </ul>
-  </div>
-   
-  <!-- Tutorial Description -->
-  <div class="tutorialList">
+<!-- Sidebar -->
+<div class="sidebar">
+  <p>Overview</p>
+  <ul class="program-list">
+    <li><a href="#overview">Video Overview</a></li>
+    <li><a href="#systemDynamics">System Dynamics</a></li>
+    <li><a href="#eulersMethod">Euler's Method</a></li>
+    <li><a href="#websiteParts">Parts of the Website</a></li>
+    <li><a href="#nodeLinkReference">Node/Link Reference</a></li>
+  </ul>
+  <p>Features</p>
+  <ul class="program-list">
+    <li><a href="#stocks">Stocks</a></li>
+    <li><a href="#clouds">Clouds</a></li>
+    <li><a href="#variables">Variables</a></li>
+    <li><a href="#flows">Flows</a></li>
+    <li><a href="#influences">Influences</a></li>
+    <li><a href="#equations">Equation Editor</a></li>
+    <li><a href="#math">Java Math Class</a></li>
+    <li><a href="#parameters">Simulation Parameters</a></li>
+    <li><a href="#ghosting">Ghosting</a></li>
+    <li><a href="#charts">Creating Charts</a></li>
+    <li><a href="#tables">Creating Tables</a></li>
+    <li><a href="#importExport">Import/Export</a></li>
+  </ul>
+  <p>Sample Projects</p>
+  <ul class="program-list">
+    <li><a href="#sample1">Water Flow</a></li>
+    <li><a href="#sample2">Spring-Mass Oscillation</a></li>
+    <li><a href="#sample3">Heating a Metal Rod</a></li>
+    <li><a href="#sample4">Population Growth</a></li>
+  </ul>
+</div>
+
+<!-- Tutorial Description -->
+<div class="tutorialList">
 
 
-    <div class="tutorialContainer"><div id="overview" class="tutorialBox"><div class="tutorialContents">
-      <video class="tutorialVideo" controls></video>
-      <div class="tutorialInfo">
-        <h1>Video Overview</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>
-      </div>
-    </div></div></div>
+  <div class="tutorialContainer"><div id="overview" class="tutorialBox"><div class="tutorialContents">
+    <video class="tutorialVideo" controls></video>
+    <div class="tutorialInfo">
+      <h1>Video Overview</h1>
+      <p>In this tutorial, you'll learn how to use LunaSim to build and simulate system dynamics models directly in your browser. We'll walk through creating components like stocks, flows, variables, and clouds, defining equations, setting simulation parameters, and visualizing results with charts and tables. You'll also learn how to save and load models.
+
+        Written instructions are provided below, and sample projects at the bottom of the page include both video and step-by-step guides to help you explore LunaSim's features in practice. </p>
+
+    </div>
+  </div></div></div>
 
 
-    <div class="tutorialContainer"><div id="systemDynamics" class="tutorialBox"><div class="tutorialContents">
-      <div class="tutorialInfo">
-        <h1>Introduction to System Dynamics</h1>
-        <p>
-          <i>System Dynamics</i> is a method used to model complex, dynamic systems. But what exactly does that mean?<br><br>
-       
-          A <i>system</i> is a group of interacting parts with many internal connections. Examples include ecosystems, businesses, and even the human body. The term <i>dynamics</i> refers to how things change over time, such as how components grow, shrink, or move. For instance, a car driving down a road demonstrates dynamics because it changes position over time.<br><br>
-       
-          When you put these ideas together, <i>System Dynamics</i> refers to modeling how different parts of a system interact and influence one another to produce changes over time.<br><br>
-       
-          LunaSim is a browser-based system dynamics tool. It allows users to simulate physical situations by graphically solving sets of differential equations. System Dynamics helps users understand how complex systems evolve by focusing on the relationships between system components and how they affect each other through mathematical models. Rather than examining one cause-and-effect event at a time, system dynamics emphasizes the bigger picture, focusing on how one action influences another, and how those effects circle back to impact the original cause.<br><br>
-       
-          This method is especially useful for predicting future behavior in systems based on current conditions. It often uses numerical methods such as <i>Euler’s Method</i> and <i>Runge-Kutta 4</i> to approximate solutions. System Dynamics is widely used in fields such as population modeling, economics, environmental science, and the simulation of physical systems.
-        </p>        
-      </div>
-    </div></div></div>
+  <div class="tutorialContainer"><div id="systemDynamics" class="tutorialBox"><div class="tutorialContents">
+    <div class="tutorialInfo">
+      <h1>Introduction to System Dynamics</h1>
+      <p>
+        <i>System Dynamics</i> is a method used to model complex, dynamic systems. But what exactly does that mean?<br><br>
+
+        A <i>system</i> is a group of interacting parts with many internal connections. Examples include ecosystems, businesses, and even the human body. The term <i>dynamics</i> refers to how things change over time, such as how components grow, shrink, or move. For instance, a car driving down a road demonstrates dynamics because it changes position over time.<br><br>
+
+        When you put these ideas together, <i>System Dynamics</i> refers to modeling how different parts of a system interact and influence one another to produce changes over time.<br><br>
+
+        LunaSim is a browser-based system dynamics tool. It allows users to simulate physical situations by graphically solving sets of differential equations. System Dynamics helps users understand how complex systems evolve by focusing on the relationships between system components and how they affect each other through mathematical models. Rather than examining one cause-and-effect event at a time, system dynamics emphasizes the bigger picture, focusing on how one action influences another, and how those effects circle back to impact the original cause.<br><br>
+
+        This method is especially useful for predicting future behavior in systems based on current conditions. It often uses numerical methods such as <i>Euler's Method</i> and <i>Runge-Kutta 4</i> to approximate solutions. System Dynamics is widely used in fields such as population modeling, economics, environmental science, and the simulation of physical systems.
+      </p>
+    </div>
+  </div></div></div>
 
 
-    <div class="tutorialContainer"><div id="eulersMethod" class="tutorialBox"><div class="tutorialContents">
-      <div class="tutorialInfo">
-        <h1>Worked Example: Euler's Method</h1>
-        <p>
-          Let’s say we want to model how a population grows over time.<br><br>
-       
-          Imagine a town with 100 people. The number of people increases by 10% each year. We want to know: What will the population be after 5 years? As opposed to jumping to the final answer with a formula, we’ll calculate it step by step using Euler’s Method, a simple technique to simulate change over time through small intervals.<br><br>
-       
-          In system dynamics, we break up time into small pieces. These steps are often labeled as dt, which stands for "delta time," just a fancy way of saying "a small change in time." If dt is 1, we update the system once per year. If it’s 0.5, we’re checking in every six months. The smaller the time step, the more detailed and accurate our simulation becomes, since we’re updating the system more frequently.<br><br>
-       
-          For this example, we’ll keep it simple and use dt = 1, meaning we’ll update the population once per year over a five-year period.<br><br>
-       
-          Euler’s Method helps us estimate change over time with this simple formula: New Population = Current Population + (Rate of Change x dt).<br><br>
-       
-          In our case, the Current Population is whatever the population was the previous year. The Rate of Change is 10% of the current population, because the population is growing by 10% annually. And since dt = 1, we're applying that growth once per year.<br><br>
-       
-          We’ll now go year by year to see how the population evolves.<br><br>
-       
-          At Year 0, the population starts at 100. Ten percent of 100 is 10, so after one year, the population becomes 100 + 10 = 110.<br>
-          At Year 1, we begin with 110. Ten percent of that is 11. Adding that to the current population, we get 110 + 11 = 121.<br>
-          At Year 2, we have 121 people. Ten percent of 121 is 12.1. Adding that gives 121 + 12.1 = 133.1.<br>
-          At Year 3, we start with 133.1. Ten percent of that is 13.31, so the population becomes 133.1 + 13.31 = 146.41.<br>
-          At Year 4, the population is 146.41. Ten percent of that is 14.641, so we end up with 146.41 + 14.641 = 161.05.<br><br>
-       
-          After 5 years, using this step-by-step approach with dt = 1, the population is predicted to be approximately 161 people.<br><br>
-       
-          This example shows how System Dynamics can be used to predict how a system works in the future over small steps, based on how it’s changing at each moment. Euler’s Method is one way to do this, and it’s built right into LunaSim!
-        </p>      
-      </div>
-    </div></div></div>
+  <div class="tutorialContainer"><div id="eulersMethod" class="tutorialBox"><div class="tutorialContents">
+    <div class="tutorialInfo">
+      <h1>Worked Example: Euler's Method</h1>
+      <p>
+        Let's say we want to model how a population grows over time.<br><br>
+
+        Imagine a town with 100 people. The number of people increases by 10% each year. We want to know: What will the population be after 5 years? As opposed to jumping to the final answer with a formula, we'll calculate it step by step using Euler's Method, a simple technique to simulate change over time through small intervals.<br><br>
+
+        In system dynamics, we break up time into small pieces. These steps are often labeled as dt, which stands for "delta time," just a fancy way of saying "a small change in time." If dt is 1, we update the system once per year. If it's 0.5, we're checking in every six months. The smaller the time step, the more detailed and accurate our simulation becomes, since we're updating the system more frequently.<br><br>
+
+        For this example, we'll keep it simple and use dt = 1, meaning we'll update the population once per year over a five-year period.<br><br>
+
+        Euler's Method helps us estimate change over time with this simple formula: New Population = Current Population + (Rate of Change x dt).<br><br>
+
+        In our case, the Current Population is whatever the population was the previous year. The Rate of Change is 10% of the current population, because the population is growing by 10% annually. And since dt = 1, we're applying that growth once per year.<br><br>
+
+        We'll now go year by year to see how the population evolves.<br><br>
+
+        At Year 0, the population starts at 100. Ten percent of 100 is 10, so after one year, the population becomes 100 + 10 = 110.<br>
+        At Year 1, we begin with 110. Ten percent of that is 11. Adding that to the current population, we get 110 + 11 = 121.<br>
+        At Year 2, we have 121 people. Ten percent of 121 is 12.1. Adding that gives 121 + 12.1 = 133.1.<br>
+        At Year 3, we start with 133.1. Ten percent of that is 13.31, so the population becomes 133.1 + 13.31 = 146.41.<br>
+        At Year 4, the population is 146.41. Ten percent of that is 14.641, so we end up with 146.41 + 14.641 = 161.05.<br><br>
+
+        After 5 years, using this step-by-step approach with dt = 1, the population is predicted to be approximately 161 people.<br><br>
+
+        This example shows how System Dynamics can be used to predict how a system works in the future over small steps, based on how it's changing at each moment. Euler's Method is one way to do this, and it's built right into LunaSim!
+      </p>
+    </div>
+  </div></div></div>
 
 
-    <div class="tutorialContainer"><div id="websiteParts" class="tutorialBox"><div class="tutorialContents">
-      <div class="tutorialInfo">
-        <h1>Website Parts</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>
-      </div>
-    </div></div></div>
+  <div class="tutorialContainer"><div id="websiteParts" class="tutorialBox"><div class="tutorialContents">
+    <div class="tutorialInfo">
+      <h1>Website Parts</h1>
+      <p>The LunaSim interface is made up of multiple key components:</p>
+      <p>Model Builder Area: This is the main workspace where you visually create your system dynamics model by adding elements like stocks, variables, flows, etc.</p>
+      <p>Equation Editor: A table interface where you define and edit the mathematical relationships (equations) between your model elements.</p>
+      <p>Simulation Parameters: Allows you to configure the time settings and numerical method (<i>Euler's Method</i> or <i>Runge-Kutta 4</i>) for your simulation.</p>
+      <p>Charts/Tables Tab: Lets you visualize your simulation results using interactive charts and data tables.</p>
+      <p>Import/Export Buttons: Used to save or load your model files and output visualizations for later use.</p>
+    </div>
+  </div></div></div>
+
+  <div class="tutorialContainer"><div id="nodeLinkReference" class="tutorialBox"><div class="tutorialContents">
+    <div class="tutorialImage"><img src="Placeholder.jpg"></div>
+    <div class="tutorialInfo">
+      <h1>Node/Link Reference</h1>
+      <h3>Nodes</h3>
+      <p>Stocks: Rectangular blocks representing accumulations (e.g., population, money).</p>
+      <p>Variables: Circles that represent calculated values used in your equations.</p>
+      <p>Clouds: Cloud-shaped icons that act as infinite sources or sinks for flows.</p>
+      <h3>Links</h3>
+      <p>Flows: Straight arrows showing the movement or change of values between stocks/clouds.</p>
+      <p>Influences: Curved arrows representing dependencies in your equations (e.g., [growth rate] influences [population change]).</p>
+    </div>
+  </div></div></div>
+
+  <div class="tutorialContainer"><div id="stocks" class="tutorialBox"><div class="tutorialContents">
+    <div class="tutorialImage"><img src="Placeholder.jpg"></div>
+    <div class="tutorialInfo">
+      <h1>Stocks</h1>
+      <p>Stocks are the foundational components in system dynamics. They store values that accumulate over time (e.g., the number of people in a population).</p>
+      <p>1. Click the Stock button.</p>
+      <p>2. Click anywhere in the canvas (build area) to place the stock. It appears as a rectangle.</p>
+      <p>3. To rename the stock, double-click the text below it and enter a descriptive name.</p>
+      <p>4. To move it, simply click and drag the stock around the canvas.</p>
+      <p>5. To delete, click the stock once to select it and press Backspace.</p>
+    </div>
+  </div></div></div>
+
+  <div class="tutorialContainer"><div id="clouds" class="tutorialBox"><div class="tutorialContents">
+    <div class="tutorialImage"><img src="Placeholder.jpg"></div>
+    <div class="tutorialInfo">
+      <h1>Clouds</h1>
+      <p>Clouds represent sources or sinks that can send or absorb flows without limit. Use them to start or end flow connections.</p>
+      <p>1. Click the Cloud button.</p>
+      <p>2. Click anywhere in the canvas (build area) to place the cloud. It appears as a cloud. </p>
+      <p>3. To move it, simply click and drag the cloud around the canvas. </p>
+      <p>4. To delete, click the cloud once to select it and press Backspace</p>
+    </div>
+  </div></div></div>
+
+  <div class="tutorialContainer"><div id="variables" class="tutorialBox"><div class="tutorialContents">
+    <div class="tutorialImage"><img src="Placeholder.jpg"></div>
+    <div class="tutorialInfo">
+      <h1>Variables</h1>
+      <p>Variables (also called converters) are used to calculate values based on other components. These appear as circles and are recalculated every time step.</p>
+      <p>1. Click the Variable button.</p>
+      <p>2. Click anywhere in the canvas (build area) to place the variable. It appears as a circle.</p>
+      <p>3. To rename the variable, double-click the text below it and enter a descriptive name.</p>
+      <p>4. To move it, simply click and drag the variable around the canvas.</p>
+      <p>5. To delete, click the variable once to select it and press Backspace.</p>
+    </div>
+  </div></div></div>
+
+  <div class="tutorialContainer"><div id="flows" class="tutorialBox"><div class="tutorialContents">
+    <div class="tutorialImage"><img src="Placeholder.jpg"></div>
+    <div class="tutorialInfo">
+      <h1>Flows</h1>
+      <p>Flows indicate changes in stocks and represent how fast something is increasing or decreasing.</p>
+      <p>1. Click the Flow button.</p>
+      <p>2. Click on a source element (stock or cloud). </p>
+      <p>3. Drag to a destination element (stock or cloud).</p>
+      <p>4. A straight arrow will appear, labeled with the flow name. </p>
+      <p>5. To rename the flow, double-click the text below it and enter a descriptive name.</p>
+      <p>6. To delete, click the flow once to select it and press Backspace.</p>
+    </div>
+  </div></div></div>
+
+  <div class="tutorialContainer"><div id="influences" class="tutorialBox"><div class="tutorialContents">
+    <div class="tutorialImage"><img src="Placeholder.jpg"></div>
+    <div class="tutorialInfo">
+      <h1>Influences</h1>
+      <p>Influences are curved arrows showing which elements affect others in equations.</p>
+      <p>1. Click the Influence button.</p>
+      <p>2. Click a source element (stock, variable, or flow).</p>
+      <p>3. Drag to a destination element (variable or flow).</p>
+      <p>4. To bend the arrow, click the middle point and drag to adjust the curve.</p>
+    </div>
+  </div></div></div>
+
+  <div class="tutorialContainer"><div id="equations" class="tutorialBox"><div class="tutorialContents">
+    <div class="tutorialImage"><img src="Placeholder.jpg"></div>
+    <div class="tutorialInfo">
+      <h1>Equation Editor</h1>
+      <p>This table-based interface lets you define the behavior of your model by entering equations and settings.</p>
+      <p>Type: Indicates whether the element is a stock, flow, or variable.</p>
+      <p>Name: The label used for referencing in equations.</p>
+      <p>Equation: Mathematical expression that defines how the element behaves.</p>
+      <p>Uniflow/Nonnegative: Checkbox used to restrict flows to only positive values.</p>
+      <p>Changes in the model are automatically reflected in this table and vice versa.</p>
+    </div>
+  </div></div></div>
+
+  <div class="tutorialContainer"> <div id="math" class="tutorialBox"><div class="tutorialContents">
+    <div class="tutorialImage"><img src="Placeholder.jpg"></div>
+    <div class="tutorialInfo">
+      <h1>Java Math Class</h1>
+      <p>You can use many mathematical functions in your equations (a dropdown menu for functions will appear when typing):</p>
+      <p>Arithmetic: +, -, *, /</p>
+      <p>Conditionals: if(condition) {trueResult} else {falseResult}</p>
+      <p>Trigonometry: sin(), cos(), tan()</p>
+      <p>Exponentials and Logs: exp(), log()</p>
+      <p>Other functions: max(), min(), sqrt(), etc.</p>
+    </div>
+  </div></div></div>
+
+  <div class="tutorialContainer"><div id="parameters" class="tutorialBox"><div class="tutorialContents">
+    <div class="tutorialImage"><img src="Placeholder.jpg"></div>
+    <div class="tutorialInfo">
+      <h1>Simulation Parameters</h1>
+      <p>Before running a simulation, you must configure:</p>
+      <p>Start Time: When the simulation begins (e.g., 0)</p>
+      <p>End Time: When the simulation ends (e.g., 100)</p>
+      <p>dt: The timestep (e.g., 1, 0.1), controls how often calculations are performed</p>
+      <p>Integration Method: Choose between Euler's Method and Runge-Kutta 4</p>
+      <p>Click "Run" to validate inputs and start the simulation. Errors (like dt &gt; simulation length) will trigger alerts.</p>
+    </div>
+  </div></div></div>
+
+  <div class="tutorialContainer"><div id="ghosting" class="tutorialBox"><div class="tutorialContents">
+    <div class="tutorialInfo">
+      <h1>Ghosting</h1>
+      <p>Ghosts are visual duplicates of existing elements, used to clean up complex diagrams.</p>
+      <p>Create a ghost by naming a new element $OriginalName.</p>
+      <p>Ghosts appear lighter in color and follow the behavior of the original.</p>
+      <p>Useful to prevent overlapping arrows and clarify diagrams.</p>
+    </div>
+  </div></div></div>
+
+  <div class="tutorialContainer"><div id="charts" class="tutorialBox"><div class="tutorialContents">
+    <div class="tutorialInfo">
+      <h1>Creating Charts</h1>
+      <p>1. Go to the Charts/Tables tab.</p>
+      <p>2. Click the + button.</p>
+      <p>3. Choose Chart.</p>
+      <p>4. Select one variable for the x-axis (usually time).</p>
+      <p>5. Select additional series to plot on the y-axis.</p>
+      <p>6. A new chart tab will be created, click to view it.</p>
+      <p>7. Use the Export button to download the chart as a PNG.</p>
+    </div>
+  </div></div></div>
+
+  <div class="tutorialContainer"><div id="tables" class="tutorialBox"><div class="tutorialContents">
+    <div class="tutorialInfo">
+      <h1>Creating Tables</h1>
+      <p>1. Go to the Charts/Tables tab.</p>
+      <p>2. Click the + button.</p>
+      <p>3. Choose Table.</p>
+      <p>4. Select one variable for the x-axis.</p>
+      <p>5. Select one or more data series to display.</p>
+      <p>6. Click the new table tab to view it.</p>
+      <p>7. Use the Export button to download the table as a CSV file.</p>
+    </div>
+  </div></div></div>
+
+  <div class="tutorialContainer"><div id="importExport" class="tutorialBox"><div class="tutorialContents">
+    <div class="tutorialInfo">
+      <h1>Import/Export</h1>
+      <h3>Import</h3>
+      <p>1. Click the Load button.</p>
+      <p>2. Choose a .json file from your computer.</p>
+      <p>The diagram and equations will be restored as saved.</p>
+      <h3>Export</h3>
+      <p>Model Export: Go to "Modal View" and click Export to save the model as a .json file.</p>
+      <p>Charts: In a chart tab, click Export to download a .png image.</p>
+      <p>Tables: In a table tab, click Export to download a .csv file.</p>
+    </div>
+  </div></div></div>
+
+  <div class="tutorialContainer"><div id="sample1" class="tutorialBox"><div class="tutorialContents">
+    <video class="tutorialVideo" controls></video>
+    <div class="tutorialInfo">
+      <h1>Water Flow</h1>
+      <p>In this tutorial we will cover how to simulate the behavior of water draining from a container with a hole in its bottom.
+        The rate of water flow out of a container depends on the current water level which gives us a differential relation.
+        This differential relation (for the water outflow velocity) is given by Torricelli's Law. The tutorial steps in written form are found below. </p>
 
 
-    <div class="tutorialContainer"><div id="nodeLinkReference" class="tutorialBox"><div class="tutorialContents">
-      <div class="tutorialImage"><img src="Placeholder.jpg"></div>
-      <div class="tutorialInfo">
-        <h1>Node/Link Reference</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>
-      </div>
-    </div></div></div>
+    </div>
+  </div></div></div>
+
+  <div class="tutorialContainer"><div id="sample1content" class="tutorialBox"><div class="tutorialContents">
+    <div class="tutorialInfo">
+      <h1>Water Flow Tutorial Steps</h1>
+
+      <h3>Step 1: Define System Components</h3>
+
+      <h4>Stock(s)</h4>
+
+      <p>[Volume] = current water volume in the container</p>
+
+      <h4>Cloud(s)</h4>
+
+      <p>Create a cloud which will represent an infinite sink.</p>
+
+      <h4>Flow(s)</h4>
+
+      <p>[dV] = represents change in volume, going from [Volume] to the cloud</p>
+
+      <h4>Variable(s)</h4>
+      <p>[Height] = water level height</p>
+      <p>[V<sub>outflow</sub>] = velocity of outflowing water</p>
+      <p>[A<sub>container</sub>] = cross-sectional area of the container </p>
+      <p>[A<sub>hole</sub>] = area of the hole </p>
+      <p>[g] = gravitational acceleration </p>
+
+      <br>
+      <h3>Step 2: Add Influences</h3>
+
+      <h4>Influence(s)</h4>
+
+      <p>[Volume],[A<sub>container</sub>] to [Height]</p>
+      <p>[Height],[g] to [V<sub>outflow</sub>]</p>
+      <p>[V<sub>outflow</sub>],[A<sub>hole</sub>] to [dV]</p>
+
+      <br>
+      <h3>Step 3: Input Equations</h3>
+      <h4>Differential Equations</h4>
+      <p>[V<sub>outflow</sub>] = (2 * [g] * [Height])^(1/2)</p>
+      <p>[Height] = [Volume] / [A<sub>container</sub>]</p>
+      <p>[dV] = -[A<sub>hole</sub>] * [V<sub>outflow</sub>]</p>
+      <h4>Constants / Initial Values</h4>
+      <p>[g] = 9.8</p>
+      <p>[Volume] = initial volume</p>
+      <p>[A<sub>hole</sub>] = area of the hole</p>
+      <p>[A<sub>container</sub>] = cross-sectional area of the container</p>
+
+      <br>
+      <h3>Step 4: Generate a Chart</h3>
+
+      <p>Once the model is set up, run the simulation and plot the water height versus time. You can also change the simulation parameters if desired. </p>
+
+    </div>
+  </div></div></div>
 
 
-    <div class="tutorialContainer"><div id="stocks" class="tutorialBox"><div class="tutorialContents">
-      <div class="tutorialImage"><img src="Placeholder.jpg"></div>
-      <div class="tutorialInfo">
-        <h1>Stocks</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>
-      </div>
-    </div></div></div>
+  <div class="tutorialContainer"><div id="sample2" class="tutorialBox"><div class="tutorialContents">
+    <video class="tutorialVideo" controls></video>
+    <div class="tutorialInfo">
+      <h1>Spring-Mass Oscillation</h1>
+      <p>This tutorial simulates the motion of a mass attached to a spring, applying Hooke's Law and Newton's Second Law to model oscillations.
+      The net force on this mass depends on the force due to the spring (proportional to its displacement) and also a damping force (proportional to its velocity).
+        This differential relation models the behavior of damped harmonic oscillators. The tutorial steps in written form are found below. </p>
 
+    </div>
+  </div></div></div>
+  <div class="tutorialContainer"><div id="sample2content" class="tutorialBox"><div class="tutorialContents">
+    <div class="tutorialInfo">
+      <h1>Spring-Mass Oscillation Tutorial Steps</h1>
 
-    <div class="tutorialContainer"><div id="clouds" class="tutorialBox"><div class="tutorialContents">
-      <div class="tutorialImage"><img src="Placeholder.jpg"></div>
-      <div class="tutorialInfo">
-        <h1>Clouds</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>
-      </div>
-    </div></div></div>
+      <h3>Step 1: Define System Components</h3>
 
+      <h4>Stock(s)</h4>
+      <p>[Position] = displacement of the mass from equilibrium</p>
+      <p>[Velocity] = velocity of the mass</p>
 
-    <div class="tutorialContainer"><div id="variables" class="tutorialBox"><div class="tutorialContents">
-      <div class="tutorialImage"><img src="Placeholder.jpg"></div>
-      <div class="tutorialInfo">
-        <h1>Variables</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>
-      </div>
-    </div></div></div>
+      <h4>Cloud(s)</h4>
 
+      <p>Create a cloud which will represent an infinite source.</p>
 
-    <div class="tutorialContainer"><div id="flows" class="tutorialBox"><div class="tutorialContents">
-      <div class="tutorialImage"><img src="Placeholder.jpg"></div>
-      <div class="tutorialInfo">
-        <h1>Flows</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>
-      </div>
-    </div></div></div>
+      <h4>Flow(s)</h4>
 
+      <p>[dv] = represents change in velocity, going from the cloud to [Velocity]</p>
+      <p>[dx] = represents change in position, going from the [Velocity] to [Position]</p>
 
-    <div class="tutorialContainer"><div id="influences" class="tutorialBox"><div class="tutorialContents">
-      <div class="tutorialImage"><img src="Placeholder.jpg"></div>
-      <div class="tutorialInfo">
-        <h1>Influences</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>
-      </div>
-    </div></div></div>
+      <h4>Variable(s)</h4>
+      <p>[Force] = net force on mass</p>
+      <p>[Acceleration] = acceleration of the mass</p>
+      <p>[Mass] = mass of the object</p>
+      <p>[SpringConstant] = stiffness of the spring</p>
+      <p>[Damping] = damping coefficient </p>
 
+      <br>
+      <h3>Step 2: Add Influences</h3>
 
-    <div class="tutorialContainer"><div id="equations" class="tutorialBox"><div class="tutorialContents">
-      <div class="tutorialImage"><img src="Placeholder.jpg"></div>
-      <div class="tutorialInfo">
-        <h1>Equation Editor</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>
-      </div>
-    </div></div></div>
+      <h4>Influence(s)</h4>
+      <p>[Position], [SpringConstant], [Damping], and [Velocity] to [Force]</p>
+      <p>[Force] and [Mass] to [Acceleration]</p>
+      <p>[Acceleration] to [dv]</p>
 
+      <br>
+      <h3>Step 3: Input Equations</h3>
+      <h4>Differential Equations</h4>
+      <p>[Force] = -[SpringConstant] * [Position] - [Damping] * [Velocity]</p>
+      <p>[Acceleration] = [Force] / [Mass]</p>
+      <p>[dv] = [Acceleration]</p>
+      <p>[dx] = [velocity]</p>
 
-    <div class="tutorialContainer"> <div id="math" class="tutorialBox"><div class="tutorialContents">
-      <div class="tutorialImage"><img src="Placeholder.jpg"></div>
-      <div class="tutorialInfo">
-        <h1>Java Math Class</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>
-      </div>
-    </div></div></div>
+      <h4>Constants / Initial Values</h4>
+      <p>[Mass] = mass of the object</p>
+      <p>[SpringConstant] = stiffness of the spring</p>
+      <p>[Damping] = damping coefficient</p>
+      <p>[Position] = initial position</p>
+      <p>[Velocity] = initial velocity</p>
 
+      <br>
+      <h3>Step 4: Generate a Chart</h3>
 
-    <div class="tutorialContainer"><div id="parameters" class="tutorialBox"><div class="tutorialContents">
-      <div class="tutorialImage"><img src="Placeholder.jpg"></div>
-      <div class="tutorialInfo">
-        <h1>Simulation Parameters</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>
-      </div>
-    </div></div></div>
+      <p>
+        Once the model is set up, run the simulation and plot the position and/or velocity versus time. You can also change the simulation parameters if desired.
+      </p>
 
+    </div>
+  </div></div></div>
 
-    <div class="tutorialContainer"><div id="ghosting" class="tutorialBox"><div class="tutorialContents">
-      <div class="tutorialInfo">
-        <h1>Ghosting</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>
-      </div>
-    </div></div></div>
+  <div class="tutorialContainer"><div id="sample3" class="tutorialBox"><div class="tutorialContents">
+    <video class="tutorialVideo" controls></video>
+    <div class="tutorialInfo">
+      <h1>Heating a Metal Rod</h1>
+      <p>This tutorial models the temperature change along a metal rod heated at one end, applying heat conduction principles and visualizing the temperature profile over time.
+        The rate of heat flow is governed by Fourier's Law, which relates the temperature gradient to the heat transfer rate. This results in a partial differential equation that describes the evolution of temperature across the rod. The tutorial steps in written form are found below.
+      </p>
 
+    </div>
+  </div></div></div>
+  <div class="tutorialContainer"><div id="sample3content" class="tutorialBox"><div class="tutorialContents">
+    <div class="tutorialInfo">
+      <h1>Heating a Metal Rod Tutorial Steps</h1>
 
-    <div class="tutorialContainer"><div id="charts" class="tutorialBox"><div class="tutorialContents">
-      <div class="tutorialInfo">
-        <h1>Creating Charts</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>
-      </div>
-    </div></div></div>
+      <h3>Step 1: Define System Components</h3>
 
+      <h4>Stock(s)</h4>
+      <p>[Temperature] = temperature distribution along the rod</p>
 
-    <div class="tutorialContainer"><div id="tables" class="tutorialBox"><div class="tutorialContents">
-      <div class="tutorialInfo">
-        <h1>Creating Tables</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>
-      </div>
-    </div></div></div>
+      <h4>Variable(s)</h4>
+      <p>[HeatFlux] = rate of heat transfer</p>
+      <p>[RodLength] = length of the metal rod</p>
+      <p>[Conductivity] = thermal conductivity of the material</p>
+      <p>[AmbientTemp] = ambient temperature around the rod</p>
 
+      <br>
+      <h3>Step 2: Add Influences</h3>
 
-    <div class="tutorialContainer"><div id="importExport" class="tutorialBox"><div class="tutorialContents">
-      <div class="tutorialInfo">
-        <h1>Import/Export</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>
-      </div>
-    </div></div></div>
+      <h4>Influence(s)</h4>
+      <p>[Temperature] and [Conductivity] to [HeatFlux]</p>
+      <p>[HeatFlux] and [RodLength] to [Temperature]</p>
 
+      <br>
+      <h3>Step 3: Input Equations</h3>
+      <h4>Differential Equations</h4>
+      <p>[HeatFlux] = -[Conductivity] * (d[Temperature]/dx)</p>
+      <p>d[Temperature]/dt = (1 / (density * specific_heat)) * (d[HeatFlux]/dx)</p>
 
-    <div class="tutorialContainer"><div id="sample1" class="tutorialBox"><div class="tutorialContents">
-      <video class="tutorialVideo" controls></video>
-      <div class="tutorialInfo">
-        <h1>Water Flow</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>
-      </div>
-    </div></div></div>
+      <h4>Constants / Initial Values</h4>
+      <p>[Conductivity] = [value]</p>
+      <p>[RodLength] = [value]</p>
+      <p>[AmbientTemp] = [value]</p>
+      <p>Initial [Temperature] = ambient temperature</p>
 
+      <br>
+      <h3>Step 4: Generate a Chart</h3>
 
-    <div class="tutorialContainer"><div id="sample2" class="tutorialBox"><div class="tutorialContents">
-      <video class="tutorialVideo" controls></video>
-      <div class="tutorialInfo">
-        <h1>Spring Oscillation</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>
-      </div>
-    </div></div></div>
+      <p>Once the model is set up, run the simulation and plot the Temperature versus length. You can also change the simulation parameters if desired.</p>
 
+    </div>
+  </div></div></div>
+  <div class="tutorialContainer"><div id="sample4" class="tutorialBox"><div class="tutorialContents">
+    <video class="tutorialVideo" controls></video>
+    <div class="tutorialInfo">
+      <h1>Population Growth Model</h1>
+      <p>This tutorial models population growth using the logistic growth equation, incorporating carrying capacity limitations.
+        The rate of population change depends on both the current population size and the environmental constraints, which gives us a nonlinear differential equation.
+        This relation captures the realistic behavior of populations leveling off as they approach their carrying capacity.
+        The tutorial steps in written form are found below.</p>
+    </div>
+  </div></div></div>
+  <div class="tutorialContainer"><div id="sample4content" class="tutorialBox"><div class="tutorialContents">
+    <div class="tutorialInfo">
+      <h1>Population Growth Model Tutorial Steps</h1>
+      <h3>Step 1: Define System Components</h3>
 
-    <div class="tutorialContainer"><div id="sample3" class="tutorialBox"><div class="tutorialContents">
-      <video class="tutorialVideo" controls></video>
-      <div class="tutorialInfo">
-        <h1>Rocket Motion</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>
-      </div>
-    </div></div></div>
+      <h4>Stock(s)</h4>
+      <p>[Population] = number of individuals</p>
 
+      <h4>Variable(s)</h4>
+      <p>[GrowthRate] = intrinsic growth rate</p>
+      <p>[CarryingCapacity] = maximum sustainable population</p>
 
-    <div class="tutorialContainer"><div id="sample4" class="tutorialBox"><div class="tutorialContents">
-      <video class="tutorialVideo" controls></video>
-      <div class="tutorialInfo">
-        <h1>Population Growth</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>
-      </div>
-    </div></div></div>
-  </div>
+      <br>
+      <h3>Step 2: Add Influences</h3>
+
+      <h4>Influence(s)</h4>
+      <p>[Population], [GrowthRate], and [CarryingCapacity] to d[Population]/dt</p>
+
+      <br>
+      <h3>Step 3: Input Equations</h3>
+      <h4>Differential Equations</h4>
+      <p>d[Population]/dt = [GrowthRate] * [Population] * (1 - [Population] / [CarryingCapacity])</p>
+
+      <h4>Constants / Initial Values</h4>
+      <p>[GrowthRate] = intrinsic growth rate</p>
+      <p>[CarryingCapacity] = maximum sustainable population</p>
+      <p>[Population] = initial population</p>
+
+      <br>
+      <h3>Step 4: Generate a Chart</h3>
+
+      <p>Once the model is set up, run the simulation and plot the Population versus time. You can also change the simulation parameters if desired.</p>
+    </div>
+  </div></div></div>
+</div>
 
 
 <script>
@@ -304,6 +562,3 @@
 
 </body>
 </html>
-
-
-
