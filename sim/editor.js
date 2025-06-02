@@ -802,26 +802,20 @@ function resetSimErrorPopup() {
     document.getElementById("simErrorPopupDismiss").innerHTML = "Dismiss"
 }*/
 
-function containsReference(equation, nodeDataArray) {
+function containsReference(equation, data) {
     const matches = [];
     const regex = /\[(.*?)\]/g;
     const allMatches = equation.matchAll(regex);
 
-    // Create a label-to-key map
-    const labelToKey = {};
-    for (const node of nodeDataArray) {
-        if (node.label !== undefined) {
-            labelToKey[node.label] = node.key;
-        }
+    for (const match of allMatches) {
+        matches.push(match[1]);
     }
 
-    // Replace labels with corresponding keys
-    for (const match of allMatches) {
-        const label = match[1];
-        if (labelToKey.hasOwnProperty(label)) {
-            matches.push(labelToKey[label]);
-        } else {
-            matches.push(label); // fallback: keep the label if key not found
+    for (let i = 0; i < matches.length; i++) {
+        for (let j = 0; j < data.stock.length; j++) {
+            if(data.stock[j].label == matches[i]) {
+                matches[i] = data.stock[j].key;
+            }
         }
     }
 
