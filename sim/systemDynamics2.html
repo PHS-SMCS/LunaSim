@@ -18,7 +18,8 @@
     }
   </script>
   <!-- style sheets -->
-  <link rel="stylesheet" href="simulation2.css" id="lightThemeCSS">
+  <link rel="stylesheet" href="simulation2.css" id="lightThemeCSS base-style">
+  <link rel="stylesheet" href="" id="theme-style">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="icon" href="../img/lunaLogo.svg">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -41,7 +42,7 @@
     <script id="code" type="module" src="editor.js"></script>
     <script id="code2" type="module" src="translator.js"></script>
     <script id="code3" type="module" src="engine.js"></script>
-    <script id="code4" type="module" src="tabsManagement.js"></script>
+    <script id="code4" type="module" src="tabsManagement2.js"></script>
     
     <div id="sample">
       <div id ="header">
@@ -121,8 +122,8 @@
         <div class="chartSidebar">
           <ul>
             <!-- Chart Area Scrollable -->
-            <div class="chart-section">
-              <li><a href="#"><i class="fa-regular fa-chart-sine"></i><span>Chart1</span></a></li>
+            <div class="chart-section" id="tabsList">
+              <!--<li><a href="#"><i class="fa-regular fa-chart-sine"></i><span>Chart1</span></a></li>
               <li><a href="#"><i class="fa-regular fa-chart-sine"></i><span>Chart2</span></a></li>
               <li><a href="#"><i class="fa-regular fa-table"></i><span>Table1</span></a></li>
               <li><a href="#"><i class="fa-regular fa-table"></i><span>Table2</span></a></li>
@@ -134,7 +135,7 @@
               <li><a href="#"><i class="fa-regular fa-table"></i><span>Table3</span></a></li>
               <li><a href="#"><i class="fa-regular fa-table"></i><span>Table3</span></a></li>
               <li><a href="#"><i class="fa-regular fa-table"></i><span>Table3</span></a></li>
-              <li><a href="#" ><i class="fa-regular fa-table"></i><span>Table3</span></a></li>
+              <li><a href="#" ><i class="fa-regular fa-table"></i><span>Table3</span></a></li>-->
             </div>
 
             <!-- Settings Area Fixed -->
@@ -162,7 +163,7 @@
           <p class="chart-title">Chart Editor</p>
           <!-- Top Section -->
           <div class="chartEditor-top">
-            <button class="chart-btn full-width"  onclick="openSettings(event, 'chartsPopup')">Create New Chart</button>
+            <button class="chart-btn full-width"  id="addTab" onclick="openSettings(event, 'chartsPopup')">Create New Chart</button>
             <hr>
           </div>
 
@@ -228,9 +229,9 @@
         <div class="setting-group">
           <label for="themeSelect">Theme</label>
           <select id="themeSelect" class="settings-dropdown" style="width: 80%;">
-            <option>Normal</option>
-            <option>Classic</option>
-            <option>Dark</option>
+            <option selected value="normal">Normal</option>
+            <option value="classic">Classic</option>
+            <option value="dark">Dark</option>
           </select>
           <label for="fontSelect">Font</label>
           <select id="fontSelect" class="settings-dropdown" style="width: 80%;">
@@ -340,7 +341,7 @@
           <button class="close-btn" onclick="closeSettings('simErrorPopup')"><i class="fa-regular fa-xmark"></i></button>
         </div>
         <div class="setting-group">
-          <p id="simErrorPopupDesc">If you're seeing this, I guess you just suck.</p>
+          <p id="simErrorPopupDesc">If you're seeing this then the developers are really bad at coding.</p>
         </div>
         <button id="simErrorPopupCancel" class="setting-button" onclick="closeSettings('simErrorPopup')">Dismiss</button>
       </div>
@@ -358,6 +359,32 @@
           </div>
           <div id="equationEditorPopupContent"></div>
         </div>
+      </div>
+
+      <div id="popForm">
+        <form id="tabConfig" name = "tabConfig" onsubmit="return false"> <!-- Will not refresh page -->
+          <div>
+            <p>Table or chart:</p>
+            <input type="radio" id="table" name="model_type" value="table" required>
+            <label for="table">Table</label><br>
+            <input type="radio" id="chart" name="model_type" value="chart" required>
+            <label for="chart">Chart</label>
+          </div>
+          <div>
+            <p>X-Axis:</p>
+            <select name="xAxis" id="xAxis" style="font-size: inherit;" required>
+              <!-- Options initialized dynamically -->
+            </select>
+          </div>
+          <div >
+            <p>Y-Axis:</p>
+            <table id="yAxis">
+              <!-- Multiple checkboxes initialized dynamically -->
+            </table>
+          </div>
+          <button id="submitModel">Create New Tab</button>
+          <button id="closeNewTabPopup"><b>X</b></button>
+        </form>
       </div>
 
 
@@ -380,36 +407,10 @@
         </div>
         <div class="tabContent" id="chartsTables">
         <div id="tabManager">
-          <button id="addTab">
-            <i id="addTabButton" class="fa fa-plus-square"></i></button>
           <div id="tabsList">
             <!-- Tabs added dynamically -->
           </div>
         </div>
-        <div id="popForm">
-        <form id="tabConfig" name = "tabConfig" onsubmit="return false"> <!-- Will not refresh page -->
-          <div>
-            <p>Table or chart:</p>
-            <input type="radio" id="table" name="model_type" value="table" required>
-            <label for="table">Table</label><br>
-            <input type="radio" id="chartType" name="model_type" value="chart" required>
-            <label for="chartType">Chart</label>
-          </div>
-          <div>
-            <p>X-Axis:</p>
-            <select name="xAxis" id="xAxis" style="font-size: inherit;" required>
-              <!-- Options initialized dynamically -->
-            </select>
-          </div>
-          <div >
-            <p>Y-Axis:</p>
-            <table id="yAxis">
-              <!-- Multiple checkboxes initialized dynamically -->
-            </table>
-          </div>
-          <button id="submitModel">Create New Tab</button>
-          <button id="closeNewTabPopup"><b>X</b></button>
-        </form>
         <div id="grayEffectDiv"></div>
       </div>
       </div>
@@ -775,49 +776,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 </script>
-
-
-<!--<script>
-  function stripPx(value) {
-    return value.replace(/px\s*$/, '');
-  }
-
-  function formatPxInputs() {
-    const inputs = document.querySelectorAll(".px-visual-input");
-
-    inputs.forEach(input => {
-      // Ensure default visual value shows "px"
-      if (input.value !== "" && !input.value.endsWith("px")) {
-        input.value = input.value + "px";
-      }
-
-      // On focus: strip px
-      input.addEventListener("focus", () => {
-        input.value = stripPx(input.value);
-      });
-
-      // On blur: add px back
-      input.addEventListener("blur", () => {
-        const val = stripPx(input.value);
-        if (!isNaN(val) && val !== "") {
-          input.value = val + "px";
-        }
-      });
-
-      // Optional live cleanup
-      input.addEventListener("input", () => {
-        input.value = stripPx(input.value);
-      });
-    });
-  }
-
-  document.addEventListener("DOMContentLoaded", formatPxInputs);
-
-  // Helper to get numeric value later
-  function getRawValue(inputEl) {
-    return parseInt(stripPx(inputEl.value), 10);
-  }
-</script>-->
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const buttons = document.querySelectorAll('.toolbar a:not(.no-active), .chartSidebar a:not(.no-active)');
@@ -890,62 +848,23 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 </script>
-<!-- Save Images -->
- <!--<script>
-document.addEventListener("DOMContentLoaded", () => {
-  const fileSelect = document.getElementById("fileSelect");
-  const imageSettingsSection = document.getElementById("imageSettingsSection");
-  const exportButton = document.getElementById("exportButton");
-  const downloadImageButton = document.getElementById("downloadImageButton");
-  const imageMarginInput = document.getElementById("imageMargin");
+<script>
+  const themeSelect = document.getElementById('themeSelect');
+  const themeLink = document.getElementById('theme-style');
 
-  function updateExportOptions() {
-    const selected = fileSelect.value;
-    if (selected === ".png" || selected === ".jpg" || selected === ".tiff") {
-      imageSettingsSection.style.display = "block";
-      downloadImageButton.style.display = "inline-block";
-      exportButton.style.display = "none";
-    } else {
-      imageSettingsSection.style.display = "none";
-      downloadImageButton.style.display = "none";
-      exportButton.style.display = "inline-block";
+  themeSelect.addEventListener('change', () => {
+    const selected = themeSelect.value.toLowerCase();
+
+    let themeHref = '';
+    if (selected === 'dark') {
+      themeHref = 'simulationDark.css';
+    } else if (selected === 'classic') {
+      themeHref = 'simulationClassic.css';
     }
-  }
 
-  exportButton.addEventListener("click", () => {
-    closeSettings("exportPopup");
-    const blob = new Blob(["LunaSim project data"], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "project.luna";
-    a.click();
-    URL.revokeObjectURL(url);
+    // Apply theme or remove if 'normal'
+    themeLink.setAttribute('href', themeHref);
   });
-
-  downloadImageButton.addEventListener("click", () => {
-    closeSettings("exportPopup");
-    const selected = fileSelect.value;
-    const margin = parseInt(imageMarginInput.value) || 15;
-
-    const diagram = window.myDiagram; // Ensure your GoJS diagram is assigned to this
-
-    switch (selected) {
-      case ".png":
-        saveDiagramAsPng(diagram, "project.png", margin);
-        break;
-      case ".jpg":
-        saveDiagramAsJpg(diagram, "project.jpg", margin);
-        break;
-      case ".tiff":
-        saveDiagramAsTiff(diagram, "project.tiff", margin);
-        break;
-    }
-  });
-
-  updateExportOptions();
-  fileSelect.addEventListener("change", updateExportOptions);
-});
- </script>-->
+</script>
 </body>
 </html>

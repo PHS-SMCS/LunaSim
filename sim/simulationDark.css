@@ -1,0 +1,384 @@
+body {
+  background: linear-gradient(60deg, rgba(79, 107, 184, 1) 0%, rgba(79, 165, 189, 1) 100%);
+}
+
+#model_name {
+  background-color: rgba(38, 50, 83, 0.95);
+  border: 1px solid #627bc0;
+  color: white;
+}
+
+.actionButton {
+  background-color: rgba(60, 84, 148, 0.5);
+  color: white;
+}
+
+.actionButton:hover {
+  background-color: rgba(60, 84, 148, 1);
+}
+
+#runButton {
+  background: rgba(45, 114, 82, 0.9);
+}
+
+#runButton:hover {
+  background-color: rgba(26, 73, 51, 0.9);
+}
+
+#loadButton {
+  background: rgba(59, 45, 114, 0.9);
+}
+
+#loadButton:hover {
+  background: rgba(32, 24, 64, 0.9);
+}
+
+#expButton {
+  background: rgba(59, 45, 114, 0.9);
+}
+
+#expButton:hover {
+  background: rgba(32, 24, 64, 0.9);
+}
+
+#clearButton {
+  background: rgba(114, 45, 45, 0.9);
+}
+
+#clearButton:hover {
+  background: rgba(59, 21, 21, 0.9);
+}
+
+#saveStatus {
+  color: white;
+}
+
+.tabButton {
+  color: white;
+  background-color: rgba(60, 84, 148, 0.5);
+}
+
+.tabButton.active {
+  background-color: rgba(60, 84, 148, 1);
+  box-shadow: 0 4px 15px rgba(79, 107, 184, 0.7);
+}
+
+.modelViewer {
+  background: rgba(60, 84, 148, 1);
+}
+
+.toolbar ul {
+  background-color: rgba(38, 50, 83, 0.95);
+  box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
+}
+
+a {
+  color: #FFF;
+}
+
+a:hover,
+a:focus {
+  background-color: #374875;
+}
+
+a span {
+  background-color: #46598e;
+}
+
+a span:before {
+  background-color: #46598e;
+}
+
+a.active {
+  background-color: #46598e;
+}
+
+.modelCanvas {
+  background-color: #ffffff;
+  box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
+  color: white;
+}
+
+#myDiagram {
+  background-color: white;
+}
+
+#eqEditor {
+  background-color: rgba(38, 50, 83, 0.95);
+  box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
+  color: white;
+}
+
+.equation-editor-zoom-icon {
+  color: #ffffff;
+}
+
+.equation-editor-zoom-icon:hover {
+  color: #627bc0;
+}
+
+.eqTableInputBox {
+  background-color: #1d253d;
+  border: 1px solid #627bc0;
+  color: #ffffff;
+}
+
+.eqStockBox input {
+  border: 1px solid #847640;
+}
+
+.eqVariableBox input {
+  border: 1px solid #3b773d;
+}
+
+.eqFlowBox input {
+  border: 1px solid #627bc0;
+}
+
+.equation-editor-table thead th {
+  background-color: rgba(38, 50, 83, 0.95);
+}
+
+#eqTableDiv::-webkit-scrollbar-thumb {
+  background: #627bc0;
+}
+
+.equation-editor-checkbox {
+  accent-color: #627bc0;
+  background-color: #2a3350;
+  border: 1px solid #627bc0;
+}
+
+.equation-editor-checkbox:checked {
+  background-color: #627bc0;
+  border-color: #627bc0;
+}
+
+.equation-editor-checkbox:checked::after {
+  border: solid white;
+}
+
+/* Chart Viewer */
+.chartViewer {
+  background: rgba(60, 84, 148, 1);
+  color: white;
+}
+
+.chartSidebar ul {
+  background-color: rgba(38, 50, 83, 0.95);
+  box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
+}
+
+.settings-section {
+  border-top: 1px solid #374875;
+  color: #ffffff;
+}
+
+/* Chart Viewer - Canvas */
+.chartCanvas {
+  background-color: #ffffff;
+  box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
+  color: white;
+}
+
+/* Chart Viewer - Chart Editor */
+.chartEditor {
+  background-color: rgba(38, 50, 83, 0.95);
+  box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
+  color: white;
+}
+
+.chartEditor hr {
+  border-top: 1px solid #627bc0;
+}
+
+.chart-btn {
+  background-color: #1d253d;
+  border: 1px solid #627bc0;
+  color: white;
+}
+
+.chart-btn:hover {
+  background-color: #627bc0;
+}
+
+/* Popups */
+
+/* Overlay Effect */
+#overlay {
+  background-color: rgba(0, 0, 0, 0.85);
+}
+
+/* Default Settings Popup CSS */
+
+/* Header */
+.settings-header h2 {
+  color: #ffffff;
+}
+
+/* Close Button */
+.close-btn {
+  color: #ffffff;
+}
+
+.close-btn:hover {
+  color: #627bc0;
+}
+
+/* Setting Group */
+.setting-group {
+  color: #ffffff;
+}
+
+/* Setting Input Box */
+.settings-input {
+  background-color: #1d253d;
+  border: 1px solid #627bc0;
+  color: #ffffff;
+}
+
+/* Setting Dropdown */
+.settings-dropdown {
+  background-color: #1d253d;
+  border: 1px solid #627bc0;
+  color: #ffffff;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='white' .../>");
+}
+
+/* Divider */
+.settings-divider {
+  border-top: 1px solid #627bc0;
+}
+
+/* Toggle Switch */
+.slider {
+  background-color: #1d253d;
+}
+
+.toggle-switch input:checked + .slider {
+  background-color: #627bc0;
+}
+
+/* Settings Button */
+.setting-button {
+  background-color: #1d253d;
+  border: 1px solid #627bc0;
+  color: #ffffff;
+}
+
+.setting-button:hover {
+  background-color: #627bc0;
+}
+
+/* Settings Popup */
+.settings-popup {
+  background-color: #283458;
+  color: #ffffff;
+  box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
+}
+
+/* Theme Popup */
+.theme-popup {
+  background-color: #283458;
+  color: #ffffff;
+  box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
+}
+
+/* Chart Creator Popup */
+.charts-popup {
+  background-color: #283458;
+  color: #ffffff;
+  box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
+}
+
+/* Import Popup */
+.export-popup {
+  background-color: #283458;
+  color: #ffffff;
+  box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
+}
+
+/* Simulation Error Popup */
+#simErrorPopup {
+  background: rgba(114, 45, 45, 1);
+  border: 1px solid rgb(65, 27, 27);
+  color: #ffffff;
+  box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
+}
+
+#simErrorPopupTitle, #simErrorPopupDesc {
+  color: white;
+}
+
+#simErrorPopupCancel:hover {
+  background: rgb(52, 20, 20);
+  border: 1px solid rgb(45, 18, 18);
+}
+
+#simErrorPopupCancel {
+  background: rgb(80, 34, 34);
+  border: 1px solid rgb(65, 27, 27);
+}
+
+/* Equation Editor Overlay */
+.equation-editor-overlay {
+  background-color: rgba(0, 0, 0, 0.85); 
+}
+
+/* Equation Editor Popup */
+.equation-editor-popup {
+  background-color: #283458;
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+  color: white;
+}
+
+.close-icon {
+  color: #ffffff;
+}
+
+.close-icon:hover {
+  color: #627bc0;
+}
+
+/* Autocomplete */
+
+.autocomplete-list {
+  background-color: #1d253d;
+  border: 1px solid #627bc0;
+  color: white;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+}
+
+.autocomplete-item {
+  border-bottom: 1px solid #283251;
+}
+
+.autocomplete-item.selected,
+.autocomplete-item:hover {
+  background-color: #283251;
+}
+
+/* Stupid Stuff */
+
+.model-zoom-icon {
+  color: rgb(255, 255, 255);
+  background-color: rgba(38, 50, 83, 0.95);
+  transition: background-color 0.3s ease;
+}
+
+.model-zoom-icon:hover {
+  background-color: #46598e;
+}
+
+.popup-overlay {
+  background-color: rgba(10, 10, 30, 0.95);
+}
+
+.popup-content {
+  background-color: #1c2541;
+}
+
+.close-popup {
+  color: white;
+}
+
