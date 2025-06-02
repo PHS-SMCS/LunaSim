@@ -88,7 +88,6 @@
 
 
         <div class="modelCanvas" id="modalView">
-          <i class="fa-solid fa-up-right-and-down-left-from-center model-zoom-icon" onclick="openModelCanvasPopup()"></i>
           <div id="myDiagram">
             <canvas width="100%" height="100%">This text is displayed if your browser does not support the Canvas HTML
               element.</canvas>
@@ -361,10 +360,6 @@
         </div>
       </div>
 
-      <div id="modelCanvasPopupOverlay" class="popup-overlay" style="display: none;">
-        <div class="popup-content" id="popupContent"></div>
-        <i class="fa-solid fa-xmark close-popup" onclick="closeModelCanvasPopup()"></i>
-      </div>
 
 
       <!-- Weird Stuff To Deal With Later -->
@@ -952,6 +947,5 @@ document.addEventListener("DOMContentLoaded", () => {
   fileSelect.addEventListener("change", updateExportOptions);
 });
  </script>-->
-
 </body>
 </html>

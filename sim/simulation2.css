@@ -557,18 +557,26 @@ a.active {
   overflow: visible;  /* Allow tooltips to escape */
 }
 
-.chart-section,
-.tool-section {
-  overflow-y: auto;     /* Enable vertical scroll */
-  overflow-x: visible;  /* Allow horizontal overflow for tooltips */
-  position: relative;   /* Anchor tooltips correctly */
-  z-index: 1;           /* Lower than tooltip z-index */
-  isolation: isolate;   /* Create new stacking context */
+.chart-section {
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  z-index: 1;      
+  isolation: isolate;
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   padding: 0 0.75rem;
+}
+
+.tool-section {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0 0.75rem 0.75rem 0.75rem;
 }
 
 .settings-section {
