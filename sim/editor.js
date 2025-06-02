@@ -990,9 +990,9 @@ function run() {
     var dt = document.getElementById("dt").value;
     var integrationMethod = document.getElementById("integrationMethod").value == "euler" ? "euler" : "rk4";
 
-    document.getElementById("startTime").classList = "simParamsInput";
-    document.getElementById("endTime").classList = "simParamsInput";
-    document.getElementById("dt").classList = "simParamsInput";
+    document.getElementById("startTime").classList = "settings-input simParamsInput";
+    document.getElementById("endTime").classList = "settings-input simParamsInput";
+    document.getElementById("dt").classList = "settings-input simParamsInput";
     //resetSimErrorPopup();
 
     // Error Checking part 1: All fields must be numbers
