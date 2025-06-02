@@ -10,6 +10,7 @@ export function translate(obj) {
         "variables":[],
         "influences":[],
         "valves":[],
+        "stock": []
     };
 
     class influence {
@@ -28,6 +29,7 @@ export function translate(obj) {
         var node = obj.nodeDataArray[i];
 
         if (node.category == "stock") {
+            res.stock.push({key: node.key, label: node.label});
             stockKeyToName[node.key] = node.label;
 
             if (node.label[0] === "$") {
