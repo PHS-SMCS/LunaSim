@@ -376,7 +376,7 @@ a.active {
 /* Model Viewer - Equation Editor */
 /* Equation Editor Box */
 #eqEditor {
-  background-color: rgba(38, 50, 83, 0.95);
+  background-color: rgba(38, 50, 83, 1);
   height: calc(95vh - 3vw);
   min-width: calc(100vw - 8.7vw - 58vw);
   flex: 1;
@@ -1006,12 +1006,12 @@ a.active {
 
 #simErrorPopupCancel:hover {
   background: rgb(52, 20, 20);
-  border: 1px solid rgb(45, 18, 18);
+  border: 1px solid rgb(52, 20, 20);
 }
 
 #simErrorPopupCancel {
   background: rgb(80, 34, 34);
-  border: 1px solid rgb(65, 27, 27);
+  border: 1px solid rgb(80, 34, 34);
 }
 
 /* Equation Editor Overlay */
