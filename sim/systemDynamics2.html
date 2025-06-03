@@ -824,28 +824,41 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Keyboard shortcut handling
-    document.addEventListener("keydown", (event) => {
-      const tag = document.activeElement.tagName.toLowerCase();
-      if (tag === "input" || tag === "textarea") return;
+      document.addEventListener("keydown", (event) => {
+          const tag = document.activeElement.tagName.toLowerCase();
+          if (tag === "input" || tag === "textarea") return;
 
-      const keyMap = {
-        p: "pointer_button",
-        s: "stock_button",
-        v: "variable_button",
-        c: "cloud_button",
-        i: "influence_button",
-        f: "flow_button"
-      };
+          const keyMap = {
+              p: "pointer_button",
+              s: "stock_button",
+              v: "variable_button",
+              c: "cloud_button",
+              i: "influence_button",
+              f: "flow_button"
+          };
 
-      const key = event.key.toLowerCase();
-      const buttonId = keyMap[key];
-      if (!buttonId) return;
+          const key = event.key.toLowerCase();
+          const buttonId = keyMap[key];
+          if (!buttonId) return;
 
-      const button = document.getElementById(buttonId);
-      if (button) {
-        activateButton(button);
-      }
-    });
+          const button = document.getElementById(buttonId);
+          if (!button) return;
+
+          // Deactivate previous highlight
+          document.querySelectorAll(".tool-section a").forEach(btn => {
+              btn.classList.remove("active");
+              const tooltip = btn.querySelector("span");
+              if (tooltip) {
+                  tooltip.style.transform = "scale(0)";
+                  tooltip.style.opacity = "0";
+              }
+          });
+
+          // Activate new button
+          button.classList.add("active");
+          button.click(); // optional: only if you want to simulate click behavior too
+      });
+
   });
 </script>
 <script>
