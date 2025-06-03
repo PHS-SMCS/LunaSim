@@ -67,7 +67,7 @@ input, button, select {
 #logoImage {
   position: absolute;
   top: calc(1vh + 3px);
-  right: 1vw;
+  right: 15px;
   height: 4vh;
   z-index: 500;
   cursor: pointer;
@@ -103,7 +103,7 @@ input, button, select {
 .actionButton {
   height: 5vh;
   padding: 0.5svh 1svw;
-  font-size: 0.9rem;
+  font-size: 0.84rem;
   width: 6.7vw;
   border-radius: 8px;
   background-color: rgba(60, 84, 148, 0.5);
@@ -471,7 +471,7 @@ a.active {
 .equation-editor-table thead th {
   position: sticky;
   top: 0;
-  background-color: rgba(38, 50, 83, 0.95);
+  background-color: rgba(38, 50, 83, 1);
   z-index: 2;
 }
 

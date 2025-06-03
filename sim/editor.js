@@ -417,7 +417,7 @@ function buildTemplates() {
             {
                 movable: false,
                 layerName: "Foreground",
-                selectable: true,
+                selectable: false,
                 pickable: true,
                 alignmentFocus: go.Spot.None
             },
@@ -802,20 +802,26 @@ function resetSimErrorPopup() {
     document.getElementById("simErrorPopupDismiss").innerHTML = "Dismiss"
 }*/
 
-function containsReference(equation, data) {
+function containsReference(equation, nodeDataArray) {
     const matches = [];
     const regex = /\[(.*?)\]/g;
     const allMatches = equation.matchAll(regex);
 
-    for (const match of allMatches) {
-        matches.push(match[1]);
+    // Create a label-to-key map
+    const labelToKey = {};
+    for (const node of nodeDataArray) {
+        if (node.label !== undefined) {
+            labelToKey[node.label] = node.key;
+        }
     }
 
-    for (let i = 0; i < matches.length; i++) {
-        for (let j = 0; j < data.stock.length; j++) {
-            if(data.stock[j].label == matches[i]) {
-                matches[i] = data.stock[j].key;
-            }
+    // Replace labels with corresponding keys
+    for (const match of allMatches) {
+        const label = match[1];
+        if (labelToKey.hasOwnProperty(label)) {
+            matches.push(labelToKey[label]);
+        } else {
+            matches.push(label); // fallback: keep the label if key not found
         }
     }
 
@@ -1623,39 +1629,6 @@ function saveDiagramAsTiff(diagram, filename = "diagram.tiff", margin = 15) {
         }
     });
 }
-
-// ================= Image Export Handler =================
-document.getElementById("downloadImageButton").addEventListener("click", function () {
-    const type = document.getElementById("fileSelect").value; // .png, .jpg, .tiff
-    const marginInput = parseInt(document.getElementById("imageMargin").value);
-    const margin = isNaN(marginInput) ? 15 : marginInput;
-    const filename = (document.getElementById("model_name").value || "diagram").trim();
-
-    if (!myDiagram) {
-        alert("Diagram not initialized.");
-        return;
-    }
-
-    switch (type) {
-        case ".png":
-            saveDiagramAsPng(myDiagram, filename + ".png", margin);
-            break;
-        case ".jpg":
-            saveDiagramAsJpg(myDiagram, filename + ".jpg", margin);
-            break;
-        case ".tiff":
-            saveDiagramAsTiff(myDiagram, filename + ".tiff", margin);
-            break;
-        default:
-            alert("Unsupported export format: " + type);
-            return;
-    }
-
-    lastExportDate = new Date();
-    hasExportedYet = true;
-    unsavedEdits = false;
-    updateSaveStatus();
-});
 
 
 $(document).ready(() => {
