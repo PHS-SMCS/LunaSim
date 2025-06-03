@@ -140,7 +140,7 @@ function init() {
             $(go.Shape, "Rectangle",
                 {
                     fill: null,  // light gray with transparency
-                    stroke: "#808080",
+                    stroke: "#3489eb",
                     strokeWidth: 1
                 })
         );
@@ -162,7 +162,7 @@ function init() {
             $(go.Shape, "Rectangle",
                 {
                     fill: null,  // light gray with transparency
-                    stroke: "#808080",
+                    stroke: "#3489eb",
                     strokeWidth: 1
                 })
         );
@@ -375,7 +375,7 @@ function buildTemplates() {
                 new go.Binding("fill", "color").makeTwoWay(),
                 {
                     desiredSize: new go.Size(50, 30),
-                    fill: "#ffcc99" // default
+                    fill: "#f0f0f0" // default
                 }),
             $(go.TextBlock, textStyle(),
                 {
@@ -409,7 +409,7 @@ function buildTemplates() {
                 {
                     figure: "Cloud",
                     desiredSize: new go.Size(30, 30),
-                    fill: "#cccccc" // default
+                    fill: "#f0f0f0" // default
                 })
         ));
 
@@ -462,7 +462,7 @@ function buildTemplates() {
                 {
                     figure: "Ellipse",
                     desiredSize: new go.Size(25, 25),
-                    fill: "#99ff99" // default
+                    fill: "#f0f0f0" // default
                 }),
             $(go.TextBlock, textStyle(),
                 {
@@ -518,10 +518,10 @@ function buildTemplates() {
                     scale: 2.0
                 },
                 new go.Binding("fill", "isSelected", function(sel) {
-                    return sel ? "#3489eb" : "#808080";
+                    return sel ? "#3489eb" : "#3489eb";
                 }).ofObject(),
                 new go.Binding("stroke", "isSelected", function(sel) {
-                    return sel ? "#3489eb" : "#808080";
+                    return sel ? "#3489eb" : "#3489eb";
                 }).ofObject()
             )
         ));
@@ -1631,9 +1631,11 @@ $(document).ready(() => {
 
 function getDefaultColor(type) {
     switch (type) {
-        case "stock": return "#1457d1";
-        case "variable": return "#ae28b3";
-        case "valve": return "#ff3b0e";
-        default: return "#08fadd";
+        case "stock": return "#f0f0f0";
+        case "variable": return "#f0f0f0";
+        case "valve": return "#3489eb";
+        case "flow": return "#3489eb";
+        case "influence": return "#e3680e";
+        default: return "#f0f0f0";
     }
 }
