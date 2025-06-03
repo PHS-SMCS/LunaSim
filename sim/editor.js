@@ -1629,6 +1629,40 @@ function saveDiagramAsTiff(diagram, filename = "diagram.tiff", margin = 15) {
     });
 }
 
+// ================= Image Export Handler =================
+document.getElementById("downloadImageButton").addEventListener("click", function () {
+    const type = document.getElementById("fileSelect").value; // .png, .jpg, .tiff
+    const marginInput = parseInt(document.getElementById("imageMargin").value);
+    const margin = isNaN(marginInput) ? 15 : marginInput;
+    const filename = (document.getElementById("model_name").value || "diagram").trim();
+
+    if (!myDiagram) {
+        alert("Diagram not initialized.");
+        return;
+    }
+
+    switch (type) {
+        case ".png":
+            saveDiagramAsPng(myDiagram, filename + ".png", margin);
+            break;
+        case ".jpg":
+            saveDiagramAsJpg(myDiagram, filename + ".jpg", margin);
+            break;
+        case ".tiff":
+            saveDiagramAsTiff(myDiagram, filename + ".tiff", margin);
+            break;
+        default:
+            alert("Unsupported export format: " + type);
+            return;
+    }
+
+    lastExportDate = new Date();
+    hasExportedYet = true;
+    unsavedEdits = false;
+    updateSaveStatus();
+});
+//hi
+
 
 $(document).ready(() => {
     setupAutocompleteForInputs();
