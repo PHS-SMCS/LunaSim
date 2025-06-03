@@ -10,7 +10,7 @@ export function translate(obj) {
         "variables":[],
         "influences":[],
         "valves":[],
-        "stock": []
+        "labelsandkeys": []
     };
 
     class influence {
@@ -29,7 +29,8 @@ export function translate(obj) {
         var node = obj.nodeDataArray[i];
 
         if (node.category == "stock") {
-            res.stock.push({key: node.key, label: node.label});
+            res.labelsandkeys.push({key: node.key, label: node.label});
+
             stockKeyToName[node.key] = node.label;
 
             if (node.label[0] === "$") {
@@ -46,6 +47,8 @@ export function translate(obj) {
             };
         }
         if (node.category == "variable") {
+
+            res.labelsandkeys.push({key: node.key, label: node.label});
 
             res.variables.push({equation: node.equation, label: node.label});
 
@@ -78,8 +81,8 @@ export function translate(obj) {
                     currentInfluence.to = obj.nodeDataArray[h].key;
                     currentInfluence.toEq = obj.nodeDataArray[h].equation;
                 }
-                if(obj.nodeDataArray[h].label == link.from){
-                    currentInfluence.from = obj.nodeDataArray[h].label;
+                if(obj.nodeDataArray[h].key == link.from){
+                    currentInfluence.from = obj.nodeDataArray[h].key;
                 }
             }
             res.influences.push(currentInfluence);

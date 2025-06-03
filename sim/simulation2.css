@@ -471,7 +471,7 @@ a.active {
 .equation-editor-table thead th {
   position: sticky;
   top: 0;
-  background-color: rgba(38, 50, 83, 0.95);
+  background-color: rgba(38, 50, 83, 1);
   z-index: 2;
 }
 
@@ -600,7 +600,7 @@ a.active {
   border-radius: 10px;
   box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
   padding: 1rem;
-  color: white;
+  color: black;
   overflow: auto;
 }
 
@@ -1216,72 +1216,132 @@ input.settings-input.invalid:focus {
 
 /* Yabba Gabba Goo */
 
-
-#popForm {
-  border: 1px solid black;
+/* Main Chart Popup Container */
+.charts-popup {
   position: fixed;
-  width: 70%;
-  height: 80%;
-  top: 10%;
-  left: 15%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  background-color: #283458;
+  color: #ffffff;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  width: 90vw;
+  max-width: 500px;
+  max-height: 85vh;
+  overflow-y: auto;
   z-index: 1003;
-  background-color: white;
-  overflow: scroll;
-  overflow-x: hidden;
+  box-shadow: 0 10px 50px rgba(5, 4, 62, 0.25);
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+}
+
+/* Show State */
+.charts-popup.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  pointer-events: auto;
+}
+
+.charts-popup.hidden {
   display: none;
 }
 
-#tabConfig {
-  padding: 0 5vw;
-  font-size: max(24px, 2vw);
+/* Form inside popup */
+#popForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
 }
 
-#submitModel {
-  margin-top: 20px;
-  margin-bottom: 30px;
+/* Form fields */
+#tabConfig {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  font-size: 1rem;
+}
+
+/* Headings and Labels */
+#tabConfig p {
+  margin: 0;
+  font-weight: 600;
+}
+
+/* Radio Buttons */
+#tabConfig input[type="radio"] {
+  margin-right: 0.5rem;
+}
+
+#tabConfig label {
+  margin-right: 1.5rem;
+}
+
+/* Dropdown */
+#xAxis {
   width: 100%;
-  height: 50px;
-  background-color: #33cc33;
+  padding: 0.5rem;
+  background-color: #1d253d;
+  border: 1px solid #627bc0;
+  border-radius: 0.5rem;
+  color: #ffffff;
+  font-size: 1rem;
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position-x: calc(100% - 0.75rem);
+  background-position-y: center;
+  background-size: 1rem;
+  padding-right: 2rem;
+}
+
+/* Y-Axis Table */
+#yAxis {
+  width: 100%;
+  background-color: transparent;
+  border-collapse: collapse;
   color: white;
-  font-size: 20px;
-  border-radius: 3px;
-  border: none;
+  font-size: 1rem;
+}
+
+/* Submit Button */
+#submitModel {
+  width: 100%;
+  padding: 0.6rem;
+  background-color: #1d253d;
+  border: 1px solid #627bc0;
+  border-radius: 0.5rem;
+  color: #ffffff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease-out;
 }
 
 #submitModel:hover {
-  background-color: #009933;
-  transition: background-color 0.3s;
+  background-color: #627bc0;
 }
 
-#submitModel:active {
-  background-color: #008822;
-  transition: background-color 0.3s;
-}
-
-
+/* Close Button */
 #closeNewTabPopup {
-  width: 50px;
-  height: 50px;
-  color: white;
-  font-size: 30px;
-  background-color: #ff0000;
-  border-radius: 10px;
-  border: none;
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 1rem;
+  right: 1rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: #ffffff;
+  cursor: pointer;
 }
 
 #closeNewTabPopup:hover {
-  background-color: #dd0000;
-  transition: background-color 0.3s;
+  color: #ff5c5c;
 }
-
-#closeNewTabPopup:active {
-  background-color: #bb0000;
-  transition: background-color 0.3s;
-}
-
 
 #datatable {
   height: calc(100% - 2px);

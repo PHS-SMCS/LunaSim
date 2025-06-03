@@ -140,7 +140,7 @@ function init() {
             $(go.Shape, "Rectangle",
                 {
                     fill: null,  // light gray with transparency
-                    stroke: "#808080",
+                    stroke: "#3489eb",
                     strokeWidth: 1
                 })
         );
@@ -162,7 +162,7 @@ function init() {
             $(go.Shape, "Rectangle",
                 {
                     fill: null,  // light gray with transparency
-                    stroke: "#808080",
+                    stroke: "#3489eb",
                     strokeWidth: 1
                 })
         );
@@ -375,7 +375,7 @@ function buildTemplates() {
                 new go.Binding("fill", "color").makeTwoWay(),
                 {
                     desiredSize: new go.Size(50, 30),
-                    fill: "#ffcc99" // default
+                    fill: "#f0f0f0" // default
                 }),
             $(go.TextBlock, textStyle(),
                 {
@@ -386,6 +386,7 @@ function buildTemplates() {
                 },
                 new go.Binding("alignment", "label_offset", go.Spot.parse).makeTwoWay(go.Spot.stringify))
         ));
+
 
     myDiagram.nodeTemplateMap.add("cloud",
         $(go.Node, nodeStyle(),{
@@ -408,7 +409,7 @@ function buildTemplates() {
                 {
                     figure: "Cloud",
                     desiredSize: new go.Size(30, 30),
-                    fill: "#cccccc" // default
+                    fill: "#f0f0f0" // default
                 })
         ));
 
@@ -461,7 +462,7 @@ function buildTemplates() {
                 {
                     figure: "Ellipse",
                     desiredSize: new go.Size(25, 25),
-                    fill: "#99ff99" // default
+                    fill: "#f0f0f0" // default
                 }),
             $(go.TextBlock, textStyle(),
                 {
@@ -517,10 +518,10 @@ function buildTemplates() {
                     scale: 2.0
                 },
                 new go.Binding("fill", "isSelected", function(sel) {
-                    return sel ? "#3489eb" : "#808080";
+                    return sel ? "#3489eb" : "#3489eb";
                 }).ofObject(),
                 new go.Binding("stroke", "isSelected", function(sel) {
-                    return sel ? "#3489eb" : "#808080";
+                    return sel ? "#3489eb" : "#3489eb";
                 }).ofObject()
             )
         ));
@@ -786,8 +787,7 @@ function labelValidator(textblock, oldstr, newstr) {
 
 // Displays the Simulation Error Popup
 function showSimErrorPopup() {
-    document.getElementById("simErrorPopup").style.display = "block";
-    document.getElementById("grayEffectDiv").style.display = "block";
+    openSettings(event, 'simErrorPopup');
 }
 document.getElementById("simErrorPopupDismiss").addEventListener("click", closeSimErrorPopup);
 // Closes the Simulation Error Popup
@@ -811,14 +811,6 @@ function containsReference(equation, data) {
         matches.push(match[1]);
     }
 
-    for (let i = 0; i < matches.length; i++) {
-        for (let j = 0; j < data.stock.length; j++) {
-            if(data.stock[j].label == matches[i]) {
-                matches[i] = data.stock[j].key;
-            }
-        }
-    }
-
     return matches;
 }
 
@@ -831,19 +823,45 @@ function run() {
     var json = JSON.parse(myDiagram.model.toJson());
     var engineJson = translate(json);
 
+    console.log(engineJson);
+
 
     for (var i = 0; i < engineJson.variables.length; i++) {
         var variable = engineJson.variables[i];
-        var references = containsReference(variable.equation, engineJson.nodeDataArray);
-        if (references.length > 0) {
-            for (var h = 0; h < references.length; h++) {
+        var references = containsReference(variable.equation);
+        var newReferences = [];
+
+        for (var t = 0; t < references.length; t++) {
+            var found = false;
+            for (var c = 0; c < engineJson.labelsandkeys.length; c++) {
+                const ref = references[t];
+                const label = engineJson.labelsandkeys[c].label;
+                const key = engineJson.labelsandkeys[c].key;
+
+                if (ref == label) {
+                    console.log(`Match found: '${ref}' => '${key}'`);
+                    newReferences.push(key);
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                console.log(`No match for '${references[t]}', keeping original`);
+                newReferences.push(references[t]);
+            }
+        }
+        if (newReferences.length > 0) {
+            for (var h = 0; h < newReferences.length; h++) {
+                var currentKey = "";
+
                 var exists = false;
                 for (var j = 0; j < engineJson.influences.length; j++) {
-                    if (engineJson.influences[j].to === variable.key && engineJson.influences[j].from === references[h]) {
+                    if (engineJson.influences[j].to === variable.key && engineJson.influences[j].from === newReferences[h]) {
                         exists = true;
                     }
                     if (engineJson.influences[j].to === variable.key &&
-                        !references.includes(engineJson.influences[j].from)) {
+                        !newReferences.includes(engineJson.influences[j].from)) {
                         document.getElementById("simErrorPopupDesc").innerHTML =
                             "Incorrect influence from " + engineJson.influences[j].from + " to " + engineJson.influences[j].to;
                         showSimErrorPopup();
@@ -852,7 +870,7 @@ function run() {
                 }
                 if (!exists) {
                     document.getElementById("simErrorPopupDesc").innerHTML =
-                        "Missing an influence from " + references[h] + " to " + variable.key;
+                        "Missing an influence from " + newReferences[h] + " to " + variable.key;
                     showSimErrorPopup();
                     return;
                 }
@@ -861,7 +879,7 @@ function run() {
             for (var j = 0; j < engineJson.influences.length; j++) {
                 if (engineJson.influences[j].to === variable.key) {
                     document.getElementById("simErrorPopupDesc").innerHTML =
-                        "No references in equation for " + variable.key + ", but influence from " + engineJson.influences[j].from + " exists.";
+                        "No newReferences in equation for " + variable.key + ", but influence from " + engineJson.influences[j].from + " exists.";
                     showSimErrorPopup();
                     return;
                 }
@@ -871,16 +889,42 @@ function run() {
 
     for (var i = 0; i < engineJson.valves.length; i++) {
         var valve = engineJson.valves[i];
-        var references = containsReference(valve.equation, engineJson.nodeDataArray);
-        if (references.length > 0) {
-            for (var j = 0; j < references.length; j++) {
+        var references = containsReference(valve.equation);
+        console.log(references);
+        console.log(engineJson.labelsandkeys);
+        var newReferences = [];
+
+        for (var t = 0; t < references.length; t++) {
+            var found = false;
+            for (var c = 0; c < engineJson.labelsandkeys.length; c++) {
+                const ref = references[t];
+                const label = engineJson.labelsandkeys[c].label;
+                const key = engineJson.labelsandkeys[c].key;
+
+                if (ref == label) {
+                    console.log(`Match found: '${ref}' => '${key}'`);
+                    newReferences.push(key);
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                console.log(`No match for '${references[t]}', keeping original`);
+                newReferences.push(references[t]);
+            }
+        }
+        console.log(newReferences);
+        if (newReferences.length > 0) {
+            for (var j = 0; j < newReferences.length; j++) {
                 var exists = false;
                 for (var h = 0; h < engineJson.influences.length; h++) {
-                    if (engineJson.influences[h].to === valve.key && engineJson.influences[h].from === references[j]) {
+                    if (engineJson.influences[h].to == valve.key && engineJson.influences[h].from == newReferences[j]) {
                         exists = true;
                     }
-                    if (engineJson.influences[h].to === valve.key &&
-                        !references.includes(engineJson.influences[h].from)) {
+                    if (engineJson.influences[h].to == valve.key &&
+                        !newReferences.includes(engineJson.influences[h].from)) {
+                        console.log(engineJson.influences[h]);
                         document.getElementById("simErrorPopupDesc").innerHTML =
                             "Incorrect influence from " + engineJson.influences[h].from + " to " + engineJson.influences[h].to;
                         showSimErrorPopup();
@@ -889,99 +933,22 @@ function run() {
                 }
                 if (!exists) {
                     document.getElementById("simErrorPopupDesc").innerHTML =
-                        "Missing an influence from " + references[j] + " to " + valve.key;
+                        "Missing an influence from " + newReferences[j] + " to " + valve.key;
                     showSimErrorPopup();
                     return;
                 }
             }
         } else {
             for (var j = 0; j < engineJson.influences.length; j++) {
-                if (engineJson.influences[j].to === valve.key) {
+                if (engineJson.influences[j].to == valve.key) {
                     document.getElementById("simErrorPopupDesc").innerHTML =
-                        "No references in equation for " + valve.key + ", but influence from " + engineJson.influences[j].from + " exists.";
+                        "No newReferences in equation for " + valve.key + ", but influence from " + engineJson.influences[j].from + " exists.";
                     showSimErrorPopup();
                     return;
                 }
             }
         }
     }
-
-
-
-    // for(var i = 0; i < engineJson.variables.length; i++){
-    //     var references = containsReference(engineJson.variables[i].equation);
-    //     if(references.length>0) {
-    //         for (var h = 0; h < references.length; h++) {
-    //             var exists = false;
-    //             for (var j = 0; j < engineJson.influences.length; j++) {
-    //                 if (engineJson.influences[j].to == engineJson.variables[i].label && engineJson.influences[j].from == references[h]) {
-    //                     exists = true;
-    //                 }
-    //                 if (engineJson.influences[j].to === engineJson.variables[i].label &&
-    //                     !references.includes(engineJson.influences[j].from)) {
-    //                     document.getElementById("simErrorPopupDesc").innerHTML =
-    //                         "Incorrect influence from " + engineJson.influences[j].from + " to " + engineJson.influences[j].to;
-    //                     showSimErrorPopup();
-    //                     return;
-    //                 }
-    //             }
-    //             if (!exists) {
-    //                 document.getElementById("simErrorPopupDesc").innerHTML = "Missing an influence from " + references[h] + " to " + engineJson.variables[i].label;
-    //                 showSimErrorPopup();
-    //                 return;
-    //             }
-    //         }
-    //     } else {
-    //         for (var j = 0; j < engineJson.influences.length; j++) {
-    //             if (engineJson.influences[j].to === engineJson.variables[i].label) {
-    //                 document.getElementById("simErrorPopupDesc").innerHTML =
-    //                     "No references in equation for " + engineJson.variables[i].label + ", but influence from " + engineJson.influences[j].from + " exists.";
-    //                 showSimErrorPopup();
-    //                 return;
-    //             }
-    //         }
-    //     }
-    // }
-    //
-    // for(var i =0; i<engineJson.valves.length; i++){
-    //     var references = containsReference(engineJson.valves[i].equation);
-    //     if(references.length>0) {
-    //         for(var j =0; j<references.length; j++){
-    //             var exists = false;
-    //             for(var h =0; h < engineJson.influences.length; h++){
-    //                 if (engineJson.influences[h].to == engineJson.valves[i].key && engineJson.influences[h].from == references[j]) {
-    //                     exists = true;
-    //                 }
-    //                 if (engineJson.influences[h].to === engineJson.valves[i].key &&
-    //                     !references.includes(engineJson.influences[h].from)) {
-    //                     document.getElementById("simErrorPopupDesc").innerHTML =
-    //                         "Incorrect influence from " + engineJson.influences[h].from + " to " + engineJson.influences[h].to;
-    //                     showSimErrorPopup();
-    //                     return;
-    //                 }
-    //
-    //             }
-    //             if (!exists) {
-    //                 document.getElementById("simErrorPopupDesc").innerHTML = "Missing an influence from " + references[j] + " to " + engineJson.valves[i].label;
-    //                 showSimErrorPopup();
-    //                 return;
-    //             }
-    //         }
-    //     }else {
-    //         for (var j = 0; j < engineJson.influences.length; j++) {
-    //             console.log(engineJson.influences);
-    //             if (engineJson.influences[j].to === engineJson.valves[i].key) {
-    //                 document.getElementById("simErrorPopupDesc").innerHTML =
-    //                     "No references in equation for " + engineJson.valves[i].label + ", but influence from " + engineJson.influences[j].from + " exists.";
-    //                 showSimErrorPopup();
-    //                 return;
-    //             }
-    //         }
-    //     }
-    //
-    // }
-
-
 
 
     // get information on the start time, end time, dt, and integration method and add it to the engine json
@@ -1624,6 +1591,39 @@ function saveDiagramAsTiff(diagram, filename = "diagram.tiff", margin = 15) {
     });
 }
 
+// ================= Image Export Handler =================
+document.getElementById("downloadImageButton").addEventListener("click", function () {
+    const type = document.getElementById("fileSelect").value; // .png, .jpg, .tiff
+    const marginInput = parseInt(document.getElementById("imageMargin").value);
+    const margin = isNaN(marginInput) ? 15 : marginInput;
+    const filename = (document.getElementById("model_name").value || "diagram").trim();
+
+    if (!myDiagram) {
+        alert("Diagram not initialized.");
+        return;
+    }
+
+    switch (type) {
+        case ".png":
+            saveDiagramAsPng(myDiagram, filename + ".png", margin);
+            break;
+        case ".jpg":
+            saveDiagramAsJpg(myDiagram, filename + ".jpg", margin);
+            break;
+        case ".tiff":
+            saveDiagramAsTiff(myDiagram, filename + ".tiff", margin);
+            break;
+        default:
+            alert("Unsupported export format: " + type);
+            return;
+    }
+
+    lastExportDate = new Date();
+    hasExportedYet = true;
+    unsavedEdits = false;
+    updateSaveStatus();
+});
+
 
 $(document).ready(() => {
     setupAutocompleteForInputs();
@@ -1631,9 +1631,11 @@ $(document).ready(() => {
 
 function getDefaultColor(type) {
     switch (type) {
-        case "stock": return "#1457d1";
-        case "variable": return "#ae28b3";
-        case "valve": return "#ff3b0e";
-        default: return "#08fadd";
+        case "stock": return "#f0f0f0";
+        case "variable": return "#f0f0f0";
+        case "valve": return "#3489eb";
+        case "flow": return "#3489eb";
+        case "influence": return "#e3680e";
+        default: return "#f0f0f0";
     }
 }
