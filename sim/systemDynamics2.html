@@ -192,7 +192,7 @@
         </div>
         <div class="setting-group">
 
-          <label for="startTime" class="dotted-underline">Start Time</label>
+          <label for="startTime">Start Time</label>
           <input type="text" id="startTime" class="settings-input" placeholder="Enter start time..." value="0" style="width: 70%;">
 
           <label for="endTime">End Time</label>
@@ -256,54 +256,32 @@
           <h2>Edit Chart/Table</h2>
           <button class="close-btn" onclick="closeSettings('chartsPopup')"><i class="fa-regular fa-xmark"></i></button>
         </div>
-        <div class="setting-group">
-          <label for="chartSelect">Type</label>
-          <select id="chartSelect" class="settings-dropdown" style="width: 75%;">
-            <option>Chart</option>
-            <option>Table</option>
-          </select>
-        </div>
-        <hr class="settings-divider">
-
-        <div class="setting-group">
-          <label for="xaxisSelect">X-Axis</label>
-          <select id="xaxisSelect" class="settings-dropdown" style="width: 75%;">
-            <option>Time</option>
-            <option>Stock1</option>
-            <option>Stock2</option>
-          </select>
-        </div>
-
-        <hr class="settings-divider">
-
-        <div class="setting-group">
-          <span>Y-Axis</span>
-          <label class="switch-label">
-            <span>Stock1</span>
-            <label class="toggle-switch">
-              <input type="checkbox">
-              <span class="slider"></span>
-            </label>
-          </label>
-
-          <label class="switch-label">
-            <span>Stock2</span>
-            <label class="toggle-switch">
-              <input type="checkbox">
-              <span class="slider"></span>
-            </label>
-          </label>
-
-          <label class="switch-label">
-            <span>Stock3</span>
-            <label class="toggle-switch">
-              <input type="checkbox">
-              <span class="slider"></span>
-            </label>
-          </label>
-        </div>
-        <button class="setting-button" onclick="closeSettings('chartsPopup')">Create Table/Chart</button>
+        <div id="popForm">
+        <form id="tabConfig" name = "tabConfig" onsubmit="return false"> <!-- Will not refresh page -->
+          <div>
+            <p>Table or chart:</p>
+            <input type="radio" id="table" name="model_type" value="table" required>
+            <label for="table">Table</label><br>
+            <input type="radio" id="chart" name="model_type" value="chart" required>
+            <label for="chart">Chart</label>
+          </div>
+          <div>
+            <p>X-Axis:</p>
+            <select name="xAxis" id="xAxis" style="font-size: inherit;" required>
+              <!-- Options initialized dynamically -->
+            </select>
+          </div>
+          <div >
+            <p>Y-Axis:</p>
+            <table id="yAxis">
+              <!-- Multiple checkboxes initialized dynamically -->
+            </table>
+          </div>
+          <button id="submitModel" onclick="closeSettings('chartsPopup')">Create New Tab</button>
+        </form>
       </div>
+      </div>
+
 
       <!-- ================== Export Popup ================== -->
       <div id="exportPopup" class="export-popup hidden">
@@ -341,7 +319,7 @@
           <button class="close-btn" onclick="closeSettings('simErrorPopup')"><i class="fa-regular fa-xmark"></i></button>
         </div>
         <div class="setting-group">
-          <p id="simErrorPopupDesc">If you're seeing this then the developers are really bad at coding.</p>
+          <p id="simErrorPopupDesc">This is the default popup. This should only appear during the debug process.</p>
         </div>
         <button id="simErrorPopupCancel" class="setting-button" onclick="closeSettings('simErrorPopup')">Dismiss</button>
       </div>
@@ -360,34 +338,6 @@
           <div id="equationEditorPopupContent"></div>
         </div>
       </div>
-
-      <div id="popForm">
-        <form id="tabConfig" name = "tabConfig" onsubmit="return false"> <!-- Will not refresh page -->
-          <div>
-            <p>Table or chart:</p>
-            <input type="radio" id="table" name="model_type" value="table" required>
-            <label for="table">Table</label><br>
-            <input type="radio" id="chart" name="model_type" value="chart" required>
-            <label for="chart">Chart</label>
-          </div>
-          <div>
-            <p>X-Axis:</p>
-            <select name="xAxis" id="xAxis" style="font-size: inherit;" required>
-              <!-- Options initialized dynamically -->
-            </select>
-          </div>
-          <div >
-            <p>Y-Axis:</p>
-            <table id="yAxis">
-              <!-- Multiple checkboxes initialized dynamically -->
-            </table>
-          </div>
-          <button id="submitModel">Create New Tab</button>
-          <button id="closeNewTabPopup"><b>X</b></button>
-        </form>
-      </div>
-
-
 
       <!-- Weird Stuff To Deal With Later -->
       <div class="weirdStuff">
@@ -824,41 +774,28 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Keyboard shortcut handling
-      document.addEventListener("keydown", (event) => {
-          const tag = document.activeElement.tagName.toLowerCase();
-          if (tag === "input" || tag === "textarea") return;
+    document.addEventListener("keydown", (event) => {
+      const tag = document.activeElement.tagName.toLowerCase();
+      if (tag === "input" || tag === "textarea") return;
 
-          const keyMap = {
-              p: "pointer_button",
-              s: "stock_button",
-              v: "variable_button",
-              c: "cloud_button",
-              i: "influence_button",
-              f: "flow_button"
-          };
+      const keyMap = {
+        p: "pointer_button",
+        s: "stock_button",
+        v: "variable_button",
+        c: "cloud_button",
+        i: "influence_button",
+        f: "flow_button"
+      };
 
-          const key = event.key.toLowerCase();
-          const buttonId = keyMap[key];
-          if (!buttonId) return;
+      const key = event.key.toLowerCase();
+      const buttonId = keyMap[key];
+      if (!buttonId) return;
 
-          const button = document.getElementById(buttonId);
-          if (!button) return;
-
-          // Deactivate previous highlight
-          document.querySelectorAll(".tool-section a").forEach(btn => {
-              btn.classList.remove("active");
-              const tooltip = btn.querySelector("span");
-              if (tooltip) {
-                  tooltip.style.transform = "scale(0)";
-                  tooltip.style.opacity = "0";
-              }
-          });
-
-          // Activate new button
-          button.classList.add("active");
-          button.click(); // optional: only if you want to simulate click behavior too
-      });
-
+      const button = document.getElementById(buttonId);
+      if (button) {
+        activateButton(button);
+      }
+    });
   });
 </script>
 <script>

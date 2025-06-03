@@ -81,6 +81,9 @@ function addOptions(){
   const series = seriesKeys(false);
   let x = document.getElementById("xAxis"); // refers to x-axis select node
   let y = document.getElementById("yAxis"); // refers to y-axis div node
+
+  x.innerHTML = "";
+  y.innerHTML = "";
   
   // Configuration for buttons of x-axis
   for (var i = 0; i < series.length; i++){
