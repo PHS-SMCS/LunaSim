@@ -50,7 +50,7 @@ export function translate(obj) {
 
             res.labelsandkeys.push({key: node.key, label: node.label});
 
-            res.variables.push({equation: node.equation, label: node.label});
+            res.variables.push({key: node.key, equation: node.equation, label: node.label});
 
             if (node.label[0] === "$") {
                 continue;

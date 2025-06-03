@@ -857,6 +857,9 @@ function run() {
 
                 var exists = false;
                 for (var j = 0; j < engineJson.influences.length; j++) {
+                    console.log(engineJson.influences[j].to === variable.key && engineJson.influences[j].from === newReferences[h]);
+                    console.log(variable.key);
+                    console.log(newReferences[h]);
                     if (engineJson.influences[j].to === variable.key && engineJson.influences[j].from === newReferences[h]) {
                         exists = true;
                     }
@@ -870,7 +873,7 @@ function run() {
                 }
                 if (!exists) {
                     document.getElementById("simErrorPopupDesc").innerHTML =
-                        "Missing an influence from " + newReferences[h] + " to " + variable.key;
+                        "Missing an influence from " + references[h] + " to " + variable.label;
                     showSimErrorPopup();
                     return;
                 }
@@ -879,7 +882,7 @@ function run() {
             for (var j = 0; j < engineJson.influences.length; j++) {
                 if (engineJson.influences[j].to === variable.key) {
                     document.getElementById("simErrorPopupDesc").innerHTML =
-                        "No newReferences in equation for " + variable.key + ", but influence from " + engineJson.influences[j].from + " exists.";
+                        "No newReferences in equation for " + variable.label + ", but influence from " + engineJson.influences[j].from + " exists.";
                     showSimErrorPopup();
                     return;
                 }
