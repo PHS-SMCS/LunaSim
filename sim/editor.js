@@ -1212,7 +1212,6 @@ function loadModel(evt) {
 
         // set the diagram position back to what it was
         myDiagram.initialPosition = myDiagram.position;
-
         // Reset save status after loading model
         lastEditDate = new Date();
         unsavedEdits = false;
