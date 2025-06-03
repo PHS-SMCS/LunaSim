@@ -433,12 +433,27 @@ listenChangesinArray(tabs, configTabs);
 document.addEventListener("DOMContentLoaded", function() { configTabs(); });
 
  // updates data and goes to default
-document.getElementById("runButton").addEventListener("click", function() { 
-  tabs[0] = new Graphic("chart", "time", seriesKeys(true).splice(1)); 
-  configTabs(); 
-  list.firstChild.click(); 
-  if(TESTING_MODE) console.log(tabs);  
+document.getElementById("runButton").addEventListener("click", function () {
+  tabs[0] = new Graphic("chart", "time", seriesKeys(true).splice(1));
+  configTabs();
+  list.firstChild.click();
+
+  // AUTO SWITCH TO CHART/TABLES VIEW
+  const modelViewer = document.querySelector('.modelViewer');
+  const chartViewer = document.querySelector('.chartViewer');
+  const modelBtn = document.getElementById('modelBtn');
+  const chartBtn = document.getElementById('chartBtn');
+
+  if (chartViewer.classList.contains('hidden')) {
+    chartViewer.classList.remove('hidden');
+    modelViewer.classList.add('hidden');
+    chartBtn.classList.add('active');
+    modelBtn.classList.remove('active');
+  }
+
+  if (TESTING_MODE) console.log(tabs);
 });
+
 
 document.getElementById("addTab").addEventListener("click", openForm);
 document.getElementById("submitModel").addEventListener("click", submit);
