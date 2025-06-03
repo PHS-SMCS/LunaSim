@@ -1655,6 +1655,7 @@ document.getElementById("downloadImageButton").addEventListener("click", functio
     unsavedEdits = false;
     updateSaveStatus();
 });
+//hi
 
 
 $(document).ready(() => {
