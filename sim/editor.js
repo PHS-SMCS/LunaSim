@@ -1246,6 +1246,19 @@ document.getElementById("loadButton").addEventListener("click", function () {
 });
 
 init();
+document.getElementById("centerModelBtn").addEventListener("click", function(){
+    myDiagram.zoomToFit();
+
+    const diagramBounds = myDiagram.documentBounds;
+    const viewBounds = myDiagram.viewportBounds;
+
+    const diagramCenter = diagramBounds.center;
+    const viewCenter = viewBounds.center;
+
+    const offset = diagramCenter.subtract(viewCenter);
+    myDiagram.position = myDiagram.position.copy().add(offset);
+});
+
 
 // add button event listeners
 // mode buttons
