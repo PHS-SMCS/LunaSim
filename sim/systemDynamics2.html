@@ -48,7 +48,7 @@
       <div id ="header">
         <div class="actions">
           <p id="saveStatus">Last Cloud Save: -<br>Last Export: -</p>
-          <button class="actionButton" id="runButton" onclick="openSettings(event, 'simErrorPopup')"><i class="fa-regular fa-play"></i> Run</button>
+          <button class="actionButton" id="runButton"><i class="fa-regular fa-play"></i> Run</button>
           <input type="file" id="load-actual-button" accept=".luna, .txt" hidden/>
           <button class="actionButton" id="loadButton"><i class="fa-regular fa-file-import"></i> Load</button>
           <button class="actionButton" id="expButton" onclick="openSettings(event, 'exportPopup')"><i class="fa-regular fa-file-export"></i> Save</button>
@@ -90,10 +90,16 @@
 
         <div class="modelCanvas" id="modalView">
           <div id="myDiagram">
-            <canvas width="100%" height="100%">This text is displayed if your browser does not support the Canvas HTML
-              element.</canvas>
+            <canvas width="100%" height="100%">
+              This text is displayed if your browser does not support the Canvas HTML element.
+            </canvas>
           </div>
+
+          <button id="centerModelBtn" class="center-btn" title="Center Model">
+            <i class="fa-solid fa-compress"></i>
+          </button>
         </div>
+
 
         <div id="eqEditor">
           <div class="equation-editor-header">
