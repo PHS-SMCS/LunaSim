@@ -120,6 +120,7 @@ function init() {
 
                 return go.ClickCreatingTool.prototype.insertPart.call(this, loc);
             }
+
         });
 
     // install the NodeLabelDraggingTool as a "mouse move" tool
@@ -290,6 +291,7 @@ function init() {
     buildTemplates();
 
     myDiagram.model = go.Model.fromJson("{ \"class\": \"GraphLinksModel\", \"linkLabelKeysProperty\": \"labelKeys\", \"nodeDataArray\": [],\"linkDataArray\": [] }"); // default if no model is loaded
+    setupLocalStoragePersistence(myDiagram);
 }
 
 function refreshGoJsModel() {
@@ -1641,4 +1643,23 @@ function getDefaultColor(type) {
         case "influence": return "#e3680e";
         default: return "#f0f0f0";
     }
+}
+// Call this once after your diagram is created
+function setupLocalStoragePersistence(diagram) {
+    const savedModel = localStorage.getItem("model");
+    if (savedModel) {
+        try {
+            myDiagram.model = go.Model.fromJson(savedModel);
+            updateTable(true);
+            loadTableToDiagram();
+        } catch (e) {
+            console.error("Failed to parse saved diagram model:", e);
+        }
+    }
+
+    window.addEventListener("beforeunload", () => {
+        loadTableToDiagram();  // make sure equations/checkboxes are synced first
+        const json = myDiagram.model.toJson();  // ✅ this is a string now
+        localStorage.setItem("model", json);
+    });
 }
