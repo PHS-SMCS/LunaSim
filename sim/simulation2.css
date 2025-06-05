@@ -17,7 +17,7 @@ body {
   align-items: flex-start;
   justify-content: flex-start;
   position: relative;
-  background: linear-gradient(60deg, rgba(79, 107, 184, 1) 0%, rgba(79, 165, 189, 1) 100%);
+  background: linear-gradient(60deg, #4f6bb8 0%, #4fa5bd 100%);
 }
 
 input, button, select {
