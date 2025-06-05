@@ -21,6 +21,7 @@ var SD = {
 
 let GOJS_ELEMENT_LABELS = [];       // All labels in creation order
 let GOJS_ELEMENT_LABELS_SET = new Set();  // Ensure uniqueness
+let simulationHasRunSuccessfully = false;
 
 var myDiagram;   // Declared as global
 var sim = new Simulation();
@@ -419,6 +420,7 @@ function buildTemplates() {
         $(go.Node, nodeStyle(),
             {
                 movable: false,
+                deletable: false,
                 layerName: "Foreground",
                 selectable: true,
                 pickable: true,
@@ -820,6 +822,7 @@ function containsReference(equation, data) {
 
 function run() {
 
+    window.simulationHasRunSuccessfully = false;
     loadTableToDiagram();
 
     var json = JSON.parse(myDiagram.model.toJson());
@@ -870,6 +873,7 @@ function run() {
                         document.getElementById("simErrorPopupDesc").innerHTML =
                             "Incorrect influence from " + engineJson.influences[j].from + " to " + engineJson.influences[j].to;
                         showSimErrorPopup();
+                        window.simulationHasRunSuccessfully = window.simulationHasRunSuccessfully || false;
                         return;
                     }
                 }
@@ -877,6 +881,7 @@ function run() {
                     document.getElementById("simErrorPopupDesc").innerHTML =
                         "Missing an influence from " + references[h] + " to " + variable.label;
                     showSimErrorPopup();
+                    window.simulationHasRunSuccessfully = window.simulationHasRunSuccessfully || false;
                     return;
                 }
             }
@@ -886,6 +891,7 @@ function run() {
                     document.getElementById("simErrorPopupDesc").innerHTML =
                         "No newReferences in equation for " + variable.label + ", but influence from " + engineJson.influences[j].from + " exists.";
                     showSimErrorPopup();
+                    window.simulationHasRunSuccessfully = window.simulationHasRunSuccessfully || false;
                     return;
                 }
             }
@@ -938,6 +944,7 @@ function run() {
                         document.getElementById("simErrorPopupDesc").innerHTML =
                             "Incorrect influence from " + engineJson.influences[h].from + " to " + engineJson.influences[h].to;
                         showSimErrorPopup();
+                        window.simulationHasRunSuccessfully = window.simulationHasRunSuccessfully || false;
                         return;
                     }
                 }
@@ -945,6 +952,7 @@ function run() {
                     document.getElementById("simErrorPopupDesc").innerHTML =
                         "Missing an influence from " + newReferences[j] + " to " + valve.key;
                     showSimErrorPopup();
+                    window.simulationHasRunSuccessfully = window.simulationHasRunSuccessfully || false;
                     return;
                 }
             }
@@ -952,8 +960,9 @@ function run() {
             for (var j = 0; j < engineJson.influences.length; j++) {
                 if (engineJson.influences[j].to == newReferences[j]) {
                     document.getElementById("simErrorPopupDesc").innerHTML =
-                        "No newReferences in equation for " + valve.key + ", but influence from " + engineJson.influences[j].from + " exists.";
+                        "No new references in equation for " + valve.key + ", but influence from " + engineJson.influences[j].from + " exists.";
                     showSimErrorPopup();
+                    window.simulationHasRunSuccessfully = window.simulationHasRunSuccessfully || false;
                     return;
                 }
             }
@@ -994,6 +1003,7 @@ function run() {
         });
         document.getElementById("simErrorPopupDesc").innerHTML = "There are errors with the simulation parameters:<br><br>" + errors.join("<br>");
         showSimErrorPopup();
+        window.simulationHasRunSuccessfully = window.simulationHasRunSuccessfully || false;
         return;
     }
 
@@ -1020,6 +1030,7 @@ function run() {
         });
         document.getElementById("simErrorPopupDesc").innerHTML = "There are errors with the simulation parameters:<br><br>" + errors.join("<br>");
         showSimErrorPopup();
+        window.simulationHasRunSuccessfully = window.simulationHasRunSuccessfully || false;
         return;
     }
 
@@ -1034,6 +1045,7 @@ function run() {
             });
             document.getElementById("simErrorPopupDesc").innerHTML = "This simulation contains 1000+ steps; as such, running it may lead to lag or the website freezing. Please adjust dt or enable high step-count simulations.<br><br>If you proceed with the simulation, it may be wise to export your LunaSim project in case the website crashes.";
             showSimErrorPopup();
+            window.simulationHasRunSuccessfully = window.simulationHasRunSuccessfully || false;
             return;
         }
     }
@@ -1043,6 +1055,8 @@ function run() {
     engineJson.end_time = parseFloat(endTime);
     engineJson.dt = parseFloat(dt);
     engineJson.integration_method = integrationMethod;
+
+
 
     sim.setData(engineJson);
 
@@ -1059,13 +1073,22 @@ function run() {
 
     sim.reset();
 
-    // Hopefully, the simulation should have successfully completed; scroll to top of page
-    // and open the "Charts/Tables" tab
-    window.scroll({
-        top: 0,
-        behavior: "smooth",
-    });
-    document.getElementById("secondaryOpen").click();
+    try {
+        // If any check fails, it should throw an error or return early
+
+        window.simulationHasRunSuccessfully = true;
+        if (typeof window.activateChartView === 'function') {
+            window.activateChartView(); // Tab switch
+        }
+
+    } catch (err) {
+        console.error("Simulation failed:", err);
+        // Optional: show debug popup
+        window.simulationHasRunSuccessfully = window.simulationHasRunSuccessfully || false;
+    }
+
+
+
 }
 
 // function to change color of the tool button when selected (does through changing the class)
