@@ -327,7 +327,7 @@
             <p class="equation-editor-title">Equation Editor</p>
             <i class="fa-regular fa-xmark close-icon" onclick="closePopup()"></i>
           </div>
-          <div id="equationEditorPopupContent" class="equation-editor-popup-content"></div>
+          <div id="equationEditorPopupContent"></div>
         </div>
       </div>
 
@@ -422,10 +422,6 @@
     const modelBtn = document.getElementById('modelBtn');
     const chartBtn = document.getElementById('chartBtn');
 
-    chartBtn.addEventListener('click', function (event) {
-      activateChartView(event);
-    });
-
     // Initial state: show modelViewer, hide chartViewer, modelBtn active
     modelViewer.classList.remove('hidden');
     chartViewer.classList.add('hidden');
@@ -451,21 +447,13 @@
       }
     }
 
-    function activateChartView(event) {
-      if (!window.simulationHasRunSuccessfully) {
-        document.getElementById("simErrorPopupDesc").innerHTML =
-                "The model has not been successfully run yet. Please run the simulation to access Charts and Tables.";
-        openSettings(event, 'simErrorPopup');
-        return;
-      }
-
+    function activateChartView() {
       if (chartViewer.classList.contains('hidden')) {
         showViewer(chartViewer, modelViewer);
         chartBtn.classList.add('active');
         modelBtn.classList.remove('active');
       }
     }
-
 
     modelBtn.addEventListener('click', (e) => {
       e.preventDefault();
