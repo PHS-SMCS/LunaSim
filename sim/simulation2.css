@@ -1059,31 +1059,36 @@ a.active {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(1);
-  background-color: #283458;
+  background-color: rgba(38, 50, 83, 1);
   padding: 1rem;
   border-radius: 10px;
   box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
   z-index: 2000;
   display: none;
   width: 95vw;
-  max-height: 90vh;
-  overflow: auto;
+  max-height: 75vh;
   opacity: 0;
   transition: opacity 0.3s ease, transform 0.3s ease;
-  pointer-events: none;
+  pointer-events: auto;
+  overflow: auto;
+  
 }
 
 .equation-editor-popup.show {
   opacity: 1;
   transform: translate(-50%, -50%) scale(1);
-  pointer-events: auto;
 }
 
 .equation-editor-popup-header {
+  position: sticky;
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 0.4rem;
+}
+
+#equationEditorPopupContent {
+  overflow-y: auto;
 }
 
 .close-icon {
