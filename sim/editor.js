@@ -21,7 +21,8 @@ var SD = {
 
 let GOJS_ELEMENT_LABELS = [];       // All labels in creation order
 let GOJS_ELEMENT_LABELS_SET = new Set();  // Ensure uniqueness
-let simulationHasRunSuccessfully = false;
+let simulationHasRunSuccessfully_button = false;
+let simulationHasRunSuccessfully_tab = false;
 
 var myDiagram;   // Declared as global
 var sim = new Simulation();
@@ -716,7 +717,7 @@ function updateTable(load = false) {
         .filter(n =>
             n.label &&
             !n.label.startsWith('$') && // skip ghosts
-            n.category !== "cloud"      // skip clouds ✅
+            n.category !== "cloud"      // skip clouds
         )
         .map(n => n.label);
 
@@ -821,9 +822,14 @@ function containsReference(equation, data) {
 
 
 function run() {
-
-    window.simulationHasRunSuccessfully = false;
+    window.simulationHasRunSuccessfully_tab = false;
     loadTableToDiagram();
+    if (!Array.isArray(myDiagram.model.nodeDataArray) || myDiagram.model.nodeDataArray.length === 0) {
+        document.getElementById("simErrorPopupDesc").innerHTML =
+            "The model is empty. Please add at least one stock, variable, or flow before running the simulation.";
+        showSimErrorPopup();
+        return;
+    }
 
     var json = JSON.parse(myDiagram.model.toJson());
     var engineJson = translate(json);
@@ -873,7 +879,7 @@ function run() {
                         document.getElementById("simErrorPopupDesc").innerHTML =
                             "Incorrect influence from " + engineJson.influences[j].from + " to " + engineJson.influences[j].to;
                         showSimErrorPopup();
-                        window.simulationHasRunSuccessfully = window.simulationHasRunSuccessfully || false;
+                        window.simulationHasRunSuccessfully_tab = false;
                         return;
                     }
                 }
@@ -881,7 +887,7 @@ function run() {
                     document.getElementById("simErrorPopupDesc").innerHTML =
                         "Missing an influence from " + references[h] + " to " + variable.label;
                     showSimErrorPopup();
-                    window.simulationHasRunSuccessfully = window.simulationHasRunSuccessfully || false;
+                    window.simulationHasRunSuccessfully_tab = false;
                     return;
                 }
             }
@@ -891,7 +897,7 @@ function run() {
                     document.getElementById("simErrorPopupDesc").innerHTML =
                         "No newReferences in equation for " + variable.label + ", but influence from " + engineJson.influences[j].from + " exists.";
                     showSimErrorPopup();
-                    window.simulationHasRunSuccessfully = window.simulationHasRunSuccessfully || false;
+                    window.simulationHasRunSuccessfully_tab = false;
                     return;
                 }
             }
@@ -944,7 +950,7 @@ function run() {
                         document.getElementById("simErrorPopupDesc").innerHTML =
                             "Incorrect influence from " + engineJson.influences[h].from + " to " + engineJson.influences[h].to;
                         showSimErrorPopup();
-                        window.simulationHasRunSuccessfully = window.simulationHasRunSuccessfully || false;
+                        window.simulationHasRunSuccessfully_tab = false;
                         return;
                     }
                 }
@@ -952,17 +958,17 @@ function run() {
                     document.getElementById("simErrorPopupDesc").innerHTML =
                         "Missing an influence from " + newReferences[j] + " to " + valve.key;
                     showSimErrorPopup();
-                    window.simulationHasRunSuccessfully = window.simulationHasRunSuccessfully || false;
+                    window.simulationHasRunSuccessfully_tab = false;
                     return;
                 }
             }
         } else {
             for (var j = 0; j < engineJson.influences.length; j++) {
-                if (engineJson.influences[j].to == newReferences[j]) {
+                if (engineJson.influences[j].to === newReferences[j]) {
                     document.getElementById("simErrorPopupDesc").innerHTML =
                         "No new references in equation for " + valve.key + ", but influence from " + engineJson.influences[j].from + " exists.";
                     showSimErrorPopup();
-                    window.simulationHasRunSuccessfully = window.simulationHasRunSuccessfully || false;
+                    window.simulationHasRunSuccessfully_tab = false;
                     return;
                 }
             }
@@ -1003,7 +1009,7 @@ function run() {
         });
         document.getElementById("simErrorPopupDesc").innerHTML = "There are errors with the simulation parameters:<br><br>" + errors.join("<br>");
         showSimErrorPopup();
-        window.simulationHasRunSuccessfully = window.simulationHasRunSuccessfully || false;
+        window.simulationHasRunSuccessfully_tab = false;
         return;
     }
 
@@ -1030,7 +1036,7 @@ function run() {
         });
         document.getElementById("simErrorPopupDesc").innerHTML = "There are errors with the simulation parameters:<br><br>" + errors.join("<br>");
         showSimErrorPopup();
-        window.simulationHasRunSuccessfully = window.simulationHasRunSuccessfully || false;
+        window.simulationHasRunSuccessfully_tab = false;
         return;
     }
 
@@ -1045,10 +1051,11 @@ function run() {
             });
             document.getElementById("simErrorPopupDesc").innerHTML = "This simulation contains 1000+ steps; as such, running it may lead to lag or the website freezing. Please adjust dt or enable high step-count simulations.<br><br>If you proceed with the simulation, it may be wise to export your LunaSim project in case the website crashes.";
             showSimErrorPopup();
-            window.simulationHasRunSuccessfully = window.simulationHasRunSuccessfully || false;
+            window.simulationHasRunSuccessfully_tab = false;
             return;
         }
     }
+
 
     // Looks all good!
     engineJson.start_time = parseFloat(startTime);
@@ -1057,35 +1064,30 @@ function run() {
     engineJson.integration_method = integrationMethod;
 
 
-
-    sim.setData(engineJson);
-
-    if (PERFORMANCE_MODE == true)
-      console.time('Simulation Runtime'); // Measuring simulation runtime
-
-    data = sim.run();
-
-    if (PERFORMANCE_MODE == true) { // Measuring simulation runtime
-      console.timeEnd('Simulation Runtime');
-    }
-
-    console.log(data);
-
-    sim.reset();
-
     try {
-        // If any check fails, it should throw an error or return early
+        sim.setData(engineJson);
 
-        window.simulationHasRunSuccessfully = true;
-        if (typeof window.activateChartView === 'function') {
-            window.activateChartView(); // Tab switch
-        }
+        if (PERFORMANCE_MODE === true) console.time('Simulation Runtime');
+        data = sim.run(); // 🚨 might throw
+        if (PERFORMANCE_MODE === true) console.timeEnd('Simulation Runtime');
+
+        sim.reset();
+
+        window.simulationHasRunSuccessfully_button = true;
+
+        window.scroll({ top: 0, behavior: "smooth" });
+        document.getElementById("secondaryOpen").click();
 
     } catch (err) {
         console.error("Simulation failed:", err);
-        // Optional: show debug popup
-        window.simulationHasRunSuccessfully = window.simulationHasRunSuccessfully || false;
+        document.getElementById("simErrorPopupDesc").innerHTML = "Simulation Error: " + err.message;
+        showSimErrorPopup();
+
+        // Preserve previous success state if applicable
+        window.simulationHasRunSuccessfully_tab = false;
     }
+
+
 
 
 
@@ -1323,7 +1325,6 @@ document.getElementById("clearButton").addEventListener("click", function() {
         document.getElementById("endTime").value = 10;
         document.getElementById("dt").value = 0.1;
         document.getElementById("integrationMethod").value = "rk4";
-
         // clear the diagram
         myDiagram.model = go.Model.fromJson("{ \"class\": \"GraphLinksModel\", \"linkLabelKeysProperty\": \"labelKeys\", \"nodeDataArray\": [],\"linkDataArray\": [] }");
         // clear the table

@@ -63,7 +63,7 @@
 
       <div class="tabBar">
           <button class="tabButton" id="modelBtn">Model View</button>
-          <button class="tabButton" id="chartBtn">Charts/Tables</button>        
+          <button class="tabButton" id="chartBtn">Charts/Tables</button>
       </div>
       <div class="modelViewer">
         <!-- Tool Bar -->
@@ -438,7 +438,7 @@
     const chartBtn = document.getElementById('chartBtn');
 
     chartBtn.addEventListener('click', function (event) {
-      activateChartView(event);
+      activateChartView_button(event);
     });
 
     // Initial state: show modelViewer, hide chartViewer, modelBtn active
@@ -466,13 +466,29 @@
       }
     }
 
-    function activateChartView(event) {
-      if (!window.simulationHasRunSuccessfully) {
+    function activateChartView_tab(event) {
+      if (!window.simulationHasRunSuccessfully_tab) {
         document.getElementById("simErrorPopupDesc").innerHTML =
                 "The model has not been successfully run yet. Please run the simulation to access Charts and Tables.";
         openSettings(event, 'simErrorPopup');
         return;
       }
+
+
+      if (chartViewer.classList.contains('hidden')) {
+        showViewer(chartViewer, modelViewer);
+        chartBtn.classList.add('active');
+        modelBtn.classList.remove('active');
+      }
+    }
+    function activateChartView_button(event) {
+      if (!window.simulationHasRunSuccessfully_button) {
+        document.getElementById("simErrorPopupDesc").innerHTML =
+                "The model has not been successfully run yet. Please run the simulation to access Charts and Tables.";
+        openSettings(event, 'simErrorPopup');
+        return;
+      }
+
 
       if (chartViewer.classList.contains('hidden')) {
         showViewer(chartViewer, modelViewer);
@@ -481,7 +497,6 @@
       }
     }
 
-
     modelBtn.addEventListener('click', (e) => {
       e.preventDefault();
       activateModelView();
@@ -489,7 +504,7 @@
 
     chartBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      activateChartView();
+      activateChartView_tab();
     });
   });
 
