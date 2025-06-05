@@ -21,6 +21,7 @@ var SD = {
 
 let GOJS_ELEMENT_LABELS = [];       // All labels in creation order
 let GOJS_ELEMENT_LABELS_SET = new Set();  // Ensure uniqueness
+let simulationHasRunSuccessfully = false;
 
 var myDiagram;   // Declared as global
 var sim = new Simulation();
@@ -419,6 +420,7 @@ function buildTemplates() {
         $(go.Node, nodeStyle(),
             {
                 movable: false,
+                deletable: false,
                 layerName: "Foreground",
                 selectable: true,
                 pickable: true,
@@ -820,6 +822,7 @@ function containsReference(equation, data) {
 
 function run() {
 
+    window.simulationHasRunSuccessfully = false;
     loadTableToDiagram();
 
     var json = JSON.parse(myDiagram.model.toJson());
@@ -870,6 +873,7 @@ function run() {
                         document.getElementById("simErrorPopupDesc").innerHTML =
                             "Incorrect influence from " + engineJson.influences[j].from + " to " + engineJson.influences[j].to;
                         showSimErrorPopup();
+                        window.simulationHasRunSuccessfully = window.simulationHasRunSuccessfully || false;
                         return;
                     }
                 }
@@ -877,6 +881,7 @@ function run() {
                     document.getElementById("simErrorPopupDesc").innerHTML =
                         "Missing an influence from " + references[h] + " to " + variable.label;
                     showSimErrorPopup();
+                    window.simulationHasRunSuccessfully = window.simulationHasRunSuccessfully || false;
                     return;
                 }
             }
@@ -886,6 +891,7 @@ function run() {
                     document.getElementById("simErrorPopupDesc").innerHTML =
                         "No newReferences in equation for " + variable.label + ", but influence from " + engineJson.influences[j].from + " exists.";
                     showSimErrorPopup();
+                    window.simulationHasRunSuccessfully = window.simulationHasRunSuccessfully || false;
                     return;
                 }
             }
@@ -919,12 +925,17 @@ function run() {
                 newReferences.push(references[t]);
             }
         }
+        console.log(engineJson.influences);
         console.log(newReferences);
         if (newReferences.length > 0) {
             for (var j = 0; j < newReferences.length; j++) {
                 var exists = false;
                 for (var h = 0; h < engineJson.influences.length; h++) {
-                    if (engineJson.influences[h].to == valve.key && engineJson.influences[h].from == newReferences[j]) {
+                    console.log("valve key:" + valve.key);
+                    console.log(engineJson.influences[h]);
+                    console.log("ref:"+newReferences[j]);
+                    console.log(engineJson.influences[h].to == newReferences[j] && engineJson.influences[h].from == valve.key);
+                    if (engineJson.influences[h].to == newReferences[j] && engineJson.influences[h].from == valve.key) {
                         exists = true;
                     }
                     if (engineJson.influences[h].to == valve.key &&
@@ -933,6 +944,7 @@ function run() {
                         document.getElementById("simErrorPopupDesc").innerHTML =
                             "Incorrect influence from " + engineJson.influences[h].from + " to " + engineJson.influences[h].to;
                         showSimErrorPopup();
+                        window.simulationHasRunSuccessfully = window.simulationHasRunSuccessfully || false;
                         return;
                     }
                 }
@@ -940,15 +952,17 @@ function run() {
                     document.getElementById("simErrorPopupDesc").innerHTML =
                         "Missing an influence from " + newReferences[j] + " to " + valve.key;
                     showSimErrorPopup();
+                    window.simulationHasRunSuccessfully = window.simulationHasRunSuccessfully || false;
                     return;
                 }
             }
         } else {
             for (var j = 0; j < engineJson.influences.length; j++) {
-                if (engineJson.influences[j].to == valve.key) {
+                if (engineJson.influences[j].to == newReferences[j]) {
                     document.getElementById("simErrorPopupDesc").innerHTML =
-                        "No newReferences in equation for " + valve.key + ", but influence from " + engineJson.influences[j].from + " exists.";
+                        "No new references in equation for " + valve.key + ", but influence from " + engineJson.influences[j].from + " exists.";
                     showSimErrorPopup();
+                    window.simulationHasRunSuccessfully = window.simulationHasRunSuccessfully || false;
                     return;
                 }
             }
@@ -989,6 +1003,7 @@ function run() {
         });
         document.getElementById("simErrorPopupDesc").innerHTML = "There are errors with the simulation parameters:<br><br>" + errors.join("<br>");
         showSimErrorPopup();
+        window.simulationHasRunSuccessfully = window.simulationHasRunSuccessfully || false;
         return;
     }
 
@@ -1015,6 +1030,7 @@ function run() {
         });
         document.getElementById("simErrorPopupDesc").innerHTML = "There are errors with the simulation parameters:<br><br>" + errors.join("<br>");
         showSimErrorPopup();
+        window.simulationHasRunSuccessfully = window.simulationHasRunSuccessfully || false;
         return;
     }
 
@@ -1029,6 +1045,7 @@ function run() {
             });
             document.getElementById("simErrorPopupDesc").innerHTML = "This simulation contains 1000+ steps; as such, running it may lead to lag or the website freezing. Please adjust dt or enable high step-count simulations.<br><br>If you proceed with the simulation, it may be wise to export your LunaSim project in case the website crashes.";
             showSimErrorPopup();
+            window.simulationHasRunSuccessfully = window.simulationHasRunSuccessfully || false;
             return;
         }
     }
@@ -1038,6 +1055,8 @@ function run() {
     engineJson.end_time = parseFloat(endTime);
     engineJson.dt = parseFloat(dt);
     engineJson.integration_method = integrationMethod;
+
+
 
     sim.setData(engineJson);
 
@@ -1054,13 +1073,22 @@ function run() {
 
     sim.reset();
 
-    // Hopefully, the simulation should have successfully completed; scroll to top of page
-    // and open the "Charts/Tables" tab
-    window.scroll({
-        top: 0,
-        behavior: "smooth",
-    });
-    document.getElementById("secondaryOpen").click();
+    try {
+        // If any check fails, it should throw an error or return early
+
+        window.simulationHasRunSuccessfully = true;
+        if (typeof window.activateChartView === 'function') {
+            window.activateChartView(); // Tab switch
+        }
+
+    } catch (err) {
+        console.error("Simulation failed:", err);
+        // Optional: show debug popup
+        window.simulationHasRunSuccessfully = window.simulationHasRunSuccessfully || false;
+    }
+
+
+
 }
 
 // function to change color of the tool button when selected (does through changing the class)
@@ -1428,7 +1456,6 @@ function setupAutocompleteForInputs() {
             let updated, newCursor;
 
             if (isInBrackets) {
-                // ✅ Add closing bracket and move cursor after it
                 before = before.replace(/\[([^\[\]]*)$/, `[${replacement}]`);
                 updated = before + after;
                 newCursor = before.length;
@@ -1454,7 +1481,6 @@ function setupAutocompleteForInputs() {
     });
 
 
-    // ✅ NEW: Hide dropdown when the input field loses focus
     $tbody.on('blur', 'input[name="equation"]', function () {
         setTimeout(() => {
             if (!$(':hover').hasClass('autocomplete-item')) {
@@ -1609,7 +1635,6 @@ function saveDiagramAsTiff(diagram, filename = "diagram.tiff", margin = 15) {
     });
 }
 
-// ================= Image Export Handler =================
 document.getElementById("downloadImageButton").addEventListener("click", function () {
     const type = document.getElementById("fileSelect").value; // .png, .jpg, .tiff
     const marginInput = parseInt(document.getElementById("imageMargin").value);
@@ -1671,8 +1696,8 @@ function setupLocalStoragePersistence(diagram) {
     }
 
     window.addEventListener("beforeunload", () => {
-        loadTableToDiagram();  // make sure equations/checkboxes are synced first
-        const json = myDiagram.model.toJson();  // ✅ this is a string now
+        loadTableToDiagram();
+        const json = myDiagram.model.toJson();
         localStorage.setItem("model", json);
     });
 }
