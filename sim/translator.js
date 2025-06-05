@@ -64,6 +64,8 @@ export function translate(obj) {
 
         if (node.category == "valve") {
             res.valves.push({equation: node.equation, label: node.label, key: node.key});
+            res.labelsandkeys.push({key: node.key, label: node.label});
+
         }
 
 

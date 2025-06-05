@@ -919,12 +919,17 @@ function run() {
                 newReferences.push(references[t]);
             }
         }
+        console.log(engineJson.influences);
         console.log(newReferences);
         if (newReferences.length > 0) {
             for (var j = 0; j < newReferences.length; j++) {
                 var exists = false;
                 for (var h = 0; h < engineJson.influences.length; h++) {
-                    if (engineJson.influences[h].to == valve.key && engineJson.influences[h].from == newReferences[j]) {
+                    console.log("valve key:" + valve.key);
+                    console.log(engineJson.influences[h]);
+                    console.log("ref:"+newReferences[j]);
+                    console.log(engineJson.influences[h].to == newReferences[j] && engineJson.influences[h].from == valve.key);
+                    if (engineJson.influences[h].to == newReferences[j] && engineJson.influences[h].from == valve.key) {
                         exists = true;
                     }
                     if (engineJson.influences[h].to == valve.key &&
@@ -945,7 +950,7 @@ function run() {
             }
         } else {
             for (var j = 0; j < engineJson.influences.length; j++) {
-                if (engineJson.influences[j].to == valve.key) {
+                if (engineJson.influences[j].to == newReferences[j]) {
                     document.getElementById("simErrorPopupDesc").innerHTML =
                         "No newReferences in equation for " + valve.key + ", but influence from " + engineJson.influences[j].from + " exists.";
                     showSimErrorPopup();
@@ -1428,7 +1433,6 @@ function setupAutocompleteForInputs() {
             let updated, newCursor;
 
             if (isInBrackets) {
-                // ✅ Add closing bracket and move cursor after it
                 before = before.replace(/\[([^\[\]]*)$/, `[${replacement}]`);
                 updated = before + after;
                 newCursor = before.length;
@@ -1454,7 +1458,6 @@ function setupAutocompleteForInputs() {
     });
 
 
-    // ✅ NEW: Hide dropdown when the input field loses focus
     $tbody.on('blur', 'input[name="equation"]', function () {
         setTimeout(() => {
             if (!$(':hover').hasClass('autocomplete-item')) {
@@ -1609,7 +1612,6 @@ function saveDiagramAsTiff(diagram, filename = "diagram.tiff", margin = 15) {
     });
 }
 
-// ================= Image Export Handler =================
 document.getElementById("downloadImageButton").addEventListener("click", function () {
     const type = document.getElementById("fileSelect").value; // .png, .jpg, .tiff
     const marginInput = parseInt(document.getElementById("imageMargin").value);
@@ -1671,8 +1673,8 @@ function setupLocalStoragePersistence(diagram) {
     }
 
     window.addEventListener("beforeunload", () => {
-        loadTableToDiagram();  // make sure equations/checkboxes are synced first
-        const json = myDiagram.model.toJson();  // ✅ this is a string now
+        loadTableToDiagram();
+        const json = myDiagram.model.toJson();
         localStorage.setItem("model", json);
     });
 }
