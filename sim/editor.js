@@ -1457,10 +1457,16 @@ function setupAutocompleteForInputs() {
             let updated, newCursor;
 
             if (isInBrackets) {
-                before = before.replace(/\[([^\[\]]*)$/, `[${replacement}]`);
-                updated = before + after;
-                newCursor = before.length;
-            } else {
+                before = before.replace(/\[([^\[\]]*)$/, `[${replacement}`);
+                if (after.trim().startsWith("]")) {
+                    updated = before + after;
+                    newCursor = before.length;
+                } else {
+                    updated = before + "]" + after;
+                    newCursor = before.length + 1;
+                }
+            }
+            else {
                 const match = before.match(/(\w+)$/);
                 const currentFragment = match ? match[1] : "";
                 const fragmentStart = cursorPos - currentFragment.length;
@@ -1534,10 +1540,16 @@ function showAutocomplete($input) {
             let updated, newCursor;
 
             if (isInBrackets) {
-                // ✅ Add closing bracket and move cursor after it
-                before = before.replace(/\[([^\[\]]*)$/, `[${match}]`);
-                updated = before + after;
-                newCursor = before.length;
+                before = before.replace(/\[([^\[\]]*)$/, `[${match}`);
+                if (after.trim().startsWith("]")) {
+                    updated = before + after;
+                    newCursor = before.length;
+                } else {
+                    // Add closing bracket
+                    updated = before + "]" + after;
+                    newCursor = before.length + 1;
+                }
+
             } else {
             // Replace function name, add (), move cursor inside
             const funcName = match;
