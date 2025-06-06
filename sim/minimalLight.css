@@ -1,0 +1,376 @@
+/* Light Minimal Theme */
+body {
+    background: #f8f9fa;
+    box-shadow: none;
+}
+
+#model_name {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    color: #212529;
+}
+
+.actionButton {
+    background-color: rgba(108, 117, 125, 0.1);
+    color: #495057;
+}
+
+.actionButton:hover {
+    background-color: #e9ecef;
+}
+
+#runButton {
+    background: rgba(40, 167, 69, 0.9);
+    color: white;
+}
+
+#runButton:hover {
+    background-color: rgba(33, 136, 56, 0.9);
+}
+
+#loadButton,
+#expButton {
+    background: rgba(0, 123, 255, 0.9);
+    color: white;
+}
+
+#loadButton:hover,
+#expButton:hover {
+    background: rgba(0, 86, 179, 0.9);
+}
+
+#clearButton {
+    background: rgba(220, 53, 69, 0.9);
+    color: white;
+}
+
+#clearButton:hover {
+    background: rgba(200, 35, 51, 0.9);
+}
+
+#saveStatus {
+    color: #495057;
+}
+
+.tabButton {
+    color: #495057;
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.tabButton.active {
+    background-color: #e9ecef;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.modelViewer {
+    background: #ffffff;
+    border: 1px solid #dee2e6;
+}
+
+.toolbar ul,
+.chartSidebar ul {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+}
+
+.settings-section {
+    border-top: 1px solid #dee2e6;
+}
+
+.graphTabsActive {
+    background-color: #007bff !important;
+    color: white;
+}
+
+a {
+    color: #007bff;
+}
+
+a:hover,
+a:focus {
+    background-color: #f8f9fa;
+}
+
+a span {
+    background-color: #e9ecef;
+}
+
+a span:before {
+    background-color: #e9ecef;
+}
+
+a.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.modelCanvas {
+    background-color: #ffffff;
+    color: #212529;
+}
+
+#myDiagram {
+    background-color: #ffffff;
+}
+
+.center-btn {
+    background-color: #ffffff;
+    color: #495057;
+    border: 1px solid #dee2e6;
+}
+
+.center-btn:hover i {
+    color: #007bff;
+}
+
+#eqEditor {
+    background-color: #ffffff;
+    color: #212529;
+    border: 1px solid #dee2e6;
+}
+
+.equation-editor-zoom-icon {
+    color: #495057;
+}
+
+.equation-editor-zoom-icon:hover {
+    color: #007bff;
+}
+
+.equation-editor-table th {
+    background-color: #f8f9fa;
+}
+
+.eqTableInputBox {
+    background-color: #ffffff;
+    border: 1px solid #ced4da;
+    color: #495057;
+}
+
+.eqStockBox input {
+    border: 1px solid #ffc107;
+}
+
+.eqVariableBox input {
+    border: 1px solid #28a745;
+}
+
+.eqFlowBox input {
+    border: 1px solid #6c757d;
+}
+
+.equation-editor-table thead th {
+    background-color: #f8f9fa;
+}
+
+.nncheckbox,
+.yAxisCheckbox {
+    accent-color: #007bff;
+    background-color: #ffffff;
+    border: 2px solid #ced4da;
+}
+
+.nncheckbox:checked,
+.yAxisCheckbox:checked {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.nncheckbox:hover,
+.yAxisCheckbox:hover {
+    border-color: #495057;
+}
+
+.chartViewer {
+    background: #ffffff;
+    border: 1px solid #dee2e6;
+}
+
+.chartCanvas {
+    background-color: #ffffff;
+    color: #212529;
+}
+
+.chartEditor {
+    background-color: #f8f9fa;
+    color: #495057;
+    border: 1px solid #dee2e6;
+}
+
+.chart-stats p {
+    color: #6c757d;
+}
+
+.chartEditor hr {
+    border-top: 1px solid #dee2e6;
+}
+
+.chart-btn {
+    background-color: #ffffff;
+    border: 1px solid #ced4da;
+    color: #495057;
+}
+
+.chart-btn:hover {
+    background-color: #e9ecef;
+}
+
+#overlay {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.settings-header h2,
+.close-btn,
+.setting-group {
+    color: #212529;
+}
+
+.close-btn:hover {
+    color: #007bff;
+}
+
+.settings-input,
+.settings-dropdown {
+    background-color: #ffffff;
+    border: 1px solid #ced4da;
+    color: #495057;
+}
+
+.settings-divider {
+    border-top: 1px solid #dee2e6;
+}
+
+.slider {
+    background-color: #ced4da;
+}
+
+.slider:before {
+    background-color: white;
+}
+
+.toggle-switch input:checked + .slider {
+    background-color: #007bff;
+}
+
+.setting-button {
+    background-color: #ffffff;
+    border: 1px solid #ced4da;
+    color: #495057;
+}
+
+.setting-button:hover {
+    background-color: #e9ecef;
+}
+
+.settings-popup,
+.theme-popup,
+.charts-popup,
+.export-popup {
+    background-color: #ffffff;
+    color: #212529;
+    border: 1px solid #dee2e6;
+}
+
+#simErrorPopup {
+    background: rgba(248, 215, 218, 1);
+    border: 1px solid rgb(220, 53, 69);
+    color: #721c24;
+}
+
+#simErrorPopupTitle,
+#simErrorPopupDesc {
+    color: #721c24;
+}
+
+#simErrorPopupCancel {
+    background: rgb(220, 53, 69);
+    border: 1px solid rgb(220, 53, 69);
+    color: white;
+}
+
+#simErrorPopupCancel:hover {
+    background: rgb(200, 35, 51);
+    border: 1px solid rgb(200, 35, 51);
+}
+
+.equation-editor-overlay {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.equation-editor-popup {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+}
+
+.close-icon {
+    color: #495057;
+}
+
+.close-icon:hover {
+    color: #007bff;
+}
+
+.equation-editor-popup,
+.equation-editor-popup * {
+    color: #212529;
+}
+
+#xAxis {
+    background-color: #ffffff;
+    border: 1px solid #ced4da;
+    color: #495057;
+}
+
+#yAxis {
+    background-color: transparent;
+    color: #495057;
+}
+
+#submitModel {
+    background-color: #ffffff;
+    border: 1px solid #ced4da;
+    color: #495057;
+}
+
+#submitModel:hover {
+    background-color: #e9ecef;
+}
+
+.autocomplete-list {
+    background-color: #ffffff;
+    border: 1px solid #ced4da;
+    color: #495057;
+}
+
+.autocomplete-item {
+    border-bottom: 1px solid #dee2e6;
+}
+
+.autocomplete-item.selected,
+.autocomplete-item:hover {
+    background-color: #f8f9fa;
+}
+
+.model-zoom-icon {
+    color: #495057;
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+}
+
+.model-zoom-icon:hover {
+    background-color: #f8f9fa;
+}
+
+.popup-overlay {
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.popup-content {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+}
+
+.close-popup {
+    color: #495057;
+}

@@ -1,0 +1,388 @@
+/* Ultra Dark Theme */
+body {
+    background: #0a0a0a;
+    box-shadow: none;
+}
+
+#model_name {
+    background-color: #000000;
+    border: 1px solid #1a1a1a;
+    color: #999999;
+}
+
+.actionButton {
+    background-color: rgba(30, 30, 30, 0.5);
+    color: #999999;
+}
+
+.actionButton:hover {
+    background-color: #1a1a1a;
+}
+
+#runButton {
+    background: rgba(20, 70, 20, 0.9);
+}
+
+#runButton:hover {
+    background-color: rgba(15, 50, 15, 0.9);
+}
+
+#loadButton,
+#expButton {
+    background: rgba(30, 30, 60, 0.9);
+}
+
+#loadButton:hover,
+#expButton:hover {
+    background: rgba(20, 20, 40, 0.9);
+}
+
+#clearButton {
+    background: rgba(70, 20, 20, 0.9);
+}
+
+#clearButton:hover {
+    background: rgba(50, 15, 15, 0.9);
+}
+
+#saveStatus {
+    color: #999999;
+}
+
+.tabButton {
+    color: #999999;
+    background-color: #000000;
+    box-shadow: none;
+}
+
+.tabButton.active {
+    background-color: #1a1a1a;
+    box-shadow: none;
+}
+
+.modelViewer {
+    background: #0f0f0f;
+}
+
+.toolbar ul,
+.chartSidebar ul {
+    background-color: #000000;
+}
+
+.settings-section {
+    border-top: 1px solid #1a1a1a;
+}
+
+.graphTabsActive {
+    background-color: #1a1a1a !important;
+}
+
+a {
+    color: #666666;
+}
+
+a:hover,
+a:focus {
+    background-color: #1a1a1a;
+}
+
+a span {
+    background-color: #1a1a1a;
+}
+
+a span:before {
+    background-color: #1a1a1a;
+}
+
+a.active {
+    background-color: #1a1a1a;
+}
+
+.modelCanvas {
+    background-color: #0f0f0f;
+    color: #ffffff;
+}
+
+#myDiagram {
+    background-color: #0f0f0f;
+}
+
+/* GoJS specific text styling */
+#myDiagram text,
+#myDiagram .go-text,
+.modelCanvas text,
+.modelCanvas .go-text {
+    fill: #ffffff !important;
+    color: #ffffff !important;
+}
+
+/* GoJS node text labels */
+#myDiagram g text,
+.modelCanvas g text {
+    fill: #ffffff !important;
+}
+
+/* GoJS link labels */
+#myDiagram .go-link text,
+.modelCanvas .go-link text {
+    fill: #ffffff !important;
+}
+
+/* Any SVG text within the model viewer */
+.modelViewer text,
+.modelViewer .go-text {
+    fill: #ffffff !important;
+    color: #ffffff !important;
+}
+
+.center-btn {
+    background-color: #000000;
+    color: #999999;
+}
+
+.center-btn:hover i {
+    color: #666666;
+}
+
+#eqEditor {
+    background-color: #000000;
+    color: #999999;
+}
+
+.equation-editor-zoom-icon {
+    color: #999999;
+}
+
+.equation-editor-zoom-icon:hover {
+    color: #666666;
+}
+
+.equation-editor-table th {
+    background-color: #000000;
+}
+
+.eqTableInputBox {
+    background-color: #0a0a0a;
+    border: 1px solid #1a1a1a;
+    color: #999999;
+}
+
+.eqStockBox input {
+    border: 1px solid #3a3000;
+}
+
+.eqVariableBox input {
+    border: 1px solid #1a3a1a;
+}
+
+.eqFlowBox input {
+    border: 1px solid #1a1a1a;
+}
+
+.equation-editor-table thead th {
+    background-color: #000000;
+}
+
+.nncheckbox,
+.yAxisCheckbox {
+    accent-color: #1a1a1a;
+    background-color: #0a0a0a;
+    border: 2px solid #1a1a1a;
+}
+
+.nncheckbox:checked,
+.yAxisCheckbox:checked {
+    background-color: #1a1a1a;
+    border-color: #1a1a1a;
+}
+
+.nncheckbox:hover,
+.yAxisCheckbox:hover {
+    border-color: #666666;
+}
+
+.chartViewer {
+    background: #0f0f0f;
+}
+
+.chartCanvas {
+    background-color: #0f0f0f;
+    color: #999999;
+}
+
+.chartEditor {
+    background-color: #000000;
+    color: #999999;
+}
+
+.chart-stats p {
+    color: #666666;
+}
+
+.chartEditor hr {
+    border-top: 1px solid #1a1a1a;
+}
+
+.chart-btn {
+    background-color: #0a0a0a;
+    border: 1px solid #1a1a1a;
+    color: #999999;
+}
+
+.chart-btn:hover {
+    background-color: #1a1a1a;
+}
+
+#overlay {
+    background-color: rgba(0, 0, 0, 0.95);
+}
+
+.settings-header h2,
+.close-btn,
+.setting-group {
+    color: #999999;
+}
+
+.close-btn:hover {
+    color: #666666;
+}
+
+.settings-input,
+.settings-dropdown {
+    background-color: #0a0a0a;
+    border: 1px solid #1a1a1a;
+    color: #999999;
+}
+
+.settings-divider {
+    border-top: 1px solid #1a1a1a;
+}
+
+.slider {
+    background-color: #0a0a0a;
+}
+
+.slider:before {
+    background-color: #666666;
+}
+
+.toggle-switch input:checked + .slider {
+    background-color: #1a1a1a;
+}
+
+.setting-button {
+    background-color: #0a0a0a;
+    border: 1px solid #1a1a1a;
+    color: #999999;
+}
+
+.setting-button:hover {
+    background-color: #1a1a1a;
+}
+
+.settings-popup,
+.theme-popup,
+.charts-popup,
+.export-popup {
+    background-color: #000000;
+    color: #999999;
+}
+
+#simErrorPopup {
+    background: rgba(40, 10, 10, 1);
+    border: 1px solid rgb(50, 15, 15);
+    color: #999999;
+}
+
+#simErrorPopupTitle,
+#simErrorPopupDesc {
+    color: #999999;
+}
+
+#simErrorPopupCancel {
+    background: rgb(50, 15, 15);
+    border: 1px solid rgb(50, 15, 15);
+}
+
+#simErrorPopupCancel:hover {
+    background: rgb(70, 20, 20);
+    border: 1px solid rgb(70, 20, 20);
+}
+
+.equation-editor-overlay {
+    background-color: rgba(0, 0, 0, 0.95);
+}
+
+.equation-editor-popup {
+    background-color: #000000;
+}
+
+.close-icon {
+    color: #999999;
+}
+
+.close-icon:hover {
+    color: #666666;
+}
+
+.equation-editor-popup,
+.equation-editor-popup * {
+    color: #999999;
+}
+
+#xAxis {
+    background-color: #0a0a0a;
+    border: 1px solid #1a1a1a;
+    color: #999999;
+}
+
+#yAxis {
+    background-color: transparent;
+    color: #999999;
+}
+
+#submitModel {
+    background-color: #0a0a0a;
+    border: 1px solid #1a1a1a;
+    color: #999999;
+}
+
+#submitModel:hover {
+    background-color: #1a1a1a;
+}
+
+.autocomplete-list {
+    background-color: #0a0a0a;
+    border: 1px solid #1a1a1a;
+    color: #999999;
+}
+
+.autocomplete-item {
+    border-bottom: 1px solid #1a1a1a;
+}
+
+.autocomplete-item.selected,
+.autocomplete-item:hover {
+    background-color: #1a1a1a;
+}
+
+.model-zoom-icon {
+    color: #999999;
+    background-color: #000000;
+}
+
+.model-zoom-icon:hover {
+    background-color: #1a1a1a;
+}
+
+.popup-overlay {
+    background-color: rgba(0, 0, 0, 0.98);
+}
+
+.popup-content {
+    background-color: #000000;
+}
+
+.close-popup {
+    color: #999999;
+}

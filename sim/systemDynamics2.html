@@ -820,23 +820,33 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 </script>
-<script>
-  const themeSelect = document.getElementById('themeSelect');
-  const themeLink = document.getElementById('theme-style');
+  <script>
+    const themeSelect = document.getElementById('themeSelect');
+    const themeLink = document.getElementById('theme-style');
 
-  themeSelect.addEventListener('change', () => {
-    const selected = themeSelect.value.toLowerCase();
-
-    let themeHref = '';
-    if (selected === 'monochrome') {
-      themeHref = 'simulationMonochrome.css';
-    } else if (selected === 'classic') {
-      themeHref = 'simulationClassic.css';
+    const savedTheme = localStorage.getItem('selectedTheme');
+    if (savedTheme) {
+      themeSelect.value = savedTheme;
+      applyTheme(savedTheme);
     }
 
-    // Apply theme or remove if 'normal'
-    themeLink.setAttribute('href', themeHref);
-  });
-</script>
+    themeSelect.addEventListener('change', () => {
+      const selected = themeSelect.value.toLowerCase();
+      localStorage.setItem('selectedTheme', selected);
+      applyTheme(selected);
+    });
+
+    function applyTheme(selected) {
+      let themeHref = '';
+      if (selected === 'monochrome') {
+        themeHref = 'simulationMonochrome.css';
+      } else if (selected === 'classic') {
+        themeHref = 'ultraDark.css';
+      } else {
+        themeHref = '';
+      }
+      themeLink.setAttribute('href', themeHref);
+    }
+  </script>
 </body>
 </html>
