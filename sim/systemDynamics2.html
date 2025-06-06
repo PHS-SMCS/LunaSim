@@ -156,7 +156,7 @@
           <p class="chart-title">Chart Editor</p>
           <!-- Top Section -->
           <div class="chartEditor-top">
-            <button class="chart-btn full-width"  id="addTab" onclick="openSettings(event, 'chartsPopup')">Create New Chart</button>
+            <button class="chart-btn full-width"  id="addTab" onclick="openSettings(event, 'chartsPopup')">Create New Visual</button>
             <hr>
           </div>
 
@@ -175,8 +175,8 @@
           <!-- Bottom Section -->
           <div class="chartEditor-bottom">
             <hr>
-            <button class="chart-btn full-width" id="downloadGraph">Download Graph</button>
-            <button class="chart-btn full-width" id="deleteGraph">Delete Graph</button>
+            <button class="chart-btn full-width" id="downloadGraph">Download Visual</button>
+            <button class="chart-btn full-width" id="deleteGraph">Delete Visual</button>
           </div>
         </div>
 
@@ -193,13 +193,13 @@
         <div class="setting-group">
 
           <label for="startTime">Start Time</label>
-          <input type="text" id="startTime" class="settings-input" placeholder="Enter start time..." value="0" style="width: 70%;">
+          <input type="text" id="startTime" class="settings-input" placeholder="Enter start time..." value="0" style="width: 70%;" autocomplete="off">
 
           <label for="endTime">End Time</label>
-          <input type="text" id="endTime" class="settings-input" placeholder="Enter end time..." value="10" style="width: 70%;">
+          <input type="text" id="endTime" class="settings-input" placeholder="Enter end time..." value="10" style="width: 70%;" autocomplete="off">
 
           <label for="dt">dt (Time Increment)</label>
-          <input type="text" id="dt" class="settings-input" placeholder="Enter dt..." value="0.1" style="width: 50%;">
+          <input type="text" id="dt" class="settings-input" placeholder="Enter dt..." value="0.1" style="width: 50%;" autocomplete="off">
 
           <label for="integrationMethod">Integration Method</label>
           <select id="integrationMethod" class="settings-dropdown" style="width: 50%;">
@@ -311,7 +311,7 @@
           <hr class="settings-divider">
           <div class="setting-group">    
             <label for="imageMargin" class="dotted-underline">Image Margin</label>
-            <input type="text" id="imageMargin" class="px-visual-input settings-input" placeholder="Enter margin..." value="15" style="width: 65%;">
+            <input type="text" id="imageMargin" class="px-visual-input settings-input" placeholder="Enter margin..." value="15" style="width: 65%;" autocomplete="off">
           </div>
           <button id="downloadImageButton" class="setting-button" onclick="closeSettings('exportPopup')">Download Image</button>
         </div>
@@ -892,6 +892,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 </script>
-
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('input').forEach(input => {
+      input.setAttribute('autocomplete', 'off');
+    });
+  });
+</script>
 </body>
 </html>
