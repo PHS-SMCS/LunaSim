@@ -231,7 +231,7 @@
           <select id="themeSelect" class="settings-dropdown" style="width: 80%;">
             <option selected value="normal">Normal</option>
             <option value="classic">Classic</option>
-            <option value="dark">Dark</option>
+            <option value="monochrome">Monochrome</option>
           </select>
           <label for="simulationFont">Font</label>
           <select id="simulationFont" class="settings-dropdown" style="width: 80%;">
@@ -828,8 +828,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const selected = themeSelect.value.toLowerCase();
 
     let themeHref = '';
-    if (selected === 'dark') {
-      themeHref = 'simulationDark.css';
+    if (selected === 'monochrome') {
+      themeHref = 'simulationMonochrome.css';
     } else if (selected === 'classic') {
       themeHref = 'simulationClassic.css';
     }

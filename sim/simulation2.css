@@ -184,8 +184,6 @@ input, button, select {
   }
 }
 
-
-
 /* Tab Bar (Model Viewer / Chart Viewer) */
 .tabBar {
   position: absolute;
@@ -218,7 +216,7 @@ input, button, select {
 
 .tabButton.active {
   background-color: rgba(60, 84, 148, 1); /* brighter, matching modelViewer bg */
-  transform: scale(1.1);
+  transform: scale(1.11);
   box-shadow: 0 4px 15px rgba(79, 107, 184, 0.7);
 }
 
@@ -260,11 +258,6 @@ input, button, select {
 }
 
 /* Universal Sidebar Styling (Applies to Toolbar and Chart Sidebar) */
-/*.toolbar ul li:nth-last-child(3) {
-  margin-top: 3rem;
-  padding-top: 1.25rem;
-  border-top: 1px solid #374875;
-}*/
 
 li + li {
   margin-top: 0.5rem;
@@ -363,13 +356,13 @@ a.active {
   background-color: white;
   position: absolute;
   z-index:500;
-  overflow: auto; /* Allow scrolling */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  overflow: auto; 
+  scrollbar-width: none; 
+  -ms-overflow-style: none;
 }
 
 #myDiagram::-webkit-scrollbar {
-  display: none; /* Safari and Chrome */
+  display: none; 
 }
 
 .center-btn {
@@ -401,7 +394,6 @@ a.active {
 .center-btn:hover i {
   color: #627bc0;
 }
-
 
 
 /* Model Viewer - Equation Editor */
@@ -464,6 +456,7 @@ a.active {
   vertical-align: middle;
   padding-bottom: 0.5rem;
   font-size: 1rem;
+  background-color: rgba(38, 50, 83, 1);
 }
 
 /* Equation Editor Input Box */
@@ -490,15 +483,11 @@ a.active {
   border: 1px solid #627bc0;
 }
 
-/* Equation Editor Specials */
-
-/* Scrollable Table Section */
 #eqTableDiv {
-  max-height: calc(100% - 3.2rem); /* Leave space for header */
+  max-height: calc(100% - 3.2rem);
   overflow-y: auto;
 }
 
-/* Sticky Header Row */
 .equation-editor-table thead th {
   position: sticky;
   top: 0;
@@ -506,23 +495,14 @@ a.active {
   z-index: 2;
 }
 
-/* Optional: Improve scroll aesthetics */
-#eqTableDiv::-webkit-scrollbar {
-  width: 8px;
-}
-#eqTableDiv::-webkit-scrollbar-thumb {
-  background: #627bc0;
-  border-radius: 4px;
-}
-
-/* Equation Editor Checkbox */
+/* Checkboxes */
 .nncheckbox, .yAxisCheckbox {
   width: 1.2rem;
   height: 1.2rem;
   accent-color: #627bc0;
   cursor: pointer;
   background-color: #2a3350;
-  border: 2px solid #627bc0;
+  border: 1px solid #627bc0;
   border-radius: 6px;
   appearance: none;
   -webkit-appearance: none;
@@ -557,39 +537,6 @@ a.active {
 .nncheckbox:hover, .yAxisCheckbox:hover {
   transform: scale(1.05);
   border-color: #8da5e6;
-}
-
-.equation-editor-checkbox {
-  width: 100rem;
-  height: 100rem;
-  accent-color: #627bc0;
-  cursor: pointer;
-  background-color: #2a3350;
-  border: 1px solid #627bc0;
-  border-radius: 3px;
-  appearance: none;
-  -webkit-appearance: none;
-  outline: none;
-  position: relative;
-  vertical-align: middle;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
-}
-
-.equation-editor-checkbox:checked {
-  background-color: #627bc0;
-  border-color: #627bc0;
-}
-
-.equation-editor-checkbox:checked::after {
-  content: "";
-  position: absolute;
-  left: 0.35rem;
-  top: 0.1rem;
-  width: 0.3rem;
-  height: 0.6rem;
-  border: solid white;
-  border-width: 0 0.2rem 0.2rem 0;
-  transform: rotate(45deg);
 }
 
 /* Chart Viewer */
@@ -663,6 +610,16 @@ a.active {
   border-top: 1px solid #374875;
 }
 
+.graphTabsActive {
+  background-color: #46598e !important;
+  border-radius: 8px !important;
+}
+
+.graphTabsActive i,
+.graphTabsActive span {
+  color: white !important;
+}
+
 /* Chart Viewer - Canvas */
 .chartCanvas {
   position: relative; 
@@ -709,6 +666,12 @@ a.active {
   margin-bottom: 1rem;
 }
 
+.chart-stats p {
+  margin: 0.3svh 0;
+  font-size: 0.95em;
+  color: #ccc;
+}
+
 /* Add this class for horizontal lines */
 .chartEditor hr {
   border: none;
@@ -740,7 +703,6 @@ a.active {
 .full-width {
   width: 100%;
 }
-
 
 /* Popups */
 /* Overlay Effect */
@@ -895,6 +857,28 @@ a.active {
   transform: translateX(1.1rem);
 }
 
+/* Error Validation For Popup */
+
+.validation-message {
+  color: #ff5555;
+  font-style: italic;
+  font-size: 0.85rem;
+  margin: 0px;
+  margin-top: 5px;
+}
+
+input.settings-input.invalid {
+  border: 1px solid red !important;
+}
+
+input.settings-input.invalid:focus {
+  border: 1px solid red !important;
+}
+
+.validation-message.hidden {
+  display: none;
+}
+
 /* Settings Button */
 .setting-button {
   margin-top: 1.1rem;
@@ -988,7 +972,7 @@ a.active {
   border-radius: 1rem;
   padding: 1.5rem;
   width: 90vw;
-  max-width: 300px;
+  max-width: 500px;
   max-height: 85vh;
   overflow-y: auto;
   z-index: 1003;
@@ -1000,7 +984,6 @@ a.active {
   pointer-events: none;
 }
 
-/* Show State */
 .charts-popup.show {
   opacity: 1;
   transform: translate(-50%, -50%) scale(1);
@@ -1011,8 +994,7 @@ a.active {
   display: none;
 }
 
-
-/* Import Popup */
+/* Export Popup */
 .export-popup {
   position: fixed;
   top: 50%;
@@ -1115,7 +1097,7 @@ a.active {
   z-index: 2000;
   display: none;
   width: 95vw;
-  max-height: 75vh;
+  max-height: 90vh;
   opacity: 0;
   transition: opacity 0.3s ease, transform 0.3s ease;
   pointer-events: auto;
@@ -1156,31 +1138,103 @@ a.active {
   color: white;
 }
 
-.validation-message {
-  color: #ff5555;
-  font-style: italic;
-  font-size: 0.85rem;
-  margin: 0px;
-  margin-top: 5px;
+#popForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
 }
 
-input.settings-input.invalid {
-  border: 1px solid red !important;
+#tabConfig {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  font-size: 1rem;
 }
 
-input.settings-input.invalid:focus {
-  border: 1px solid red !important;
+#tabConfig p {
+  margin: 0;
+  font-weight: 600;
 }
 
-.validation-message.hidden {
-  display: none;
+#tabConfig input[type="radio"] {
+  margin-right: 0.5rem;
+}
+
+#tabConfig label {
+  margin-right: 1.5rem;
+}
+
+#xAxis {
+  width: 100%;
+  padding: 0.5rem;
+  background-color: #1d253d;
+  border: 1px solid #627bc0;
+  border-radius: 0.5rem;
+  color: #ffffff;
+  font-size: 1rem;
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position-x: calc(100% - 0.75rem);
+  background-position-y: center;
+  background-size: 1rem;
+  padding-right: 2rem;
+}
+
+#yAxis {
+  width: 100%;
+  background-color: transparent;
+  border-collapse: collapse;
+  color: white;
+  font-size: 1rem;
+}
+
+#submitModel {
+  width: 100%;
+  padding: 0.6rem;
+  background-color: #1d253d;
+  border: 1px solid #627bc0;
+  border-radius: 0.5rem;
+  color: #ffffff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease-out;
+}
+
+#submitModel:hover {
+  background-color: #627bc0;
+}
+
+#datatable {
+  height: calc(100% - 2px);
+  width: 100%;
 }
 
 .weirdStuff {
   display: none;
 }
 
-/* Autocomplete */
+/* Ghosting */
+
+.ghost {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: gray;
+  pointer-events: none;
+  white-space: pre;
+  font-size: inherit;
+  font-family: inherit;
+  width: 100%;
+  z-index: 1;
+  transform: translateX(0.1975em);
+  padding-top: 0.175em;
+  box-sizing: border-box;
+
+}
+
+/* Math Autocomplete */
 
 .autocomplete-wrapper {
   position: relative;
@@ -1195,23 +1249,6 @@ input.settings-input.invalid:focus {
   font-family: inherit;
   width: 100%;
   z-index: 2;
-}
-
-.ghost {
-  position: absolute;
-  top: 0;
-  left: 0;
-  color: gray;
-  pointer-events: none;
-  white-space: pre;
-  font-size: inherit;
-  font-family: inherit;
-  width: 100%;
-  z-index: 1;
-  transform: translateX(0.1975em); /* 👈 shift only the ghost text */
-  padding-top: 0.175em;
-  box-sizing: border-box;
-
 }
 
 .autocomplete-list {
@@ -1242,7 +1279,7 @@ input.settings-input.invalid:focus {
   font-weight: bold;
 }
 
-/* Stupid Stuff */
+/* Stupid Stuff That Won't Make the Sim Run */
 
 .model-zoom-icon {
   position: absolute;
@@ -1293,103 +1330,3 @@ input.settings-input.invalid:focus {
   color: white;
   cursor: pointer;
 }
-
-/* Yabba Gabba Goo */
-
-/* Main Chart Popup Container */
-/* Form inside popup */
-#popForm {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  width: 100%;
-}
-
-/* Form fields */
-#tabConfig {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  font-size: 1rem;
-}
-
-/* Headings and Labels */
-#tabConfig p {
-  margin: 0;
-  font-weight: 600;
-}
-
-/* Radio Buttons */
-#tabConfig input[type="radio"] {
-  margin-right: 0.5rem;
-}
-
-#tabConfig label {
-  margin-right: 1.5rem;
-}
-
-/* Dropdown */
-#xAxis {
-  width: 100%;
-  padding: 0.5rem;
-  background-color: #1d253d;
-  border: 1px solid #627bc0;
-  border-radius: 0.5rem;
-  color: #ffffff;
-  font-size: 1rem;
-  appearance: none;
-  background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
-  background-repeat: no-repeat;
-  background-position-x: calc(100% - 0.75rem);
-  background-position-y: center;
-  background-size: 1rem;
-  padding-right: 2rem;
-}
-
-/* Y-Axis Table */
-#yAxis {
-  width: 100%;
-  background-color: transparent;
-  border-collapse: collapse;
-  color: white;
-  font-size: 1rem;
-}
-
-/* Submit Button */
-#submitModel {
-  width: 100%;
-  padding: 0.6rem;
-  background-color: #1d253d;
-  border: 1px solid #627bc0;
-  border-radius: 0.5rem;
-  color: #ffffff;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background 0.3s ease-out;
-}
-
-#submitModel:hover {
-  background-color: #627bc0;
-}
-
-#datatable {
-  height: calc(100% - 2px);
-  width: 100%;
-}
-
-.chart-stats p {
-  margin: 0.3svh 0;
-  font-size: 0.95em;
-  color: #ccc;
-}
-
-.graphTabsActive {
-  background-color: #46598e !important;
-  border-radius: 8px !important;
-}
-
-.graphTabsActive i,
-.graphTabsActive span {
-  color: white !important;
-}
-
