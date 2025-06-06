@@ -161,7 +161,7 @@ a.active {
 }
 
 .equation-editor-table thead th {
-    background-color: #f8f9fa;
+    background-color: #FFFFFF;
 }
 
 .nncheckbox,
@@ -269,7 +269,6 @@ a.active {
 .export-popup {
     background-color: #ffffff;
     color: #212529;
-    border: 1px solid #dee2e6;
 }
 
 #simErrorPopup {
