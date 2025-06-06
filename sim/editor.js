@@ -994,7 +994,7 @@ function run() {
             }
         } else {
             for (var j = 0; j < engineJson.influences.length; j++) {
-                if (engineJson.influences[j].to === newReferences[j]) {
+                if (engineJson.influences[j].to == valve.key) {
                     document.getElementById("simErrorPopupDesc").innerHTML =
                         "No new references in equation for " + valve.key + ", but influence from " + engineJson.influences[j].from + " exists.";
                     showSimErrorPopup();
