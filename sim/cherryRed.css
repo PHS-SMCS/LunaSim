@@ -103,47 +103,6 @@ a.active {
     color: #ffebee;
 }
 
-#myDiagram {
-    background-color: #2a0f0f;
-}
-
-/* GoJS specific styling for Red theme */
-#myDiagram text,
-#myDiagram .go-text,
-.modelCanvas text,
-.modelCanvas .go-text {
-    fill: #ffebee !important;
-    color: #ffebee !important;
-}
-
-#myDiagram g text,
-.modelCanvas g text {
-    fill: #ffebee !important;
-}
-
-#myDiagram .go-link text,
-.modelCanvas .go-link text {
-    fill: #ffcdd2 !important;
-}
-
-.modelViewer text,
-.modelViewer .go-text {
-    fill: #ffebee !important;
-    color: #ffebee !important;
-}
-
-/* GoJS node styling */
-#myDiagram .go-node,
-.modelCanvas .go-node {
-    stroke: #f44336 !important;
-}
-
-/* GoJS link styling */
-#myDiagram .go-link,
-.modelCanvas .go-link {
-    stroke: #ffcdd2 !important;
-}
-
 .center-btn {
     background-color: #2a0f0f;
     color: #ffebee;

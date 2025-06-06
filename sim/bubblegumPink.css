@@ -98,52 +98,6 @@ a.active {
     background-color: #e91e63;
 }
 
-.modelCanvas {
-    background-color: #2a0f2a;
-    color: #fce4ec;
-}
-
-#myDiagram {
-    background-color: #2a0f2a;
-}
-
-/* GoJS specific styling for Pink theme */
-#myDiagram text,
-#myDiagram .go-text,
-.modelCanvas text,
-.modelCanvas .go-text {
-    fill: #fce4ec !important;
-    color: #fce4ec !important;
-}
-
-#myDiagram g text,
-.modelCanvas g text {
-    fill: #fce4ec !important;
-}
-
-#myDiagram .go-link text,
-.modelCanvas .go-link text {
-    fill: #f8bbd9 !important;
-}
-
-.modelViewer text,
-.modelViewer .go-text {
-    fill: #fce4ec !important;
-    color: #fce4ec !important;
-}
-
-/* GoJS node styling */
-#myDiagram .go-node,
-.modelCanvas .go-node {
-    stroke: #e91e63 !important;
-}
-
-/* GoJS link styling */
-#myDiagram .go-link,
-.modelCanvas .go-link {
-    stroke: #f8bbd9 !important;
-}
-
 .center-btn {
     background-color: #2a0f2a;
     color: #fce4ec;
