@@ -913,7 +913,7 @@ function run() {
         } else {
             for (var j = 0; j < engineJson.influences.length; j++) {
                 if (engineJson.influences[j].to === variable.key) {
-                    document.getElementById("simErrorPopupDesc").innerHTML = "No newReferences in equation for " + variable.label + ", but influence from " + engineJson.influences[j].from + " exists.";
+                    document.getElementById("simErrorPopupDesc").innerHTML = "No references in equation for " + variable.label + ", but influence from " + engineJson.influences[j].from + " exists.";
                     showSimErrorPopup();
                     window.simulationHasRunSuccessfully_tab = false;
                     return;
@@ -980,7 +980,7 @@ function run() {
         } else {
             for (var j = 0; j < engineJson.influences.length; j++) {
                 if (engineJson.influences[j].to == valve.key) {
-                    document.getElementById("simErrorPopupDesc").innerHTML = "No new references in equation for " + valve.key + ", but influence from " + engineJson.influences[j].from + " exists.";
+                    document.getElementById("simErrorPopupDesc").innerHTML = "No references in equation for " + valve.key + ", but influence from " + engineJson.influences[j].from + " exists.";
                     showSimErrorPopup();
                     window.simulationHasRunSuccessfully_tab = false;
                     return;
