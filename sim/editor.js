@@ -941,7 +941,8 @@ function run() {
                     console.log(engineJson.influences[h]);
                     console.log("ref:"+newReferences[j]);
                     console.log(engineJson.influences[h].to == newReferences[j] && engineJson.influences[h].from == valve.key);
-                    if (engineJson.influences[h].to == newReferences[j] && engineJson.influences[h].from == valve.key) {
+                    if ((engineJson.influences[h].to == newReferences[j] && engineJson.influences[h].from == valve.key)||
+                        (engineJson.influences[h].to == valve.key && engineJson.influences[h].from == newReferences[j])) {
                         exists = true;
                     }
                     if (engineJson.influences[h].to == valve.key &&
