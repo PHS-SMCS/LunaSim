@@ -93,7 +93,14 @@ var data;
 /**
  * Timestamp of the last edit in the editor.
  * @type {Date}
- */var lastExportDate = new Date();
+ */
+var lastEditDate = new Date();
+/**
+ * Timestamp of last export
+ * @type {Date}
+ */
+
+var lastExportDate = new Date();
 
 /**
  * Indicates whether there are unsaved edits in the model.
@@ -115,7 +122,9 @@ var hasExportedYet = false;
 
 function updateSaveStatus() {
     let current = new Date();
-    document.getElementById("saveStatus").innerHTML = `${unsavedEdits ? "Unsaved Edits!" : "No Unsaved Edits"} (Last Edit: ${formatDeltaTime(current - lastEditDate)})<br>` + `Last Exported: ${hasExportedYet ? formatDeltaTime(current - lastExportDate) : "-"}`;
+    document.getElementById("saveStatus").innerHTML =
+        `${unsavedEdits ? "Unsaved Edits!" : "No Unsaved Edits"} (Last Edit: ${formatDeltaTime(current - lastEditDate)})<br>` +
+        `Last Exported: ${hasExportedYet ? formatDeltaTime(current - lastExportDate) : "-"}`;
 }
 
 /**
