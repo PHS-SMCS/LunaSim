@@ -549,11 +549,26 @@ function updateChartStats(index) {
   const xAxis = tab.xAxis || "—";
   const yAxis = Array.isArray(tab.yAxis) ? tab.yAxis.join(", ") : "—";
 
+  // Get simulation settings from input fields
+  const startTime = parseFloat(document.getElementById("startTime")?.value) || 0;
+  const endTime = parseFloat(document.getElementById("endTime")?.value) || 0;
+  const dt = parseFloat(document.getElementById("dt")?.value) || 0;
+  const stepCount = (endTime - startTime) / dt || 0;
+
+  const integrationMethod = document.getElementById("integrationMethod")?.value || "—";
+  const methodDisplay = (integrationMethod === "rk4") ? "Runge-Kutta 4" :
+                        (integrationMethod === "euler") ? "Euler" : integrationMethod;
+
   statsEl.innerHTML = `
     <p><strong>Name:</strong> ${name}</p>
     <p><strong>Type:</strong> ${type}</p>
     <p><strong>X-Axis:</strong> ${xAxis}</p>
     <p><strong>Y-Axis:</strong> ${yAxis}</p>
+    <hr>
+    <p><strong>Start Time:</strong> ${startTime}s</p>
+    <p><strong>End Time:</strong> ${endTime}s</p>
+    <p><strong>dt (Interval):</strong> ${dt}s</p>
+    <p><strong>Step Count:</strong> ${Math.round(stepCount)}</p>
+    <p><strong>Integration Method:</strong> ${methodDisplay}</p>
   `;
 }
-
