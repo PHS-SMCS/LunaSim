@@ -232,6 +232,11 @@
             <option selected value="normal">Normal</option>
             <option value="classic">Classic</option>
             <option value="monochrome">Monochrome</option>
+            <option value="fgreen">Forest Green</option>
+            <option value="mlight">Minimal Light</option>
+            <option value="oblue">Ocean Blue</option>
+            <option value="sorange">Sunset Orange</option>
+            <option value="cpurple">Cosmic Purple</option>
           </select>
           <label for="simulationFont">Font</label>
           <select id="simulationFont" class="settings-dropdown" style="width: 80%;">
@@ -841,7 +846,17 @@ document.addEventListener("DOMContentLoaded", () => {
       if (selected === 'monochrome') {
         themeHref = 'simulationMonochrome.css';
       } else if (selected === 'classic') {
-        themeHref = 'oceanBlue.css';
+        themeHref = 'simulationClassic.css'; 
+      } else if (selected === 'mlight') {
+        themeHref = 'minimalLight.css'; 
+      } else if (selected === 'oblue') {
+        themeHref = 'OceanBlue.css'; 
+      } else if (selected === 'sorange') {
+        themeHref = 'sunsetOrange.css'; 
+      } else if (selected === 'fgreen') {
+        themeHref = 'forestGreen.css'; 
+      } else if (selected === 'cpurple') {
+        themeHref = 'cosmicPurple.css'; 
       } else {
         themeHref = '';
       }
