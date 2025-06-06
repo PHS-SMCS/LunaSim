@@ -1179,6 +1179,8 @@ function download(filename, text) {
 
 function loadModel(evt) {
     var reader = new FileReader();
+    var file = evt.target.files[0];
+    console.log(file);
 
     reader.onload = function (evt) {
         // Check if the file is valid JSON
@@ -1229,6 +1231,10 @@ function loadModel(evt) {
 
         // set the diagram position back to what it was
         myDiagram.initialPosition = myDiagram.position;
+        if (file && file.name) {
+            console.log(file.name);
+            document.getElementById("model_name").value = file.name.replace(/\.[^/.]+$/, "");
+        }
 
         // Reset save status after loading model
         lastEditDate = new Date();
