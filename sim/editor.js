@@ -1068,7 +1068,7 @@ function run() {
         sim.setData(engineJson);
 
         if (PERFORMANCE_MODE === true) console.time('Simulation Runtime');
-        data = sim.run(); // 🚨 might throw
+        data = sim.run(); // might throw
         if (PERFORMANCE_MODE === true) console.timeEnd('Simulation Runtime');
 
         sim.reset();
