@@ -225,6 +225,10 @@ function configTabs() {
   for (let j = 0; j < tabs.length; j++) {
     const tab = document.createElement("li");
     tab.className = "graphTabs";
+    if (j === 0) {
+      tab.classList.add("graphTabsActive"); // default selection
+    }
+
     tab.dataset.index = j; // safer indexing
 
     const tabLink = document.createElement("a");
@@ -259,6 +263,14 @@ function configTabs() {
         return;
       }
 
+      // Remove active class from all
+      tabsList.querySelectorAll("li").forEach(t => t.classList.remove("graphTabsActive"));
+
+      // Add active to clicked one
+      tab.classList.add("graphTabsActive");
+
+
+      updateChartStats(i);
       // Visual active state
       list.querySelectorAll("li").forEach(t => t.classList.remove("graphTabsActive"));
       this.classList.add("graphTabsActive");
@@ -520,3 +532,21 @@ document.getElementById("deleteGraph").addEventListener("click", function () {
   configTabs(); // Refresh tabs UI
   list.firstChild.click(); // Return to default tab
 });
+
+function updateChartStats(index) {
+  const statsEl = document.getElementById("chartStats");
+  if (!statsEl || !tabs[index]) return;
+
+  const tab = tabs[index];
+  const name = (index === 0) ? "Default" : `Chart ${index}`;
+  const type = tab.type === "table" ? "Table" : "Chart";
+  const xAxis = tab.xAxis || "—";
+  const yAxis = Array.isArray(tab.yAxis) ? tab.yAxis.join(", ") : "—";
+
+  statsEl.innerHTML = `
+    <p><strong>Name:</strong> ${name}</p>
+    <p><strong>Type:</strong> ${type}</p>
+    <p><strong>X-Axis:</strong> ${xAxis}</p>
+    <p><strong>Y-Axis:</strong> ${yAxis}</p>
+  `;
+}

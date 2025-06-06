@@ -1378,3 +1378,19 @@ input.settings-input.invalid:focus {
   width: 100%;
 }
 
+.chart-stats p {
+  margin: 0.3svh 0;
+  font-size: 0.95em;
+  color: #ccc;
+}
+
+.graphTabsActive {
+  background-color: #46598e !important;
+  border-radius: 8px !important;
+}
+
+.graphTabsActive i,
+.graphTabsActive span {
+  color: white !important;
+}
+
