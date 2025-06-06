@@ -1,5 +1,6 @@
 /* Imports */
-@import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=Lexend:wght@300;400;500;600;700&display=swap');
+
 
 
 /* Universal Styling */
@@ -7,8 +8,13 @@
   box-sizing: border-box;
 }
 
+:root {
+  --simulation-font: 'Golos Text', sans-serif;
+}
+
+
 body {
-  font-family: "Golos Text", sans-serif;
+  font-family: var(--simulation-font);
   margin: 0px;
   line-height: 1.5;
   min-height: 100vh;
@@ -21,7 +27,7 @@ body {
 }
 
 input, button, select {
-  font-family: "Golos Text", sans-serif;
+  font-family: var(--simulation-font);
 }
 
 * {
@@ -685,7 +691,7 @@ a.active {
   background-color: #1d253d;
   border: 1px solid #627bc0;
   color: white;
-  font-family: 'Golos Text', sans-serif;
+  font-family: var(--simulation-font);
   font-size: 1rem;
   cursor: pointer;
   transition: background 0.3s ease-out;

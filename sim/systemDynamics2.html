@@ -243,15 +243,15 @@
           </select>
           <label for="simulationFont">Font</label>
           <select id="simulationFont" class="settings-dropdown" style="width: 80%;">
-            <option>Arial</option>
-            <option>Helvetica</option>
-            <option>Verdana</option>
-            <option>Trebuchet MS</option>
-            <option>Times New Roman</option>
-            <option>Inter</option>
-            <option>Lexend</option>
-            <option>Golos Text</option>
+            <option selected value="Golos Text">Golos Text</option>
+            <option value="Arial">Arial</option>
+            <option value="Trebuchet MS">Trebuchet MS</option>
+            <option value="Times New Roman">Times New Roman</option>
+            <option value="Inter">Inter</option>
+            <option value="Lexend">Lexend</option>
+            <option value="Comic Sans MS">Comic Sans</option>
           </select>
+
         </div>
 
         <button class="setting-button" onclick="closeSettings('themePopup')">Apply Settings</button>
@@ -872,5 +872,26 @@ document.addEventListener("DOMContentLoaded", () => {
       themeLink.setAttribute('href', themeHref);
     }
   </script>
+<script>
+  const fontSelect = document.getElementById('simulationFont');
+
+  fontSelect.addEventListener('change', () => {
+    const selectedFont = fontSelect.value;
+    document.documentElement.style.setProperty('--simulation-font', `'${selectedFont}', sans-serif`);
+
+    // Optional: Save to session storage so font persists
+    sessionStorage.setItem("selectedFont", selectedFont);
+  });
+
+  // Apply font on page load from sessionStorage (if available)
+  window.addEventListener("DOMContentLoaded", () => {
+    const savedFont = sessionStorage.getItem("selectedFont");
+    if (savedFont) {
+      document.documentElement.style.setProperty('--simulation-font', `'${savedFont}', sans-serif`);
+      fontSelect.value = savedFont;
+    }
+  });
+</script>
+
 </body>
 </html>
