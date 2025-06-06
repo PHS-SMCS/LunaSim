@@ -582,10 +582,14 @@ function loadTableToDiagram() {
     // read the equation, and checkbox values from the table
     $tbody.find('tr').each(function () {
         var name = $(this).find('input[name="name"]').val(); // get the name of the object
-        var equation = $(this).find('input[name="equation"]').val(); // get the equation of the object
-        var checkbox = $(this).find('input[name="checkbox"]').is(':checked'); // get the checkbox value of the object
+            let migrated = $(this).data('migrated');
+            let equation = migrated ? migrated.equation : $(this).find('input[name="equation"]').val();
+            let checkbox = migrated ? migrated.checkbox : $(this).find('input[name="checkbox"]').is(':checked');
 
-        // update the json with the new equation and checkbox values
+            $(this).removeData('migrated');
+
+
+            // update the json with the new equation and checkbox values
         $.each(json.nodeDataArray, function (i, item) {
             if (item.label === name) {
                 item.equation = equation;
@@ -760,6 +764,31 @@ function isGhost(label) {
 }
 
 function labelValidator(textblock, oldstr, newstr) {
+
+    const $tbody = $('#eqTableBody');
+    $tbody.find('tr').each(function () {
+        const $row = $(this);
+        const name = $row.find('input[name="name"]').val();
+
+        if (name === oldstr) {
+            const equation = $row.find('input[name="equation"]').val();
+            const checkbox = $row.find('input[name="checkbox"]').is(':checked');
+
+            // Update row to reflect new label
+            $row.find('input[name="name"]').val(newstr);
+
+            // Also update in table tracking array
+            GOJS_ELEMENT_LABELS_SET.delete(oldstr);
+            GOJS_ELEMENT_LABELS_SET.add(newstr);
+
+            const index = GOJS_ELEMENT_LABELS.indexOf(oldstr);
+            if (index !== -1) GOJS_ELEMENT_LABELS[index] = newstr;
+
+            // Store these on a temporary attribute to use during loadTableToDiagram
+            $row.data('migrated', { equation, checkbox });
+        }
+    });
+
     if (newstr === oldstr) return true; // nothing changed
 
     if (newstr === "") return false; // don't allow empty label
