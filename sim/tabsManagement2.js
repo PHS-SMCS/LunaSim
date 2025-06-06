@@ -507,14 +507,12 @@ document.getElementById("downloadGraph").addEventListener("click", function () {
 });
 
 
-// Handle Graph Delete
 document.getElementById("deleteGraph").addEventListener("click", function () {
   if (tabs.length <= 1) {
     showPopup("Cannot delete the default tab.");
     return;
   }
 
-  // Find the active tab index
   const activeTab = document.querySelector(".graphTabsActive");
   if (!activeTab) {
     showPopup("No chart is currently selected.");
@@ -528,10 +526,18 @@ document.getElementById("deleteGraph").addEventListener("click", function () {
     return;
   }
 
-  tabs.splice(index, 1); // Remove from array
-  configTabs(); // Refresh tabs UI
-  list.firstChild.click(); // Return to default tab
+  tabs.splice(index, 1); // Remove the tab
+
+  configTabs(); // Rebuild the tabs
+
+  // Activate the previous tab (or the first one if index - 1 is out of bounds)
+  const newIndex = Math.max(0, index - 1);
+  const newActiveTab = list.querySelector(`li[data-index="${newIndex}"]`);
+  if (newActiveTab) {
+    newActiveTab.click();
+  }
 });
+
 
 function updateChartStats(index) {
   const statsEl = document.getElementById("chartStats");
@@ -550,3 +556,4 @@ function updateChartStats(index) {
     <p><strong>Y-Axis:</strong> ${yAxis}</p>
   `;
 }
+
