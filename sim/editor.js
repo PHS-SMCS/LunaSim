@@ -1407,6 +1407,7 @@ document.getElementById("clearButton").addEventListener("click", function () {
         let doubleConfirm = confirm("Are you REALLY sure? If you want to save the project you are currently working on, press CANCEL and export it first; otherwise, the data will be cleared. You've been warned!");
         if (!doubleConfirm) return;
 
+        document.getElementById("model_name").value = "New Project";
         // Reset Model
         document.getElementById("startTime").value = 0;
         document.getElementById("endTime").value = 10;
@@ -1872,3 +1873,16 @@ function setupLocalStoragePersistence(diagram) {
         localStorage.setItem("model", json);
     });
 }
+
+const modelNameInput = document.getElementById('model_name');
+
+// Load saved model name from localStorage
+const savedName = localStorage.getItem('model_name');
+if (savedName) {
+    modelNameInput.value = savedName;
+}
+
+// Save the model name to localStorage when it changes
+modelNameInput.addEventListener('input', () => {
+    localStorage.setItem('model_name', modelNameInput.value);
+});
