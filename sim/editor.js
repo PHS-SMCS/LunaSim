@@ -1350,8 +1350,7 @@ export {data};
 const JAVA_MATH_FUNCTIONS = [
     'sin()', 'cos()', 'tan()', 'asin()', 'acos()', 'atan()', 'atan2()', 'sinh()', 'cosh()', 'tanh()',
     'exp()', 'log()', 'log10()', 'sqrt()', 'cbrt()', 'abs()', 'ceil()', 'floor()', 'round()', 'pow()',
-    'max()', 'min()', 'signum()', 'toRadians()', 'toDegrees()', 'random()', 'hypot()', 'expm1()', 'log1p()',
-    'copySign()', 'nextUp()', 'nextDown()', 'ulp()', 'IEEEremainder()', 'rint()', 'getExponent()', 'scalb()', 'fma()'
+    'max()', 'min()', 'sign()', 'random()', 'hypot()', 'expm1()', 'log1p()'
 ];
 
 /*

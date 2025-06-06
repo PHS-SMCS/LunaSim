@@ -55,6 +55,24 @@ export class Simulation {
             // Constants
             .replaceAll(/(?<!Math\.)\bpi\b/gi, 'Math.PI')
             .replaceAll(/(?<!Math\.)\be\b/gi, 'Math.E')
+            // rest of the functions
+            .replaceAll(/(?<!Math\.)\bexp\b/gi, 'Math.exp')
+            .replaceAll(/(?<!Math\.)\blog\b/gi, 'Math.log')
+            .replaceAll(/(?<!Math\.)\blog10\b/gi, 'Math.log10')
+            .replaceAll(/(?<!Math\.)\bsqrt\b/gi, 'Math.sqrt')
+            .replaceAll(/(?<!Math\.)\bcbrt\b/gi, 'Math.cbrt')
+            .replaceAll(/(?<!Math\.)\babs\b/gi, 'Math.abs')
+            .replaceAll(/(?<!Math\.)\bceil\b/gi, 'Math.ceil')
+            .replaceAll(/(?<!Math\.)\bfloor\b/gi, 'Math.floor')
+            .replaceAll(/(?<!Math\.)\bround\b/gi, 'Math.round')
+            .replaceAll(/(?<!Math\.)\bpow\b/gi, 'Math.pow')
+            .replaceAll(/(?<!Math\.)\bmax\b/gi, 'Math.max')
+            .replaceAll(/(?<!Math\.)\bmin\b/gi, 'Math.min')
+            .replaceAll(/(?<!Math\.)\brandom\b/gi, 'Math.random')
+            .replaceAll(/(?<!Math\.)\bhypot\b/gi, 'Math.hypot')
+            .replaceAll(/(?<!Math\.)\bexpm1\b/gi, 'Math.expm1')
+            .replaceAll(/(?<!Math\.)\blog1p\b/gi, 'Math.log1p')
+            .replaceAll(/(?<!Math\.)\bsign\b/gi, 'Math.sign')
 
 
         try {
