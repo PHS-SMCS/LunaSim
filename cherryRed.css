@@ -1,0 +1,397 @@
+/* Red Theme */
+body {
+    background: #3d1a1a;
+    box-shadow: none;
+}
+
+#model_name {
+    background-color: #2a0f0f;
+    border: 1px solid #f44336;
+    color: #ffebee;
+}
+
+.actionButton {
+    background-color: rgba(244, 67, 54, 0.6);
+    color: #ffebee;
+}
+
+.actionButton:hover {
+    background-color: #4a1e1e;
+}
+
+#runButton {
+    background: rgba(34, 139, 34, 0.9);
+}
+
+#runButton:hover {
+    background-color: rgba(25, 100, 25, 0.9);
+}
+
+#loadButton,
+#expButton {
+    background: rgba(244, 67, 54, 0.9);
+}
+
+#loadButton:hover,
+#expButton:hover {
+    background: rgba(211, 47, 47, 0.9);
+}
+
+#clearButton {
+    background: rgba(198, 40, 40, 0.9);
+}
+
+#clearButton:hover {
+    background: rgba(183, 28, 28, 0.9);
+}
+
+#saveStatus {
+    color: #ffebee;
+}
+
+.tabButton {
+    color: #ffebee;
+    background-color: #2a0f0f;
+    box-shadow: none;
+}
+
+.tabButton.active {
+    background-color: #4a1e1e;
+    box-shadow: none;
+}
+
+.modelViewer {
+    background: #4a1e1e;
+}
+
+.toolbar ul,
+.chartSidebar ul {
+    background-color: #2a0f0f;
+}
+
+.settings-section {
+    border-top: 1px solid #f44336;
+}
+
+.graphTabsActive {
+    background-color: #f44336 !important;
+}
+
+a {
+    color: #ffcdd2;
+}
+
+a:hover,
+a:focus {
+    background-color: #f44336;
+}
+
+a span {
+    background-color: #f44336;
+}
+
+a span:before {
+    background-color: #f44336;
+}
+
+a.active {
+    background-color: #f44336;
+}
+
+.modelCanvas {
+    background-color: #2a0f0f;
+    color: #ffebee;
+}
+
+#myDiagram {
+    background-color: #2a0f0f;
+}
+
+/* GoJS specific styling for Red theme */
+#myDiagram text,
+#myDiagram .go-text,
+.modelCanvas text,
+.modelCanvas .go-text {
+    fill: #ffebee !important;
+    color: #ffebee !important;
+}
+
+#myDiagram g text,
+.modelCanvas g text {
+    fill: #ffebee !important;
+}
+
+#myDiagram .go-link text,
+.modelCanvas .go-link text {
+    fill: #ffcdd2 !important;
+}
+
+.modelViewer text,
+.modelViewer .go-text {
+    fill: #ffebee !important;
+    color: #ffebee !important;
+}
+
+/* GoJS node styling */
+#myDiagram .go-node,
+.modelCanvas .go-node {
+    stroke: #f44336 !important;
+}
+
+/* GoJS link styling */
+#myDiagram .go-link,
+.modelCanvas .go-link {
+    stroke: #ffcdd2 !important;
+}
+
+.center-btn {
+    background-color: #2a0f0f;
+    color: #ffebee;
+}
+
+.center-btn:hover i {
+    color: #ffcdd2;
+}
+
+#eqEditor {
+    background-color: #2a0f0f;
+    color: #ffebee;
+}
+
+.equation-editor-zoom-icon {
+    color: #ffebee;
+}
+
+.equation-editor-zoom-icon:hover {
+    color: #f44336;
+}
+
+.equation-editor-table th {
+    background-color: #2a0f0f;
+}
+
+.eqTableInputBox {
+    background-color: #1f0a0a;
+    border: 1px solid #f44336;
+    color: #ffebee;
+}
+
+.eqStockBox input {
+    border: 1px solid #ff9800;
+}
+
+.eqVariableBox input {
+    border: 1px solid #4caf50;
+}
+
+.eqFlowBox input {
+    border: 1px solid #f44336;
+}
+
+.equation-editor-table thead th {
+    background-color: #2a0f0f;
+}
+
+.nncheckbox,
+.yAxisCheckbox {
+    accent-color: #f44336;
+    background-color: #1f0a0a;
+    border: 2px solid #f44336;
+}
+
+.nncheckbox:checked,
+.yAxisCheckbox:checked {
+    background-color: #f44336;
+    border-color: #f44336;
+}
+
+.nncheckbox:hover,
+.yAxisCheckbox:hover {
+    border-color: #ffcdd2;
+}
+
+.chartViewer {
+    background: #4a1e1e;
+}
+
+.chartCanvas {
+    background-color: #ffffff;
+    color: black;
+}
+
+.chartEditor {
+    background-color: #2a0f0f;
+    color: #ffebee;
+}
+
+.chart-stats p {
+    color: #ffcdd2;
+}
+
+.chartEditor hr {
+    border-top: 1px solid #f44336;
+}
+
+.chart-btn {
+    background-color: #1f0a0a;
+    border: 1px solid #f44336;
+    color: #ffebee;
+}
+
+.chart-btn:hover {
+    background-color: #f44336;
+}
+
+#overlay {
+    background-color: rgba(42, 15, 15, 0.85);
+}
+
+.settings-header h2,
+.close-btn,
+.setting-group {
+    color: #ffebee;
+}
+
+.close-btn:hover {
+    color: #f44336;
+}
+
+.settings-input,
+.settings-dropdown {
+    background-color: #1f0a0a;
+    border: 1px solid #f44336;
+    color: #ffebee;
+}
+
+.settings-divider {
+    border-top: 1px solid #f44336;
+}
+
+.slider {
+    background-color: #1f0a0a;
+}
+
+.slider:before {
+    background-color: white;
+}
+
+.toggle-switch input:checked + .slider {
+    background-color: #f44336;
+}
+
+.setting-button {
+    background-color: #1f0a0a;
+    border: 1px solid #f44336;
+    color: #ffebee;
+}
+
+.setting-button:hover {
+    background-color: #f44336;
+}
+
+.settings-popup,
+.theme-popup,
+.charts-popup,
+.export-popup {
+    background-color: #2a0f0f;
+    color: #ffebee;
+}
+
+#simErrorPopup {
+    background: rgba(198, 40, 40, 1);
+    border: 1px solid rgb(183, 28, 28);
+    color: #ffffff;
+}
+
+#simErrorPopupTitle,
+#simErrorPopupDesc {
+    color: white;
+}
+
+#simErrorPopupCancel {
+    background: rgb(183, 28, 28);
+    border: 1px solid rgb(183, 28, 28);
+}
+
+#simErrorPopupCancel:hover {
+    background: rgb(160, 25, 25);
+    border: 1px solid rgb(160, 25, 25);
+}
+
+.equation-editor-overlay {
+    background-color: rgba(42, 15, 15, 0.65);
+}
+
+.equation-editor-popup {
+    background-color: #2a0f0f;
+}
+
+.close-icon {
+    color: #ffebee;
+}
+
+.close-icon:hover {
+    color: #f44336;
+}
+
+.equation-editor-popup,
+.equation-editor-popup * {
+    color: #ffebee;
+}
+
+#xAxis {
+    background-color: #1f0a0a;
+    border: 1px solid #f44336;
+    color: #ffebee;
+}
+
+#yAxis {
+    background-color: transparent;
+    color: #ffebee;
+}
+
+#submitModel {
+    background-color: #1f0a0a;
+    border: 1px solid #f44336;
+    color: #ffebee;
+}
+
+#submitModel:hover {
+    background-color: #f44336;
+}
+
+.autocomplete-list {
+    background-color: #1f0a0a;
+    border: 1px solid #f44336;
+    color: #ffebee;
+}
+
+.autocomplete-item {
+    border-bottom: 1px solid #f44336;
+}
+
+.autocomplete-item.selected,
+.autocomplete-item:hover {
+    background-color: #f44336;
+}
+
+.model-zoom-icon {
+    color: #ffebee;
+    background-color: #2a0f0f;
+}
+
+.model-zoom-icon:hover {
+    background-color: #f44336;
+}
+
+.popup-overlay {
+    background-color: rgba(45, 20, 20, 0.95);
+}
+
+.popup-content {
+    background-color: #2a0f0f;
+}
+
+.close-popup {
+    color: #ffebee;
+}
