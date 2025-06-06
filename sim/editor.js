@@ -764,59 +764,46 @@ function isGhost(label) {
 }
 
 function labelValidator(textblock, oldstr, newstr) {
+    if (newstr === oldstr) return true;
+    if (newstr === "") return false;
+    if (!isNaN(newstr)) return false;
+
+    if (newstr.startsWith('$')) {
+        const targetLabel = newstr.substring(1);
+        const realNodeCount = myDiagram.model.nodeDataArray.filter(node =>
+            node.label === targetLabel &&
+            node.label !== oldstr &&
+            !isGhost(node.label)
+        ).length;
+
+        return realNodeCount >= 1;
+    }
 
     const $tbody = $('#eqTableBody');
     $tbody.find('tr').each(function () {
         const $row = $(this);
         const name = $row.find('input[name="name"]').val();
-
         if (name === oldstr) {
             const equation = $row.find('input[name="equation"]').val();
             const checkbox = $row.find('input[name="checkbox"]').is(':checked');
-
-            // Update row to reflect new label
             $row.find('input[name="name"]').val(newstr);
 
-            // Also update in table tracking array
             GOJS_ELEMENT_LABELS_SET.delete(oldstr);
             GOJS_ELEMENT_LABELS_SET.add(newstr);
-
             const index = GOJS_ELEMENT_LABELS.indexOf(oldstr);
             if (index !== -1) GOJS_ELEMENT_LABELS[index] = newstr;
 
-            // Store these on a temporary attribute to use during loadTableToDiagram
             $row.data('migrated', { equation, checkbox });
         }
     });
 
-    if (newstr === oldstr) return true; // nothing changed
-
-    if (newstr === "") return false; // don't allow empty label
-
-    if (newstr[0] === "$") {
-        // Only allow ghosting if the referenced node exists
-        // (Previous behavior would delete the node if it didn't exist, which is bad)
-        var unique = true;
-        for (var i = 0; i < myDiagram.model.nodeDataArray.length; i++) {
-            if (`$${myDiagram.model.nodeDataArray[i].label}` === newstr) {
-                unique = false;
-            }
-        }
-        return !unique; // we WANT a duplicate to exist
-    }
-
-    // make sure it is not **Just** a number
-    if (!isNaN(newstr)) return false;
-
-    // check all the elements in the model to make sure the new label is unique
-    var unique = true;
-    for (var i = 0; i < myDiagram.model.nodeDataArray.length; i++) {
+    for (let i = 0; i < myDiagram.model.nodeDataArray.length; i++) {
         if (myDiagram.model.nodeDataArray[i].label === newstr) {
-            unique = false;
+            return false;
         }
     }
 
-    return unique;
+    return true;
 }
 
 // Displays the Simulation Error Popup
