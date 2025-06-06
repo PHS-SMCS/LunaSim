@@ -360,7 +360,8 @@ function buildTemplates() {
 
     // Node templates
     myDiagram.nodeTemplateMap.add("stock",
-        $(go.Node, nodeStyle(),{
+        $(go.Node, nodeStyle(),
+            {
                 selectionAdornmentTemplate:
                     $(go.Adornment, "Auto",
                         $(go.Shape,
@@ -376,10 +377,12 @@ function buildTemplates() {
                     )
             },
             $(go.Shape, shapeStyle(),
-                new go.Binding("fill", "color").makeTwoWay(),
+                new go.Binding("fill", "", function(data) {
+                    if (data.label && data.label.startsWith('$')) return "white";
+                    return "#cfcfcf";
+                }).makeTwoWay(),
                 {
-                    desiredSize: new go.Size(50, 30),
-                    fill: "#f0f0f0" // default
+                    desiredSize: new go.Size(50, 30)
                 }),
             $(go.TextBlock, textStyle(),
                 {
@@ -389,7 +392,8 @@ function buildTemplates() {
                     textValidation: labelValidator
                 },
                 new go.Binding("alignment", "label_offset", go.Spot.parse).makeTwoWay(go.Spot.stringify))
-        ));
+        )
+    );
 
 
     myDiagram.nodeTemplateMap.add("cloud",
