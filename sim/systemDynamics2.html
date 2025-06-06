@@ -232,13 +232,14 @@
             <option selected value="normal">Normal</option>
             <option value="classic">Classic</option>
             <option value="monochrome">Monochrome</option>
-            <option value="fgreen">Forest Green</option>
-            <option value="mlight">Minimal Light</option>
-            <option value="oblue">Ocean Blue</option>
+            <option value="cred">Cherry Red</option>
+            <option value="cblossom">Cherry Blossom</option>
             <option value="sorange">Sunset Orange</option>
+            <option value="fgreen">Forest Green</option>
+            <option value="oblue">Ocean Blue</option>
             <option value="cpurple">Cosmic Purple</option>
             <option value="bpink">Bubblegum Pink</option>
-            <option value="cred">Cherry Red</option>
+            <option value="mlight">Minimal Light</option>  
           </select>
           <label for="simulationFont">Font</label>
           <select id="simulationFont" class="settings-dropdown" style="width: 80%;">
@@ -863,6 +864,8 @@ document.addEventListener("DOMContentLoaded", () => {
         themeHref = 'bubblegumPink.css'; 
       } else if (selected === 'cred') {
         themeHref = 'cherryRed.css'; 
+      } else if (selected === 'cblossom') {
+        themeHref = 'cherryBlossom.css'; 
       } else {
         themeHref = '';
       }
