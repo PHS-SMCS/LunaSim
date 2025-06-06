@@ -386,11 +386,16 @@ a.active {
   padding: 8px 10px;
   font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  opacity: 0.5;
+  transition: background-color 0.2s ease, opacity 0.3s ease;
 }
 
 .center-btn i {
   transition: color 0.3s ease;
+}
+
+.center-btn:hover {
+  opacity: 1;
 }
 
 .center-btn:hover i {
@@ -510,9 +515,50 @@ a.active {
   border-radius: 4px;
 }
 
-
-
 /* Equation Editor Checkbox */
+.nncheckbox, .yAxisCheckbox {
+  width: 1.2rem;
+  height: 1.2rem;
+  accent-color: #627bc0;
+  cursor: pointer;
+  background-color: #2a3350;
+  border: 2px solid #627bc0;
+  border-radius: 6px;
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  position: relative;
+  transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+}
+
+.nncheckbox::after, .yAxisCheckbox::after {
+  content: "";
+  position: absolute;
+  left: 0.35rem;
+  top: 0.1rem;
+  width: 0.25rem;
+  height: 0.5rem;
+  border: solid white;
+  border-width: 0 0.15rem 0.15rem 0;
+  transform: rotate(45deg);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.nncheckbox:checked, .yAxisCheckbox:checked {
+  background-color: #627bc0;
+  border-color: #627bc0;
+}
+
+.nncheckbox:checked::after, .yAxisCheckbox:checked::after {
+  opacity: 1;
+}
+
+.nncheckbox:hover, .yAxisCheckbox:hover {
+  transform: scale(1.05);
+  border-color: #8da5e6;
+}
+
 .equation-editor-checkbox {
   width: 100rem;
   height: 100rem;
@@ -943,9 +989,11 @@ a.active {
   border-radius: 1rem;
   padding: 1.5rem;
   width: 90vw;
-  max-width: 400px;
-  z-index: 1001;
-  box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
+  max-width: 300px;
+  max-height: 85vh;
+  overflow-y: auto;
+  z-index: 1003;
+  box-shadow: 0 10px 50px rgba(5, 4, 62, 0.25);
   display: flex;
   flex-direction: column;
   opacity: 0;
@@ -953,6 +1001,7 @@ a.active {
   pointer-events: none;
 }
 
+/* Show State */
 .charts-popup.show {
   opacity: 1;
   transform: translate(-50%, -50%) scale(1);
@@ -962,6 +1011,7 @@ a.active {
 .charts-popup.hidden {
   display: none;
 }
+
 
 /* Import Popup */
 .export-popup {
@@ -1248,39 +1298,6 @@ input.settings-input.invalid:focus {
 /* Yabba Gabba Goo */
 
 /* Main Chart Popup Container */
-.charts-popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.95);
-  background-color: #283458;
-  color: #ffffff;
-  border-radius: 1rem;
-  padding: 1.5rem;
-  width: 90vw;
-  max-width: 500px;
-  max-height: 85vh;
-  overflow-y: auto;
-  z-index: 1003;
-  box-shadow: 0 10px 50px rgba(5, 4, 62, 0.25);
-  display: flex;
-  flex-direction: column;
-  opacity: 0;
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  pointer-events: none;
-}
-
-/* Show State */
-.charts-popup.show {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-  pointer-events: auto;
-}
-
-.charts-popup.hidden {
-  display: none;
-}
-
 /* Form inside popup */
 #popForm {
   display: flex;
@@ -1356,25 +1373,8 @@ input.settings-input.invalid:focus {
   background-color: #627bc0;
 }
 
-/* Close Button */
-#closeNewTabPopup {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  width: 2.5rem;
-  height: 2.5rem;
-  background-color: transparent;
-  border: none;
-  font-size: 1.5rem;
-  color: #ffffff;
-  cursor: pointer;
-}
-
-#closeNewTabPopup:hover {
-  color: #ff5c5c;
-}
-
 #datatable {
   height: calc(100% - 2px);
   width: 100%;
 }
+

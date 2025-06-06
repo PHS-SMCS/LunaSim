@@ -168,8 +168,8 @@
           <!-- Bottom Section -->
           <div class="chartEditor-bottom">
             <hr>
-            <button class="chart-btn full-width">Download Graph</button>
-            <button class="chart-btn full-width">Delete Graph</button>
+            <button class="chart-btn full-width" id="downloadGraph">Download Graph</button>
+            <button class="chart-btn full-width" id="deleteGraph">Delete Graph</button>
           </div>
         </div>
 
@@ -250,21 +250,21 @@
         </div>
         <div id="popForm">
         <form id="tabConfig" name = "tabConfig" onsubmit="return false"> <!-- Will not refresh page -->
-          <div>
-            <p>Table or chart:</p>
-            <input type="radio" id="table" name="model_type" value="table" required>
-            <label for="table">Table</label><br>
-            <input type="radio" id="chart" name="model_type" value="chart" required>
-            <label for="chart">Chart</label>
+          <div class="setting-group">
+            <label for="model_type">Type</label>
+            <select id="model_type" name="model_type" class="settings-dropdown" style="width: 60%;" required>
+              <option value="table">Table</option>
+              <option value="chart">Chart</option>
+            </select>
           </div>
-          <div>
-            <p>X-Axis:</p>
-            <select name="xAxis" id="xAxis" style="font-size: inherit;" required>
+          <div class="setting-group">
+            <label for="xAxis">X-Axis</label>
+            <select name="xAxis" id="xAxis" style="font-size: inherit; width: 60%;" required>
               <!-- Options initialized dynamically -->
             </select>
           </div>
-          <div >
-            <p>Y-Axis:</p>
+          <div class="setting-group">
+            <label for="yAxis">Y-Axis</label>
             <table id="yAxis">
               <!-- Multiple checkboxes initialized dynamically -->
             </table>

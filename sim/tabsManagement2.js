@@ -381,11 +381,12 @@ function configTabs() {
           tableColumns.push({ title: yName, field: yName });
         }
 
-        new Tabulator("#datatable", {
+        window.tableInstance = new Tabulator("#datatable", {
           data: tableData,
           layout: "fitColumns",
           columns: tableColumns,
         });
+
 
         if (PERFORMANCE_MODE) console.timeEnd('Table Render Time');
       }
@@ -462,4 +463,60 @@ document.getElementById("closeNewTabPopup").addEventListener("click", function()
   document.getElementById("grayEffectDiv").style.display = "none";
   form.reset(); // reset input
   resetOptions(); // reset options
+});
+
+// Handle Graph Download
+document.getElementById("downloadGraph").addEventListener("click", function () {
+  if (!tabs || tabs.length === 0) {
+    showPopup("No chart or table available to download.");
+    return;
+  }
+
+  const chartEl = document.getElementById("chart");
+  const tableEl = document.getElementById("datatable");
+
+  const chartVisible = chartEl && !chartEl.hidden;
+  const tableVisible = tableEl && !tableEl.hidden;
+
+  if (chartVisible) {
+    chart.dataURI().then(({ imgURI }) => {
+      const link = document.createElement("a");
+      link.href = imgURI;
+      link.download = "chart.png";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+  } else if (tableVisible && window.tableInstance) {
+    window.tableInstance.download("csv", "table.csv");
+  } else {
+    showPopup("No visible chart or table to download.");
+  }
+});
+
+
+// Handle Graph Delete
+document.getElementById("deleteGraph").addEventListener("click", function () {
+  if (tabs.length <= 1) {
+    showPopup("Cannot delete the default tab.");
+    return;
+  }
+
+  // Find the active tab index
+  const activeTab = document.querySelector(".graphTabsActive");
+  if (!activeTab) {
+    showPopup("No chart is currently selected.");
+    return;
+  }
+
+  const index = Number(activeTab.dataset.index);
+
+  if (isNaN(index) || index === 0) {
+    showPopup("Cannot delete the default tab.");
+    return;
+  }
+
+  tabs.splice(index, 1); // Remove from array
+  configTabs(); // Refresh tabs UI
+  list.firstChild.click(); // Return to default tab
 });
