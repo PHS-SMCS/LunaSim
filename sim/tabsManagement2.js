@@ -139,18 +139,44 @@ function openForm(){
 }
 
 // Will validate and add tab data
-function submit(){
-  let inputs = document.getElementsByTagName('input');
+function submit() {
+  let form = document.forms["tabConfig"];
+  let nameInput = document.getElementById("tab_name");
+  let nameError = document.getElementById("nameValidation");
+
+  const name = nameInput.value.trim();
+
+  // Validate name
+  if (!name) {
+    nameInput.classList.add("invalid");
+    nameError.classList.remove("hidden");
+  } else {
+    nameInput.classList.remove("invalid");
+    nameError.classList.add("hidden");
+  }
+
+  // Validate Y-axis checkboxes
+  let ySelected = false;
+  let inputs = document.getElementsByClassName('yAxisCheckbox');
   for (let i = 0; i < inputs.length; i++) {
-    if (inputs.item(i).className == 'yAxisCheckbox') {
-      if (inputs.item(i).checked == true){
-        initializeTab(); // add data if valid
-        return false; // want to return false to disable default submission
-      }
+    if (inputs[i].checked) {
+      ySelected = true;
+      break;
     }
   }
-  showPopup("Check at least one box."); // no alert if at least one is checked
+
+  if (!ySelected) {
+    showPopup("Check at least one Y-axis box.");
+  }
+
+  // Abort submit if validations fail
+  if (!name || !ySelected) return false;
+
+  // Proceed
+  initializeTab(); // push new tab
+  return false;
 }
+
 
 // Resets the options so that it updates the options
 function resetOptions(){
@@ -448,7 +474,23 @@ listenChangesinArray(tabs, configTabs);
 
 // Event listeners
 
-document.addEventListener("DOMContentLoaded", function() { configTabs(); });
+document.addEventListener("DOMContentLoaded", function() {
+  configTabs();
+
+  const modelType = document.getElementById("model_type");
+  const xAxisGroup = document.getElementById("xAxisGroup");
+
+  modelType.addEventListener("change", () => {
+    const isTable = modelType.value === "table";
+    xAxisGroup.style.display = isTable ? "none" : "flex";
+  });
+
+  modelType.dispatchEvent(new Event("change"));
+
+  document.getElementById("submitModel").addEventListener("click", submit);
+});
+
+
 
  // updates data and goes to default
 document.getElementById("runButton").addEventListener("click", function () {
@@ -565,10 +607,10 @@ function updateChartStats(index) {
                         (integrationMethod === "euler") ? "Euler" : integrationMethod;
 
   statsEl.innerHTML = `
-    <p>Name: ${tab.name || `Chart ${index}`}</p>
-    <p>Type: ${tab.type.charAt(0).toUpperCase() + tab.type.slice(1)}</p>
-    <p>X-Axis: ${tab.xAxis}</p>
-    <p>Y-Axis: ${tab.yAxis.join(", ")}</p>
+    <p><strong>Name:</strong> ${tab.name || name}</p>
+    <p><strong>Type:</strong> ${tab.type.charAt(0).toUpperCase() + tab.type.slice(1)}</p>
+    <p><strong>X-Axis:</strong> ${tab.xAxis}</p>
+    <p><strong>Y-Axis:</strong> ${tab.yAxis.join(", ")}</p>
     <hr>
     <p><strong>Start Time:</strong> ${startTime}</p>
     <p><strong>End Time:</strong> ${endTime}</p>
