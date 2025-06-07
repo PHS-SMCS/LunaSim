@@ -30,7 +30,7 @@ body {
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     text-align: left;
     color: #807c7c;
-    border: 2px solid #4f6bb8;
+    border: 1px solid #000000;
 }
 
 
@@ -116,7 +116,7 @@ body {
     text-align: left;
     min-height: 200px;
     transition: transform 0.1s ease-in-out;
-    border: 2px solid #4f6bb8;
+    border: 1px solid #000000;
 }
 
 
@@ -185,8 +185,8 @@ body {
 
 
 .tutorialImage {
-    width: 300px;
     height: 300px;
+    width: 300px;
     border-radius: 15px;
     align-self: center;
     overflow: hidden;
@@ -200,6 +200,7 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border: none;
 }
 
 
@@ -210,4 +211,40 @@ body {
 }
 
 
+.tutorialInfo table{
+    border-collapse: separate; 
+    border-radius: 15px;
+    text-align: center;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
 
+.tutorialInfo table tr {
+    margin: 15px;
+    height: 60px;
+}
+
+.tutorialInfo table tr:nth-child(even) {
+    background-color: #D6EEEE;
+}
+
+.tutorialInfo table tr:nth-child(odd) {
+    background-color: #edf7f7;
+}
+
+
+.tutorialInfo table th {
+    font-size: 18px;
+    font-weight: 600;
+    background-color: #354066;
+    color: white;
+    padding: 10px
+}
+
+.tutorialInfo table td {
+    font-size: 16px;
+    font-weight: 400;
+    color: black;
+    line-height: 1.5;
+    padding: 10px
+}

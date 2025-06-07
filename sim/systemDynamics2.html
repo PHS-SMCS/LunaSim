@@ -295,7 +295,7 @@
               <!-- Multiple checkboxes initialized dynamically -->
             </table>
           </div>
-          <button id="submitModel">Create New Tab</button>
+          <button id="submitModel" onclick="closeSettings('chartsPopup')">Create New Tab</button>
         </form>
       </div>
       </div>
@@ -368,7 +368,7 @@
         <div id="closeNewTabPopup"></div>
 
         <button class="tablinks" id="defaultOpen">Model View</button>
-        <button class="tablinks" id="secondaryOpen">Charts/Tables</button>
+        <button id="secondaryOpen">Charts/Tables</button>
         <div id ="tabName"></div>
         <div id="nav">
         <div class="webTabs">
@@ -385,12 +385,22 @@
       </div>
     </div>
 <script>
+  let hasModelRunSuccessfully = false;
+
+  document.getElementById("runButton").addEventListener("click", function () {
+    hasModelRunSuccessfully = true;
+  });
+
+
   // ================== Opening the settings popup ==================
   const popup = document.getElementById("settingsPopup");
   const overlay = document.getElementById("overlay");
 
   // Function to open the popup with transition
   function openSettings(event, popupWindow) {
+    if (popupWindow = 'simErrorPopup') {
+      hasModelRunSuccessfully = false;
+    }
     const popup = document.getElementById(popupWindow);
     event.preventDefault();
     popup.classList.remove("hidden");
@@ -478,7 +488,7 @@
     }
 
     function activateChartView_tab(event) {
-      if (!window.simulationHasRunSuccessfully_tab) {
+      if (!hasModelRunSuccessfully) {
         document.getElementById("simErrorPopupDesc").innerHTML =
                 "The model has not been successfully run yet. Please run the simulation to access Charts and Tables.";
         openSettings(event, 'simErrorPopup');
@@ -493,7 +503,7 @@
       }
     }
     function activateChartView_button(event) {
-      if (!window.simulationHasRunSuccessfully_button) {
+      if (!hasModelRunSuccessfully) {
         document.getElementById("simErrorPopupDesc").innerHTML =
                 "The model has not been successfully run yet. Please run the simulation to access Charts and Tables.";
         openSettings(event, 'simErrorPopup');

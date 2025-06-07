@@ -1156,6 +1156,18 @@ function run() {
         window.scroll({top: 0, behavior: "smooth"});
         document.getElementById("secondaryOpen").click();
 
+        const modelViewer = document.querySelector('.modelViewer');
+        const chartViewer = document.querySelector('.chartViewer');
+        const modelBtn = document.getElementById('modelBtn');
+        const chartBtn = document.getElementById('chartBtn');
+
+        if (chartViewer.classList.contains('hidden')) {
+            chartViewer.classList.remove('hidden');
+            modelViewer.classList.add('hidden');
+            chartBtn.classList.add('active');
+            modelBtn.classList.remove('active');
+        }
+
     } catch (err) {
         console.error("Simulation failed:", err);
         document.getElementById("simErrorPopupDesc").innerHTML = "Simulation Error: " + err.message;

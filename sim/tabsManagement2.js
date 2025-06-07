@@ -499,17 +499,6 @@ document.getElementById("runButton").addEventListener("click", function () {
   list.firstChild.click();
 
   // AUTO SWITCH TO CHART/TABLES VIEW
-  const modelViewer = document.querySelector('.modelViewer');
-  const chartViewer = document.querySelector('.chartViewer');
-  const modelBtn = document.getElementById('modelBtn');
-  const chartBtn = document.getElementById('chartBtn');
-
-  if (chartViewer.classList.contains('hidden')) {
-    chartViewer.classList.remove('hidden');
-    modelViewer.classList.add('hidden');
-    chartBtn.classList.add('active');
-    modelBtn.classList.remove('active');
-  }
 
   if (TESTING_MODE) console.log(tabs);
 });
