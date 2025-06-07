@@ -622,10 +622,6 @@ a.active {
   border-radius: 8px !important;
 }
 
-.graphTabsActive i,
-.graphTabsActive span {
-  color: white !important;
-}
 
 /* Chart Viewer - Canvas */
 .chartCanvas {

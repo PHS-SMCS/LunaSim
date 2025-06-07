@@ -263,8 +263,8 @@ a.active {
 }
 
 #simErrorPopup {
-  background: rgba(114, 45, 45, 1);
-  border: 1px solid rgb(65, 27, 27);
+  background: #9d4886;
+  border: 1px solid #683259;
   color: #ffffff;
 }
 
@@ -274,8 +274,8 @@ a.active {
 }
 
 #simErrorPopupCancel {
-  background: rgb(80, 34, 34);
-  border: 1px solid rgb(80, 34, 34);
+  background: #683259;
+  border: 1px solid #683259;
 }
 
 #simErrorPopupCancel:hover {
