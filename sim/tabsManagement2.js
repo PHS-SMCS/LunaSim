@@ -241,7 +241,10 @@ function configTabs() {
       : "fa-regular fa-chart-sine";
 
     const label = document.createElement("span");
-    label.textContent = (j === 0) ? "Default" : "Chart" + j;
+    const chartName = tabs[j].name || ((j === 0) ? "Default" : "Chart " + j);
+    label.textContent = chartName;
+    tab.setAttribute("data-tooltip", chartName);
+
 
     tabLink.appendChild(icon);
     tabLink.appendChild(label);
