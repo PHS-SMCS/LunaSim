@@ -1,4 +1,4 @@
-/* Ultra Dark Theme */
+/* Ultra Dark Theme - No Dimming - Bright White Text */
 body {
     background: #0a0a0a;
     box-shadow: none;
@@ -7,12 +7,12 @@ body {
 #model_name {
     background-color: #000000;
     border: 1px solid #1a1a1a;
-    color: #999999;
+    color: #ffffff; /* Changed from #999999 */
 }
 
 .actionButton {
-    background-color: rgba(30, 30, 30, 0.5);
-    color: #999999;
+    background-color: #1e1e1e;
+    color: #ffffff; /* Changed from #999999 */
 }
 
 .actionButton:hover {
@@ -20,37 +20,37 @@ body {
 }
 
 #runButton {
-    background: rgba(20, 70, 20, 0.9);
+    background: #144614;
 }
 
 #runButton:hover {
-    background-color: rgba(15, 50, 15, 0.9);
+    background-color: #0f320f;
 }
 
 #loadButton,
 #expButton {
-    background: rgba(30, 30, 60, 0.9);
+    background: #1e1e3c;
 }
 
 #loadButton:hover,
 #expButton:hover {
-    background: rgba(20, 20, 40, 0.9);
+    background: #141428;
 }
 
 #clearButton {
-    background: rgba(70, 20, 20, 0.9);
+    background: #461414;
 }
 
 #clearButton:hover {
-    background: rgba(50, 15, 15, 0.9);
+    background: #320f0f;
 }
 
 #saveStatus {
-    color: #999999;
+    color: #ffffff; /* Changed from #999999 */
 }
 
 .tabButton {
-    color: #999999;
+    color: #ffffff; /* Changed from #999999 */
     background-color: #000000;
     box-shadow: none;
 }
@@ -78,7 +78,7 @@ body {
 }
 
 a {
-    color: #666666;
+    color: #ffffff; /* Changed from #666666 */
 }
 
 a:hover,
@@ -99,12 +99,13 @@ a.active {
 }
 
 .modelCanvas {
-    background-color: #0f0f0f;
-    color: #ffffff;
+    background-color: #ffffff;
+    color: #000000;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 #myDiagram {
-    background-color: #0f0f0f;
+    background-color: #ffffff;
 }
 
 /* GoJS specific text styling */
@@ -112,49 +113,49 @@ a.active {
 #myDiagram .go-text,
 .modelCanvas text,
 .modelCanvas .go-text {
-    fill: #ffffff !important;
-    color: #ffffff !important;
+    fill: #000000 !important;
+    color: #000000 !important;
 }
 
 /* GoJS node text labels */
 #myDiagram g text,
 .modelCanvas g text {
-    fill: #ffffff !important;
+    fill: #000000 !important;
 }
 
 /* GoJS link labels */
 #myDiagram .go-link text,
 .modelCanvas .go-link text {
-    fill: #ffffff !important;
+    fill: #000000 !important;
 }
 
 /* Any SVG text within the model viewer */
 .modelViewer text,
 .modelViewer .go-text {
-    fill: #ffffff !important;
-    color: #ffffff !important;
+    fill: #000000 !important;
+    color: #000000 !important;
 }
 
 .center-btn {
     background-color: #000000;
-    color: #999999;
+    color: #ffffff; /* Changed from #999999 */
 }
 
 .center-btn:hover i {
-    color: #666666;
+    color: #ffffff; /* Changed from #666666 */
 }
 
 #eqEditor {
     background-color: #000000;
-    color: #999999;
+    color: #ffffff; /* Changed from #999999 */
 }
 
 .equation-editor-zoom-icon {
-    color: #999999;
+    color: #ffffff; /* Changed from #999999 */
 }
 
 .equation-editor-zoom-icon:hover {
-    color: #666666;
+    color: #ffffff; /* Changed from #666666 */
 }
 
 .equation-editor-table th {
@@ -164,7 +165,7 @@ a.active {
 .eqTableInputBox {
     background-color: #0a0a0a;
     border: 1px solid #1a1a1a;
-    color: #999999;
+    color: #ffffff; /* Changed from #999999 */
 }
 
 .eqStockBox input {
@@ -198,7 +199,7 @@ a.active {
 
 .nncheckbox:hover,
 .yAxisCheckbox:hover {
-    border-color: #666666;
+    border-color: #ffffff; /* Changed from #666666 */
 }
 
 .chartViewer {
@@ -207,16 +208,16 @@ a.active {
 
 .chartCanvas {
     background-color: #0f0f0f;
-    color: #999999;
+    color: #ffffff; /* Changed from #999999 */
 }
 
 .chartEditor {
     background-color: #000000;
-    color: #999999;
+    color: #ffffff; /* Changed from #999999 */
 }
 
 .chart-stats p {
-    color: #666666;
+    color: #ffffff; /* Changed from #666666 */
 }
 
 .chartEditor hr {
@@ -226,7 +227,7 @@ a.active {
 .chart-btn {
     background-color: #0a0a0a;
     border: 1px solid #1a1a1a;
-    color: #999999;
+    color: #ffffff; /* Changed from #999999 */
 }
 
 .chart-btn:hover {
@@ -234,24 +235,24 @@ a.active {
 }
 
 #overlay {
-    background-color: rgba(0, 0, 0, 0.95);
+    background-color: #000000;
 }
 
 .settings-header h2,
 .close-btn,
 .setting-group {
-    color: #999999;
+    color: #ffffff; /* Changed from #999999 */
 }
 
 .close-btn:hover {
-    color: #666666;
+    color: #ffffff; /* Changed from #666666 */
 }
 
 .settings-input,
 .settings-dropdown {
     background-color: #0a0a0a;
     border: 1px solid #1a1a1a;
-    color: #999999;
+    color: #ffffff; /* Changed from #999999 */
 }
 
 .settings-divider {
@@ -263,7 +264,7 @@ a.active {
 }
 
 .slider:before {
-    background-color: #666666;
+    background-color: #ffffff; /* Changed from #666666 */
 }
 
 .toggle-switch input:checked + .slider {
@@ -273,7 +274,7 @@ a.active {
 .setting-button {
     background-color: #0a0a0a;
     border: 1px solid #1a1a1a;
-    color: #999999;
+    color: #ffffff; /* Changed from #999999 */
 }
 
 .setting-button:hover {
@@ -285,18 +286,18 @@ a.active {
 .charts-popup,
 .export-popup {
     background-color: #000000;
-    color: #999999;
+    color: #ffffff; /* Changed from #999999 */
 }
 
 #simErrorPopup {
-    background: rgba(40, 10, 10, 1);
+    background: #280a0a;
     border: 1px solid rgb(50, 15, 15);
-    color: #999999;
+    color: #ffffff; /* Changed from #999999 */
 }
 
 #simErrorPopupTitle,
 #simErrorPopupDesc {
-    color: #999999;
+    color: #ffffff; /* Changed from #999999 */
 }
 
 #simErrorPopupCancel {
@@ -310,7 +311,7 @@ a.active {
 }
 
 .equation-editor-overlay {
-    background-color: rgba(0, 0, 0, 0.95);
+    background-color: #000000;
 }
 
 .equation-editor-popup {
@@ -318,33 +319,33 @@ a.active {
 }
 
 .close-icon {
-    color: #999999;
+    color: #ffffff; /* Changed from #999999 */
 }
 
 .close-icon:hover {
-    color: #666666;
+    color: #ffffff; /* Changed from #666666 */
 }
 
 .equation-editor-popup,
 .equation-editor-popup * {
-    color: #999999;
+    color: #ffffff; /* Changed from #999999 */
 }
 
 #xAxis {
     background-color: #0a0a0a;
     border: 1px solid #1a1a1a;
-    color: #999999;
+    color: #ffffff; /* Changed from #999999 */
 }
 
 #yAxis {
     background-color: transparent;
-    color: #999999;
+    color: #ffffff; /* Changed from #999999 */
 }
 
 #submitModel {
     background-color: #0a0a0a;
     border: 1px solid #1a1a1a;
-    color: #999999;
+    color: #ffffff; /* Changed from #999999 */
 }
 
 #submitModel:hover {
@@ -354,7 +355,7 @@ a.active {
 .autocomplete-list {
     background-color: #0a0a0a;
     border: 1px solid #1a1a1a;
-    color: #999999;
+    color: #ffffff; /* Changed from #999999 */
 }
 
 .autocomplete-item {
@@ -367,7 +368,7 @@ a.active {
 }
 
 .model-zoom-icon {
-    color: #999999;
+    color: #ffffff; /* Changed from #999999 */
     background-color: #000000;
 }
 
@@ -376,7 +377,7 @@ a.active {
 }
 
 .popup-overlay {
-    background-color: rgba(0, 0, 0, 0.98);
+    background-color: #000000;
 }
 
 .popup-content {
@@ -384,5 +385,5 @@ a.active {
 }
 
 .close-popup {
-    color: #999999;
+    color: #ffffff; /* Changed from #999999 */
 }
