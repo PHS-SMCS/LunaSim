@@ -908,7 +908,15 @@ function run() {
     var engineJson = translate(json);
 
     console.log(engineJson);
-
+    for(var i =0; i<engineJson.influences.length; i++) {
+        if(engineJson.influences[i].tolabel.startsWith("$")){
+            engineJson.influences[i].to = engineJson.influences[i].tolabel.substring(1);
+        }
+        if(engineJson.influences[i].fromlabel.startsWith("$")){
+            engineJson.influences[i].from = engineJson.influences[i].fromlabel.substring(1);
+            console.log(engineJson.influences[i].from);
+        }
+    }
 
     for (var i = 0; i < engineJson.variables.length; i++) {
         var variable = engineJson.variables[i];
@@ -941,9 +949,6 @@ function run() {
 
                 var exists = false;
                 for (var j = 0; j < engineJson.influences.length; j++) {
-                    console.log(engineJson.influences[j].to === variable.key && engineJson.influences[j].from === newReferences[h]);
-                    console.log(variable.key);
-                    console.log(newReferences[h]);
                     if (engineJson.influences[j].to === variable.key && engineJson.influences[j].from === newReferences[h]) {
                         exists = true;
                     }

@@ -17,6 +17,8 @@ export function translate(obj) {
         to;
         toEq;
         from;
+        tolabel;
+        fromlabel;
     }
     var valves = obj.nodeDataArray.filter(node => node.category === "valve");
 
@@ -82,9 +84,11 @@ export function translate(obj) {
                 if(obj.nodeDataArray[h].key == link.to){
                     currentInfluence.to = obj.nodeDataArray[h].key;
                     currentInfluence.toEq = obj.nodeDataArray[h].equation;
+                    currentInfluence.tolabel = obj.nodeDataArray[h].label;
                 }
                 if(obj.nodeDataArray[h].key == link.from){
                     currentInfluence.from = obj.nodeDataArray[h].key;
+                    currentInfluence.fromlabel = obj.nodeDataArray[h].label;
                 }
             }
             res.influences.push(currentInfluence);
