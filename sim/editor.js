@@ -593,7 +593,6 @@ function loadTableToDiagram() {
  *
  * @param {boolean} [load=false] - Whether to load equation/checkbox values into the table.
  */
-
 function updateTable(load = false) {
     var data = myDiagram.model.toJson();
     var json = JSON.parse(data);
@@ -601,14 +600,14 @@ function updateTable(load = false) {
     var $tbody = $('#eqTableBody');
     $tbody.empty(); // clear the table so we can re-add in sorted order
 
-    // Filter out invalid entries
+    // Filter out valid nodes (stocks, flows, variables) that aren't ghosts or clouds
     let validNodes = json.nodeDataArray.filter(item =>
         item.label !== undefined &&
         !isGhost(item.label) &&
         (item.category === "stock" || item.category === "variable" || item.category === "valve")
     );
 
-    // Sort nodes: stocks first, then flows (valves), then variables
+    // Sort: stock -> valve (flow) -> variable
     validNodes.sort((a, b) => {
         const order = { "stock": 0, "valve": 1, "variable": 2 };
         return order[a.category] - order[b.category];
@@ -623,7 +622,10 @@ function updateTable(load = false) {
 
         var category = item.category === "valve" ? "flow" : item.category;
 
-        var $tr = $('<tr>').append(
+        // Create row and cells
+        var $tr = $('<tr>');
+
+        $tr.append(
             $('<td>').append($('<input class="eqTableInputBox">')
                 .attr('type', 'text')
                 .attr('name', 'type')
@@ -641,19 +643,25 @@ function updateTable(load = false) {
         );
 
         if (category === "stock" || category === "flow") {
-            $('<td>').append($('<input>')
-                .attr('type', 'checkbox')
-                .attr('name', 'checkbox')
-                .attr('class', 'nncheckbox')
-                .change(function () {
-                    loadTableToDiagram();
-                }))
-                .appendTo($tr);
+            // Add checkbox with proper event binding and state
+            $tr.append(
+                $('<td>').append(
+                    $('<input>')
+                        .attr('type', 'checkbox')
+                        .attr('name', 'checkbox')
+                        .attr('class', 'nncheckbox')
+                        .prop('checked', !!item.checkbox)
+                        .on('change', function () {
+                            loadTableToDiagram();
+                        })
+                )
+            );
         } else {
-            $('<td>').appendTo($tr); // empty cell for variables
+            // Add empty cell
+            $tr.append($('<td>'));
         }
 
-        // Add color classes
+        // Add color styling
         if (category === "stock") {
             $tr.find('td').slice(0, 3).addClass("eqStockBox");
         } else if (category === "flow") {
@@ -664,17 +672,18 @@ function updateTable(load = false) {
 
         if (load) {
             $tr.find('input[name="equation"]').val(item.equation);
-            $tr.find('input[name="checkbox"]').prop('checked', item.checkbox);
+            $tr.find('input[name="checkbox"]').prop('checked', !!item.checkbox);
         }
 
         $tr.appendTo($tbody);
     });
 
-    // Rebuild GOJS_ELEMENT_LABELS
+    // Rebuild GOJS_ELEMENT_LABELS list
     GOJS_ELEMENT_LABELS = myDiagram.model.nodeDataArray
         .filter(n => n.label && !n.label.startsWith('$') && n.category !== "cloud")
         .map(n => n.label);
 }
+
 
 /**
  * Determines whether a flow is a biflow (bidirectional) or uniflow (unidirectional)
@@ -739,6 +748,8 @@ function labelValidator(textblock, oldstr, newstr) {
     if (newstr === oldstr) return true;
     if (newstr === "") return false;
     if (!isNaN(newstr)) return false;
+
+
 
     if (isGhost(newstr)) {
         const targetLabel = newstr.substring(1);
