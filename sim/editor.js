@@ -1022,7 +1022,7 @@ function run() {
                     }
                 }
                 if (!exists) {
-                    document.getElementById("simErrorPopupDesc").innerHTML = "Missing an influence from " + newReferences[j] + " to " + valve.key;
+                    document.getElementById("simErrorPopupDesc").innerHTML = "Missing an influence from " + references[j] + " to " + valve.key;
                     showSimErrorPopup();
                     window.simulationHasRunSuccessfully_tab = false;
                     return;
