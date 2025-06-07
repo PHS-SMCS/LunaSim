@@ -872,6 +872,9 @@ function resetSimErrorPopup() {
 function containsReference(equation, data) {
     const matches = [];
     const regex = /\[(.*?)\]/g;
+    if(equation == null){
+        return matches;
+    }
     const allMatches = equation.matchAll(regex);
 
     for (const match of allMatches) {
@@ -910,11 +913,20 @@ function run() {
     console.log(engineJson);
     for(var i =0; i<engineJson.influences.length; i++) {
         if(engineJson.influences[i].tolabel.startsWith("$")){
-            engineJson.influences[i].to = engineJson.influences[i].tolabel.substring(1);
+            var tarlab = engineJson.influences[i].tolabel.substring(1);
+            for(var j =0; j<engineJson.labelsandkeys.length; j++){
+                if(engineJson.labelsandkeys[j].label == tarlab){
+                    engineJson.influences[i].to = engineJson.labelsandkeys[j].key;
+                }
+            }
         }
         if(engineJson.influences[i].fromlabel.startsWith("$")){
-            engineJson.influences[i].from = engineJson.influences[i].fromlabel.substring(1);
-            console.log(engineJson.influences[i].from);
+            var tarlab = engineJson.influences[i].fromlabel.substring(1);
+            for(var j =0; j<engineJson.labelsandkeys.length; j++){
+                if(engineJson.labelsandkeys[j].label == tarlab){
+                    engineJson.influences[i].from = engineJson.labelsandkeys[j].key;
+                }
+            }
         }
     }
 
@@ -953,7 +965,9 @@ function run() {
                         exists = true;
                     }
                     if (engineJson.influences[j].to === variable.key && !newReferences.includes(engineJson.influences[j].from)) {
-                        document.getElementById("simErrorPopupDesc").innerHTML = "Incorrect influence from " + engineJson.influences[j].from + " to " + engineJson.influences[j].to;
+                        console.log(engineJson.influences[j].from);
+                        console.log(newReferences);
+                        document.getElementById("simErrorPopupDesc").innerHTML = "Incorrect influence from " + engineJson.influences[j].fromlabel + " to " + engineJson.influences[j].tolabel;
                         showSimErrorPopup();
                         window.simulationHasRunSuccessfully_tab = false;
                         return;
@@ -1011,9 +1025,6 @@ function run() {
             for (var j = 0; j < newReferences.length; j++) {
                 var exists = false;
                 for (var h = 0; h < engineJson.influences.length; h++) {
-                    console.log("valve key:" + valve.key);
-                    console.log(engineJson.influences[h]);
-                    console.log("ref:" + newReferences[j]);
                     console.log(engineJson.influences[h].to == newReferences[j] && engineJson.influences[h].from == valve.key);
                     if ((engineJson.influences[h].to == newReferences[j] && engineJson.influences[h].from == valve.key) || (engineJson.influences[h].to == valve.key && engineJson.influences[h].from == newReferences[j])) {
                         exists = true;
