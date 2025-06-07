@@ -188,8 +188,10 @@ function initializeTab() {
   else
     x = form["xAxis"].value;
 
-  var tab = new Graphic(form["model_type"].value, x, y); // initializes the Graphic object
+  var tab = new Graphic(form["model_type"].value, x, y);
+  tab.name = form["tab_name"].value || "Chart " + (tabs.length); // fallback if blank
   tabs.push(tab); // add to end of array
+  setTimeout(() => list.lastChild.click(), 0);
   document.getElementById("popForm").style.display = "none"; // hide form
   document.getElementById("grayEffectDiv").style.display = "none";
   form.reset(); // reset input
@@ -563,10 +565,10 @@ function updateChartStats(index) {
                         (integrationMethod === "euler") ? "Euler" : integrationMethod;
 
   statsEl.innerHTML = `
-    <p><strong>Name:</strong> ${name}</p>
-    <p><strong>Type:</strong> ${type}</p>
-    <p><strong>X-Axis:</strong> ${xAxis}</p>
-    <p><strong>Y-Axis:</strong> ${yAxis}</p>
+    <p>Name: ${tab.name || `Chart ${index}`}</p>
+    <p>Type: ${tab.type.charAt(0).toUpperCase() + tab.type.slice(1)}</p>
+    <p>X-Axis: ${tab.xAxis}</p>
+    <p>Y-Axis: ${tab.yAxis.join(", ")}</p>
     <hr>
     <p><strong>Start Time:</strong> ${startTime}</p>
     <p><strong>End Time:</strong> ${endTime}</p>

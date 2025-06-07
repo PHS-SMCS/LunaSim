@@ -266,11 +266,15 @@
       <!-- ================== Charts Popup ================== -->
       <div id="chartsPopup" class="charts-popup hidden">
         <div class="settings-header">
-          <h2>Edit Chart/Table</h2>
+          <h2>Create Chart/Table</h2>
           <button class="close-btn" onclick="closeSettings('chartsPopup')"><i class="fa-regular fa-xmark"></i></button>
         </div>
         <div id="popForm">
         <form id="tabConfig" name = "tabConfig" onsubmit="return false"> <!-- Will not refresh page -->
+          <div class="setting-group">
+            <label for="tab_name">Visual Name</label>
+            <input type="text" id="tab_name" name="tab_name" class="settings-input" placeholder="e.g., Population Chart" required />
+          </div>
           <div class="setting-group">
             <label for="model_type">Type</label>
             <select id="model_type" name="model_type" class="settings-dropdown" style="width: 60%;" required>
