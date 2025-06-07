@@ -537,6 +537,7 @@ function setMode(mode, itemType) {
  * and reinitializes the model while preserving the diagram’s position.
  * Also sets `unsavedEdits` and updates sessionStorage.
  */
+
 function loadTableToDiagram() {
     // get the json from the GoJS model
     var data = myDiagram.model.toJson();
@@ -597,95 +598,82 @@ function updateTable(load = false) {
     var data = myDiagram.model.toJson();
     var json = JSON.parse(data);
 
-    // get tbody by id eqTableBody
     var $tbody = $('#eqTableBody');
+    $tbody.empty(); // clear the table so we can re-add in sorted order
 
-    // 1. add new items to table
-    $.each(json.nodeDataArray, function (i, item) { // includes stocks, variables, and clouds
-        if (item.label === undefined) { // if the item is a valve or cloud, skip it
-            return;
-        }
+    // Filter out invalid entries
+    let validNodes = json.nodeDataArray.filter(item =>
+        item.label !== undefined &&
+        !isGhost(item.label) &&
+        (item.category === "stock" || item.category === "variable" || item.category === "valve")
+    );
 
-        // check if the item is a ghost, if so, skip it
-        if (isGhost(item.label)) {
-            return;
-        }
+    // Sort nodes: stocks first, then flows (valves), then variables
+    validNodes.sort((a, b) => {
+        const order = { "stock": 0, "valve": 1, "variable": 2 };
+        return order[a.category] - order[b.category];
+    });
+
+    // Create rows
+    validNodes.forEach(item => {
         if (!GOJS_ELEMENT_LABELS_SET.has(item.label)) {
             GOJS_ELEMENT_LABELS.push(item.label);
             GOJS_ELEMENT_LABELS_SET.add(item.label);
         }
-        // check if item already exists in table, if not add it
-        var exists = false;
-        $tbody.find('tr').each(function () {
-            if ($(this).find('input[name="name"]').val() === item.label) {
-                exists = true;
-            }
-        });
 
-        if (!exists) {
-            var category = item.category == "valve" ? "flow" : item.category; // if the item is a valve, change the category to flow
+        var category = item.category === "valve" ? "flow" : item.category;
 
-            var $tr = $('<tr>').append($('<td>').append($('<input class="eqTableInputBox">').attr('type', 'text').attr('name', 'type').attr('value', category).attr('readonly', true) // add the type of the object to the row (uneditable by user)
-            ), $('<td>').append($('<input class="eqTableInputBox">').attr('type', 'text').attr('name', 'name').attr('value', item.label).attr('readonly', true) // add the name of the object to the row (uneditable by user)
-            ), $('<td>').append(// make width 100% so that the equation takes up the entire column
-                $("<input  class=\"eqTableInputBox\" style='width: inherit;'>").attr('type', 'text').attr('name', 'equation').css('width', '99%')),).appendTo($tbody);
+        var $tr = $('<tr>').append(
+            $('<td>').append($('<input class="eqTableInputBox">')
+                .attr('type', 'text')
+                .attr('name', 'type')
+                .attr('value', category)
+                .attr('readonly', true)),
+            $('<td>').append($('<input class="eqTableInputBox">')
+                .attr('type', 'text')
+                .attr('name', 'name')
+                .attr('value', item.label)
+                .attr('readonly', true)),
+            $('<td>').append($("<input class=\"eqTableInputBox\" style='width: inherit;'>")
+                .attr('type', 'text')
+                .attr('name', 'equation')
+                .css('width', '99%'))
+        );
 
-            if (category === "stock" || category === "flow") {
-                // append a checkbox
-                $('<td>').append(// this checkbox determines if the stock is non-negative or if the flow is uniflow
-                    // also has an event listener that calls the save function when the checkbox is changed (to update arrows on flows)
-                    $('<input>').attr('type', 'checkbox').attr('name', 'checkbox').attr('class', 'nncheckbox').change(function () {
-                        loadTableToDiagram();
-                    }))
-                    .appendTo($tr);
-            } else {
-                // if the object is a variable or cloud, add a blank column
-                $('<td>').appendTo($tr);
-            }
-
-            // depending on the category, change the color of the row (only first 2 columns)
-            if (category === "stock") {
-                // get the first 2 columns of the row
-                $tr.find('td').slice(0, 3).addClass("eqStockBox");
-            } else if (category === "flow") {
-                $tr.find('td').slice(0, 3).addClass("eqFlowBox");
-            } else if (category === "variable") {
-                $tr.find('td').slice(0, 3).addClass("eqVariableBox");
-            }
-
-            if (load) {
-                // populate the equation and checkbox from json
-                $tr.find('input[name="equation"]').val(item.equation);
-                $tr.find('input[name="checkbox"]').prop('checked', item.checkbox);
-            }
+        if (category === "stock" || category === "flow") {
+            $('<td>').append($('<input>')
+                .attr('type', 'checkbox')
+                .attr('name', 'checkbox')
+                .attr('class', 'nncheckbox')
+                .change(function () {
+                    loadTableToDiagram();
+                }))
+                .appendTo($tr);
+        } else {
+            $('<td>').appendTo($tr); // empty cell for variables
         }
+
+        // Add color classes
+        if (category === "stock") {
+            $tr.find('td').slice(0, 3).addClass("eqStockBox");
+        } else if (category === "flow") {
+            $tr.find('td').slice(0, 3).addClass("eqFlowBox");
+        } else if (category === "variable") {
+            $tr.find('td').slice(0, 3).addClass("eqVariableBox");
+        }
+
+        if (load) {
+            $tr.find('input[name="equation"]').val(item.equation);
+            $tr.find('input[name="checkbox"]').prop('checked', item.checkbox);
+        }
+
+        $tr.appendTo($tbody);
     });
 
-
-    // 2. remove any items that are no longer in the model
-    $tbody.find('tr').each(function () {
-        var name = $(this).find('input[name="name"]').val(); // get the name of the object
-        var exists = false;
-        $.each(json.nodeDataArray, function (i, item) {
-            if (item.category !== "stock" && item.category !== "variable" && item.category !== "valve") { // excludes clouds and influences
-                return;
-            }
-
-            if (item.label === name) {
-                exists = true;
-            }
-        });
-
-        if (!exists) {
-            $(this).remove();
-        }
-    });
+    // Rebuild GOJS_ELEMENT_LABELS
     GOJS_ELEMENT_LABELS = myDiagram.model.nodeDataArray
-        .filter(n => n.label && !n.label.startsWith('$') && // skip ghosts
-            n.category !== "cloud"      // skip clouds
-        )
+        .filter(n => n.label && !n.label.startsWith('$') && n.category !== "cloud")
         .map(n => n.label);
-
 }
 
 /**
