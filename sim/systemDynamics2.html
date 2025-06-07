@@ -233,6 +233,7 @@
             <option selected value="normal">Normal</option>
             <option value="classic">Classic</option>
             <option value="monochrome">Monochrome</option>
+            <option value="nvoid">Nebula Void</option>
             <option value="cred">Cherry Red</option>
             <option value="cblossom">Cherry Blossom</option>
             <option value="sorange">Sunset Orange</option>
@@ -869,6 +870,8 @@ document.addEventListener("DOMContentLoaded", () => {
         themeHref = 'cherryRed.css'; 
       } else if (selected === 'cblossom') {
         themeHref = 'cherryBlossom.css'; 
+      } else if (selected === 'nvoid') {
+        themeHref = 'nebulaVoid.css'; 
       } else {
         themeHref = '';
       }

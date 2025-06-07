@@ -205,7 +205,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 58%;
+      height: 61%;
     }
 
     .info-box {
@@ -328,7 +328,7 @@
 .features-list li {
   display: flex;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .icon-circle {
@@ -397,6 +397,25 @@
   animation-delay: 0.1s;
 }
 
+@keyframes fadeInFadeOut {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-toggle {
+  animation: fadeInFadeOut 0.6s ease-in-out forwards;
+}
+
+#creditsBox {
+  transition: opacity 0.3s ease-in-out;
+}
+
 
 
   </style>
@@ -420,19 +439,20 @@
         <button class="launch-btn" onclick="launchLunaSim()">
           Click Here to Launch <i class="fa-regular fa-arrow-up-right-from-square"></i>
         </button>
-        <button class="feedback-btn">
+        <button class="feedback-btn" onclick="toggleCredits()">
           Provide Feedback <i class="fa-regular fa-comment"></i>
         </button>
       </div>
 
 
-      <div class="credits-box">
+      <div class="credits-box" id="creditsBox">
         <h3>Credits</h3>
         <p>
-          <b>Project Manager(s):</b> Sienna Simms, Ryan Chung<br>
-          <b>Lead Programmer(s):</b> Karthik Vedula, Akash Saran<br>
-          <b>Lead Tester(s)</b> Aditya Patil, Sienna Simms, Arjun Mujumdar<br>
-          <b>Systems Analyst(s):</b> Aditya Patil, Caleb Wen<br>
+          <b>Original Creators:</b> Karthik Vedula, Aditya Patil, Sienna Simms<br>
+          <b>Project Manager:</b> Ryan Chung<br>
+          <b>Lead Programmer:</b> Akash Saran<br>
+          <b>Lead Tester:</b> Arjun Mujumdar<br>
+          <b>Systems Analyst:</b> Caleb Wen<br>
           <b>Functional Developer:</b> William Park<br>
           <b>Special Thanks:</b> Ishan Kheterpal, Mark Estep, and the SMCS 27' Class
           
@@ -443,7 +463,7 @@
     <div class="info-box-section fade-in-right">
       <div class="info-box">
         <h2>What is LunaSim?</h2>
-        <p>LunaSim is a browser-based system dynamics software that simulates physical systems using differential equations.</p>
+        <p>LunaSim is a browser-based system dynamics software. Its use is to simulate physical situations by graphically representing solutions to sets of differential equations provided by the user. </p>
 
         <h2>Important Features</h2>
         <div class="features-columns">
@@ -466,7 +486,7 @@
               <div class="icon-circle"><i class="fa-regular fa-lambda"></i></div>
               <div class="feature-text">
                 <strong>Equations</strong>
-                <p>Refrences, Logic, Math Functions</p>
+                <p>Refrences, Java Math Functions</p>
               </div>
             </li>
             <li>
@@ -504,7 +524,7 @@
               <div class="icon-circle"><i class="fa-regular fa-ghost"></i></div>
               <div class="feature-text">
                 <strong>And Much More!</strong>
-                <p>Ghosting, Documentation, etc.</p>
+                <p>Ghosting, Logic, Docs, etc.</p>
               </div>
             </li>
           </ul>
@@ -551,6 +571,38 @@
       window.location.href = "../sim/systemDynamics2.html";
     }
   </script>
+<script>
+  function toggleCredits() {
+  const creditsBox = document.getElementById('creditsBox');
+
+  // Define new content you want to show
+  const newContent = `
+    <h3>Send Us An Email!</h3>
+    <p>
+      <b>Karthik Vedula:</b> <a href="mailto:karthik@vedula.me">karthik@vedula.me</a><br>
+      <b>Ryan Chung:</b> <a href="mailto:ryanchung9984@gmail.com">ryanchung9984@gmail.com</a><br>
+      <b>Akash Saran:</b> <a href="mailto:akashsaran.ssp@gmail.com">akashsaran.ssp@gmail.com</a><br>
+      <b>Arjun Mujumdar:</b> <a href="mailto:arjun.m.mujumdar">arjun.m.mujumdar</a><br>
+      <b>Caleb Wen:</b> <a href="mailto:calebrwen@gmail.com">calebrwen@gmail.com</a><br>
+      <b>William Park:</b> <a href="mailto:smartynotchy@gmail.com">smartynotchy@gmail.com</a><br>
+      Your feedback will help us improve LunaSim for generations to come!
+    </p>
+  `;
+
+  // Add fade-out
+  creditsBox.classList.remove('fade-toggle');
+  creditsBox.style.opacity = '0';
+
+  setTimeout(() => {
+    creditsBox.innerHTML = newContent;
+
+    // Add fade-in
+    creditsBox.classList.add('fade-toggle');
+    creditsBox.style.opacity = '1';
+  }, 300); // Match fade-out time
+}
+
+</script>
 </body>
 </html>
 
