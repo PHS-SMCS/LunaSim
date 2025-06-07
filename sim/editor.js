@@ -1388,6 +1388,20 @@ document.getElementById("loadButton").addEventListener("click", function () {
 });
 
 init();
+
+myDiagram.toolManager.textEditingTool.doActivate = function() {
+    const tb = this.textBlock;
+    if (tb) tb.opacity = 0; // hide during edit
+    go.TextEditingTool.prototype.doActivate.call(this);
+};
+
+myDiagram.toolManager.textEditingTool.doDeactivate = function() {
+    const tb = this.textBlock;
+    if (tb) tb.opacity = 1; // show after edit
+    go.TextEditingTool.prototype.doDeactivate.call(this);
+};
+
+
 document.getElementById("centerModelBtn").addEventListener("click", function () {
     myDiagram.zoomToFit();
 
