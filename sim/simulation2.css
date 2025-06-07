@@ -2,7 +2,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=Lexend:wght@300;400;500;600;700&display=swap');
 
 
-
 /* Universal Styling */
 *, *:after, *:before {
   box-sizing: border-box;
@@ -341,6 +340,7 @@ a.active {
   box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
   color: white;
   overflow: hidden;
+  border: none;
   
 }
 
@@ -353,12 +353,13 @@ a.active {
   user-select: none;
   touch-action: none;
   z-index: 5;
+  border: none;
 }
 
 #myDiagram {
   width: 100%;
   height: 100%;
-  border: 1px solid black;
+  border: none;
   background-color: white;
   position: absolute;
   z-index:500;
@@ -1341,3 +1342,30 @@ input.settings-input.invalid:focus {
   color: white;
   cursor: pointer;
 }
+
+.graphTabs {
+  position: relative;
+}
+
+.graphTabs::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #46598e;
+  color: #fff;
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  border-radius: 8px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 10;
+}
+
+.graphTabs:hover::after {
+  opacity: 1;
+}
+
