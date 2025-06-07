@@ -1525,93 +1525,94 @@ function getTopBracketMatches(fragment) {
 
 function setupAutocompleteForInputs() {
     const $tbody = $('#eqTableBody');
-
+    const $tpopupbody = $('#equationEditorPopupContent');
     // Show suggestions as the user types
-    $tbody.on('input', 'input[name="equation"]', function (e) {
-        if (e.originalEvent && ["ArrowUp", "ArrowDown", "Tab"].includes(e.originalEvent.key)) return;
-        showAutocomplete($(this));
-    });
+    [$tbody, $tpopupbody].forEach($container => {
+        $container.on('input', 'input[name="equation"]', function (e) {
+            if (e.originalEvent && ["ArrowUp", "ArrowDown", "Tab"].includes(e.originalEvent.key)) return;
+            showAutocomplete($(this));
+        });
 
-    $tbody.on('keydown', 'input[name="equation"]', function (e) {
-        const $input = $(this);
-        const dropdown = $('.autocomplete-list');
-        const items = dropdown.find('.autocomplete-item');
-        let selected = items.filter('.selected');
+        $container.on('keydown', 'input[name="equation"]', function (e) {
+            const $input = $(this);
+            const dropdown = $('.autocomplete-list');
+            const items = dropdown.find('.autocomplete-item');
+            let selected = items.filter('.selected');
 
-        if (e.key === 'ArrowDown') {
-            e.preventDefault();
-            if (selected.length === 0) {
-                items.first().addClass('selected');
-            } else {
-                const next = selected.removeClass('selected').next();
-                (next.length ? next : items.first()).addClass('selected');
-            }
-            return;
-        }
-
-        if (e.key === 'ArrowUp') {
-            e.preventDefault();
-            if (selected.length === 0) {
-                items.last().addClass('selected');
-            } else {
-                const prev = selected.removeClass('selected').prev();
-                (prev.length ? prev : items.last()).addClass('selected');
-            }
-            return;
-        }
-
-        if ((e.key === 'Tab' || e.key === 'Enter') && selected.length > 0) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            const cursorPos = $input[0].selectionStart;
-            const fullText = $input.val();
-
-            const isInBrackets = isCursorInsideBrackets(fullText, cursorPos);
-            let before = fullText.slice(0, cursorPos);
-            const after = fullText.slice(cursorPos);
-            const replacement = selected.text();
-            let updated, newCursor;
-
-            if (isInBrackets) {
-                before = before.replace(/\[([^\[\]]*)$/, `[${replacement}`);
-                if (after.trim().startsWith("]")) {
-                    updated = before + after;
-                    newCursor = before.length;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (selected.length === 0) {
+                    items.first().addClass('selected');
                 } else {
-                    updated = before + "]" + after;
-                    newCursor = before.length + 1;
+                    const next = selected.removeClass('selected').next();
+                    (next.length ? next : items.first()).addClass('selected');
                 }
-            } else {
-                const match = before.match(/(\w+)$/);
-                const currentFragment = match ? match[1] : "";
-                const fragmentStart = cursorPos - currentFragment.length;
-
-                const funcName = selected.text();
-                const withParens = funcName.endsWith("()") ? funcName : funcName + "()";
-
-                before = fullText.slice(0, fragmentStart);
-                updated = before + withParens + after;
-                newCursor = before.length + withParens.indexOf("()") + 1; // inside the ()
+                return;
             }
 
+            if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (selected.length === 0) {
+                    items.last().addClass('selected');
+                } else {
+                    const prev = selected.removeClass('selected').prev();
+                    (prev.length ? prev : items.last()).addClass('selected');
+                }
+                return;
+            }
 
-            $input.val(updated);
-            $input[0].setSelectionRange(newCursor, newCursor);
-            $('.autocomplete-list').remove();
+            if ((e.key === 'Tab' || e.key === 'Enter') && selected.length > 0) {
+                e.preventDefault();
+                e.stopPropagation();
 
-        }
-    });
+                const cursorPos = $input[0].selectionStart;
+                const fullText = $input.val();
+
+                const isInBrackets = isCursorInsideBrackets(fullText, cursorPos);
+                let before = fullText.slice(0, cursorPos);
+                const after = fullText.slice(cursorPos);
+                const replacement = selected.text();
+                let updated, newCursor;
+
+                if (isInBrackets) {
+                    before = before.replace(/\[([^\[\]]*)$/, `[${replacement}`);
+                    if (after.trim().startsWith("]")) {
+                        updated = before + after;
+                        newCursor = before.length;
+                    } else {
+                        updated = before + "]" + after;
+                        newCursor = before.length + 1;
+                    }
+                } else {
+                    const match = before.match(/(\w+)$/);
+                    const currentFragment = match ? match[1] : "";
+                    const fragmentStart = cursorPos - currentFragment.length;
+
+                    const funcName = selected.text();
+                    const withParens = funcName.endsWith("()") ? funcName : funcName + "()";
+
+                    before = fullText.slice(0, fragmentStart);
+                    updated = before + withParens + after;
+                    newCursor = before.length + withParens.indexOf("()") + 1; // inside the ()
+                }
 
 
-    $tbody.on('blur', 'input[name="equation"]', function () {
-        setTimeout(() => {
-            if (!$(':hover').hasClass('autocomplete-item')) {
+                $input.val(updated);
+                $input[0].setSelectionRange(newCursor, newCursor);
                 $('.autocomplete-list').remove();
-            }
-        }, 150);
-    });
 
+            }
+        });
+
+
+        $container.on('blur', 'input[name="equation"]', function () {
+            setTimeout(() => {
+                if (!$(':hover').hasClass('autocomplete-item')) {
+                    $('.autocomplete-list').remove();
+                }
+            }, 150);
+        });
+    })
     // Also remove on clicks outside
     $(document).on('mousedown', function (e) {
         if (!$(e.target).closest('.autocomplete-list, input[name="equation"]').length) {
