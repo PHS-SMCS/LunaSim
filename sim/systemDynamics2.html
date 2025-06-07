@@ -272,6 +272,10 @@
         <div id="popForm">
         <form id="tabConfig" name = "tabConfig" onsubmit="return false"> <!-- Will not refresh page -->
           <div class="setting-group">
+            <label for="tab_name">Visual Name</label>
+            <input type="text" id="tab_name" name="tab_name" class="settings-input" placeholder="e.g., Population Chart" required />
+          </div>
+          <div class="setting-group">
             <label for="model_type">Type</label>
             <select id="model_type" name="model_type" class="settings-dropdown" style="width: 60%;" required>
               <option value="chart" selected>Chart</option>
