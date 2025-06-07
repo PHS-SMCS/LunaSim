@@ -190,6 +190,7 @@ function initializeTab() {
 
   var tab = new Graphic(form["model_type"].value, x, y); // initializes the Graphic object
   tabs.push(tab); // add to end of array
+  setTimeout(() => list.lastChild.click(), 0);
   document.getElementById("popForm").style.display = "none"; // hide form
   document.getElementById("grayEffectDiv").style.display = "none";
   form.reset(); // reset input
