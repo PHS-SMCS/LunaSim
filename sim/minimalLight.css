@@ -55,23 +55,25 @@ body {
 .tabButton {
     color: #495057;
     background-color: #ffffff;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: none; /* Removed shadow */
 }
 
 .tabButton.active {
     background-color: #e9ecef;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: none; /* Removed shadow */
 }
 
 .modelViewer {
     background: #ffffff;
     border: 1px solid #dee2e6;
+    box-shadow: none; /* Removed shadow */
 }
 
 .toolbar ul,
 .chartSidebar ul {
     background-color: #ffffff;
     border: 1px solid #dee2e6;
+    box-shadow: none; /* Removed shadow */
 }
 
 .settings-section {
@@ -108,10 +110,7 @@ a.active {
 .modelCanvas {
     background-color: #ffffff;
     color: #212529;
-}
-
-#myDiagram {
-    background-color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .center-btn {
@@ -128,6 +127,7 @@ a.active {
     background-color: #ffffff;
     color: #212529;
     border: 1px solid #dee2e6;
+    box-shadow: none; /* Removed shadow */
 }
 
 .equation-editor-zoom-icon {
@@ -186,6 +186,7 @@ a.active {
 .chartViewer {
     background: #ffffff;
     border: 1px solid #dee2e6;
+    box-shadow: none; /* Removed shadow */
 }
 
 .chartCanvas {

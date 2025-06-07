@@ -38,11 +38,13 @@ body {
 }
 
 #clearButton {
-    background: rgba(220, 20, 60, 0.9);
+    background: rgba(255, 127, 80, 0.9);
+    color: #fff5e6;
 }
 
 #clearButton:hover {
-    background: rgba(178, 16, 48, 0.9);
+    background: rgba(255, 99, 71, 0.9);
+    color: #fff5e6;
 }
 
 #saveStatus {
@@ -101,6 +103,7 @@ a.active {
 .modelCanvas {
     background-color: #ffffff;
     color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 #myDiagram {
@@ -262,24 +265,26 @@ a.active {
 }
 
 #simErrorPopup {
-    background: rgba(220, 20, 60, 1);
-    border: 1px solid rgb(178, 16, 48);
-    color: #ffffff;
+    background: rgba(45, 31, 23, 0.95);
+    border: 1px solid #ff7f50;
+    color: #fff5e6;
 }
 
 #simErrorPopupTitle,
 #simErrorPopupDesc {
-    color: white;
+    color: #fff5e6;
 }
 
 #simErrorPopupCancel {
-    background: rgb(190, 18, 52);
-    border: 1px solid rgb(190, 18, 52);
+    background: #ff7f50;
+    border: 1px solid #ff7f50;
+    color: #fff5e6;
 }
 
 #simErrorPopupCancel:hover {
-    background: rgb(150, 14, 40);
-    border: 1px solid rgb(150, 14, 40);
+    background: #ff6347;
+    border: 1px solid #ff6347;
+    color: #fff5e6;
 }
 
 .equation-editor-overlay {

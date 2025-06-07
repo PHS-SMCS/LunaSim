@@ -38,11 +38,13 @@ body {
 }
 
 #clearButton {
-    background: rgba(231, 76, 60, 0.9);
+    background: rgba(138, 43, 226, 0.9); /* Blueviolet - cosmic purple */
+    color: #f0e6ff;
 }
 
 #clearButton:hover {
-    background: rgba(192, 57, 43, 0.9);
+    background: rgba(102, 51, 153, 0.9); /* Darker purple on hover */
+    color: #f0e6ff;
 }
 
 #saveStatus {
@@ -62,6 +64,7 @@ body {
 
 .modelViewer {
     background: #3d2954;
+    border: none;
 }
 
 .toolbar ul,
@@ -101,6 +104,7 @@ a.active {
 .modelCanvas {
     background-color: #ffffff;
     color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 #myDiagram {
@@ -262,24 +266,26 @@ a.active {
 }
 
 #simErrorPopup {
-    background: rgba(231, 76, 60, 1);
-    border: 1px solid rgb(192, 57, 43);
-    color: #ffffff;
+    background: rgba(41, 20, 82, 0.95); /* Deep cosmic purple background */
+    border: 1px solid #9370db; /* Medium purple border */
+    color: #f0e6ff;
 }
 
 #simErrorPopupTitle,
 #simErrorPopupDesc {
-    color: white;
+    color: #f0e6ff;
 }
 
 #simErrorPopupCancel {
-    background: rgb(210, 65, 52);
-    border: 1px solid rgb(210, 65, 52);
+    background: #9370db; /* Medium purple button */
+    border: 1px solid #9370db;
+    color: #f0e6ff;
 }
 
 #simErrorPopupCancel:hover {
-    background: rgb(170, 50, 40);
-    border: 1px solid rgb(170, 50, 40);
+    background: #bb86fc; /* Lighter purple on hover */
+    border: 1px solid #bb86fc;
+    color: #1a0f26; /* Dark background for contrast */
 }
 
 .equation-editor-overlay {

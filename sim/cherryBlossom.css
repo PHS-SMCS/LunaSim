@@ -109,6 +109,7 @@ a.active {
 .modelCanvas {
     background-color: #fce7f3;
     color: #831843;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .center-btn {

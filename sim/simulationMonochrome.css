@@ -1,4 +1,4 @@
-/* Original Discord Theme */
+/* Original Discord Theme - Monochrome with Dull Green Run Button */
 body {
   background: #575c65;
   box-shadow: none;
@@ -20,29 +20,35 @@ body {
 }
 
 #runButton {
-  background: rgba(45, 114, 82, 0.9);
+  background: rgba(76, 102, 76, 0.9); /* Dull green */
+  color: white;
 }
 
 #runButton:hover {
-  background-color: rgba(26, 73, 51, 0.9);
+  background-color: rgba(92, 118, 92, 0.9); /* Slightly lighter dull green on hover */
+  color: white;
 }
 
 #loadButton,
 #expButton {
-  background: rgba(59, 45, 114, 0.9);
+  background: rgba(60, 65, 70, 0.9); /* Darker gray */
+  color: white;
 }
 
 #loadButton:hover,
 #expButton:hover {
-  background: rgba(32, 24, 64, 0.9);
+  background: rgba(80, 85, 90, 0.9); /* Medium-dark gray on hover */
+  color: white;
 }
 
 #clearButton {
-  background: rgba(114, 45, 45, 0.9);
+  background: rgba(40, 45, 50, 0.9); /* Very dark gray */
+  color: white;
 }
 
 #clearButton:hover {
-  background: rgba(59, 21, 21, 0.9);
+  background: rgba(60, 65, 70, 0.9); /* Darker gray on hover */
+  color: white;
 }
 
 #saveStatus {
@@ -101,6 +107,7 @@ a.active {
 .modelCanvas {
   background-color: #ffffff;
   color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 #myDiagram {
@@ -262,8 +269,8 @@ a.active {
 }
 
 #simErrorPopup {
-  background: rgba(114, 45, 45, 1);
-  border: 1px solid rgb(65, 27, 27);
+  background: rgba(35, 37, 42, 0.95); /* Dark gray background */
+  border: 1px solid #4e525a; /* Medium gray border */
   color: #ffffff;
 }
 
@@ -273,13 +280,15 @@ a.active {
 }
 
 #simErrorPopupCancel {
-  background: rgb(80, 34, 34);
-  border: 1px solid rgb(80, 34, 34);
+  background: #4e525a; /* Medium gray button */
+  border: 1px solid #4e525a;
+  color: white;
 }
 
 #simErrorPopupCancel:hover {
-  background: rgb(52, 20, 20);
-  border: 1px solid rgb(52, 20, 20);
+  background: #636770; /* Lighter gray on hover */
+  border: 1px solid #636770;
+  color: white;
 }
 
 .equation-editor-overlay {

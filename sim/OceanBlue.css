@@ -38,11 +38,13 @@ body {
 }
 
 #clearButton {
-    background: rgba(220, 20, 60, 0.9);
+    background: rgba(32, 99, 155, 0.9); /* Deep ocean blue instead of red */
+    color: #e6f3ff;
 }
 
 #clearButton:hover {
-    background: rgba(160, 15, 45, 0.9);
+    background: rgba(23, 64, 108, 0.9); /* Darker ocean blue on hover */
+    color: #e6f3ff;
 }
 
 #saveStatus {
@@ -101,6 +103,7 @@ a.active {
 .modelCanvas {
     background-color: #ffffff;
     color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 #myDiagram {
@@ -262,24 +265,26 @@ a.active {
 }
 
 #simErrorPopup {
-    background: rgba(220, 20, 60, 1);
-    border: 1px solid rgb(160, 15, 45);
-    color: #ffffff;
+    background: rgba(15, 40, 70, 0.95); /* Deep ocean blue background */
+    border: 1px solid #4682b4; /* Steel blue border */
+    color: #e6f3ff;
 }
 
 #simErrorPopupTitle,
 #simErrorPopupDesc {
-    color: white;
+    color: #e6f3ff;
 }
 
 #simErrorPopupCancel {
-    background: rgb(180, 15, 50);
-    border: 1px solid rgb(180, 15, 50);
+    background: #4682b4; /* Steel blue button */
+    border: 1px solid #4682b4;
+    color: #e6f3ff;
 }
 
 #simErrorPopupCancel:hover {
-    background: rgb(140, 10, 35);
-    border: 1px solid rgb(140, 10, 35);
+    background: #5f9ea0; /* Cadet blue on hover */
+    border: 1px solid #5f9ea0;
+    color: #e6f3ff;
 }
 
 .equation-editor-overlay {
