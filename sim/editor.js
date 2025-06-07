@@ -1022,7 +1022,7 @@ function run() {
                     }
                 }
                 if (!exists) {
-                    document.getElementById("simErrorPopupDesc").innerHTML = "Missing an influence from " + references[j] + " to " + valve.key;
+                    document.getElementById("simErrorPopupDesc").innerHTML = "Missing an influence from " + references[j] + " to " + valve.label;
                     showSimErrorPopup();
                     window.simulationHasRunSuccessfully_tab = false;
                     return;
@@ -1031,7 +1031,7 @@ function run() {
         } else {
             for (var j = 0; j < engineJson.influences.length; j++) {
                 if (engineJson.influences[j].to == valve.key) {
-                    document.getElementById("simErrorPopupDesc").innerHTML = "No references in equation for " + valve.key + ", but influence from " + engineJson.influences[j].from + " exists.";
+                    document.getElementById("simErrorPopupDesc").innerHTML = "No references in equation for " + valve.label + ", but influence from " + engineJson.influences[j].from + " exists.";
                     showSimErrorPopup();
                     window.simulationHasRunSuccessfully_tab = false;
                     return;
