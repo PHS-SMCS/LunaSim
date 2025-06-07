@@ -139,16 +139,17 @@ a.active {
     color: #e6f3ff;
 }
 
+/* Ocean-themed unique border colors for equation editor boxes */
 .eqStockBox input {
-    border: 1px solid #b8860b;
+    border: 1px solid #20b2aa; /* Light Sea Green - represents stored ocean resources */
 }
 
 .eqVariableBox input {
-    border: 1px solid #228b22;
+    border: 1px solid #00bfff; /* Deep Sky Blue - represents dynamic ocean variables */
 }
 
 .eqFlowBox input {
-    border: 1px solid #2d5a87;
+    border: 1px solid #2d5a87; /* Steel Blue - represents ocean currents and flows */
 }
 
 .equation-editor-table thead th {

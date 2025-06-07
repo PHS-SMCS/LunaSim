@@ -130,16 +130,17 @@ a.active {
     color: #fce4ec;
 }
 
+/* Pink-themed unique border colors for equation editor boxes */
 .eqStockBox input {
-    border: 1px solid #ff9800;
+    border: 1px solid #ff69b4; /* Hot Pink - represents stored pink resources */
 }
 
 .eqVariableBox input {
-    border: 1px solid #4caf50;
+    border: 1px solid #ff1493; /* Deep Pink - represents dynamic pink variables */
 }
 
 .eqFlowBox input {
-    border: 1px solid #e91e63;
+    border: 1px solid #e91e63; /* Pink - represents pink flows (kept existing) */
 }
 
 .equation-editor-table thead th {

@@ -148,20 +148,21 @@ a.active {
     color: #495057;
 }
 
+/* Light minimal-themed unique border colors for equation editor boxes */
 .eqStockBox input {
-    border: 1px solid #ffc107;
+    border: 1px solid #17a2b8; /* Info Blue - represents stored information */
 }
 
 .eqVariableBox input {
-    border: 1px solid #28a745;
+    border: 1px solid #28a745; /* Success Green - represents dynamic variables */
 }
 
 .eqFlowBox input {
-    border: 1px solid #6c757d;
+    border: 1px solid #6c757d; /* Secondary Gray - represents neutral flows (kept existing) */
 }
 
 .equation-editor-table thead th {
-    background-color: #FFFFFF;
+    background-color: #ffffff;
 }
 
 .nncheckbox,

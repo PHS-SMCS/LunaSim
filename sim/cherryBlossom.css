@@ -21,28 +21,34 @@ body {
 
 #runButton {
     background: rgba(34, 139, 34, 0.9);
+    color: white;
 }
 
 #runButton:hover {
     background-color: rgba(25, 100, 25, 0.9);
+    color: white;
 }
 
 #loadButton,
 #expButton {
     background: rgba(233, 30, 99, 0.8);
+    color: white;
 }
 
 #loadButton:hover,
 #expButton:hover {
     background: rgba(194, 24, 91, 0.9);
+    color: white;
 }
 
 #clearButton {
     background: rgba(173, 20, 87, 0.8);
+    color: white;
 }
 
 #clearButton:hover {
     background: rgba(136, 14, 79, 0.9);
+    color: white;
 }
 
 #saveStatus {
@@ -139,16 +145,17 @@ a.active {
     color: #831843;
 }
 
+/* Cherry blossom-themed unique border colors for equation editor boxes */
 .eqStockBox input {
-    border: 1px solid #ff9800;
+    border: 1px solid #be185d; /* Deep Rose Pink - represents stored cherry blossom resources */
 }
 
 .eqVariableBox input {
-    border: 1px solid #4caf50;
+    border: 1px solid #ec407a; /* Medium Pink - represents blooming variables */
 }
 
 .eqFlowBox input {
-    border: 1px solid #f8bbd9;
+    border: 1px solid #f8bbd9; /* Soft Pink - represents gentle flows (kept existing) */
 }
 
 .equation-editor-table thead th {

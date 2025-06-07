@@ -135,16 +135,17 @@ a.active {
     color: #ffebee;
 }
 
+/* Red-themed unique border colors for equation editor boxes with more distinction */
 .eqStockBox input {
-    border: 1px solid #ff9800;
+    border: 1px solid #ff9800; /* Amber/Orange - represents stored energy/resources */
 }
 
 .eqVariableBox input {
-    border: 1px solid #4caf50;
+    border: 1px solid #ffeb3b; /* Yellow - represents dynamic changing variables */
 }
 
 .eqFlowBox input {
-    border: 1px solid #f44336;
+    border: 1px solid #f44336; /* Material Red - represents red flows (kept existing) */
 }
 
 .equation-editor-table thead th {

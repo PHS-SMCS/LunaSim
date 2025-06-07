@@ -1,3 +1,4 @@
+/* Original Discord Theme */
 body {
   background: #575c65;
   box-shadow: none;
@@ -61,7 +62,6 @@ body {
 
 .modelViewer {
   background: #43454c;
-  
 }
 
 .toolbar ul,
@@ -78,7 +78,7 @@ body {
 }
 
 a {
-  color: #FFF;
+  color: #fff;
 }
 
 a:hover,
@@ -139,34 +139,38 @@ a.active {
   color: #ffffff;
 }
 
+/* Discord-themed unique border colors for equation editor boxes */
 .eqStockBox input {
-  border: 1px solid #847640;
+  border: 1px solid #ffffff; /* White - represents stored Discord resources */
 }
 
 .eqVariableBox input {
-  border: 1px solid #3b773d;
+  border: 1px solid #99aab5; /* Discord Light Gray - represents dynamic variables */
 }
 
 .eqFlowBox input {
-  border: 1px solid #4c5570;
+  border: 1px solid #4c5570; /* Discord Dark Gray - represents flows (kept existing) */
 }
 
 .equation-editor-table thead th {
   background-color: #2f3136;
 }
 
-.nncheckbox, .yAxisCheckbox {
+.nncheckbox,
+.yAxisCheckbox {
   accent-color: #4c5570;
   background-color: #2b2e35;
   border: 2px solid #4c5570;
 }
 
-.nncheckbox:checked, .yAxisCheckbox:checked {
+.nncheckbox:checked,
+.yAxisCheckbox:checked {
   background-color: #4c5570;
   border-color: #4c5570;
 }
 
-.nncheckbox:hover, .yAxisCheckbox:hover {
+.nncheckbox:hover,
+.yAxisCheckbox:hover {
   border-color: #ffffff;
 }
 
@@ -263,7 +267,8 @@ a.active {
   color: #ffffff;
 }
 
-#simErrorPopupTitle, #simErrorPopupDesc {
+#simErrorPopupTitle,
+#simErrorPopupDesc {
   color: white;
 }
 

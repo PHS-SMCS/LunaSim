@@ -139,16 +139,17 @@ a.active {
     color: #f0e6ff;
 }
 
+/* Purple cosmic-themed unique border colors for equation editor boxes */
 .eqStockBox input {
-    border: 1px solid #f39c12;
+    border: 1px solid #bb86fc; /* Light Purple - represents cosmic stored energy */
 }
 
 .eqVariableBox input {
-    border: 1px solid #2ecc71;
+    border: 1px solid #4a148c; /* Deep Purple - represents dynamic cosmic variables */
 }
 
 .eqFlowBox input {
-    border: 1px solid #6a4c93;
+    border: 1px solid #6a4c93; /* Medium Purple - represents cosmic flows (kept existing) */
 }
 
 .equation-editor-table thead th {

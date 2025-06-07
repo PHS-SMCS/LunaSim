@@ -139,16 +139,17 @@ a.active {
     color: #e8f5e8;
 }
 
+/* Forest green-themed unique border colors for equation editor boxes */
 .eqStockBox input {
-    border: 1px solid #daa520;
+    border: 1px solid #228b22; /* Forest Green - represents stored forest resources */
 }
 
 .eqVariableBox input {
-    border: 1px solid #32cd32;
+    border: 1px solid #32cd32; /* Lime Green - represents growing forest variables */
 }
 
 .eqFlowBox input {
-    border: 1px solid #4a6741;
+    border: 1px solid #4a6741; /* Dark Forest Green - represents forest flows (kept existing) */
 }
 
 .equation-editor-table thead th {

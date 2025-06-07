@@ -139,16 +139,17 @@ a.active {
     color: #fff5e6;
 }
 
+/* Sunset orange-themed unique border colors for equation editor boxes */
 .eqStockBox input {
-    border: 1px solid #daa520;
+    border: 1px solid #ff8c00; /* Dark Orange - represents stored sunset energy */
 }
 
 .eqVariableBox input {
-    border: 1px solid #32cd32;
+    border: 1px solid #ffa500; /* Orange - represents dynamic sunset variables */
 }
 
 .eqFlowBox input {
-    border: 1px solid #8b5a2b;
+    border: 1px solid #8b5a2b; /* Brown Orange - represents sunset flows (kept existing) */
 }
 
 .equation-editor-table thead th {
