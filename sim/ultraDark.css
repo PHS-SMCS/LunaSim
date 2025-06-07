@@ -387,3 +387,121 @@ a.active {
 .close-popup {
     color: #ffffff; /* Changed from #999999 */
 }
+/* Apex Charts hover tooltip styling - with proper color markers */
+
+/* Main tooltip container */
+.apexcharts-tooltip {
+    background: #000000 !important;
+    border: 1px solid #333333 !important;
+    color: #ffffff !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* All text elements inside tooltip */
+.apexcharts-tooltip * {
+    color: #ffffff !important;
+}
+
+/* Title section of tooltip */
+.apexcharts-tooltip-title {
+    background: #1a1a1a !important;
+    color: #ffffff !important;
+    border-bottom: 1px solid #333333 !important;
+    font-weight: bold !important;
+}
+
+/* Series group container */
+.apexcharts-tooltip-series-group {
+    background: #000000 !important;
+    padding: 8px !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+/* Make sure the series group is visible */
+.apexcharts-tooltip-series-group.apexcharts-active {
+    display: flex !important;
+    opacity: 1 !important;
+}
+
+/* Fix for the color marker/dot - REMOVE background override */
+.apexcharts-tooltip-marker {
+    width: 12px !important;
+    height: 12px !important;
+    display: inline-block !important;
+    margin-right: 8px !important;
+    border-radius: 50% !important;
+    /* REMOVED: background: #ffffff !important; - this was forcing white */
+    /* Let Apex Charts set the color dynamically */
+}
+
+/* Text elements */
+.apexcharts-tooltip-text {
+    color: #ffffff !important;
+}
+
+.apexcharts-tooltip-text-label,
+.apexcharts-tooltip-text-value {
+    color: #ffffff !important;
+}
+
+/* X-axis tooltip/crosshair label */
+.apexcharts-xaxistooltip {
+    background: #000000 !important;
+    border: 1px solid #333333 !important;
+    color: #ffffff !important;
+    font-weight: normal !important;
+    padding: 5px 10px !important;
+    opacity: 1 !important;
+}
+
+.apexcharts-xaxistooltip-bottom:before,
+.apexcharts-xaxistooltip-bottom:after {
+    border-bottom-color: #000000 !important;
+}
+
+/* Y-axis tooltip */
+.apexcharts-yaxistooltip {
+    background: #000000 !important;
+    border: 1px solid #333333 !important;
+    color: #ffffff !important;
+}
+
+.apexcharts-yaxistooltip-left:before,
+.apexcharts-yaxistooltip-left:after {
+    border-left-color: #000000 !important;
+}
+
+.apexcharts-yaxistooltip-right:before,
+.apexcharts-yaxistooltip-right:after {
+    border-right-color: #000000 !important;
+}
+
+/* Make sure all text in tooltips is white */
+.apexcharts-xaxistooltip *,
+.apexcharts-yaxistooltip * {
+    color: #ffffff !important;
+}
+
+/* Fix for tooltip arrow */
+.apexcharts-tooltip-arrow {
+    border-color: #000000 !important;
+}
+
+/* Additional specificity for nested elements - but exclude marker background */
+.apexcharts-tooltip .apexcharts-tooltip-title,
+.apexcharts-tooltip .apexcharts-tooltip-series-group,
+.apexcharts-tooltip .apexcharts-tooltip-text,
+.apexcharts-tooltip .apexcharts-tooltip-text-label,
+.apexcharts-tooltip .apexcharts-tooltip-text-value {
+    color: #ffffff !important;
+}
+
+/* Make sure we don't override the marker's dynamic background color */
+.apexcharts-tooltip .apexcharts-tooltip-marker {
+    /* Only set dimensions and spacing, not background color */
+    width: 12px !important;
+    height: 12px !important;
+    margin-right: 8px !important;
+    border-radius: 50% !important;
+}
