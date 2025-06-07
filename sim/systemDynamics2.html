@@ -37,13 +37,13 @@
   <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
   <!-- Override CSS w/ Dark Mode Theme -->
   <link rel="stylesheet" href="simulation_dark.css" disabled="disabled" id="darkThemeCSS">
-  
+
   <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script id="code" type="module" src="editor.js"></script>
     <script id="code2" type="module" src="translator.js"></script>
     <script id="code3" type="module" src="engine.js"></script>
     <script id="code4" type="module" src="tabsManagement2.js"></script>
-    
+
     <div id="sample">
       <div id ="header">
         <div class="actions">
@@ -59,7 +59,7 @@
 
         <img id="logoImage" src="../img/lunaLogo.svg" alt="LunaSim Logo" />
       </div>
-      
+
 
       <div class="tabBar">
           <button class="tabButton" id="modelBtn">Model View</button>
@@ -144,13 +144,13 @@
 
         <div class="chartCanvas">
           <div id="display">
-            
+
             <div id="chart" style="width: 100%;"></div>
             <div id = "datatable">
             </div>
           </div>
         </div>
-        
+
 
 
         <div class="chartEditor">
@@ -216,7 +216,7 @@
             </label>
           </label>
         </div>
-        
+
         <button class="setting-button" onclick="closeSettings('settingsPopup')">Apply Settings</button>
         <p id="validationMessage" class="validation-message hidden">* Please don't leave boxes empty</p>
       </div>
@@ -241,9 +241,9 @@
             <option value="oblue">Ocean Blue</option>
             <option value="cpurple">Cosmic Purple</option>
             <option value="bpink">Bubblegum Pink</option>
-            <option value="mlight">Minimal Light</option> 
-            <option value="rduck">Rubber Duck</option> 
-            <option value="udark">Ultra Dark</option> 
+            <option value="mlight">Minimal Light</option>
+            <option value="rduck">Rubber Duck</option>
+            <option value="udark">Ultra Dark</option>
           </select>
           <label for="simulationFont">Font</label>
           <select id="simulationFont" class="settings-dropdown" style="width: 80%;">
@@ -273,7 +273,8 @@
         <form id="tabConfig" name = "tabConfig" onsubmit="return false"> <!-- Will not refresh page -->
           <div class="setting-group">
             <label for="tab_name">Visual Name</label>
-            <input type="text" id="tab_name" name="tab_name" class="settings-input" placeholder="e.g., Population Chart" required />
+            <input type="text" id="tab_name" name="tab_name" class="settings-input" placeholder="e.g., Population Chart" autocomplete="off" />
+            <p id="nameValidation" class="validation-message hidden">* Please enter a visual name.</p>
           </div>
           <div class="setting-group">
             <label for="model_type">Type</label>
@@ -282,7 +283,7 @@
               <option value="table">Table</option>
             </select>
           </div>
-          <div class="setting-group">
+          <div class="setting-group" id="xAxisGroup">
             <label for="xAxis">X-Axis</label>
             <select name="xAxis" id="xAxis" style="font-size: inherit; width: 60%;" required>
               <!-- Options initialized dynamically -->
@@ -294,7 +295,7 @@
               <!-- Multiple checkboxes initialized dynamically -->
             </table>
           </div>
-          <button id="submitModel" onclick="closeSettings('chartsPopup')">Create New Tab</button>
+          <button id="submitModel">Create New Tab</button>
         </form>
       </div>
       </div>
@@ -319,7 +320,7 @@
 
         <div id="imageSettingsSection" style="display: none;">
           <hr class="settings-divider">
-          <div class="setting-group">    
+          <div class="setting-group">
             <label for="imageMargin" class="dotted-underline">Image Margin</label>
             <input type="text" id="imageMargin" class="px-visual-input settings-input" placeholder="Enter margin..." value="15" style="width: 65%;" autocomplete="off">
           </div>
@@ -342,7 +343,7 @@
       </div>
 
 
-      
+
 
       <!-- ================== Equation Editor Popup ================== -->
       <div id="equationEditorOverlay" class="equation-editor-overlay" onclick="closePopup()"></div>
@@ -365,7 +366,7 @@
         </div>
         <div id="switchThemeButton"></div>
         <div id="closeNewTabPopup"></div>
-        
+
         <button class="tablinks" id="defaultOpen">Model View</button>
         <button class="tablinks" id="secondaryOpen">Charts/Tables</button>
         <div id ="tabName"></div>
@@ -859,29 +860,29 @@ document.addEventListener("DOMContentLoaded", () => {
       if (selected === 'monochrome') {
         themeHref = 'simulationMonochrome.css';
       } else if (selected === 'classic') {
-        themeHref = 'simulationClassic.css'; 
+        themeHref = 'simulationClassic.css';
       } else if (selected === 'mlight') {
-        themeHref = 'minimalLight.css'; 
+        themeHref = 'minimalLight.css';
       } else if (selected === 'oblue') {
-        themeHref = 'OceanBlue.css'; 
+        themeHref = 'OceanBlue.css';
       } else if (selected === 'sorange') {
-        themeHref = 'sunsetOrange.css'; 
+        themeHref = 'sunsetOrange.css';
       } else if (selected === 'fgreen') {
-        themeHref = 'forestGreen.css'; 
+        themeHref = 'forestGreen.css';
       } else if (selected === 'cpurple') {
-        themeHref = 'cosmicPurple.css'; 
+        themeHref = 'cosmicPurple.css';
       } else if (selected === 'bpink') {
-        themeHref = 'bubblegumPink.css'; 
+        themeHref = 'bubblegumPink.css';
       } else if (selected === 'cred') {
-        themeHref = 'cherryRed.css'; 
+        themeHref = 'cherryRed.css';
       } else if (selected === 'cblossom') {
-        themeHref = 'cherryBlossom.css'; 
+        themeHref = 'cherryBlossom.css';
       } else if (selected === 'nvoid') {
-        themeHref = 'nebulaVoid.css'; 
+        themeHref = 'nebulaVoid.css';
       } else if (selected === 'udark') {
-        themeHref = 'ultraDark.css'; 
+        themeHref = 'ultraDark.css';
       } else if (selected === 'rduck') {
-        themeHref = 'rubberDuck.css'; 
+        themeHref = 'rubberDuck.css';
       } else {
         themeHref = '';
       }
