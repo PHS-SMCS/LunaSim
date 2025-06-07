@@ -568,9 +568,9 @@ function updateChartStats(index) {
     <p><strong>X-Axis:</strong> ${xAxis}</p>
     <p><strong>Y-Axis:</strong> ${yAxis}</p>
     <hr>
-    <p><strong>Start Time:</strong> ${startTime}s</p>
-    <p><strong>End Time:</strong> ${endTime}s</p>
-    <p><strong>dt (Interval):</strong> ${dt}s</p>
+    <p><strong>Start Time:</strong> ${startTime}</p>
+    <p><strong>End Time:</strong> ${endTime}</p>
+    <p><strong>dt (Interval):</strong> ${dt}</p>
     <p><strong>Step Count:</strong> ${Math.round(stepCount)}</p>
     <p><strong>Integration Method:</strong> ${methodDisplay}</p>
   `;

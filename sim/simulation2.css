@@ -193,7 +193,7 @@ input, button, select {
 .tabBar {
   position: absolute;
   top: calc(5vh - 1.5rem);
-  left: 0;
+  left: -4px;
   display: flex;
   gap: 0rem;
   z-index: 0;
@@ -672,6 +672,7 @@ a.active {
 .chartEditor-middle {
   flex-grow: 1;
   margin-bottom: 1rem;
+  overflow: hidden;
 }
 
 .chart-stats p {
