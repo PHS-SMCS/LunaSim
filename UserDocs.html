@@ -131,7 +131,6 @@
   </div></div></div>
 
   <div class="tutorialContainer"><div id="nodeLinkReference" class="tutorialBox"><div class="tutorialContents">
-    <div class="tutorialImage"><img src="Placeholder.jpg"></div>
     <div class="tutorialInfo">
       <h1>Node/Link Reference</h1>
       <h3>Nodes</h3>
@@ -145,97 +144,72 @@
   </div></div></div>
 
   <div class="tutorialContainer"><div id="stocks" class="tutorialBox"><div class="tutorialContents">
-    <div class="tutorialImage"><img src="Placeholder.jpg"></div>
+    <div class="tutorialImage"><img src="img/Stock.gif"></div>
     <div class="tutorialInfo">
       <h1>Stocks</h1>
-      <p>Stocks are the foundational components in system dynamics. They store values that accumulate over time (e.g., the number of people in a population).</p>
-      <p>1. Click the Stock button.</p>
-      <p>2. Click anywhere in the canvas (build area) to place the stock. It appears as a rectangle.</p>
-      <p>3. To rename the stock, double-click the text below it and enter a descriptive name.</p>
-      <p>4. To move it, simply click and drag the stock around the canvas.</p>
-      <p>5. To delete, click the stock once to select it and press Backspace.</p>
-    </div>
-  </div></div></div>
-
-  <div class="tutorialContainer"><div id="clouds" class="tutorialBox"><div class="tutorialContents">
-    <div class="tutorialImage"><img src="Placeholder.jpg"></div>
-    <div class="tutorialInfo">
-      <h1>Clouds</h1>
-      <p>Clouds represent sources or sinks that can send or absorb flows without limit. Use them to start or end flow connections.</p>
-      <p>1. Click the Cloud button.</p>
-      <p>2. Click anywhere in the canvas (build area) to place the cloud. It appears as a cloud. </p>
-      <p>3. To move it, simply click and drag the cloud around the canvas. </p>
-      <p>4. To delete, click the cloud once to select it and press Backspace</p>
-    </div>
-  </div></div></div>
-
-  <div class="tutorialContainer"><div id="variables" class="tutorialBox"><div class="tutorialContents">
-    <div class="tutorialImage"><img src="Placeholder.jpg"></div>
-    <div class="tutorialInfo">
-      <h1>Variables</h1>
-      <p>Variables (also called converters) are used to calculate values based on other components. These appear as circles and are recalculated every time step.</p>
-      <p>1. Click the Variable button.</p>
-      <p>2. Click anywhere in the canvas (build area) to place the variable. It appears as a circle.</p>
-      <p>3. To rename the variable, double-click the text below it and enter a descriptive name.</p>
-      <p>4. To move it, simply click and drag the variable around the canvas.</p>
-      <p>5. To delete, click the variable once to select it and press Backspace.</p>
+      <p>
+        In LunaSim system dynamics, a stock represents a quantity that accumulates or depletes over time. It’s like a container that holds something measurable (such as population, water, money, or energy) and changes based on the flows going in or out. Stocks provide the memory of the system and are essential for modeling how systems evolve over time. Equations can be used to define the values of stocks or influence how they change during the simulation. In addition, checking a stock as Uniflow/NN restricts it to change through a single flow and prevents its value from dropping below zero. This option is useful for modeling quantities like population or money, where negative values wouldn’t make sense.
+      </p>
     </div>
   </div></div></div>
 
   <div class="tutorialContainer"><div id="flows" class="tutorialBox"><div class="tutorialContents">
-    <div class="tutorialImage"><img src="Placeholder.jpg"></div>
+    <div class="tutorialImage"><img src="img/Flow.gif"></div>
     <div class="tutorialInfo">
       <h1>Flows</h1>
-      <p>Flows indicate changes in stocks and represent how fast something is increasing or decreasing.</p>
-      <p>1. Click the Flow button.</p>
-      <p>2. Click on a source element (stock or cloud). </p>
-      <p>3. Drag to a destination element (stock or cloud).</p>
-      <p>4. A straight arrow will appear, labeled with the flow name. </p>
-      <p>5. To rename the flow, double-click the text below it and enter a descriptive name.</p>
-      <p>6. To delete, click the flow once to select it and press Backspace.</p>
+      <p>A flow represents the rate at which a stock increases or decreases over time. Flows control how quickly quantities move into or out of stocks and can be defined using equations. They can connect stocks to other stocks or to clouds (which represent sources or sinks outside the system). The valve symbol in the middle of a flow visually represents its equation, showing that the flow’s rate is controlled by that mathematical expression. Checking a flow as Uniflow/NN means it can only act in one direction (indicated by a single arrow) and its value cannot go below zero, helping keep the model realistic by preventing negative flow rates.</p>
+    </div>
+  </div></div></div>
+
+  <div class="tutorialContainer"><div id="clouds" class="tutorialBox"><div class="tutorialContents">
+    <div class="tutorialImage"><img src="img/Cloud.gif"></div>
+    <div class="tutorialInfo">
+      <h1>Clouds</h1>
+      <p>A cloud represents a source or sink outside the system. Clouds show where quantities enter or leave the system but aren’t tracked inside as stocks. They can be connected to stocks using flows, but unlike stocks and flows, clouds have no equations and won’t appear in the equation editor. This makes them simple markers for inputs or losses coming from or going to the environment.</p>
+    </div>
+  </div></div></div>
+
+  <div class="tutorialContainer"><div id="variables" class="tutorialBox"><div class="tutorialContents">
+    <div class="tutorialImage"><img src="img/Variable.gif"></div>
+    <div class="tutorialInfo">
+      <h1>Variables</h1>
+      <p>Variables hold quantities or values that can be used throughout the model. Examples include average temperature, interest rate, birth rate, or fuel consumption rate, each representing a finite, measurable quantity. Variables can be referenced in other equations by placing their name in brackets, like [Variable1]. However, to properly link a variable to another part of the model, you must use an influence, which shows how the variable affects or controls that element. This ensures the relationships between variables and other components are clear and correctly calculated.</p>
     </div>
   </div></div></div>
 
   <div class="tutorialContainer"><div id="influences" class="tutorialBox"><div class="tutorialContents">
-    <div class="tutorialImage"><img src="Placeholder.jpg"></div>
+    <div class="tutorialImage"><img src="img/Influence.gif"></div>
     <div class="tutorialInfo">
       <h1>Influences</h1>
-      <p>Influences are curved arrows showing which elements affect others in equations.</p>
-      <p>1. Click the Influence button.</p>
-      <p>2. Click a source element (stock, variable, or flow).</p>
-      <p>3. Drag to a destination element (variable or flow).</p>
-      <p>4. To bend the arrow, click the middle point and drag to adjust the curve.</p>
+      <p>Influences are visual indicators showing that a variable is referenced in the equation of another node or flow. They represent the dependencies between components, ensuring the model knows how values affect each other. To reference a variable in an equation, you must have the proper influence connection; otherwise, the model will throw a simulation error. Influences can connect variable-to-variable, variable-to-flow, stock-to-variable, stock-to-flow, flow-to-variable, or flow-to-flow, allowing for flexible and accurate relationships throughout the system.</p>
     </div>
   </div></div></div>
 
   <div class="tutorialContainer"><div id="equations" class="tutorialBox"><div class="tutorialContents">
-    <div class="tutorialImage"><img src="Placeholder.jpg"></div>
+    <div class="tutorialImage"><img src="img/EquationEditor.gif"></div>
     <div class="tutorialInfo">
       <h1>Equation Editor</h1>
-      <p>This table-based interface lets you define the behavior of your model by entering equations and settings.</p>
-      <p>Type: Indicates whether the element is a stock, flow, or variable.</p>
-      <p>Name: The label used for referencing in equations.</p>
-      <p>Equation: Mathematical expression that defines how the element behaves.</p>
-      <p>Uniflow/Nonnegative: Checkbox used to restrict flows to only positive values.</p>
-      <p>Changes in the model are automatically reflected in this table and vice versa.</p>
+      <p>The Equation Editor is where you define how stocks, flows, and variables behave. By selecting a node and opening the editor, you can enter or edit its equation, change its name, and, for stocks and flows, check the Uniflow/NN option if needed. You can reference other nodes or links by typing their names inside brackets (e.g., [Population]), as long as a proper influence connection exists. The editor also supports logic using the ternary operator (condition ? valueIfTrue : valueIfFalse), allowing you to create conditional equations for more dynamic system behavior.</p>
     </div>
   </div></div></div>
 
   <div class="tutorialContainer"> <div id="math" class="tutorialBox"><div class="tutorialContents">
-    <div class="tutorialImage"><img src="Placeholder.jpg"></div>
+    <div class="tutorialImage"><img src="img/Math Functions.gif"></div>
     <div class="tutorialInfo">
       <h1>Java Math Class</h1>
-      <p>You can use many mathematical functions in your equations (a dropdown menu for functions will appear when typing):</p>
-      <p>Arithmetic: +, -, *, /</p>
-      <p>Conditionals: if(condition) {trueResult} else {falseResult}</p>
-      <p>Trigonometry: sin(), cos(), tan()</p>
-      <p>Exponentials and Logs: exp(), log()</p>
-      <p>Other functions: max(), min(), sqrt(), etc.</p>
+      <p>In LunaSim, you can also use Java math functions within equations to perform advanced mathematical operations:<br>Trigonometric Functions: sin(), cos(), tan(), asin(), acos(), atan(), atan2()<br>
+        Hyperbolic Functions: sinh(), cosh(), tanh()<br>
+        Exponential and Logarithmic Functions: exp(), log(), log10(), expm1(), log1p()<br>
+        Root and Power Functions: sqrt(), cbrt(), pow()<br>
+        Absolute and Rounding Functions: abs(), ceil(), floor(), round()<br>
+        Statistical and Comparison Functions: max(), min(), sign()<br>
+        Random Function: random()<br>
+      </p>
     </div>
   </div></div></div>
 
   <div class="tutorialContainer"><div id="parameters" class="tutorialBox"><div class="tutorialContents">
-    <div class="tutorialImage"><img src="Placeholder.jpg"></div>
+    <div class="tutorialImage"><img src="img/Simulation Parameters.gif"></div>
     <div class="tutorialInfo">
       <h1>Simulation Parameters</h1>
       <p>Before running a simulation, you must configure:</p>
@@ -248,6 +222,7 @@
   </div></div></div>
 
   <div class="tutorialContainer"><div id="ghosting" class="tutorialBox"><div class="tutorialContents">
+    <div class="tutorialImage"><img src="img/Ghosting.png"></div>
     <div class="tutorialInfo">
       <h1>Ghosting</h1>
       <p>Ghosts are visual duplicates of existing elements, used to clean up complex diagrams.</p>
