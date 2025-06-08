@@ -1,366 +1,370 @@
-/* Ocean Blue Theme */
+/* Rubber Ducky Theme */
 body {
-    background: #1a2332;
+    background: #ffcc00; /* Yellow background */
     box-shadow: none;
 }
 
 #model_name {
-    background-color: #0f1419;
-    border: 1px solid #2d5a87;
-    color: #e6f3ff;
+    background-color: #ff9900; /* Orange */
+    border: 1px solid #ff6600; /* Darker orange */
+    color: #000000; /* Black text for contrast */
 }
 
 .actionButton {
-    background-color: rgba(45, 85, 135, 0.6);
-    color: #e6f3ff;
+    background-color: rgba(255, 153, 0, 0.6); /* Semi-transparent orange */
+    color: #000000;
 }
 
 .actionButton:hover {
-    background-color: #1e3a52;
+    background-color: #ff6600; /* Darker orange on hover */
 }
 
 #runButton {
-    background: rgba(34, 139, 34, 0.9);
+    background: rgba(255, 153, 0, 0.9); /* Orange run button */
 }
 
 #runButton:hover {
-    background-color: rgba(25, 100, 25, 0.9);
+    background-color: rgba(255, 102, 0, 0.9); /* Darker orange on hover */
 }
 
 #loadButton,
 #expButton {
-    background: rgba(70, 130, 180, 0.9);
+    background: rgba(255, 204, 0, 0.9); /* Yellow */
 }
 
 #loadButton:hover,
 #expButton:hover {
-    background: rgba(50, 90, 130, 0.9);
+    background: rgba(255, 153, 0, 0.9); /* Orange on hover */
 }
 
 #clearButton {
-    background: rgba(32, 99, 155, 0.9); /* Deep ocean blue instead of red */
-    color: #e6f3ff;
+    background: rgba(255, 102, 0, 0.9); /* Darker orange */
+    color: #000000;
 }
 
 #clearButton:hover {
-    background: rgba(23, 64, 108, 0.9); /* Darker ocean blue on hover */
-    color: #e6f3ff;
+    background: rgba(204, 82, 0, 0.9); /* Even darker orange on hover */
+    color: #000000;
 }
 
 #saveStatus {
-    color: #e6f3ff;
+    color: #000000;
 }
 
 .tabButton {
-    color: #e6f3ff;
-    background-color: #0f1419;
+    color: #000000;
+    background-color: #ff9900; /* Orange tabs as requested */
     box-shadow: none;
 }
 
 .tabButton.active {
-    background-color: #1e3a52;
+    background-color: #ff6600; /* Darker orange for active tab */
     box-shadow: none;
 }
 
 .modelViewer {
-    background: #1e3a52;
+    background: #ffcc00; /* Yellow */
 }
 
+/* Toolbar - Orange as requested */
 .toolbar ul,
 .chartSidebar ul {
-    background-color: #0f1419;
+    background-color: #ff9900; /* Orange toolbar */
 }
 
 .settings-section {
-    border-top: 1px solid #2d5a87;
+    border-top: 1px solid #ff6600; /* Darker orange */
 }
 
 .graphTabsActive {
-    background-color: #2d5a87 !important;
+    background-color: #ff9900 !important; /* Orange active tabs */
 }
 
 a {
-    color: #87ceeb;
+    color: #ff6600; /* Darker orange links */
 }
 
 a:hover,
 a:focus {
-    background-color: #2d5a87;
+    background-color: #ff9900; /* Orange on hover */
 }
 
 a span {
-    background-color: #2d5a87;
+    background-color: #ff9900; /* Orange */
 }
 
 a span:before {
-    background-color: #2d5a87;
+    background-color: #ff9900; /* Orange */
 }
 
 a.active {
-    background-color: #2d5a87;
+    background-color: #ff9900; /* Orange */
 }
 
 .modelCanvas {
-    background-color: #ffffff;
-    color: white;
+    background-color: #ffffff; /* White */
+    color: #000000;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
+/* GoJS Canvas - White as requested */
 #myDiagram {
-    background-color: white;
+    background-color: #ffffff; /* White GoJS canvas */
 }
 
 .center-btn {
-    background-color: #0f1419;
-    color: #e6f3ff;
+    background-color: #ff9900; /* Orange */
+    color: #000000;
 }
 
 .center-btn:hover i {
-    color: #87ceeb;
+    color: #ff6600; /* Darker orange on hover */
 }
 
+/* Equation Editor - Orange as requested */
 #eqEditor {
-    background-color: #0f1419;
-    color: #e6f3ff;
+    background-color: #ff9900; /* Orange equation editor */
+    color: #000000;
 }
 
 .equation-editor-zoom-icon {
-    color: #e6f3ff;
+    color: #000000;
 }
 
 .equation-editor-zoom-icon:hover {
-    color: #2d5a87;
+    color: #ff6600; /* Darker orange on hover */
 }
 
 .equation-editor-table th {
-    background-color: #0f1419;
+    background-color: #ff9900; /* Orange */
 }
 
 .eqTableInputBox {
-    background-color: #0a0e13;
-    border: 1px solid #2d5a87;
-    color: #e6f3ff;
+    background-color: #ffcc00; /* Yellow */
+    border: 1px solid #ff6600; /* Darker orange */
+    color: #000000;
 }
 
-/* Ocean-themed unique border colors for equation editor boxes */
+/* Rubber ducky themed unique border colors for equation editor boxes */
 .eqStockBox input {
-    border: 1px solid #20b2aa; /* Light Sea Green - represents stored ocean resources */
+    border: 1px solid #ff6600; /* Darker orange - represents duck bill */
 }
 
 .eqVariableBox input {
-    border: 1px solid #00bfff; /* Deep Sky Blue - represents dynamic ocean variables */
+    border: 1px solid #ffcc00; /* Yellow - represents duck body */
 }
 
 .eqFlowBox input {
-    border: 1px solid #2d5a87; /* Steel Blue - represents ocean currents and flows */
+    border: 1px solid #ff9900; /* Orange - represents duck feet */
 }
 
 .equation-editor-table thead th {
-    background-color: #0f1419;
+    background-color: #ff9900; /* Orange */
 }
 
 .nncheckbox,
 .yAxisCheckbox {
-    accent-color: #2d5a87;
-    background-color: #0a0e13;
-    border: 2px solid #2d5a87;
+    accent-color: #ff9900; /* Orange */
+    background-color: #ffcc00; /* Yellow */
+    border: 2px solid #ff6600; /* Darker orange */
 }
 
 .nncheckbox:checked,
 .yAxisCheckbox:checked {
-    background-color: #2d5a87;
-    border-color: #2d5a87;
+    background-color: #ff9900; /* Orange */
+    border-color: #ff6600; /* Darker orange */
 }
 
 .nncheckbox:hover,
 .yAxisCheckbox:hover {
-    border-color: #87ceeb;
+    border-color: #ff6600; /* Darker orange */
 }
 
+/* Charts - Orange as requested */
 .chartViewer {
-    background: #1e3a52;
+    background: #ff9900; /* Orange */
 }
 
 .chartCanvas {
-    background-color: #ffffff;
-    color: black;
+    background-color: #ffffff; /* White */
+    color: #000000;
 }
 
 .chartEditor {
-    background-color: #0f1419;
-    color: #e6f3ff;
+    background-color: #ff9900; /* Orange */
+    color: #000000;
 }
 
 .chart-stats p {
-    color: #b0c4de;
+    color: #000000;
 }
 
 .chartEditor hr {
-    border-top: 1px solid #2d5a87;
+    border-top: 1px solid #ff6600; /* Darker orange */
 }
 
 .chart-btn {
-    background-color: #0a0e13;
-    border: 1px solid #2d5a87;
-    color: #e6f3ff;
+    background-color: #ffcc00; /* Yellow */
+    border: 1px solid #ff6600; /* Darker orange */
+    color: #000000;
 }
 
 .chart-btn:hover {
-    background-color: #2d5a87;
+    background-color: #ff9900; /* Orange on hover */
 }
 
 #overlay {
-    background-color: rgba(0, 20, 40, 0.85);
+    background-color: rgba(255, 204, 0, 0.85); /* Semi-transparent yellow */
 }
 
 .settings-header h2,
 .close-btn,
 .setting-group {
-    color: #e6f3ff;
+    color: #000000;
 }
 
 .close-btn:hover {
-    color: #2d5a87;
+    color: #ff6600; /* Darker orange on hover */
 }
 
 .settings-input,
 .settings-dropdown {
-    background-color: #0a0e13;
-    border: 1px solid #2d5a87;
-    color: #e6f3ff;
+    background-color: #ffcc00; /* Yellow */
+    border: 1px solid #ff6600; /* Darker orange */
+    color: #000000;
 }
 
 .settings-divider {
-    border-top: 1px solid #2d5a87;
+    border-top: 1px solid #ff6600; /* Darker orange */
 }
 
 .slider {
-    background-color: #0a0e13;
+    background-color: #ffcc00; /* Yellow */
 }
 
 .slider:before {
-    background-color: white;
+    background-color: #000000;
 }
 
 .toggle-switch input:checked + .slider {
-    background-color: #2d5a87;
+    background-color: #ff9900; /* Orange */
 }
 
 .setting-button {
-    background-color: #0a0e13;
-    border: 1px solid #2d5a87;
-    color: #e6f3ff;
+    background-color: #ffcc00; /* Yellow */
+    border: 1px solid #ff6600; /* Darker orange */
+    color: #000000;
 }
 
 .setting-button:hover {
-    background-color: #2d5a87;
+    background-color: #ff9900; /* Orange on hover */
 }
 
 .settings-popup,
 .theme-popup,
 .charts-popup,
 .export-popup {
-    background-color: #0f1419;
-    color: #e6f3ff;
+    background-color: #ff9900; /* Orange */
+    color: #000000;
 }
 
 #simErrorPopup {
-    background: rgba(15, 40, 70, 0.95); /* Deep ocean blue background */
-    border: 1px solid #4682b4; /* Steel blue border */
-    color: #e6f3ff;
+    background: rgba(255, 204, 0, 0.95); /* Semi-transparent yellow */
+    border: 1px solid #ff9900; /* Orange border */
+    color: #000000;
 }
 
 #simErrorPopupTitle,
 #simErrorPopupDesc {
-    color: #e6f3ff;
+    color: #000000;
 }
 
 #simErrorPopupCancel {
-    background: #4682b4; /* Steel blue button */
-    border: 1px solid #4682b4;
-    color: #e6f3ff;
+    background: #ff9900; /* Orange button */
+    border: 1px solid #ff6600; /* Darker orange */
+    color: #000000;
 }
 
 #simErrorPopupCancel:hover {
-    background: #5f9ea0; /* Cadet blue on hover */
-    border: 1px solid #5f9ea0;
-    color: #e6f3ff;
+    background: #ff6600; /* Darker orange on hover */
+    border: 1px solid #ff6600;
+    color: #000000;
 }
 
 .equation-editor-overlay {
-    background-color: rgba(0, 20, 40, 0.65);
+    background-color: rgba(255, 204, 0, 0.65); /* Semi-transparent yellow */
 }
 
 .equation-editor-popup {
-    background-color: #0f1419;
+    background-color: #ff9900; /* Orange */
 }
 
 .close-icon {
-    color: #e6f3ff;
+    color: #000000;
 }
 
 .close-icon:hover {
-    color: #2d5a87;
+    color: #ff6600; /* Darker orange on hover */
 }
 
 .equation-editor-popup,
 .equation-editor-popup * {
-    color: #e6f3ff;
+    color: #000000;
 }
 
 #xAxis {
-    background-color: #0a0e13;
-    border: 1px solid #2d5a87;
-    color: #e6f3ff;
+    background-color: #ffcc00; /* Yellow */
+    border: 1px solid #ff6600; /* Darker orange */
+    color: #000000;
 }
 
 #yAxis {
     background-color: transparent;
-    color: #e6f3ff;
+    color: #000000;
 }
 
 #submitModel {
-    background-color: #0a0e13;
-    border: 1px solid #2d5a87;
-    color: #e6f3ff;
+    background-color: #ffcc00; /* Yellow */
+    border: 1px solid #ff6600; /* Darker orange */
+    color: #000000;
 }
 
 #submitModel:hover {
-    background-color: #2d5a87;
+    background-color: #ff9900; /* Orange on hover */
 }
 
 .autocomplete-list {
-    background-color: #0a0e13;
-    border: 1px solid #2d5a87;
-    color: #e6f3ff;
+    background-color: #ffcc00; /* Yellow */
+    border: 1px solid #ff6600; /* Darker orange */
+    color: #000000;
 }
 
 .autocomplete-item {
-    border-bottom: 1px solid #2d5a87;
+    border-bottom: 1px solid #ff6600; /* Darker orange */
 }
 
 .autocomplete-item.selected,
 .autocomplete-item:hover {
-    background-color: #2d5a87;
+    background-color: #ff9900; /* Orange */
 }
 
 .model-zoom-icon {
-    color: #e6f3ff;
-    background-color: #0f1419;
+    color: #000000;
+    background-color: #ff9900; /* Orange */
 }
 
 .model-zoom-icon:hover {
-    background-color: #2d5a87;
+    background-color: #ff6600; /* Darker orange on hover */
 }
 
 .popup-overlay {
-    background-color: rgba(10, 25, 45, 0.95);
+    background-color: rgba(255, 204, 0, 0.95); /* Semi-transparent yellow */
 }
 
 .popup-content {
-    background-color: #0f1419;
+    background-color: #ff9900; /* Orange */
 }
 
 .close-popup {
-    color: #e6f3ff;
+    color: #000000;
 }
