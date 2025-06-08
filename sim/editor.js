@@ -551,11 +551,15 @@ function buildTemplates() {
         selectionAdornmentTemplate: $(go.Adornment, "Spot", $(go.Shape, "Ellipse", {
             fill: null, stroke: "dodgerblue", strokeWidth: 15, scale: 0.25
         }), $(go.Placeholder))
-    }, $(go.Shape, shapeStyle(), new go.Binding("fill", "color").makeTwoWay(), {
-        figure: "Ellipse", desiredSize: new go.Size(25, 25), fill: "#f0f0f0"
+    }, $(go.Shape, shapeStyle(), new go.Binding("fill", "", function (data) {
+        if (data.label && data.label.startsWith('$')) return "white";
+        return "#cfcfcf";
+    }).makeTwoWay(), {
+        figure: "Ellipse", desiredSize: new go.Size(25, 25)
     }), $(go.TextBlock, textStyle(), {
         _isNodeLabel: true, alignment: new go.Spot(0.5, 0.5, 0, 30), isMultiline: false, textValidation: labelValidator
     }, new go.Binding("alignment", "label_offset", go.Spot.parse).makeTwoWay(go.Spot.stringify))));
+
     myDiagram.linkTemplateMap.add("flow", $(go.Link, {
             toShortLength: 12, layerName: "Foreground", selectionAdornmentTemplate: $(go.Adornment, $(go.Shape, {
                 isPanelMain: true, stroke: "#3489eb",

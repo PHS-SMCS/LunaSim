@@ -92,6 +92,7 @@ a:focus {
 
 a span {
     background-color: #4a6741;
+    color:white;
 }
 
 a span:before {
