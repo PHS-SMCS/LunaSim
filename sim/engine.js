@@ -128,7 +128,7 @@ export class Simulation {
         // Check for circular definitions
         if (history.includes(equation)) {
             history.push(equation);
-            document.getElementById("simErrorPopupDesc").innerHTML = "Error: Circular Definition Detected:<br>" + equation + "<br><br>Stack Trace:<br>" + history.join("<br> -> ") + "<br><br>Please check your equations and try again.";
+            document.getElementById("simErrorPopupDesc").innerHTML = "Circular Definition Detected:<br>" + equation + "<br><br>Stack Trace:<br>" + history.join("<br> -> ") + "<br><br>Please check your equations and try again.";
             showSimErrorPopup();
             throw new Error("Circular Definition Detected:<br>" + equation + "<br><br>Stack Trace:<br>" + history.join("<br> -> ") + "<br><br>Please check your equations and try again.");
         }
@@ -139,9 +139,9 @@ export class Simulation {
         var res = this.safeEval(parsedEquation);
 
         if (isNaN(res)) {
-            document.getElementById("simErrorPopupDesc").innerHTML = "Error: Invalid equation:<br>" + equation + "<br><br>Parsed equation:<br>" + parsedEquation + "<br><br>Please check your equations and try again.";
+            document.getElementById("simErrorPopupDesc").innerHTML = "Invalid equation:<br>" + equation + "<br><br>Parsed equation:<br>" + parsedEquation + "<br><br>Please check your equations and try again.";
             showSimErrorPopup();
-            throw new Error("Error: Invalid equation:<br>" + equation + "<br><br>Parsed equation:<br>" + parsedEquation + "<br><br>Please check your equations and try again.");
+            throw new Error("Invalid equation:<br>" + equation + "<br><br>Parsed equation:<br>" + parsedEquation + "<br><br>Please check your equations and try again.");
         } else {
             return res;
         }
@@ -185,32 +185,32 @@ export class Simulation {
             let stock = this.data.stocks[stockName];
 
             if (stock["values"][0] == null) {
-                document.getElementById("simErrorPopupDesc").innerHTML = "Error: Invalid equation (maybe circular definition):<br>" + stock["equation"] + "<br><br>Please check your equations and try again.";
+                document.getElementById("simErrorPopupDesc").innerHTML = "Invalid equation (maybe circular definition):<br>" + stock["equation"] + "<br><br>Please check your equations and try again.";
                 showSimErrorPopup();
-                throw new Error("Error: Invalid equation (maybe circular definition):<br>" + stock["equation"] + "<br><br>Please check your equations and try again.");
+                throw new Error("Invalid equation (maybe circular definition):<br>" + stock["equation"] + "<br><br>Please check your equations and try again.");
             }
 
             for (var flowName in stock["inflows"]) {
                 if (stock["inflows"][flowName]["values"][0] == null) {
-                    document.getElementById("simErrorPopupDesc").innerHTML = "Error: Invalid equation (maybe circular definition):<br>" + stock["inflows"][flowName]["equation"] + "<br><br>Please check your equations and try again.";
+                    document.getElementById("simErrorPopupDesc").innerHTML = "Invalid equation (maybe circular definition):<br>" + stock["inflows"][flowName]["equation"] + "<br><br>Please check your equations and try again.";
                     showSimErrorPopup()
-                    throw new Error("Error: Invalid equation (maybe circular definition):<br>" + stock["inflows"][flowName]["equation"] + "<br><br>Please check your equations and try again.");
+                    throw new Error("Invalid equation (maybe circular definition):<br>" + stock["inflows"][flowName]["equation"] + "<br><br>Please check your equations and try again.");
                 }
             }
             for (var flowName in stock["outflows"]) {
                 if (stock["outflows"][flowName]["values"][0] == null) {
-                    document.getElementById("simErrorPopupDesc").innerHTML = "Error: Invalid equation (maybe circular definition):<br>" + stock["outflows"][flowName]["equation"] + "<br><br>Please check your equations and try again.";
+                    document.getElementById("simErrorPopupDesc").innerHTML = "Invalid equation (maybe circular definition):<br>" + stock["outflows"][flowName]["equation"] + "<br><br>Please check your equations and try again.";
                     showSimErrorPopup();
-                    throw new Error("Error: Invalid equation (maybe circular definition):<br>" + stock["outflows"][flowName]["equation"] + "<br><br>Please check your equations and try again.");
+                    throw new Error("Invalid equation (maybe circular definition):<br>" + stock["outflows"][flowName]["equation"] + "<br><br>Please check your equations and try again.");
                 }
             }
         }
 
         for (var converterName in this.data.converters) {
             if (this.data.converters[converterName]["values"][0] == null) {
-                document.getElementById("simErrorPopupDesc").innerHTML = "Error: Invalid equation (maybe circular definition):<br>" + this.data.converters[converterName]["equation"] + "<br><br>Please check your equations and try again.";
+                document.getElementById("simErrorPopupDesc").innerHTML = "Invalid equation (maybe circular definition):<br>" + this.data.converters[converterName]["equation"] + "<br><br>Please check your equations and try again.";
                 showSimErrorPopup();
-                throw new Error("Error: Invalid equation (maybe circular definition):<br>" + this.data.converters[converterName]["equation"] + "<br><br>Please check your equations and try again.");
+                throw new Error("Invalid equation (maybe circular definition):<br>" + this.data.converters[converterName]["equation"] + "<br><br>Please check your equations and try again.");
             }
         }
     }
