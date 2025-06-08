@@ -355,3 +355,7 @@ a.active {
 .close-popup {
     color: #ffebee;
 }
+.graphTabs::after {
+    background-color: #f44336;
+    color: white;
+}

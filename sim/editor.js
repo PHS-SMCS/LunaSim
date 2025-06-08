@@ -2,6 +2,14 @@
  * This file uses the GoJS library to create a system dynamics editor.  Additionally, there is an equation editing table,
  * which allows the user to edit the equations and characteristics of the objects in the model.
  */
+
+/**
+ * @fileoverview System Dynamics Editor using GoJS.
+ * @module editor
+ * @author Authors: Karthik S. Vedula, Sienna Simms, Ryan Chung, Arjun Mujamdar, Akash Saran
+ * adapted from https://gojs.net/latest/samples/systemDynamics.html
+ */
+
 /**
  * Indicates whether the application is running in performance testing mode.
  * @type {boolean}
@@ -114,9 +122,26 @@ var unsavedEdits = false;
  */
 
 /**
- * Updates the "save status" message in the UI.
- * Reflects if there are unsaved edits and when the last edit/export occurred.
- * Runs initially and on a regular interval.
+ * Updates the save status display in the UI, showing whether there are unsaved edits
+ * and the relative time since the last edit and last export.
+ *
+ * Uses global variables:
+ * - `unsavedEdits`: {boolean} Whether there are unsaved edits.
+ * - `lastEditDate`: {Date} Timestamp of the last edit.
+ * - `hasExportedYet`: {boolean} Whether the content has been exported at least once.
+ * - `lastExportDate`: {Date} Timestamp of the last export.
+ *
+ * Updates the inner HTML of the element with ID `saveStatus` to show:
+ * - "Unsaved Edits!" or "No Unsaved Edits"
+ * - Time since the last edit
+ * - Time since the last export, or "-" if never exported
+ *
+ * @example
+ * // If edits were made 2 minutes ago and exported 1 hour ago:
+ * updateSaveStatus();
+ * // Output in UI: "Unsaved Edits! (Last Edit: 2m ago)<br>Last Exported: 1h"
+ * @function
+ * @memberof module:editor
  */
 var hasExportedYet = false;
 
@@ -131,6 +156,7 @@ function updateSaveStatus() {
  * Formats a time delta (in ms) into a human-readable string.
  * @param {number} ms - Time in milliseconds.
  * @returns {string} A readable string like "Just Now", "5m ago", or "2h 15m ago".
+ * @memberof module:editor
  */
 function formatDeltaTime(ms) {
     let seconds = ms / 1000;
@@ -153,6 +179,8 @@ setInterval(updateSaveStatus, 10000);
  * This function sets up interaction modes, tools for creating nodes and links,
  * and ensures proper behavior for simulation-specific logic like valve linking,
  * ghost cleanup, and node uniqueness.
+ * @function
+ * @memberof module:editor
  */
 function init() {
     const $ = go.GraphObject.make;
@@ -347,6 +375,8 @@ function init() {
 /**
  * Replaces the current diagram model with a fresh instance of its current JSON state.
  * This is useful for forcing re-rendering or applying changes to templates or other bindings.
+ * @memberof module:editor
+ * @function
  */
 function refreshGoJsModel() {
     const newModelData = JSON.parse(myDiagram.model.toJson());
@@ -369,6 +399,8 @@ function refreshGoJsModel() {
  *
  * Template appearance and color vary depending on the dark mode session flag.
  * Called once during initialization.
+ * @memberof module:editor
+ * @function
  */
 function buildTemplates() {
     // COLORS (Switches depending on theme)
@@ -440,21 +472,46 @@ function buildTemplates() {
         figure: "Cloud", desiredSize: new go.Size(30, 30), fill: "#f0f0f0" // default
     })));
 
-    myDiagram.nodeTemplateMap.add("valve", $(go.Node, nodeStyle(), {
-        movable: false,
-        deletable: false,
-        layerName: "Foreground",
-        selectable: true,
-        pickable: true,
-        alignmentFocus: go.Spot.None
-    }, $(go.Shape, shapeStyle(), new go.Binding("fill", "color").makeTwoWay(), {
-        figure: "Circle",        // Always a circle
-        desiredSize: new go.Size(18, 18), fill: "#3489eb",         // default fill color
-        stroke: null             // no border (borderless)
-    }), $(go.TextBlock, textStyle(), {
-        _isNodeLabel: true, alignment: new go.Spot(0.5, 0.5, 0, 20), isMultiline: false, textValidation: labelValidator
-    }, new go.Binding("alignment", "label_offset", go.Spot.parse).makeTwoWay(go.Spot.stringify))));
+    myDiagram.nodeTemplateMap.add("valve",
+        $(go.Node, nodeStyle(), {
+                movable: false,
+                deletable: false,
+                layerName: "Foreground",
+                selectable: true,
+                pickable: true,
+                alignmentFocus: go.Spot.None,
 
+                // Custom circular selection adornment
+                selectionAdornmentTemplate:
+                    $(go.Adornment, "Auto",
+                        $(go.Shape, "Circle",
+                            {
+                                fill: null,
+                                stroke: "dodgerblue",
+                                strokeWidth: 3,
+                                desiredSize: new go.Size(50, 50)
+                            })
+                    )
+            },
+            $(go.Shape, shapeStyle(),
+                new go.Binding("fill", "color").makeTwoWay(),
+                {
+                    figure: "Circle",
+                    desiredSize: new go.Size(18, 18),
+                    fill: "#3489eb",
+                    stroke: null
+                }),
+            $(go.TextBlock, textStyle(),
+                {
+                    _isNodeLabel: true,
+                    alignment: new go.Spot(0.5, 0.5, 0, 20),
+                    isMultiline: false,
+                    textValidation: labelValidator
+                },
+                new go.Binding("alignment", "label_offset", go.Spot.parse).makeTwoWay(go.Spot.stringify)
+            )
+        )
+    );
 
     myDiagram.nodeTemplateMap.add("variable", $(go.Node, nodeStyle(), {
         selectionAdornmentTemplate: $(go.Adornment, "Spot", $(go.Shape, "Ellipse", {
@@ -509,6 +566,8 @@ function buildTemplates() {
  *
  * @param {string} mode - The interaction mode to activate ("pointer", "node", or "link").
  * @param {string} itemType - The type of item associated with the mode (e.g., "stock", "flow").
+ * @memberof module:editor
+ * @function
  */
 function setMode(mode, itemType) {
     myDiagram.startTransaction();
@@ -536,6 +595,8 @@ function setMode(mode, itemType) {
  * Updates each node’s `equation` and `checkbox` fields in the model,
  * and reinitializes the model while preserving the diagram’s position.
  * Also sets `unsavedEdits` and updates sessionStorage.
+ * @memberof module:editor
+ * @function
  */
 
 function loadTableToDiagram() {
@@ -592,6 +653,8 @@ function loadTableToDiagram() {
  * longer exist in the model.
  *
  * @param {boolean} [load=false] - Whether to load equation/checkbox values into the table.
+ * @memberof module:editor
+ * @function
  */
 
 function updateTable(load = false) {
@@ -741,6 +804,9 @@ function updateTable(load = false) {
  * Determines whether a flow is a biflow (bidirectional) or uniflow (unidirectional)
  * based on the corresponding checkbox in the equation table.
  *
+ * @memberof module:editor
+ * @function
+ *
  * @param {Object} data - The link data object, includes label keys.
  * @param {*} _ - Unused parameter (required by GoJS binding signature).
  * @returns {boolean} True if biflow, false if uniflow.
@@ -777,7 +843,8 @@ function isBiflow(data, _) {
 /**
  * Checks whether a given label represents a ghost node.
  * Ghost nodes are identified by a '$' prefix in their label.
- *
+ * @memberof module:editor
+ * @function
  * @param {string} label - The label to check.
  * @returns {boolean} True if the label is a ghost label.
  */
@@ -789,7 +856,8 @@ function isGhost(label) {
  * Validates the renaming of a label in the diagram.
  * Ensures new names are not numeric or empty, are unique,
  * and if ghosting, ensures a corresponding real node exists.
- *
+ * @memberof module:editor
+ * @function
  * @param {Object} textblock - The GoJS TextBlock.
  * @param {string} oldstr - The original string.
  * @param {string} newstr - The new string input by the user.
@@ -839,6 +907,8 @@ function labelValidator(textblock, oldstr, newstr) {
 
 /**
  * Displays the simulation error popup by opening the appropriate settings panel.
+ * @memberof module:editor
+ * @function
  */
 function showSimErrorPopup() {
     openSettings(event, 'simErrorPopup');
@@ -848,6 +918,8 @@ document.getElementById("simErrorPopupDismiss").addEventListener("click", closeS
 
 /**
  * Closes the simulation error popup and hides the gray overlay effect.
+ * @memberof module:editor
+ * @function
  */
 function closeSimErrorPopup() {
     document.getElementById("simErrorPopup").style.display = "none";
@@ -864,7 +936,8 @@ function resetSimErrorPopup() {
 /**
  * Extracts all references from a given equation string.
  * References are enclosed in square brackets, e.g., [Stock1].
- *
+ * @memberof module:editor
+ * @function
  * @param {string} equation - The equation string.
  * @param {*} data - Unused (placeholder for interface compatibility).
  * @returns {string[]} Array of reference names found in the equation.
@@ -896,6 +969,8 @@ function containsReference(equation, data) {
  * 4. Perform input validation (start, end, dt, method).
  * 5. Handle high step-count warnings.
  * 6. Attempt simulation execution and handle errors.
+ * @memberof module:editor
+ * @function
  */
 
 function run() {
@@ -1184,7 +1259,8 @@ function run() {
  * Changes the active tool button's visual state by toggling the "active" class.
  * Removes "active" class from all elements with class "tool",
  * then adds the "active" class to the clicked button.
- *
+ * @memberof module:editor
+ * @function
  * @param {Event} evt - The click event triggered by selecting a tool button.
  * @property {HTMLCollectionOf<Element>} tablinks - Elements with class "tool" (tool buttons).
  */
@@ -1201,7 +1277,8 @@ function toolSelect(evt) {
  * Changes the displayed tab content and updates the active tab button styling.
  * Hides all elements with class "tabContent", removes "active" class from all tab buttons,
  * then shows the selected tab content and marks the clicked tab button as active.
- *
+ * @memberof module:editor
+ * @function
  * @param {Event} evt - The click event triggered by selecting a tab button.
  * @param {string} tabName - The id of the tab content element to show.
  * @property {HTMLCollectionOf<Element>} tabcontent - Elements with class "tabContent" (tab panels).
@@ -1227,6 +1304,8 @@ function opentab(evt, tabName) {
  * Converts the diagram model to JSON, adds simulation parameters from UI inputs,
  * then triggers a download of the JSON data as a file named after the model.
  * Updates export-related status flags and timestamps.
+ * @memberof module:editor
+ * @function
  */
 
 function exportData() {
@@ -1255,7 +1334,8 @@ function exportData() {
 /**
  * Creates and triggers a download of a text file with the given filename and content.
  * Uses a temporary anchor element and simulates a click event to start the download.
- *
+ * @memberof module:editor
+ * @function
  * @param {string} filename - The name of the file to be downloaded.
  * @param {string} text - The text content to include in the downloaded file.
  */
@@ -1278,7 +1358,8 @@ function download(filename, text) {
  * Parses the file content as JSON, validates it, and updates UI and diagram accordingly.
  * Loads simulation parameters if present; resets to defaults otherwise.
  * Handles blank model warnings and resets save/export statuses.
- *
+ * @memberof module:editor
+ * @function
  * @param {Event} evt - The file input change event containing the selected file.
  */
 function loadModel(evt) {
@@ -1363,7 +1444,8 @@ function loadModel(evt) {
  * Toggles the dark theme stylesheet on or off.
  * Saves the dark mode status in sessionStorage.
  * Shows a popup notification suggesting the user refresh the page to apply all theme changes.
- *
+ * @memberof module:editor
+ * @function
  * @param {boolean} orig - If true, suppresses the popup notification (used on page load).
  */
 // Themes
@@ -1557,7 +1639,8 @@ observer.observe(document.getElementById('eqTableBody'), {
 /**
  * Returns the top 5 matching Java math function suggestions based on input.
  * Used for autocomplete suggestions in the equation editor.
- *
+ * @memberof module:editor
+ * @function
  * @param {string} input - The partial function name input by the user.
  * @returns {string[]} An array of suggested function names starting with the input.
  */
@@ -1571,7 +1654,8 @@ function getTopMathMatches(input) {
 /**
  * Determines whether the cursor position inside a text input is currently within brackets [].
  * Checks for unmatched opening bracket '[' before the cursor without a closing bracket ']'.
- *
+ * @memberof module:editor
+ * @function
  * @param {string} text - The full text string in the input field.
  * @param {number} cursorPos - The cursor position index in the text.
  * @returns {boolean} True if the cursor is inside unmatched brackets, false otherwise.
@@ -1586,7 +1670,8 @@ function isCursorInsideBrackets(text, cursorPos) {
 /**
  * Returns the top 5 matching GoJS element labels for autocomplete suggestions.
  * If fragment is empty, returns the first 5 default labels.
- *
+ * @memberof module:editor
+ * @function
  * @param {string} fragment - The partial text input to match against.
  * @returns {string[]} Array of suggested GoJS element labels matching the fragment.
  */
@@ -1608,6 +1693,8 @@ function getTopBracketMatches(fragment) {
  * Sets up autocomplete functionality for all equation input fields in the equation table body.
  * Handles showing suggestions on input, keyboard navigation, selection insertion,
  * and closing the autocomplete dropdown on blur or outside clicks.
+ * @memberof module:editor
+ * @function
  */
 
 function setupAutocompleteForInputs() {
@@ -1713,7 +1800,8 @@ function setupAutocompleteForInputs() {
  * Detects the current cursor position and extracts the relevant fragment
  * either inside brackets [] or as a word to suggest completions.
  * Inserts the selected autocomplete item into the input field on click.
- *
+ * @memberof module:editor
+ * @function
  * @param {JQuery} $input - jQuery-wrapped input element to show autocomplete for.
  */
 
@@ -1798,7 +1886,8 @@ function showAutocomplete($input) {
 /**
  * Saves the given GoJS diagram as a PNG image file with optional margin.
  * Uses the diagram's makeImageData API to get image Blob and triggers a download.
- *
+ * @memberof module:editor
+ * @function
  * @param {go.Diagram} diagram - The GoJS diagram instance to export.
  * @param {string} [filename="diagram.png"] - The filename to save as.
  * @param {number} [margin=15] - Margin in pixels around the diagram in the exported image.
@@ -1824,7 +1913,8 @@ function saveDiagramAsPng(diagram, filename = "diagram.png", margin = 15) {
 /**
  * Saves the given GoJS diagram as a JPG image file with optional margin.
  * Uses the diagram's makeImageData API to get image Blob and triggers a download.
- *
+ * @memberof module:editor
+ * @function
  * @param {go.Diagram} diagram - The GoJS diagram instance to export.
  * @param {string} [filename="diagram.jpg"] - The filename to save as.
  * @param {number} [margin=15] - Margin in pixels around the diagram in the exported image.
@@ -1849,7 +1939,8 @@ function saveDiagramAsJpg(diagram, filename = "diagram.jpg", margin = 15) {
 /**
  * Saves the given GoJS diagram as a TIFF image file with optional margin.
  * Uses the diagram's makeImageData API to get image Blob and triggers a download.
- *
+ * @memberof module:editor
+ * @function
  * @param {go.Diagram} diagram - The GoJS diagram instance to export.
  * @param {string} [filename="diagram.tiff"] - The filename to save as.
  * @param {number} [margin=15] - Margin in pixels around the diagram in the exported image.
@@ -1877,6 +1968,8 @@ function saveDiagramAsTiff(diagram, filename = "diagram.tiff", margin = 15) {
  * Reads user-selected export format and margin, and triggers the appropriate
  * diagram image export function.
  * Updates export and save status flags accordingly.
+ * @memberof module:editor
+ * @function
  */
 document.getElementById("downloadImageButton").addEventListener("click", function () {
     const type = document.getElementById("fileSelect").value; // .png, .jpg, .tiff
@@ -1913,6 +2006,8 @@ document.getElementById("downloadImageButton").addEventListener("click", functio
 /**
  * Initializes autocomplete functionality on all relevant input fields
  * when the document is ready.
+ * @memberof module:editor
+ * @function
  */
 $(document).ready(() => {
     setupAutocompleteForInputs();
@@ -1921,7 +2016,8 @@ $(document).ready(() => {
 /**
  * Returns the default color string (hex) for a given diagram element type.
  * Used for setting default node/link colors on creation.
- *
+ * @memberof module:editor
+ * @function
  * @param {string} type - The element type (e.g., "stock", "variable", "valve", "flow", "influence").
  * @returns {string} The corresponding hex color code.
  */
@@ -1946,7 +2042,8 @@ function getDefaultColor(type) {
  * Sets up localStorage persistence for the diagram.
  * Loads saved diagram model from localStorage if present.
  * Registers an event listener on window unload to save the current model back to localStorage.
- *
+ * @memberof module:editor
+ * @function
  * @param {go.Diagram} diagram - The GoJS diagram instance to persist.
  */
 function setupLocalStoragePersistence(diagram) {

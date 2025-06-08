@@ -1,109 +1,110 @@
-/* Sunset Orange Theme */
+/* Orange Fruit Theme */
 body {
-    background: #4a3728;
+    background: #ffe4b5; /* Light orange background */
     box-shadow: none;
 }
 
 #model_name {
-    background-color: #2d1f17;
-    border: 1px solid #8b5a2b;
-    color: #fff5e6;
+    background-color: #ff8c00; /* Dark orange */
+    border: 1px solid #ffa500; /* Orange */
+    color: white;
 }
 
 .actionButton {
-    background-color: rgba(139, 90, 43, 0.6);
-    color: #fff5e6;
+    background-color: rgba(255, 140, 0, 0.8); /* Semi-transparent dark orange */
+    color: white;
 }
 
 .actionButton:hover {
-    background-color: #5d3a1a;
+    background-color: #ff7000;
+/* Brighter orange on hover */
 }
 
 #runButton {
-    background: rgba(34, 139, 34, 0.9);
+    background: rgba(255, 140, 0, 0.9); /* Dark orange */
 }
 
 #runButton:hover {
-    background-color: rgba(25, 100, 25, 0.9);
+    background-color: #ff6000; /* Brighter orange on hover */
 }
 
 #loadButton,
 #expButton {
-    background: rgba(255, 140, 0, 0.9);
+    background: rgba(255, 165, 0, 0.9); /* Orange */
 }
 
 #loadButton:hover,
 #expButton:hover {
-    background: rgba(205, 112, 0, 0.9);
+    background: rgba(255, 140, 0, 0.9); /* Dark orange on hover */
 }
 
 #clearButton {
-    background: rgba(255, 127, 80, 0.9);
-    color: #fff5e6;
+    background: rgba(255, 127, 80, 0.9); /* Coral */
+    color: white;
 }
 
 #clearButton:hover {
-    background: rgba(255, 99, 71, 0.9);
-    color: #fff5e6;
+    background: rgba(255, 99, 71, 0.9); /* Tomato */
+    color: white;
 }
 
 #saveStatus {
-    color: #fff5e6;
+    color: #ff8c00; /* Dark orange */
 }
 
 .tabButton {
-    color: #fff5e6;
-    background-color: #2d1f17;
+    color: white;
+    background-color: #ff8c00; /* Dark orange */
     box-shadow: none;
 }
 
 .tabButton.active {
-    background-color: #5d3a1a;
+    background-color: #ff6000; /* Brighter orange */
     box-shadow: none;
 }
 
 .modelViewer {
-    background: #5d3a1a;
+    background: #ffe4b5; /* Light orange background */
 }
 
 .toolbar ul,
 .chartSidebar ul {
-    background-color: #2d1f17;
+    background-color: #ff8c00; /* Dark orange */
 }
 
 .settings-section {
-    border-top: 1px solid #8b5a2b;
+    border-top: 1px solid #ffa500; /* Orange */
 }
 
 .graphTabsActive {
-    background-color: #8b5a2b !important;
+    background-color: #ffa500 !important; /* Orange */
 }
 
 a {
-    color: #ffa500;
+    color: #ff8c00; /* Dark orange */
 }
 
 a:hover,
 a:focus {
-    background-color: #8b5a2b;
+    background-color: #ffa500; /* Orange */
 }
 
 a span {
-    background-color: #8b5a2b;
+    background-color: #ffa500; /* Orange */
 }
 
 a span:before {
-    background-color: #8b5a2b;
+    background-color: #ffa500; /* Orange */
 }
 
 a.active {
-    background-color: #8b5a2b;
+    background-color: #ffa500; /* Orange */
 }
 
 .modelCanvas {
-    background-color: #ffffff;
-    color: white;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    background-color: white;
+    color: #ff8c00; /* Dark orange */
+    box-shadow: 0 2px 5px rgba(255, 140, 0, 0.3); /* Orange shadow */
 }
 
 #myDiagram {
@@ -111,256 +112,290 @@ a.active {
 }
 
 .center-btn {
-    background-color: #2d1f17;
-    color: #fff5e6;
+    background-color: #ff8c00; /* Dark orange */
+    color: white;
 }
 
 .center-btn:hover i {
-    color: #ffa500;
+    color: #fff5e6; /* Light cream */
 }
 
 #eqEditor {
-    background-color: #2d1f17;
-    color: #fff5e6;
+    background-color: #ff8c00; /* Dark orange */
+    color: white;
 }
 
 .equation-editor-zoom-icon {
-    color: #fff5e6;
+    color: white;
 }
 
 .equation-editor-zoom-icon:hover {
-    color: #8b5a2b;
+    color: #fff5e6; /* Light cream */
 }
 
 .equation-editor-table th {
-    background-color: #2d1f17;
+    background-color: #ff8c00; /* Dark orange */
 }
 
 .eqTableInputBox {
-    background-color: #1f1611;
-    border: 1px solid #8b5a2b;
-    color: #fff5e6;
+    background-color: white;
+    border: 1px solid #ffa500; /* Orange */
+    color: #ff8c00; /* Dark orange */
 }
 
-/* Sunset orange-themed unique border colors for equation editor boxes */
+/* Orange-themed unique border colors for equation editor boxes */
 .eqStockBox input {
-    border: 1px solid #ff8c00; /* Dark Orange - represents stored sunset energy */
+    border: 2px solid #ff984a; /* Red-orange for stocks */
 }
 
 .eqVariableBox input {
-    border: 1px solid #ffa500; /* Orange - represents dynamic sunset variables */
+    border: 2px solid #ff9000; /* Dark orange for variables */
 }
 
 .eqFlowBox input {
-    border: 1px solid #8b5a2b; /* Brown Orange - represents sunset flows (kept existing) */
+    border: 2px solid #ffa500; /* Standard orange for flows */
 }
 
 .equation-editor-table thead th {
-    background-color: #2d1f17;
+    background-color: #ff8c00; /* Dark orange */
 }
 
 .nncheckbox,
 .yAxisCheckbox {
-    accent-color: #8b5a2b;
-    background-color: #1f1611;
-    border: 2px solid #8b5a2b;
+    accent-color: #ffa500; /* Orange */
+    background-color: white;
+    border: 2px solid #ffa500; /* Orange */
 }
 
 .nncheckbox:checked,
 .yAxisCheckbox:checked {
-    background-color: #8b5a2b;
-    border-color: #8b5a2b;
+    background-color: #ffa500; /* Orange */
+    border-color: #ffa500; /* Orange */
 }
 
 .nncheckbox:hover,
 .yAxisCheckbox:hover {
-    border-color: #ffa500;
+    border-color: #ff8c00; /* Dark orange */
 }
 
 .chartViewer {
-    background: #5d3a1a;
+    background: #ffe4b5; /* Light orange background */
 }
 
 .chartCanvas {
-    background-color: #ffffff;
-    color: black;
+    background-color: white;
+    color: #ff8c00; /* Dark orange */
 }
 
 .chartEditor {
-    background-color: #2d1f17;
-    color: #fff5e6;
+    background-color: #ff8c00; /* Dark orange */
+    color: white;
 }
 
 .chart-stats p {
-    color: #f4e4bc;
+    color: white;
 }
 
 .chartEditor hr {
-    border-top: 1px solid #8b5a2b;
+    border-top: 1px solid #ffa500; /* Orange */
 }
 
 .chart-btn {
-    background-color: #1f1611;
-    border: 1px solid #8b5a2b;
-    color: #fff5e6;
+    background-color: white;
+    border: 1px solid #ffa500; /* Orange */
+    color: #ff8c00; /* Dark orange */
 }
 
 .chart-btn:hover {
-    background-color: #8b5a2b;
+    background-color: #ffa500; /* Orange */
+    color: white;
 }
 
 #overlay {
-    background-color: rgba(40, 25, 15, 0.85);
+    background-color: rgba(204, 112, 0, 0.85); /* Darker orange overlay */
 }
 
 .settings-header h2,
 .close-btn,
 .setting-group {
-    color: #fff5e6;
+    color: white;
 }
 
 .close-btn:hover {
-    color: #8b5a2b;
+    color: #fff5e6; /* Light cream */
 }
 
 .settings-input,
 .settings-dropdown {
-    background-color: #1f1611;
-    border: 1px solid #8b5a2b;
-    color: #fff5e6;
+    background-color: white;
+    border: 1px solid #ffa500; /* Orange */
+    color: #ff8c00; /* Dark orange */
 }
 
 .settings-divider {
-    border-top: 1px solid #8b5a2b;
+    border-top: 1px solid #ffa500; /* Orange */
 }
 
 .slider {
-    background-color: #1f1611;
-}
-
-.slider:before {
     background-color: white;
 }
 
+.slider:before {
+    background-color: #ffa500; /* Orange */
+}
+
 .toggle-switch input:checked + .slider {
-    background-color: #8b5a2b;
+    background-color: #ffa500; /* Orange */
 }
 
 .setting-button {
-    background-color: #1f1611;
-    border: 1px solid #8b5a2b;
-    color: #fff5e6;
+    background-color: white;
+    border: 1px solid #ffa500; /* Orange */
+    color: #ff8c00; /* Dark orange */
 }
 
 .setting-button:hover {
-    background-color: #8b5a2b;
+    background-color: #ffa500; /* Orange */
+    color: white;
 }
 
 .settings-popup,
 .theme-popup,
 .charts-popup,
 .export-popup {
-    background-color: #2d1f17;
-    color: #fff5e6;
+    background-color: #cc7000; /* Darker, less bright orange */
+    color: white;
 }
 
 #simErrorPopup {
-    background: rgba(45, 31, 23, 0.95);
-    border: 1px solid #ff7f50;
-    color: #fff5e6;
+    background: rgba(204, 112, 0, 0.95); /* Darker orange with transparency */
+    border: 1px solid #ff7f50; /* Coral */
+    color: white;
 }
 
 #simErrorPopupTitle,
 #simErrorPopupDesc {
-    color: #fff5e6;
+    color: white;
 }
 
 #simErrorPopupCancel {
-    background: #ff7f50;
-    border: 1px solid #ff7f50;
-    color: #fff5e6;
+    background: white;
+    border: 1px solid white;
+    color: #ff8c00; /* Dark orange */
 }
 
 #simErrorPopupCancel:hover {
-    background: #ff6347;
-    border: 1px solid #ff6347;
-    color: #fff5e6;
+    background: #fff5e6; /* Light cream */
+    border: 1px solid #fff5e6; /* Light cream */
+    color: #ff8c00; /* Dark orange */
 }
 
 .equation-editor-overlay {
-    background-color: rgba(40, 25, 15, 0.65);
+    background-color: rgba(204, 112, 0, 0.65); /* Darker orange overlay */
 }
 
 .equation-editor-popup {
-    background-color: #2d1f17;
+    background-color: #cc7000; /* Darker, less bright orange */
 }
 
 .close-icon {
-    color: #fff5e6;
+    color: white;
 }
 
 .close-icon:hover {
-    color: #8b5a2b;
+    color: #fff5e6; /* Light cream */
 }
 
 .equation-editor-popup,
 .equation-editor-popup * {
-    color: #fff5e6;
+    color: white;
 }
 
 #xAxis {
-    background-color: #1f1611;
-    border: 1px solid #8b5a2b;
-    color: #fff5e6;
+    background-color: white;
+    border: 1px solid #ffa500; /* Orange */
+    color: #ff8c00; /* Dark orange */
 }
 
 #yAxis {
     background-color: transparent;
-    color: #fff5e6;
+    color: #ff8c00; /* Dark orange */
 }
 
 #submitModel {
-    background-color: #1f1611;
-    border: 1px solid #8b5a2b;
-    color: #fff5e6;
+    background-color: white;
+    border: 1px solid #ffa500; /* Orange */
+    color: #ff8c00; /* Dark orange */
 }
 
 #submitModel:hover {
-    background-color: #8b5a2b;
+    background-color: #ffa500; /* Orange */
+    color: white;
 }
 
 .autocomplete-list {
-    background-color: #1f1611;
-    border: 1px solid #8b5a2b;
-    color: #fff5e6;
+    background-color: white;
+    border: 1px solid #ffa500; /* Orange */
+    color: #ff8c00; /* Dark orange */
 }
 
 .autocomplete-item {
-    border-bottom: 1px solid #8b5a2b;
+    border-bottom: 1px solid #ffa500; /* Orange */
 }
 
 .autocomplete-item.selected,
 .autocomplete-item:hover {
-    background-color: #8b5a2b;
+    background-color: #ffa500; /* Orange */
+    color: white;
 }
 
 .model-zoom-icon {
-    color: #fff5e6;
-    background-color: #2d1f17;
+    color: white;
+    background-color: #ff8c00; /* Dark orange */
 }
 
 .model-zoom-icon:hover {
-    background-color: #8b5a2b;
+    background-color: #ffa500; /* Orange */
 }
 
 .popup-overlay {
-    background-color: rgba(45, 30, 20, 0.95);
+    background-color: rgba(204, 112, 0, 0.95); /* Darker orange overlay */
 }
 
 .popup-content {
-    background-color: #2d1f17;
+    background-color: #cc7000; /* Darker, less bright orange */
 }
 
 .close-popup {
-    color: #fff5e6;
+    color: white;
+}
+
+.graphTabs::after {
+    background-color: #ff6347; /* Tomato */
+    color: white;
+}
+
+/* FontAwesome icons - make them white */
+.fa,
+.fas,
+.far,
+.fal,
+.fab,
+i[class*="fa-"],
+.fa-solid,
+.fa-regular,
+.fa-light,
+.fa-brands {
+    color: white !important;
+}
+
+/* Ensure FontAwesome icons in buttons and interactive elements are white */
+.actionButton i,
+.tabButton i,
+.chart-btn i,
+.setting-button i,
+.model-zoom-icon i,
+.equation-editor-zoom-icon i,
+.center-btn i {
+    color: white !important;
 }
