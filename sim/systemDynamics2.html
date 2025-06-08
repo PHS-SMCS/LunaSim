@@ -274,7 +274,6 @@
           <div class="setting-group">
             <label for="tab_name">Visual Name</label>
             <input type="text" id="tab_name" name="tab_name" class="settings-input" style="width: 63%;" placeholder="e.g., Population Chart" autocomplete="off" />
-            <p id="nameValidation" class="validation-message hidden">* Please enter a visual name.</p>
           </div>
           <div class="setting-group">
             <label for="model_type">Type</label>
@@ -295,7 +294,8 @@
               <!-- Multiple checkboxes initialized dynamically -->
             </table>
           </div>
-          <button id="submitModel" onclick="closeSettings('chartsPopup')">Create New Tab</button>
+          <button id="submitModel">Create New Tab</button>
+          <p id="nameValidation" class="validation-message hidden">* Please enter a visual name.</p>
         </form>
       </div>
       </div>
@@ -916,5 +916,61 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 </script>
+<script>
+  const modelTypeDropdown = document.getElementById("model_type");
+  const xAxisGroup = document.getElementById("xAxisGroup");
+  const yAxisLabel = document.querySelector('label[for="yAxis"]');
+  const nameInput = document.getElementById("tab_name");
+  const yAxisTable = document.getElementById("yAxis");
+  const nameValidationMsg = document.getElementById("nameValidation");
+  const submitButton = document.getElementById("submitModel");
+
+  // Show/hide X-Axis + rename Y-Axis label
+  modelTypeDropdown.addEventListener("change", () => {
+    if (modelTypeDropdown.value === "chart") {
+      xAxisGroup.style.display = "block";
+      yAxisLabel.textContent = "Y-Axis";
+    } else {
+      xAxisGroup.style.display = "none";
+      yAxisLabel.textContent = "Columns";
+    }
+  });
+
+  // Validate on submit
+  submitButton.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    let valid = true;
+    let messages = [];
+
+    // Check name input
+    if (nameInput.value.trim() === "") {
+      nameInput.style.border = "1px solid red";
+      messages.push("* Please enter a name for the graph");
+      valid = false;
+    } else {
+      nameInput.style.border = "";
+    }
+
+    // Check y-axis (columns) checkboxes
+    const checkboxes = yAxisTable.querySelectorAll('input[type="checkbox"]');
+    const oneChecked = Array.from(checkboxes).some(cb => cb.checked);
+    if (!oneChecked) {
+      messages.push("* Please select at least one option for the y-axis (or column for tables)");
+      valid = false;
+    }
+
+    // Update validation message if there are issues
+    if (!valid) {
+      nameValidationMsg.innerHTML = messages.join("<br>");
+      nameValidationMsg.classList.remove("hidden");
+    } else {
+      nameValidationMsg.classList.add("hidden");
+      closeSettings('chartsPopup');
+    }
+  });
+</script>
+
+
 </body>
 </html>

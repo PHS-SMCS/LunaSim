@@ -1361,6 +1361,9 @@ input.settings-input.invalid:focus {
   opacity: 0;
   transition: opacity 0.2s ease;
   z-index: 10;
+  max-width: 68px; /* adjust to suit your layout */
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .graphTabs:hover::after {
