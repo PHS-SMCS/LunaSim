@@ -1,0 +1,618 @@
+/* Star Wars Sith Theme */
+body {
+    background: #0a0a0a; /* Dark black background */
+    box-shadow: none;
+}
+
+#model_name {
+    background-color: #1a1a1a; /* Dark gray */
+    border: 1px solid #990000; /* Darker red */
+    color: #990000; /* Darker red text */
+}
+
+.actionButton {
+    background-color: rgba(30, 30, 30, 0.6); /* Semi-transparent dark gray */
+    color: #990000; /* Darker red text */
+}
+
+.actionButton:hover {
+    background-color: #2a0000; /* Dark red on hover */
+}
+
+#runButton {
+    background: rgba(153, 0, 0, 0.9); /* Darker red run button */
+    color: #000000 !important; /* Black text for contrast */
+}
+
+#runButton:hover {
+    background-color: rgba(102, 0, 0, 0.9); /* Even darker red on hover */
+    color: #000000 !important; /* Keep black text */
+}
+
+#loadButton,
+#expButton {
+    background: rgba(30, 30, 30, 0.9); /* Dark gray */
+}
+
+#loadButton:hover,
+#expButton:hover {
+    background: rgba(50, 50, 50, 0.9); /* Lighter gray on hover */
+}
+
+#clearButton {
+    background: rgba(102, 0, 0, 0.9); /* Darker red */
+    color: #000000 !important; /* Black text for contrast */
+}
+
+#clearButton:hover {
+    background: rgba(80, 0, 0, 0.9); /* Even darker red on hover */
+    color: #000000 !important; /* Keep black text */
+}
+
+#saveStatus {
+    color: #990000; /* Darker red */
+}
+
+.tabButton {
+    color: #990000; /* Darker red text */
+    background-color: #1a1a1a; /* Dark gray tabs */
+    box-shadow: none;
+}
+
+.tabButton.active {
+    background-color: #2a0000; /* Dark red for active tab */
+    box-shadow: none;
+}
+
+.modelViewer {
+    background: #0a0a0a; /* Dark black */
+}
+
+/* Toolbar - Dark with red accents */
+.toolbar ul,
+.chartSidebar ul {
+    background-color: #1a1a1a; /* Dark gray toolbar */
+}
+
+/* FontAwesome icons in toolbar - Darker red */
+.toolbar i,
+.toolbar .fa,
+.toolbar .fas,
+.toolbar .far,
+.toolbar .fab,
+.chartSidebar i,
+.chartSidebar .fa,
+.chartSidebar .fas,
+.chartSidebar .far,
+.chartSidebar .fab {
+    color: #990000 !important; /* Darker red icons */
+}
+
+/* Tab text for Model, View, Charts, Tables - Darker red */
+.toolbar ul li a,
+.chartSidebar ul li a {
+    color: #990000 !important; /* Darker red text */
+}
+
+.settings-section {
+    border-top: 1px solid #990000; /* Darker red */
+}
+
+.graphTabsActive {
+    background-color: #2a0000 !important; /* Dark red active tabs */
+}
+
+a {
+    color: #990000; /* Darker red links */
+}
+
+a:hover,
+a:focus {
+    background-color: #2a0000; /* Dark red on hover */
+}
+
+a span {
+    background-color: #2a0000; /* Dark red */
+}
+
+a span:before {
+    background-color: #2a0000; /* Dark red */
+}
+
+a.active {
+    background-color: #2a0000; /* Dark red */
+}
+
+.modelCanvas {
+    background-color: #ffffff; /* Keep white */
+    color: #000000;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+/* GoJS Canvas - Keep unchanged (white) */
+#myDiagram {
+    background-color: #ffffff; /* Keep white as requested */
+}
+
+/* GoJS axis labels - Make white */
+.go-Diagram text,
+#myDiagram text,
+.go-Node text {
+    fill: #ffffff !important; /* White text for GoJS axis labels */
+    color: #ffffff !important;
+}
+
+.center-btn {
+    background-color: #1a1a1a; /* Dark gray */
+    color: #990000; /* Darker red */
+}
+
+.center-btn:hover i {
+    color: #bb0000; /* Slightly brighter red on hover */
+}
+
+/* Equation Editor - Dark with red accents */
+#eqEditor {
+    background-color: #1a1a1a; /* Dark gray equation editor */
+    color: #990000; /* Darker red text */
+}
+
+.equation-editor-zoom-icon {
+    color: #990000; /* Darker red */
+}
+
+.equation-editor-zoom-icon:hover {
+    color: #bb0000; /* Slightly brighter red on hover */
+}
+
+.equation-editor-table th {
+    background-color: #1a1a1a; /* Dark gray */
+}
+
+.eqTableInputBox {
+    background-color: #0a0a0a; /* Dark black */
+    border: 1px solid #990000; /* Darker red */
+    color: #990000; /* Darker red text */
+}
+
+/* Sith themed border colors for equation editor boxes */
+.eqStockBox input {
+    border: 1px solid #990000; /* Darker red */
+}
+
+.eqVariableBox input {
+    border: 1px solid #660000; /* Even darker red */
+}
+
+.eqFlowBox input {
+    border: 1px solid #bb0000; /* Slightly brighter red */
+}
+
+.equation-editor-table thead th {
+    background-color: #1a1a1a; /* Dark gray */
+}
+
+.nncheckbox,
+.yAxisCheckbox {
+    accent-color: #990000; /* Darker red */
+    background-color: #0a0a0a; /* Dark black */
+    border: 2px solid #990000; /* Darker red */
+}
+
+.nncheckbox:checked,
+.yAxisCheckbox:checked {
+    background-color: #990000; /* Darker red */
+    border-color: #660000; /* Even darker red */
+}
+
+.nncheckbox:hover,
+.yAxisCheckbox:hover {
+    border-color: #bb0000; /* Slightly brighter red */
+}
+
+/* Charts - Dark with red accents */
+.chartViewer {
+    background: #0a0a0a; /* Match model view background - darker */
+}
+
+.chartCanvas {
+    background-color: #0a0a0a; /* Match model view background - darker */
+    color: #ffffff;
+}
+
+.chartEditor {
+    background-color: #1a1a1a; /* Dark gray */
+    color: #990000; /* Darker red */
+}
+
+.chart-stats p {
+    color: #990000; /* Darker red */
+}
+
+.chartEditor hr {
+    border-top: 1px solid #990000; /* Darker red */
+}
+
+.chart-btn {
+    background-color: #0a0a0a; /* Dark black */
+    border: 1px solid #990000; /* Darker red */
+    color: #990000; /* Darker red */
+}
+
+.chart-btn:hover {
+    background-color: #2a0000; /* Dark red on hover */
+}
+
+/* Apex Charts - Complete styling overhaul */
+.apexcharts-canvas,
+.apexcharts-svg,
+.apexcharts-inner,
+.apexcharts-graphical {
+    background-color: #0a0a0a !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.apexcharts-canvas svg {
+    background-color: #0a0a0a !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Remove borders and outlines except for grid lines */
+.apexcharts-canvas *,
+.apexcharts-svg *,
+.apexcharts-inner *,
+.apexcharts-graphical * {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Fix chart container and wrapper */
+.apexcharts-chart,
+.apexcharts-chart-wrapper {
+    background-color: #0a0a0a !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Legend text */
+.apexcharts-legend-text {
+    color: #ffffff !important;
+    fill: #ffffff !important;
+}
+
+/* Data labels */
+.apexcharts-datalabel,
+.apexcharts-datalabel-label,
+.apexcharts-datalabel-value {
+    fill: #ffffff !important;
+}
+
+/* Axis labels */
+.apexcharts-xaxis-label,
+.apexcharts-yaxis-label,
+.apexcharts-xaxis-texts-g text,
+.apexcharts-yaxis-texts-g text,
+.apexcharts-xaxis-label tspan,
+.apexcharts-yaxis-label tspan,
+.apexcharts-xaxis-texts-g tspan,
+.apexcharts-yaxis-texts-g tspan {
+    fill: #ffffff !important;
+}
+
+/* Grid lines */
+.apexcharts-gridlines-horizontal line {
+    stroke: #666666 !important;
+    stroke-width: 1px !important;
+}
+
+.apexcharts-gridlines-vertical line {
+    stroke: #ffffff !important;
+    stroke-width: 1px !important;
+}
+
+.apexcharts-gridline {
+    stroke: #666666 !important;
+    stroke-width: 1px !important;
+}
+
+/* Crosshairs */
+.apexcharts-xcrosshairs,
+.apexcharts-ycrosshairs,
+.apexcharts-crosshairs-x,
+.apexcharts-crosshairs-y {
+    stroke: #ffffff !important;
+    stroke-width: 1px !important;
+}
+
+/* Tooltip styling */
+.apexcharts-tooltip {
+    background-color: #0a0a0a !important;
+    border: 1px solid #990000 !important;
+    color: #990000 !important;
+}
+
+.apexcharts-tooltip-title {
+    background-color: #1a1a1a !important;
+    color: #990000 !important;
+    border-bottom: 1px solid #990000 !important;
+}
+
+.apexcharts-tooltip-series-group,
+.apexcharts-tooltip-text,
+.apexcharts-tooltip-text-label,
+.apexcharts-tooltip-text-value {
+    background-color: #0a0a0a !important;
+    color: #990000 !important;
+}
+
+/* Crosshair labels */
+.apexcharts-xaxistooltip,
+.apexcharts-yaxistooltip {
+    background-color: #0a0a0a !important;
+    color: #990000 !important;
+    border: 1px solid #990000 !important;
+}
+
+.apexcharts-xaxistooltip-text,
+.apexcharts-yaxistooltip-text {
+    fill: #990000 !important;
+    color: #990000 !important;
+}
+
+/* Background rects */
+.apexcharts-canvas rect[fill="#ffffff"],
+.apexcharts-svg rect[fill="#ffffff"] {
+    fill: #0a0a0a !important;
+    stroke: none !important;
+}
+
+/* Tabulator styling - Dark grey theme */
+.tabulator {
+    background-color: #1a1a1a !important; /* Dark grey background */
+    border: 1px solid #333333 !important;
+    color: #ffffff !important; /* White text */
+}
+
+.tabulator-header {
+    background-color: #0a0a0a !important; /* Black header background */
+    border-bottom: 2px solid #990000 !important; /* Red border */
+}
+
+.tabulator-header-contents {
+    background-color: #0a0a0a !important; /* Black header background */
+}
+
+.tabulator-col {
+    background-color: #0a0a0a !important; /* Black column header */
+    border-right: 1px solid #333333 !important;
+}
+
+.tabulator-col-title {
+    color: #990000 !important; /* Red column titles */
+}
+
+.tabulator-col-content {
+    background-color: #0a0a0a !important; /* Black column content */
+}
+
+.tabulator-row {
+    background-color: #1a1a1a !important; /* Dark grey rows */
+    border-bottom: 1px solid #333333 !important;
+    color: #ffffff !important; /* White text */
+}
+
+.tabulator-row.tabulator-row-even {
+    background-color: #222222 !important; /* Slightly lighter for even rows */
+}
+
+.tabulator-row.tabulator-selected {
+    background-color: #2a0000 !important; /* Dark red for selected rows */
+}
+
+.tabulator-row.tabulator-row-hover {
+    background-color: #2a0000 !important; /* Dark red for hover */
+}
+
+.tabulator-cell {
+    border-right: 1px solid #333333 !important;
+}
+
+.tabulator-footer {
+    background-color: #0a0a0a !important; /* Black footer */
+    border-top: 1px solid #333333 !important;
+}
+
+.tabulator-footer-contents {
+    background-color: #0a0a0a !important; /* Black footer contents */
+    color: #ffffff !important; /* White text */
+}
+
+.tabulator-paginator {
+    color: #ffffff !important; /* White text */
+}
+
+.tabulator-page {
+    background-color: #1a1a1a !important; /* Dark grey page buttons */
+    color: #990000 !important; /* Red text */
+    border: 1px solid #333333 !important;
+}
+
+.tabulator-page.active {
+    background-color: #990000 !important; /* Red active page */
+    color: #000000 !important; /* Black text */
+}
+
+.tabulator-page:hover {
+    background-color: #2a0000 !important; /* Dark red on hover */
+}
+
+#overlay {
+    background-color: rgba(10, 10, 10, 0.85); /* Semi-transparent black */
+}
+
+.settings-header h2,
+.close-btn,
+.setting-group {
+    color: #990000; /* Darker red */
+}
+
+.close-btn:hover {
+    color: #bb0000; /* Slightly brighter red on hover */
+}
+
+.settings-input,
+.settings-dropdown {
+    background-color: #0a0a0a; /* Dark black */
+    border: 1px solid #990000; /* Darker red */
+    color: #990000; /* Darker red */
+}
+
+.settings-divider {
+    border-top: 1px solid #990000; /* Darker red */
+}
+
+.slider {
+    background-color: #0a0a0a; /* Dark black */
+}
+
+.slider:before {
+    background-color: #990000; /* Darker red */
+}
+
+.toggle-switch input:checked + .slider {
+    background-color: #990000; /* Darker red */
+}
+
+.setting-button {
+    background-color: #0a0a0a; /* Dark black */
+    border: 1px solid #990000; /* Darker red */
+    color: #990000; /* Darker red */
+}
+
+.setting-button:hover {
+    background-color: #2a0000; /* Dark red on hover */
+}
+
+.settings-popup,
+.theme-popup,
+.charts-popup,
+.export-popup {
+    background-color: #1a1a1a; /* Dark gray */
+    color: #990000; /* Darker red */
+}
+
+#simErrorPopup {
+    background: rgba(10, 10, 10, 0.95); /* Semi-transparent black */
+    border: 1px solid #990000; /* Darker red border */
+    color: #990000; /* Darker red */
+}
+
+#simErrorPopupTitle,
+#simErrorPopupDesc {
+    color: #990000; /* Darker red */
+}
+
+#simErrorPopupCancel {
+    background: #990000; /* Darker red button */
+    border: 1px solid #660000; /* Even darker red */
+    color: #ffffff; /* White text for contrast */
+}
+
+#simErrorPopupCancel:hover {
+    background: #bb0000; /* Slightly brighter red on hover */
+    border: 1px solid #990000;
+    color: #ffffff;
+}
+
+.equation-editor-overlay {
+    background-color: rgba(10, 10, 10, 0.65); /* Semi-transparent black */
+}
+
+.equation-editor-popup {
+    background-color: #1a1a1a; /* Dark gray */
+}
+
+.close-icon {
+    color: #990000; /* Darker red */
+}
+
+.close-icon:hover {
+    color: #bb0000; /* Slightly brighter red on hover */
+}
+
+.equation-editor-popup,
+.equation-editor-popup * {
+    color: #990000; /* Darker red */
+}
+
+#xAxis {
+    background-color: #0a0a0a; /* Dark black */
+    border: 1px solid #990000; /* Darker red */
+    color: #990000; /* Darker red */
+}
+
+#yAxis {
+    background-color: transparent;
+    color: #990000; /* Darker red */
+}
+
+#submitModel {
+    background-color: #0a0a0a; /* Dark black */
+    border: 1px solid #990000; /* Darker red */
+    color: #990000; /* Darker red */
+}
+
+#submitModel:hover {
+    background-color: #2a0000; /* Dark red on hover */
+}
+
+.autocomplete-list {
+    background-color: #0a0a0a; /* Dark black */
+    border: 1px solid #990000; /* Darker red */
+    color: #990000; /* Darker red */
+}
+
+.autocomplete-item {
+    border-bottom: 1px solid #990000; /* Darker red */
+}
+
+.autocomplete-item.selected,
+.autocomplete-item:hover {
+    background-color: #2a0000; /* Dark red */
+}
+
+.model-zoom-icon {
+    color: #990000; /* Darker red */
+    background-color: #1a1a1a; /* Dark gray */
+}
+
+.model-zoom-icon:hover {
+    background-color: #2a0000; /* Dark red on hover */
+}
+
+.popup-overlay {
+    background-color: rgba(10, 10, 10, 0.95); /* Semi-transparent black */
+}
+
+.popup-content {
+    background-color: #1a1a1a; /* Dark gray */
+}
+
+.close-popup {
+    color: #990000; /* Darker red */
+}
+
+/* Button text color - Darker red except for run and clear buttons */
+#loadButton,
+#expButton {
+    color: #990000 !important; /* Darker red text */
+}
+
+.graphTabs::after {
+    background-color: #0a0a0a;
+    color: #990000;
+}
