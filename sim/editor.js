@@ -14,23 +14,27 @@
  * Indicates whether the application is running in performance testing mode.
  * @type {boolean}
  * @default false
+ * @memberof module:editor
  */
-var PERFORMANCE_MODE = false; // For testing runtime
+var PERFORMANCE_MODE = false;
 export {PERFORMANCE_MODE};
 
 /**
  * Simulation engine handling model execution and time-stepping logic.
  * @module engine
+ * @memberof module:editor
  */
 import {Simulation} from "./engine.js";
 /**
  * Translation utility for language localization or string translation.
  * @module translator
+ * @memberof module:editor
  */
 import {translate} from "./translator.js";
 /**
  * Tool for reshaping curved links in the diagram.
  * @module CurvedLinkReshapingTool
+ * @memberof module:editor
  */
 import {CurvedLinkReshapingTool} from "./CurvedLinkReshapingTool.js";
 
@@ -40,21 +44,25 @@ import {CurvedLinkReshapingTool} from "./CurvedLinkReshapingTool.js";
  * Holds the current UI mode, selected item type, and node counters.
  * @global
  * @type {Object}
+ * @memberof module:editor
  */
 var SD = {
     /**
      * Current interaction mode.
      * Can be `"pointer"`, `"node"`, or `"link"`.
      * @type {string}
+     * @memberof module:editor
      */
     mode: "pointer", /**
      * Type of item to be created next.
      * Can be `"stock"`, `"cloud"`, `"variable"`, `"valve"`, etc.
      * @type {string}
+     * @memberof module:editor
      */
     itemType: "pointer", /**
      * Counter for unique node naming or IDs by type.
      * @type {Object}
+     * @memberof module:editor
      */
 
     nodeCounter: {stock: 0, cloud: 0, variable: 0, valve: 0}
@@ -62,22 +70,26 @@ var SD = {
 
 /**
  * Labels for all GoJS elements in the order they were created.
+ * @memberof module:editor
  * @type {string[]}
  */
 let GOJS_ELEMENT_LABELS = [];
 /**
  * Set of labels for quick uniqueness checking.
  * @type {Set<string>}
+ * @memberof module:editor
  */
 let GOJS_ELEMENT_LABELS_SET = new Set();
 /**
  * Tracks whether the simulation has successfully run using the "Run" button.
  * @type {boolean}
+ * @memberof module:editor
  */
 let simulationHasRunSuccessfully_button = false;
 /**
  * Tracks whether the simulation has successfully run when switching to the simulation tab.
  * @type {boolean}
+ * @memberof module:editor
  */
 let simulationHasRunSuccessfully_tab = false;
 
@@ -85,27 +97,32 @@ let simulationHasRunSuccessfully_tab = false;
 /**
  * The main GoJS diagram instance. Declared globally.
  * @type {go.Diagram}
+ * @memberof module:editor
  */
 var myDiagram;
 /**
  * The core simulation instance controlling the model logic.
  * @type {Simulation}
+ * @memberof module:editor
  */
 var sim = new Simulation();
 /**
  * The current working model data.
  * @type {*}
+ * @memberof module:editor
  */
 var data;
 
 /**
  * Timestamp of the last edit in the editor.
  * @type {Date}
+ * @memberof module:editor
  */
 var lastEditDate = new Date();
 /**
  * Timestamp of last export
  * @type {Date}
+ * @memberof module:editor
  */
 
 var lastExportDate = new Date();
@@ -113,12 +130,14 @@ var lastExportDate = new Date();
 /**
  * Indicates whether there are unsaved edits in the model.
  * @type {boolean}
+ * @memberof module:editor
  */
 var unsavedEdits = false;
 
 /**
  * Indicates whether the user has ever exported the model yet.
  * @type {boolean}
+ * @memberof module:editor
  */
 
 /**
@@ -170,7 +189,6 @@ function formatDeltaTime(ms) {
     return `${hours}h`;
 }
 
-// Initial and periodic update of the save status display
 updateSaveStatus();
 setInterval(updateSaveStatus, 10000);
 
@@ -185,13 +203,11 @@ setInterval(updateSaveStatus, 10000);
 function init() {
     const $ = go.GraphObject.make;
 
-    // Create the GoJS diagram instance and configure diagram-level properties
     myDiagram = $(go.Diagram, "myDiagram", {
         "undoManager.isEnabled": true,
         allowLink: false,
         "animationManager.isEnabled": false,
 
-        // Custom linking tool behavior
         "linkingTool.portGravity": 0,
         "linkingTool.doActivate": function () {
             this.temporaryLink.curve = (SD.itemType === "flow") ? go.Link.None : go.Link.Bezier;
@@ -200,7 +216,6 @@ function init() {
             go.LinkingTool.prototype.doActivate.call(this);
         },
 
-        // Custom reshaping tool for Bezier curves
         "linkReshapingTool": new CurvedLinkReshapingTool(),
 
         /**
@@ -223,7 +238,6 @@ function init() {
             return go.LinkingTool.prototype.insertLink.call(this, fromnode, fromport, tonode, toport);
         },
 
-        // Click-to-create tool customization for node creation
         "clickCreatingTool.archetypeNodeData": {},
         "clickCreatingTool.isDoubleClick": false,
         "clickCreatingTool.canStart": function () {
@@ -246,17 +260,14 @@ function init() {
         }
     });
 
-    // Add custom tool for dragging node labels
     myDiagram.toolManager.mouseMoveTools.insertAt(0, new NodeLabelDraggingTool());
 
-    // Enable drag selection (with Ctrl key)
     myDiagram.toolManager.dragSelectingTool.canStart = function () {
         const e = myDiagram.lastInput;
         return e.control && e.left;
     };
     myDiagram.toolManager.dragSelectingTool.isEnabled = true;
 
-    // Visual configuration for drag selection box
     myDiagram.toolManager.dragSelectingTool.box = $(go.Part, {layerName: "Tool"}, $(go.Shape, "Rectangle", {
         fill: null, stroke: "#3489eb", strokeWidth: 1
     }));
@@ -284,7 +295,6 @@ function init() {
     myDiagram.addModelChangedListener(e => {
         if (!e.isTransactionFinished) return;
 
-        // Remove ghost nodes if they have no corresponding real node
         myDiagram.model.nodeDataArray.forEach(node => {
             if (node.category === "cloud" || node.label[0] !== "$") return;
 
@@ -299,7 +309,7 @@ function init() {
                     });
                 }
                 myDiagram.model.removeNodeData(node);
-                loadTableToDiagram(); // Remove any ghost-related links
+                loadTableToDiagram();
             }
         });
 
@@ -362,7 +372,6 @@ function init() {
         }
     });
 
-    // Build node/link templates and initialize model
     buildTemplates();
 
     myDiagram.model = go.Model.fromJson(JSON.stringify({
@@ -403,7 +412,6 @@ function refreshGoJsModel() {
  * @function
  */
 function buildTemplates() {
-    // COLORS (Switches depending on theme)
     var fillColor = "#f0f0f0";
     var textColor = "black";
     if (sessionStorage.getItem("darkMode") == "true") {
@@ -411,11 +419,8 @@ function buildTemplates() {
         textColor = "white";
     }
 
-    // Since 2.2 you can also author concise templates with method chaining instead of GraphObject.make
-    // For details, see https://gojs.net/latest/intro/buildingObjects.html
     const $ = go.GraphObject.make;
 
-    // helper functions for the templates
     function nodeStyle() {
         return [{
             type: go.Panel.Spot,
@@ -428,7 +433,7 @@ function buildTemplates() {
 
     function shapeStyle() {
         return {
-            name: "SHAPE", stroke: "black", fill: fillColor, portId: "", // So a link can be dragged from the Node: see /GraphObject.html#portId
+            name: "SHAPE", stroke: "black", fill: fillColor, portId: "",
             fromLinkable: true, toLinkable: true
         };
     }
@@ -439,7 +444,6 @@ function buildTemplates() {
         }, new go.Binding("text", "label").makeTwoWay()];
     }
 
-    // Node templates
     myDiagram.nodeTemplateMap.add("stock", $(go.Node, nodeStyle(), {
         selectionAdornmentTemplate: $(go.Adornment, "Auto", $(go.Shape, {
             figure: "rectangle",
@@ -469,7 +473,7 @@ function buildTemplates() {
             desiredSize: new go.Size(30, 30)
         }), $(go.Placeholder))
     }, $(go.Shape, shapeStyle(), new go.Binding("fill", "color").makeTwoWay(), {
-        figure: "Cloud", desiredSize: new go.Size(30, 30), fill: "#f0f0f0" // default
+        figure: "Cloud", desiredSize: new go.Size(30, 30), fill: "#f0f0f0"
     })));
 
     myDiagram.nodeTemplateMap.add("valve",
@@ -481,7 +485,6 @@ function buildTemplates() {
                 pickable: true,
                 alignmentFocus: go.Spot.None,
 
-                // Custom circular selection adornment
                 selectionAdornmentTemplate:
                     $(go.Adornment, "Auto",
                         $(go.Shape, "Circle",
@@ -518,14 +521,14 @@ function buildTemplates() {
             fill: null, stroke: "dodgerblue", strokeWidth: 15, scale: 0.25
         }), $(go.Placeholder))
     }, $(go.Shape, shapeStyle(), new go.Binding("fill", "color").makeTwoWay(), {
-        figure: "Ellipse", desiredSize: new go.Size(25, 25), fill: "#f0f0f0" // default
+        figure: "Ellipse", desiredSize: new go.Size(25, 25), fill: "#f0f0f0"
     }), $(go.TextBlock, textStyle(), {
         _isNodeLabel: true, alignment: new go.Spot(0.5, 0.5, 0, 30), isMultiline: false, textValidation: labelValidator
     }, new go.Binding("alignment", "label_offset", go.Spot.parse).makeTwoWay(go.Spot.stringify))));
     myDiagram.linkTemplateMap.add("flow", $(go.Link, {
             toShortLength: 12, layerName: "Foreground", selectionAdornmentTemplate: $(go.Adornment, $(go.Shape, {
-                isPanelMain: true, stroke: "#3489eb",   // highlight color
-                strokeWidth: 7,      // slightly larger than normal stroke
+                isPanelMain: true, stroke: "#3489eb",
+                strokeWidth: 7,
             }))
         }, new go.Binding("curviness", "curviness").makeTwoWay(),
 
@@ -533,17 +536,14 @@ function buildTemplates() {
             return isBiflow(data) ? 8 : 0;
         }),
 
-        // Main link path shape
         $(go.Shape, {
             stroke: "#3489eb", strokeWidth: 5
         }),
 
-        // Forward arrow - now blue (previously gray)
         $(go.Shape, {
             fill: "#3489eb", stroke: "#3489eb", toArrow: "Standard", scale: 2.0,
         }),
 
-        // Backward arrow - gray normally, blue when selected
         $(go.Shape, new go.Binding("visible", "", isBiflow), {
             fromArrow: "Backward", scale: 2.0
         }, new go.Binding("fill", "isSelected", function (sel) {
@@ -600,15 +600,13 @@ function setMode(mode, itemType) {
  */
 
 function loadTableToDiagram() {
-    // get the json from the GoJS model
     var data = myDiagram.model.toJson();
     var json = JSON.parse(data);
 
     var $tbody = $('#eqTableBody');
 
-    // read the equation, and checkbox values from the table
     $tbody.find('tr').each(function () {
-        var name = $(this).find('input[name="name"]').val(); // get the name of the object
+        var name = $(this).find('input[name="name"]').val();
         let migrated = $(this).data('migrated');
         let equation = migrated ? migrated.equation : $(this).find('input[name="equation"]').val();
         let checkbox = migrated ? migrated.checkbox : $(this).find('input[name="checkbox"]').is(':checked');
@@ -616,7 +614,6 @@ function loadTableToDiagram() {
         $(this).removeData('migrated');
 
 
-        // update the json with the new equation and checkbox values
         $.each(json.nodeDataArray, function (i, item) {
             if (item.label === name) {
                 item.equation = equation;
@@ -625,23 +622,19 @@ function loadTableToDiagram() {
         });
     });
 
-    // get current diagram.position
     var pos = myDiagram.position;
 
-    // update the model with the new json
     myDiagram.model = go.Model.fromJson(JSON.stringify(json));
 
     let oldModel = sessionStorage.modelData;
     let newModel = myDiagram.model.toJson();
-    sessionStorage.modelData = newModel; // updates session storage
+    sessionStorage.modelData = newModel;
     if (oldModel != newModel) {
-        // Update the "last edited" date
         lastEditDate = new Date();
         unsavedEdits = true;
         updateSaveStatus();
     }
 
-    // set the diagram position back to what it was
     myDiagram.initialPosition = pos;
 }
 
@@ -660,7 +653,6 @@ function loadTableToDiagram() {
 function updateTable(load = false) {
     const $tbody = $('#eqTableBody');
 
-    // Save current table values back to model before doing anything (if not loading fresh)
     if (!load) {
         $tbody.find('tr').each(function () {
             const name = $(this).find('input[name="name"]').val();
@@ -678,10 +670,8 @@ function updateTable(load = false) {
     const data = myDiagram.model.toJson();
     const json = JSON.parse(data);
 
-    // Clear the table before repopulating
     $tbody.empty();
 
-    // Sort and filter nodes (stocks, valves → flows, variables)
     const sortedItems = json.nodeDataArray
         .filter(item =>
             item.label !== undefined &&
@@ -693,41 +683,33 @@ function updateTable(load = false) {
             return order[a.category] - order[b.category];
         });
 
-    // Rename finalizer function (defined here to access labelValidator and myDiagram)
     function finalizeRename() {
         const $input = $(this);
         const oldName = $input.data('oldName');
         const newName = $input.val();
 
-        if (newName === oldName) return; // no change
+        if (newName === oldName) return;
 
-        // Validate new name using your labelValidator function
         if (!labelValidator(null, oldName, newName)) {
             alert(`Invalid or duplicate name: "${newName}". Reverting to "${oldName}".`);
             $input.val(oldName);
             return;
         }
 
-        // Commit label rename properly so diagram updates immediately
         myDiagram.model.commit(() => {
             const nodeData = myDiagram.model.nodeDataArray.find(n => n.label === oldName);
             if (nodeData) {
-                // Update the label property properly
                 myDiagram.model.setDataProperty(nodeData, 'label', newName);
-                // If 'key' is also 'label', update that too:
                 if ('key' in nodeData && nodeData.key === oldName) {
                     myDiagram.model.setDataProperty(nodeData, 'key', newName);
                 }
             }
         }, 'rename node label');
 
-        // Update stored oldName on input
         $input.data('oldName', newName);
 
-        // Refresh the table so new names show up correctly
         updateTable(true);
 
-        // Explicitly request GoJS diagram update/redraw
         myDiagram.requestUpdate();
     }
 
@@ -742,12 +724,10 @@ function updateTable(load = false) {
 
         const $tr = $('<tr>');
 
-        // Type column (readonly)
         $tr.append($('<td>').append(
             $('<input class="eqTableInputBox" readonly>').attr({ type: 'text', name: 'type', value: category })
         ));
 
-        // Name column (editable input)
         const $nameInput = $('<input class="eqTableInputBox">')
             .attr({ type: 'text', name: 'name', value: label })
             .data('oldName', label)
@@ -755,13 +735,12 @@ function updateTable(load = false) {
             .on('keydown', function (e) {
                 if (e.key === 'Enter') {
                     e.preventDefault();
-                    $(this).blur(); // triggers finalizeRename via blur
+                    $(this).blur();
                 }
             });
 
         $tr.append($('<td>').append($nameInput));
 
-        // Equation column
         const $eqInput = $('<input class="eqTableInputBox" style="width: inherit;">')
             .attr({ type: 'text', name: 'equation' })
             .css('width', '99%')
@@ -769,7 +748,6 @@ function updateTable(load = false) {
 
         $tr.append($('<td>').append($eqInput));
 
-        // Checkbox or blank cell
         if (category === "stock" || category === "flow") {
             const $checkbox = $('<input>')
                 .attr({ type: 'checkbox', name: 'checkbox', class: 'nncheckbox' })
@@ -780,7 +758,6 @@ function updateTable(load = false) {
             $tr.append($('<td>'));
         }
 
-        // Apply row color class to first 3 columns
         const colorClass = category === "stock" ? "eqStockBox"
             : category === "flow" ? "eqFlowBox"
                 : "eqVariableBox";
@@ -790,7 +767,6 @@ function updateTable(load = false) {
         $tbody.append($tr);
     });
 
-    // Update GOJS_ELEMENT_LABELS array
     GOJS_ELEMENT_LABELS = myDiagram.model.nodeDataArray
         .filter(n => n.label && !n.label.startsWith('$') && n.category !== "cloud")
         .map(n => n.label);
@@ -812,28 +788,26 @@ function updateTable(load = false) {
  * @returns {boolean} True if biflow, false if uniflow.
  */
 function isBiflow(data, _) {
-    // search through table to get link's checkbox value
     var $tbody = $('#eqTableBody');
     var biflow = false;
 
-    var labelKey = data.labelKeys[0]; // get the label key of the link
-    // search in nodeDataArray for the key with the same labelKey
+    var labelKey = data.labelKeys[0];
     for (var node of myDiagram.model["nodeDataArray"]) {
         if (node.key === labelKey) {
             var flowName = node.label;
         }
     }
 
-    if (flowName[0] === '$') { // if the flow is a ghost
-        flowName = flowName.substring(1); // remove the '$' from the name
+    if (flowName[0] === '$') {
+        flowName = flowName.substring(1);
     }
 
     $tbody.find('tr').each(function () {
-        var name = $(this).find('input[name="name"]').val(); // get the name of the object
-        var checkbox = $(this).find('input[name="checkbox"]').is(':checked'); // get the checkbox value of the object
+        var name = $(this).find('input[name="name"]').val();
+        var checkbox = $(this).find('input[name="checkbox"]').is(':checked');
 
         if (name === flowName) {
-            biflow = !checkbox; // if checked, that means it is a uniflow
+            biflow = !checkbox;
         }
     });
 
@@ -1132,7 +1106,6 @@ function run() {
     }
 
 
-    // get information on the start time, end time, dt, and integration method and add it to the engine json
     var startTime = document.getElementById("startTime").value;
     var endTime = document.getElementById("endTime").value;
     var dt = document.getElementById("dt").value;
@@ -1141,9 +1114,7 @@ function run() {
     document.getElementById("startTime").classList = "settings-input simParamsInput";
     document.getElementById("endTime").classList = "settings-input simParamsInput";
     document.getElementById("dt").classList = "settings-input simParamsInput";
-    //resetSimErrorPopup();
 
-    // Error Checking part 1: All fields must be numbers
     var errors = [];
     if (isNaN(Number(startTime))) {
         errors.push("- The start time must be a number");
@@ -1168,18 +1139,17 @@ function run() {
         return;
     }
 
-    // Error Checking part 2: Other issues
-    if (Number(startTime) >= Number(endTime)) { // terminates if the end time is not greater than the start
+    if (Number(startTime) >= Number(endTime)) {
         errors.push("- The end time must be greater than the start time");
         document.getElementById("endTime").classList = "simParamsInput simParamsInputError";
     }
 
-    if (Number(dt) > Number(endTime) - Number(startTime)) { // terminates if the dt is greater than duration
+    if (Number(dt) > Number(endTime) - Number(startTime)) {
         errors.push("- The dt must be less than or equal to the duration.");
         document.getElementById("dt").classList = "simParamsInput simParamsInputError";
     }
 
-    if (Number(dt) <= 0) { // terminates if the dt is not greater than zero
+    if (Number(dt) <= 0) {
         errors.push("- The dt must be positive");
         document.getElementById("dt").classList = "simParamsInput simParamsInputError";
     }
@@ -1194,10 +1164,8 @@ function run() {
         return;
     }
 
-    // Error Checking part 3: High Step-Count Checker (avoids freezing)
-    if ((Number(endTime) - Number(startTime)) / Number(dt) >= 1000) { // 1000+ Steps
+    if ((Number(endTime) - Number(startTime)) / Number(dt) >= 1000) {
         if (!document.getElementById("simParamHighStepCount").checked) {
-            // The user did not enable high step-count simulations
             document.getElementById("dt").classList = "simParamsInput simParamsInputWarning";
             window.scroll({
                 top: document.body.scrollHeight, behavior: "smooth",
@@ -1210,7 +1178,6 @@ function run() {
     }
 
 
-    // Looks all good!
     engineJson.start_time = parseFloat(startTime);
     engineJson.end_time = parseFloat(endTime);
     engineJson.dt = parseFloat(dt);
@@ -1221,7 +1188,7 @@ function run() {
         sim.setData(engineJson);
 
         if (PERFORMANCE_MODE === true) console.time('Simulation Runtime');
-        data = sim.run(); // might throw
+        data = sim.run();
         if (PERFORMANCE_MODE === true) console.timeEnd('Simulation Runtime');
 
         sim.reset();
@@ -1248,7 +1215,6 @@ function run() {
         document.getElementById("simErrorPopupDesc").innerHTML = "Simulation Error: " + err.message;
         showSimErrorPopup();
 
-        // Preserve previous success state if applicable
         window.simulationHasRunSuccessfully_tab = false;
     }
 
@@ -1313,7 +1279,6 @@ function exportData() {
     loadTableToDiagram();
     var json = JSON.parse(myDiagram.model.toJson());
 
-    // add simulation parameters to the json
     json.simulationParameters = {
         "startTime": parseFloat(document.getElementById("startTime").value),
         "endTime": parseFloat(document.getElementById("endTime").value),
@@ -1321,13 +1286,11 @@ function exportData() {
         "integrationMethod": document.getElementById("integrationMethod").value == "euler" ? "euler" : "rk4"
     };
 
-    // download it
     download(`${filename}.luna`, JSON.stringify(json));
 
-    // update export date
     lastExportDate = new Date();
     hasExportedYet = true;
-    unsavedEdits = false; // Once exported, no more unsaved edits
+    unsavedEdits = false;
     updateSaveStatus();
 }
 
@@ -1368,7 +1331,6 @@ function loadModel(evt) {
     console.log(file);
 
     reader.onload = function (evt) {
-        // Check if the file is valid JSON
         var json;
         try {
             json = JSON.parse(evt.target.result);
@@ -1377,21 +1339,13 @@ function loadModel(evt) {
             return;
         }
 
-        // Check for blank model loading
         if (go.Model.fromJson(evt.target.result).Pc.length == 0) {
-            // .Pc is where the list of "objects" in the model is stored
-            // Checked via console.log testing
-            // This *probably* isn't good standard but it seems to be consistent across platforms & models
-
             let confirmBlankLoad = confirm("This model appears to be blank! Are you sure you want to load it?");
             if (!confirmBlankLoad) return;
         }
 
-        // If we get here, everything should be good
 
-        // check if the json has simulation parameters
         if (json.simulationParameters) {
-            // add simulation parameters from the json
             document.getElementById("startTime").value = json.simulationParameters.startTime;
             document.getElementById("endTime").value = json.simulationParameters.endTime;
             document.getElementById("dt").value = json.simulationParameters.dt;
@@ -1403,39 +1357,26 @@ function loadModel(evt) {
             document.getElementById("integrationMethod").value = "rk4";
         }
 
-        // clear the diagram
         myDiagram.model = go.Model.fromJson("{ \"class\": \"GraphLinksModel\", \"linkLabelKeysProperty\": \"labelKeys\", \"nodeDataArray\": [],\"linkDataArray\": [] }");
-        // clear the table
         $('#eqTableBody').empty();
 
-        // Load the new model
         myDiagram.model = go.Model.fromJson(evt.target.result);
 
         updateTable(true);
         loadTableToDiagram();
 
-        // set the diagram position back to what it was
         myDiagram.initialPosition = myDiagram.position;
         if (file && file.name) {
             console.log(file.name);
             document.getElementById("model_name").value = file.name.replace(/\.[^/.]+$/, "");
         }
 
-        // Reset save status after loading model
         lastEditDate = new Date();
         unsavedEdits = false;
         lastExportDate = new Date();
         hasExportedYet = false;
         updateSaveStatus();
     }
-
-    /*
-    // This doesn't actually appear to be firing on an error, so I commented it out and wrote my own error handler.
-    // Add back in if I didn't read the documentation properly and it actually works.
-
-    reader.addEventListener("error", function (evt) {
-        alert("error reading file");
-    });*/
 
     reader.readAsText(evt.target.files[0]);
 }
@@ -1448,7 +1389,6 @@ function loadModel(evt) {
  * @function
  * @param {boolean} orig - If true, suppresses the popup notification (used on page load).
  */
-// Themes
 function switch_theme(orig) {
     var dark = document.getElementById("darkThemeCSS");
     if (dark.disabled) {
@@ -1474,7 +1414,6 @@ document.getElementById("popupNotifClose").addEventListener("click", function ()
     popupNotif.style.visibility = "hidden";
 });
 
-// Retrieves session storage data when loaded
 window.onload = function () {
     if (sessionStorage.modelData) {
         myDiagram.model = go.Model.fromJson(sessionStorage.modelData);
@@ -1486,10 +1425,8 @@ window.onload = function () {
     }
 }
 
-// Model Loading
 document.getElementById("loadButton").addEventListener("click", function () {
     if (unsavedEdits) {
-        // Add a warning if the user has changed the model since their last export
         let confirmLoad = confirm(`You've made changes to this model since the last time you exported it (if at all). If you load a new model now without exporting, your changes will be lost! Are you sure you want to proceed?\n\n(Press CANCEL to go back and export your model.)`);
         if (!confirmLoad) return;
     }
@@ -1501,13 +1438,13 @@ init();
 
 myDiagram.toolManager.textEditingTool.doActivate = function() {
     const tb = this.textBlock;
-    if (tb) tb.opacity = 0; // hide during edit
+    if (tb) tb.opacity = 0;
     go.TextEditingTool.prototype.doActivate.call(this);
 };
 
 myDiagram.toolManager.textEditingTool.doDeactivate = function() {
     const tb = this.textBlock;
-    if (tb) tb.opacity = 1; // show after edit
+    if (tb) tb.opacity = 1;
     go.TextEditingTool.prototype.doDeactivate.call(this);
 };
 
@@ -1526,8 +1463,6 @@ document.getElementById("centerModelBtn").addEventListener("click", function () 
 });
 
 
-// add button event listeners
-// mode buttons
 document.getElementById("pointer_button").addEventListener("click", function () {
     setMode("pointer", "pointer");
     toolSelect(event);
@@ -1552,20 +1487,16 @@ document.getElementById("influence_button").addEventListener("click", function (
     setMode("link", "influence");
     toolSelect(event);
 });
-// Set initial mode as pointer (for UI shading)
 document.getElementById("pointer_button").click();
 
-// tab buttons
 document.getElementById("defaultOpen").addEventListener("click", function () {
     opentab(event, "modalView");
 });
 document.getElementById("secondaryOpen").addEventListener("click", function () {
     opentab(event, "chartsTables");
 });
-// Open modal viewer
 document.getElementById("defaultOpen").click();
 
-// save, load, and run buttons
 
 document.getElementById("load-actual-button").addEventListener("change", loadModel);
 document.getElementById("runButton").addEventListener("click", function () {
@@ -1575,7 +1506,6 @@ document.getElementById("exportButton").addEventListener("click", function () {
     exportData();
 });
 
-// clear button
 document.getElementById("clearButton").addEventListener("click", function () {
     let confirmNewModel = confirm("Do you want to clear this model and start a new one? Your current project will be wiped!");
     if (confirmNewModel) {
@@ -1583,17 +1513,13 @@ document.getElementById("clearButton").addEventListener("click", function () {
         if (!doubleConfirm) return;
 
         document.getElementById("model_name").value = "New Project";
-        // Reset Model
         document.getElementById("startTime").value = 0;
         document.getElementById("endTime").value = 10;
         document.getElementById("dt").value = 0.1;
         document.getElementById("integrationMethod").value = "rk4";
-        // clear the diagram
         myDiagram.model = go.Model.fromJson("{ \"class\": \"GraphLinksModel\", \"linkLabelKeysProperty\": \"labelKeys\", \"nodeDataArray\": [],\"linkDataArray\": [] }");
-        // clear the table
         $('#eqTableBody').empty();
 
-        // Reset save status after clearing model
         lastEditDate = new Date();
         unsavedEdits = false;
         lastExportDate = new Date();
@@ -1602,13 +1528,10 @@ document.getElementById("clearButton").addEventListener("click", function () {
     }
 });
 
-// reload/close warning
-// TEST-UI-001-004
 window.addEventListener('beforeunload', function (e) {
     if (unsavedEdits) e.preventDefault();
 });
 
-// Exporting myDiagram
 export {data};
 const JAVA_MATH_FUNCTIONS = ['sin()', 'cos()', 'tan()', 'asin()', 'acos()', 'atan()', 'atan2()', 'sinh()', 'cosh()', 'tanh()', 'exp()', 'log()', 'log10()', 'sqrt()', 'cbrt()', 'abs()', 'ceil()', 'floor()', 'round()', 'pow()', 'max()', 'min()', 'sign()', 'random()', 'hypot()', 'expm1()', 'log1p()'];
 
@@ -1633,8 +1556,6 @@ observer.observe(document.getElementById('eqTableBody'), {
     subtree: true
 });
 */
-// Enhance any inputs already present
-// enhanceExistingInputs();
 
 /**
  * Returns the top 5 matching Java math function suggestions based on input.
@@ -1700,7 +1621,6 @@ function getTopBracketMatches(fragment) {
 function setupAutocompleteForInputs() {
     const $tbody = $('#eqTableBody');
     const $tpopupbody = $('#equationEditorPopupContent');
-    // Show suggestions as the user types
     [$tbody, $tpopupbody].forEach($container => {
         $container.on('input', 'input[name="equation"]', function (e) {
             if (e.originalEvent && ["ArrowUp", "ArrowDown", "Tab"].includes(e.originalEvent.key)) return;
@@ -1767,7 +1687,7 @@ function setupAutocompleteForInputs() {
 
                     before = fullText.slice(0, fragmentStart);
                     updated = before + withParens + after;
-                    newCursor = before.length + withParens.indexOf("()") + 1; // inside the ()
+                    newCursor = before.length + withParens.indexOf("()") + 1;
                 }
 
 
@@ -1787,7 +1707,6 @@ function setupAutocompleteForInputs() {
             }, 150);
         });
     })
-    // Also remove on clicks outside
     $(document).on('mousedown', function (e) {
         if (!$(e.target).closest('.autocomplete-list, input[name="equation"]').length) {
             $('.autocomplete-list').remove();
@@ -1844,18 +1763,16 @@ function showAutocomplete($input) {
                     updated = before + after;
                     newCursor = before.length;
                 } else {
-                    // Add closing bracket
                     updated = before + "]" + after;
                     newCursor = before.length + 1;
                 }
 
             } else {
-                // Replace function name, add (), move cursor inside
                 const funcName = match;
                 const withParens = funcName.endsWith("()") ? funcName : funcName + "()";
                 before = before.replace(/(\w+)$/, withParens);
                 updated = before + after;
-                newCursor = before.length - 1; // cursor inside ()
+                newCursor = before.length - 1;
             }
 
 
@@ -1895,7 +1812,7 @@ function showAutocomplete($input) {
 
 function saveDiagramAsPng(diagram, filename = "diagram.png", margin = 15) {
     diagram.makeImageData({
-        background: "white", scale: 1, padding: margin,         // adds margin (in pixels) around the diagram
+        background: "white", scale: 1, padding: margin,
         returnType: "blob", callback: function (blob) {
             const url = URL.createObjectURL(blob);
             const a = document.createElement("a");
@@ -1921,7 +1838,7 @@ function saveDiagramAsPng(diagram, filename = "diagram.png", margin = 15) {
  */
 function saveDiagramAsJpg(diagram, filename = "diagram.jpg", margin = 15) {
     diagram.makeImageData({
-        background: "white", scale: 1, padding: margin,         // adds margin (in pixels) around the diagram
+        background: "white", scale: 1, padding: margin,
         returnType: "blob", callback: function (blob) {
             const url = URL.createObjectURL(blob);
             const a = document.createElement("a");
@@ -1947,7 +1864,7 @@ function saveDiagramAsJpg(diagram, filename = "diagram.jpg", margin = 15) {
  */
 function saveDiagramAsTiff(diagram, filename = "diagram.tiff", margin = 15) {
     diagram.makeImageData({
-        background: "white", scale: 1, padding: margin,         // adds margin (in pixels) around the diagram
+        background: "white", scale: 1, padding: margin,
         returnType: "blob", callback: function (blob) {
             const url = URL.createObjectURL(blob);
             const a = document.createElement("a");
@@ -1972,7 +1889,7 @@ function saveDiagramAsTiff(diagram, filename = "diagram.tiff", margin = 15) {
  * @function
  */
 document.getElementById("downloadImageButton").addEventListener("click", function () {
-    const type = document.getElementById("fileSelect").value; // .png, .jpg, .tiff
+    const type = document.getElementById("fileSelect").value;
     const marginInput = parseInt(document.getElementById("imageMargin").value);
     const margin = isNaN(marginInput) ? 15 : marginInput;
     const filename = (document.getElementById("model_name").value || "diagram").trim();
@@ -2067,13 +1984,11 @@ function setupLocalStoragePersistence(diagram) {
 
 const modelNameInput = document.getElementById('model_name');
 
-// Load saved model name from localStorage
 const savedName = localStorage.getItem('model_name');
 if (savedName) {
     modelNameInput.value = savedName;
 }
 
-// Save the model name to localStorage when it changes
 modelNameInput.addEventListener('input', () => {
     localStorage.setItem('model_name', modelNameInput.value);
 });
