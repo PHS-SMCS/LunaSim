@@ -3,6 +3,30 @@
  * Caution! This uses label and not keys to identify nodes, as the user identifies nodes by label in equations.
  */
 
+/**
+ * Converts a GoJS diagram JSON object into a structured simulation-ready format.
+ *
+ * Extracts stocks, variables, converters, valves, and influences from the diagram model.
+ * This function relies on node labels (not keys) for equation referencing,
+ * and handles ghost nodes (prefixed with `$`) by resolving them to real nodes when needed.
+ *
+ * The output object is compatible with the simulation engine used in `engine.js`.
+ *
+ * @function
+ * @memberof module:translator
+ * @param {Object} obj - The JSON object representing a GoJS model, typically from `myDiagram.model.toJson()`.
+ * @returns {Object} A structured object containing:
+ * - `stocks`: stock definitions keyed by label
+ * - `converters`: variable-equivalent nodes for plotting
+ * - `variables`: array of raw variables with key, label, and equation
+ * - `valves`: array of flow controllers (valves)
+ * - `influences`: influence connections between nodes
+ * - `labelsandkeys`: mapping of label-to-key used for reference resolution
+ *
+ * @example
+ * const engineJson = translate(myDiagram.model.toJson());
+ */
+
 export function translate(obj) {
     var res = {
         "stocks": {},

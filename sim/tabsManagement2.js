@@ -8,6 +8,11 @@ import { PERFORMANCE_MODE } from "./editor.js";
 
 var TESTING_MODE = false;
 
+/**
+ * Displays a popup notification with a given message.
+ * @function
+ * @param {string} msg - The message to show in the popup.
+ */
 
 function showPopup(msg) {
   var popupNotif = document.getElementById("popupNotif");
@@ -45,8 +50,13 @@ var chart = new ApexCharts(document.querySelector("#chart"), {
 })
 chart.render()
 
-// Creates an array of series keys
-// @def true if only reuturns stocks for default
+/**
+ * Returns an array of available series keys from simulation data.
+ * @function
+ * @param {boolean} def - If true, only returns stock names (default display).
+ * @returns {string[]} An array of valid variable names for graphing.
+ */
+
 function seriesKeys(def){
   const series = ["time"]; // time as an option
 
@@ -76,7 +86,12 @@ function seriesKeys(def){
   return series;
 }
 
-// Adds the options for the x and y axes
+/**
+ * Populates the X and Y axis selectors in the chart/table creation form.
+ * Dynamically creates options based on available simulation series.
+ * @function
+ */
+
 function addOptions(){
   const series = seriesKeys(false);
   let x = document.getElementById("xAxis"); // refers to x-axis select node
@@ -121,13 +136,18 @@ function addOptions(){
   }
 }
 
-// Opens and initializes the form popup
+/**
+ * Opens the tab configuration form for adding a new chart or table.
+ * Checks for valid simulation data before displaying the form.
+ * @function
+ */
+
 function openForm(){
   if (data == null){ // ensures that the simulation has been run first
     showPopup("Run the simulation first.");
     return;
   }
-  if (seriesKeys(false).length == 1){
+  if (seriesKeys(false).length === 1){
     showPopup("Create a model first.");
     return;
   }
@@ -138,7 +158,12 @@ function openForm(){
   form.style.display = "block"; // display form
 }
 
-// Will validate and add tab data
+/**
+ * Validates form input and submits a new chart/table tab.
+ * @function
+ * @returns {boolean} False to prevent default form submission.
+ */
+
 function submit() {
   let form = document.forms["tabConfig"];
   let nameInput = document.getElementById("tab_name");
@@ -178,7 +203,11 @@ function submit() {
 }
 
 
-// Resets the options so that it updates the options
+/**
+ * Clears all current X and Y axis options from the form UI.
+ * @function
+ */
+
 function resetOptions(){
   let x = document.getElementById("xAxis"); // refers to x-axis select node
   while (x.firstChild) { // removes all child elements
@@ -191,7 +220,12 @@ function resetOptions(){
   }
 }
 
-// Enter objects into tabs data array
+/**
+ * Adds a new tab to the tabs array based on form input values.
+ * Automatically switches to the new tab after creation.
+ * @function
+ */
+
 function initializeTab() {
   let form = document.forms["tabConfig"];
   
@@ -224,10 +258,13 @@ function initializeTab() {
   resetOptions(); // reset options
 }
 
-// Array listener
-/* @arr array you want to listen to
-   @callback function that will be called on any change inside array
+/**
+ * Watches an array for structural changes (e.g., push, pop, splice) and triggers a callback.
+ * @function
+ * @param {Array} arr - The array to observe.
+ * @param {Function} callback - The function to call when the array changes.
  */
+
 function listenChangesinArray(arr,callback){
      // Add more methods here if you want to listen to them
     ['pop','push','reverse','shift','unshift','splice','sort'].forEach((m)=>{
@@ -239,7 +276,12 @@ function listenChangesinArray(arr,callback){
     });
 }
 
-// Configures dynamic tabs
+/**
+ * Rebuilds the tab list UI from the current `tabs` array and sets up event listeners.
+ * Handles both chart and table rendering logic upon tab selection.
+ * @function
+ */
+
 function configTabs() {
   sessionStorage.tabsData = JSON.stringify(tabs); // updates session storage
   if (TESTING_MODE) console.log(tabs);
@@ -437,6 +479,13 @@ function configTabs() {
   }
 }
 
+/**
+ * Retrieves all values for a given variable or flow name from the simulation data.
+ * @function
+ * @param {string} name - The name of the variable or flow.
+ * @param {Object} data - The simulation output data.
+ * @returns {number[]|undefined} An array of numeric values, or undefined if not found.
+ */
 
 function getAllValues(name, data) {
   if (name == "time") {
@@ -574,6 +623,12 @@ document.getElementById("deleteGraph").addEventListener("click", function () {
   }
 });
 
+/**
+ * Updates the sidebar statistics display with information about the selected tab.
+ * Includes name, type, axes, and simulation configuration (start, end, dt, method).
+ * @function
+ * @param {number} index - The index of the currently selected tab.
+ */
 
 function updateChartStats(index) {
   const statsEl = document.getElementById("chartStats");

@@ -2,14 +2,23 @@
  * This file contains the main engine for the simulation.  It runs both euler's method and the RK4 method, given input in the form of a json.
  */
 
-// SIMULATION ERROR POPUP (Author: William J. Park)
-// Displays the Simulation Error Popup
+/**
+ * Displays the simulation error popup and dims the background.
+ * Triggered when an equation or model setup fails validation.
+ * @function
+ */
+
 function showSimErrorPopup() {
     document.getElementById("simErrorPopup").style.display = "block";
     document.getElementById("grayEffectDiv").style.display = "block";
 }
 document.getElementById("simErrorPopupDismiss").addEventListener("click", closeSimErrorPopup);
-// Closes the Simulation Error Popup
+
+/**
+ * Hides the simulation error popup and restores background visibility.
+ * @function
+ */
+
 function closeSimErrorPopup() {
     document.getElementById("simErrorPopup").style.display = "none";
     document.getElementById("grayEffectDiv").style.display = "none";
@@ -23,9 +32,16 @@ export class Simulation {
         this.endTime;
     }
 
-    /*
-    Wrapper for eval().
-    */
+    /**
+     * Safely evaluates a mathematical expression string using JavaScript's `eval`,
+     * while replacing known mathematical terms and correcting syntax patterns.
+     *
+     * @method
+     * @memberof Simulation
+     * @param {string} expression - The math expression to evaluate.
+     * @returns {number} The result of the evaluated expression or NaN on error.
+     */
+
     safeEval(expression) {
         // if there are two -- or two ++, remove one
         expression = expression.replaceAll("--", "+");
@@ -83,10 +99,17 @@ export class Simulation {
         }
     }
 
-    /* 
-    Replaces names in equation with values.
-    Example: 'converter1*converter2+stock1' --> '(1)*(2)+(3)'
-    */
+    /**
+     * Recursively replaces all references to variables, stocks, inflows, and outflows
+     * in the equation with their actual equation expressions or initial values.
+     *
+     * @method
+     * @memberof Simulation
+     * @param {string} equation - The expression to resolve.
+     * @param {string[]} [history=[]] - Keeps track of recursion depth and avoids circular references.
+     * @returns {string} A fully-resolved equation string ready for evaluation.
+     */
+
     parseObject(equation, history = []) {
         let objects = {} // stores all stocks, converters, and flows and their respective equation/safeval
 
@@ -119,9 +142,18 @@ export class Simulation {
         return equation;
     }
 
-    /*
-    Combines parseObject and safeEval to parse and evaluate an equation. It alerts the user if the equation is invalid.
-    */
+    /**
+     * Parses and evaluates an expression by resolving dependencies recursively,
+     * then safely evaluates the result. Detects and reports circular definitions.
+     *
+     * @method
+     * @memberof Simulation
+     * @param {string} equation - The expression to parse and evaluate.
+     * @param {string[]} [history=[]] - Used to track recursion and detect cycles.
+     * @returns {number} The numeric result of evaluating the expression.
+     * @throws Will show a popup and throw if evaluation fails or cycle is detected.
+     */
+
     parseAndEval(equation, history = []) {
 
 
@@ -147,9 +179,15 @@ export class Simulation {
         }
     }
 
-    /*
-    Applies parseObject initially all values to figure out timestep 0.
-    */
+    /**
+     * Initializes the simulation state by evaluating all stock, flow, and converter
+     * equations for timestep 0. Stores initial values and performs safety checks.
+     *
+     * @method
+     * @memberof Simulation
+     * @throws Will show a popup and throw if any value cannot be resolved.
+     */
+
     initObjects() {
         for (var stockName in this.data.stocks) {
             let stock = this.data.stocks[stockName];
@@ -215,9 +253,14 @@ export class Simulation {
         }
     }
 
-    /*
-    Resets the model to the initial state.  Deletes all values for all objects and sets safevals to null.
-    */
+    /**
+     * Resets the simulation to its initial state by clearing all values
+     * and resetting all `safeval` fields to null.
+     *
+     * @method
+     * @memberof Simulation
+     */
+
     reset() {
         for (var stockName in this.data.stocks) {
             let stock = this.data.stocks[stockName];
@@ -241,9 +284,16 @@ export class Simulation {
         this.data.timesteps = [];
     }
 
-    /* 
-    Uses stock name to return sum of inflows and outflows.
-    */
+    /**
+     * Calculates the net rate of change (dy/dt) for a given stock by summing
+     * all its inflows and outflows using current values.
+     *
+     * @method
+     * @memberof Simulation
+     * @param {Object} stock - A stock object containing inflows and outflows.
+     * @returns {number} The computed net change for the stock.
+     */
+
     dydt(stock) {
         // Locally define the inflow and outflows in stock
         let inflows = stock["inflows"];
@@ -263,9 +313,14 @@ export class Simulation {
         return sumInflow - sumOutflow;
     }
 
-    /*
-    Runs model using Euler's method.
-    */
+    /**
+     * Runs the simulation using Euler's method for numerical integration.
+     * Iterates from startTime to endTime, updating all stocks, flows, and converters.
+     *
+     * @method
+     * @memberof Simulation
+     */
+
     euler() {
         for (var t = this.startTime + this.dt; parseFloat(t.toFixed(5)) <= parseFloat(this.endTime.toFixed(5)); t += this.dt) { // (skip start time as that was covered in this.initObjects())
             this.data.timesteps.push(parseFloat(t.toFixed(5)));
@@ -306,9 +361,14 @@ export class Simulation {
         }
     }
 
-    /*
-    Runs model using 4th order Runge-Kutta method.
-    */
+    /**
+     * Runs the simulation using the 4th-order Runge-Kutta method.
+     * Provides more accurate results than Euler's method for the same step size.
+     *
+     * @method
+     * @memberof Simulation
+     */
+
     rk4() {
         for (var t = this.startTime + this.dt; parseFloat(t.toFixed(5)) <= parseFloat(this.endTime.toFixed(5)); t += this.dt) { // use high precision to make sure correct number of iterations
             this.data.timesteps.push(parseFloat(t.toFixed(5)));
@@ -406,9 +466,15 @@ export class Simulation {
         }
     }
 
-    /*
-    Sets the data for the model.  This also resets the model (safevals and values list).
-    */
+    /**
+     * Loads a structured model dataset and initializes internal simulation parameters.
+     * Also triggers a full reset of the simulation state.
+     *
+     * @method
+     * @memberof Simulation
+     * @param {Object} structData - The structured model data object.
+     */
+
     setData(structData) {
         this.data = structData;
         this.dt = parseFloat(structData.dt);
@@ -417,10 +483,15 @@ export class Simulation {
         this.reset();
     }
 
-    /* 
-    Runs the model. 
-    This is the function called by frontend.
-    */
+    /**
+     * Executes the full simulation using the configured integration method.
+     * Returns a deep copy of the resulting data.
+     *
+     * @method
+     * @memberof Simulation
+     * @returns {Object} The completed simulation output data.
+     */
+
     run() {
         this.initObjects(); // set initial values
 

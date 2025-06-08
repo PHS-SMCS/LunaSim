@@ -415,7 +415,19 @@ function buildTemplates() {
     // For details, see https://gojs.net/latest/intro/buildingObjects.html
     const $ = go.GraphObject.make;
 
-    // helper functions for the templates
+    /**
+     * Returns a shared style array for GoJS node definitions.
+     *
+     * Includes basic panel configuration and two-way binding for the node's location.
+     * Used as the base style for all node templates in the diagram.
+     *
+     * @function
+     * @memberof module:editor
+     * @returns {Array} An array of GoJS GraphObject style properties and bindings.
+     * @example
+     * const stockNode = $(go.Node, nodeStyle(), ...);
+     */
+
     function nodeStyle() {
         return [{
             type: go.Panel.Spot,
@@ -425,6 +437,18 @@ function buildTemplates() {
             locationSpot: go.Spot.Center
         }, new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify)];
     }
+    /**
+     * Returns the default style object for the shape component of GoJS nodes.
+     *
+     * Applies common port-related settings like linkability and shape naming.
+     * Used in node templates to standardize appearance and behavior.
+     *
+     * @function
+     * @memberof module:editor
+     * @returns {Object} A style object defining shape properties for GoJS nodes.
+     * @example
+     * const shape = $(go.Shape, shapeStyle(), ...);
+     */
 
     function shapeStyle() {
         return {
@@ -432,6 +456,18 @@ function buildTemplates() {
             fromLinkable: true, toLinkable: true
         };
     }
+    /**
+     * Returns the default text style array for GoJS TextBlock elements.
+     *
+     * Applies font, color, margin, and sets up two-way binding to the `label` property.
+     * Used in node templates to standardize label appearance and enable editing.
+     *
+     * @function
+     * @memberof module:editor
+     * @returns {Array} An array of text styling properties and bindings for GoJS TextBlocks.
+     * @example
+     * const text = $(go.TextBlock, textStyle(), ...);
+     */
 
     function textStyle() {
         return [{
@@ -693,7 +729,18 @@ function updateTable(load = false) {
             return order[a.category] - order[b.category];
         });
 
-    // Rename finalizer function (defined here to access labelValidator and myDiagram)
+    /**
+     * Handles finalizing the renaming of a node label in the equation table.
+     *
+     * Validates the new name, updates the corresponding node in the GoJS model,
+     * and triggers a table and diagram update. If the name is invalid or unchanged,
+     * it reverts to the original name and optionally alerts the user.
+     *
+     * @function
+     * @memberof module:editor
+     * @this {HTMLInputElement} The input field that triggered the event.
+     */
+
     function finalizeRename() {
         const $input = $(this);
         const oldName = $input.data('oldName');
@@ -906,10 +953,15 @@ function labelValidator(textblock, oldstr, newstr) {
 }
 
 /**
- * Displays the simulation error popup by opening the appropriate settings panel.
- * @memberof module:editor
+ * Displays the simulation error popup panel in the UI.
+ *
+ * Opens the popup element with ID `simErrorPopup` using the `openSettings` utility.
+ * Typically, triggered when simulation validation fails.
+ *
  * @function
+ * @memberof module:editor
  */
+
 function showSimErrorPopup() {
     openSettings(event, 'simErrorPopup');
 }
