@@ -207,7 +207,7 @@ a.active {
 }
 
 .chartCanvas {
-    background-color: #0f0f0f;
+    background-color: #000000;
     color: #ffffff; /* Changed from #999999 */
 }
 
@@ -387,121 +387,216 @@ a.active {
 .close-popup {
     color: #ffffff; /* Changed from #999999 */
 }
-/* Apex Charts hover tooltip styling - with proper color markers */
+/* Apex Charts hover tooltip styling - with proper color markers *//* Apex Charts - Complete styling overhaul */
+.apexcharts-canvas,
+.apexcharts-svg,
+.apexcharts-inner,
+.apexcharts-graphical {
+    background-color: #0a0a0a !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
 
-/* Main tooltip container */
+.apexcharts-canvas svg {
+    background-color: #0a0a0a !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Remove borders and outlines except for grid lines */
+.apexcharts-canvas *,
+.apexcharts-svg *,
+.apexcharts-inner *,
+.apexcharts-graphical * {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Fix chart container and wrapper */
+.apexcharts-chart,
+.apexcharts-chart-wrapper {
+    background-color: #0a0a0a !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Legend text */
+.apexcharts-legend-text {
+    color: #ffffff !important;
+    fill: #ffffff !important;
+}
+
+/* Data labels */
+.apexcharts-datalabel,
+.apexcharts-datalabel-label,
+.apexcharts-datalabel-value {
+    fill: #ffffff !important;
+}
+
+/* Axis labels */
+.apexcharts-xaxis-label,
+.apexcharts-yaxis-label,
+.apexcharts-xaxis-texts-g text,
+.apexcharts-yaxis-texts-g text,
+.apexcharts-xaxis-label tspan,
+.apexcharts-yaxis-label tspan,
+.apexcharts-xaxis-texts-g tspan,
+.apexcharts-yaxis-texts-g tspan {
+    fill: #ffffff !important;
+}
+
+/* Grid lines */
+.apexcharts-gridlines-horizontal line {
+    stroke: #666666 !important;
+    stroke-width: 1px !important;
+}
+
+.apexcharts-gridlines-vertical line {
+    stroke: #ffffff !important;
+    stroke-width: 1px !important;
+}
+
+.apexcharts-gridline {
+    stroke: #666666 !important;
+    stroke-width: 1px !important;
+}
+
+/* Crosshairs */
+.apexcharts-xcrosshairs,
+.apexcharts-ycrosshairs,
+.apexcharts-crosshairs-x,
+.apexcharts-crosshairs-y {
+    stroke: #ffffff !important;
+    stroke-width: 1px !important;
+}
+
+/* Tooltip styling *//* Tooltip styling */
 .apexcharts-tooltip {
-    background: #000000 !important;
-    border: 1px solid #333333 !important;
-    color: #ffffff !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) !important;
-}
-
-/* All text elements inside tooltip */
-.apexcharts-tooltip * {
+    background-color: #0a0a0a !important;
+    border: 1px solid #444444 !important;
     color: #ffffff !important;
 }
 
-/* Title section of tooltip */
 .apexcharts-tooltip-title {
-    background: #1a1a1a !important;
+    background-color: #1a1a1a !important;
     color: #ffffff !important;
-    border-bottom: 1px solid #333333 !important;
-    font-weight: bold !important;
+    border-bottom: 1px solid #444444 !important;
 }
 
-/* Series group container */
-.apexcharts-tooltip-series-group {
-    background: #000000 !important;
-    padding: 8px !important;
-    display: flex !important;
-    align-items: center !important;
-}
-
-/* Make sure the series group is visible */
-.apexcharts-tooltip-series-group.apexcharts-active {
-    display: flex !important;
-    opacity: 1 !important;
-}
-
-/* Fix for the color marker/dot - REMOVE background override */
-.apexcharts-tooltip-marker {
-    width: 12px !important;
-    height: 12px !important;
-    display: inline-block !important;
-    margin-right: 8px !important;
-    border-radius: 50% !important;
-    /* REMOVED: background: #ffffff !important; - this was forcing white */
-    /* Let Apex Charts set the color dynamically */
-}
-
-/* Text elements */
-.apexcharts-tooltip-text {
-    color: #ffffff !important;
-}
-
+.apexcharts-tooltip-series-group,
+.apexcharts-tooltip-text,
 .apexcharts-tooltip-text-label,
 .apexcharts-tooltip-text-value {
+    background-color: #0a0a0a !important;
     color: #ffffff !important;
+    fill: #ffffff !important;
 }
 
-/* X-axis tooltip/crosshair label */
-.apexcharts-xaxistooltip {
-    background: #000000 !important;
-    border: 1px solid #333333 !important;
-    color: #ffffff !important;
-    font-weight: normal !important;
-    padding: 5px 10px !important;
-    opacity: 1 !important;
-}
-
-.apexcharts-xaxistooltip-bottom:before,
-.apexcharts-xaxistooltip-bottom:after {
-    border-bottom-color: #000000 !important;
-}
-
-/* Y-axis tooltip */
+/* Crosshair labels */
+.apexcharts-xaxistooltip,
 .apexcharts-yaxistooltip {
-    background: #000000 !important;
+    background-color: #0a0a0a !important;
+    color: #ffffff !important;
+    border: 1px solid #444444 !important;
+}
+
+.apexcharts-xaxistooltip-text,
+.apexcharts-yaxistooltip-text {
+    fill: #ffffff !important;
+    color: #ffffff !important;
+}
+
+/* Background rects */
+.apexcharts-canvas rect[fill="#ffffff"],
+.apexcharts-svg rect[fill="#ffffff"] {
+    fill: #0a0a0a !important;
+    stroke: none !important;
+}
+
+/* Tabulator styling - Black theme with white text */
+.tabulator {
+    background-color: #1a1a1a !important;
     border: 1px solid #333333 !important;
     color: #ffffff !important;
 }
 
-.apexcharts-yaxistooltip-left:before,
-.apexcharts-yaxistooltip-left:after {
-    border-left-color: #000000 !important;
+.tabulator-header {
+    background-color: #0a0a0a !important;
+    border-bottom: 2px solid #ffffff !important;
 }
 
-.apexcharts-yaxistooltip-right:before,
-.apexcharts-yaxistooltip-right:after {
-    border-right-color: #000000 !important;
+.tabulator-header-contents {
+    background-color: #0a0a0a !important;
 }
 
-/* Make sure all text in tooltips is white */
-.apexcharts-xaxistooltip *,
-.apexcharts-yaxistooltip * {
+.tabulator-col {
+    background-color: #0a0a0a !important;
+    border-right: 1px solid #333333 !important;
+}
+
+.tabulator-col-title {
     color: #ffffff !important;
 }
 
-/* Fix for tooltip arrow */
-.apexcharts-tooltip-arrow {
-    border-color: #000000 !important;
+.tabulator-col-content {
+    background-color: #0a0a0a !important;
 }
 
-/* Additional specificity for nested elements - but exclude marker background */
-.apexcharts-tooltip .apexcharts-tooltip-title,
-.apexcharts-tooltip .apexcharts-tooltip-series-group,
-.apexcharts-tooltip .apexcharts-tooltip-text,
-.apexcharts-tooltip .apexcharts-tooltip-text-label,
-.apexcharts-tooltip .apexcharts-tooltip-text-value {
+.tabulator-row {
+    background-color: #1a1a1a !important;
+    border-bottom: 1px solid #333333 !important;
     color: #ffffff !important;
 }
 
-/* Make sure we don't override the marker's dynamic background color */
-.apexcharts-tooltip .apexcharts-tooltip-marker {
-    /* Only set dimensions and spacing, not background color */
-    width: 12px !important;
-    height: 12px !important;
-    margin-right: 8px !important;
-    border-radius: 50% !important;
+.tabulator-row.tabulator-row-even {
+    background-color: #222222 !important;
 }
+
+.tabulator-row.tabulator-selected {
+    background-color: #333333 !important;
+}
+
+.tabulator-row.tabulator-row-hover {
+    background-color: #333333 !important;
+}
+
+.tabulator-cell {
+    border-right: 1px solid #333333 !important;
+}
+
+.tabulator-footer {
+    background-color: #0a0a0a !important;
+    border-top: 1px solid #333333 !important;
+}
+
+.tabulator-footer-contents {
+    background-color: #0a0a0a !important;
+    color: #ffffff !important;
+}
+
+.tabulator-paginator {
+    color: #ffffff !important;
+}
+
+.tabulator-page {
+    background-color: #1a1a1a !important;
+    color: #ffffff !important;
+    border: 1px solid #333333 !important;
+}
+
+.tabulator-page.active {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+}
+
+.tabulator-page:hover {
+    background-color: #333333 !important;
+}
+
+.graphTabs::after {
+    background-color: #1a1a1a;
+    color: white;
+}
+
