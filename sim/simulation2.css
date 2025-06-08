@@ -981,7 +981,7 @@ input.settings-input.invalid:focus {
   border-radius: 1rem;
   padding: 1.5rem;
   width: 90vw;
-  max-width: 500px;
+  max-width: 425px;
   max-height: 85vh;
   overflow-y: auto;
   z-index: 1003;

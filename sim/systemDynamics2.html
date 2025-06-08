@@ -273,29 +273,29 @@
         <form id="tabConfig" name = "tabConfig" onsubmit="return false"> <!-- Will not refresh page -->
           <div class="setting-group">
             <label for="tab_name">Visual Name</label>
-            <input type="text" id="tab_name" name="tab_name" class="settings-input" placeholder="e.g., Population Chart" autocomplete="off" />
+            <input type="text" id="tab_name" name="tab_name" class="settings-input" style="width: 63%;" placeholder="e.g., Population Chart" autocomplete="off" />
             <p id="nameValidation" class="validation-message hidden">* Please enter a visual name.</p>
           </div>
           <div class="setting-group">
             <label for="model_type">Type</label>
-            <select id="model_type" name="model_type" class="settings-dropdown" style="width: 60%;" required>
+            <select id="model_type" name="model_type" class="settings-dropdown" style="width: 63%;" required>
               <option value="chart" selected>Chart</option>
               <option value="table">Table</option>
             </select>
           </div>
           <div class="setting-group" id="xAxisGroup">
             <label for="xAxis">X-Axis</label>
-            <select name="xAxis" id="xAxis" style="font-size: inherit; width: 60%;" required>
+            <select name="xAxis" id="xAxis" style="font-size: inherit; width: 63%;" required>
               <!-- Options initialized dynamically -->
             </select>
           </div>
           <div class="setting-group">
             <label for="yAxis">Y-Axis</label>
-            <table id="yAxis" style="width: 60%;">
+            <table id="yAxis" style="width: 63%;">
               <!-- Multiple checkboxes initialized dynamically -->
             </table>
           </div>
-          <button id="submitModel">Create New Tab</button>
+          <button id="submitModel" onclick="closeSettings('chartsPopup')">Create New Tab</button>
         </form>
       </div>
       </div>
