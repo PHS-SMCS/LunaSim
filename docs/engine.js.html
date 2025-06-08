@@ -1,7 +1,35 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: engine.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: engine.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  * @fileoverview Handles parsing and calculations for LunaSim
  * @module engine
- * @author Authors: Karthik S. Vedula, Ryan Chung,Arjun Mujudar, Akash Saran
+ * @author Authors: Karthik S. Vedula, Ryan Chung, Arjun Mujamdar, Akash Saran
  */
 
 
@@ -53,48 +81,48 @@ export class Simulation {
         expression = expression.replaceAll("--", "+");
         expression = expression
             // Inverse hyperbolic trig
-            .replaceAll(/(?<!Math\.)\basinh\b/gi, 'Math.asinh')
-            .replaceAll(/(?<!Math\.)\bacosh\b/gi, 'Math.acosh')
-            .replaceAll(/(?<!Math\.)\batanh\b/gi, 'Math.atanh')
+            .replaceAll(/(?&lt;!Math\.)\basinh\b/gi, 'Math.asinh')
+            .replaceAll(/(?&lt;!Math\.)\bacosh\b/gi, 'Math.acosh')
+            .replaceAll(/(?&lt;!Math\.)\batanh\b/gi, 'Math.atanh')
             // Hyperbolic trig
-            .replaceAll(/(?<!Math\.)\bsinh\b/gi, 'Math.sinh')
-            .replaceAll(/(?<!Math\.)\bcosh\b/gi, 'Math.cosh')
-            .replaceAll(/(?<!Math\.)\btanh\b/gi, 'Math.tanh')
+            .replaceAll(/(?&lt;!Math\.)\bsinh\b/gi, 'Math.sinh')
+            .replaceAll(/(?&lt;!Math\.)\bcosh\b/gi, 'Math.cosh')
+            .replaceAll(/(?&lt;!Math\.)\btanh\b/gi, 'Math.tanh')
             // Inverse trig
-            .replaceAll(/(?<!Math\.)\basin\b/gi, 'Math.asin')
-            .replaceAll(/(?<!Math\.)\bacos\b/gi, 'Math.acos')
-            .replaceAll(/(?<!Math\.)\batan\b/gi, 'Math.atan')
+            .replaceAll(/(?&lt;!Math\.)\basin\b/gi, 'Math.asin')
+            .replaceAll(/(?&lt;!Math\.)\bacos\b/gi, 'Math.acos')
+            .replaceAll(/(?&lt;!Math\.)\batan\b/gi, 'Math.atan')
             // Basic trig
-            .replaceAll(/(?<!Math\.)\bsin\b/gi, 'Math.sin')
-            .replaceAll(/(?<!Math\.)\bcos\b/gi, 'Math.cos')
-            .replaceAll(/(?<!Math\.)\btan\b/gi, 'Math.tan')
+            .replaceAll(/(?&lt;!Math\.)\bsin\b/gi, 'Math.sin')
+            .replaceAll(/(?&lt;!Math\.)\bcos\b/gi, 'Math.cos')
+            .replaceAll(/(?&lt;!Math\.)\btan\b/gi, 'Math.tan')
             // Roots
-            .replaceAll(/(?<!Math\.)\bsqrt\b/gi, 'Math.sqrt')
-            .replaceAll(/(?<!Math\.)\bcbrt\b/gi, 'Math.cbrt')
+            .replaceAll(/(?&lt;!Math\.)\bsqrt\b/gi, 'Math.sqrt')
+            .replaceAll(/(?&lt;!Math\.)\bcbrt\b/gi, 'Math.cbrt')
             // Min/Max
-            .replaceAll(/(?<!Math\.)\bmax\b/gi, 'Math.max')
-            .replaceAll(/(?<!Math\.)\bmin\b/gi, 'Math.min')
+            .replaceAll(/(?&lt;!Math\.)\bmax\b/gi, 'Math.max')
+            .replaceAll(/(?&lt;!Math\.)\bmin\b/gi, 'Math.min')
             // Constants
-            .replaceAll(/(?<!Math\.)\bpi\b/gi, 'Math.PI')
-            .replaceAll(/(?<!Math\.)\be\b/gi, 'Math.E')
+            .replaceAll(/(?&lt;!Math\.)\bpi\b/gi, 'Math.PI')
+            .replaceAll(/(?&lt;!Math\.)\be\b/gi, 'Math.E')
             // rest of the functions
-            .replaceAll(/(?<!Math\.)\bexp\b/gi, 'Math.exp')
-            .replaceAll(/(?<!Math\.)\blog\b/gi, 'Math.log')
-            .replaceAll(/(?<!Math\.)\blog10\b/gi, 'Math.log10')
-            .replaceAll(/(?<!Math\.)\bsqrt\b/gi, 'Math.sqrt')
-            .replaceAll(/(?<!Math\.)\bcbrt\b/gi, 'Math.cbrt')
-            .replaceAll(/(?<!Math\.)\babs\b/gi, 'Math.abs')
-            .replaceAll(/(?<!Math\.)\bceil\b/gi, 'Math.ceil')
-            .replaceAll(/(?<!Math\.)\bfloor\b/gi, 'Math.floor')
-            .replaceAll(/(?<!Math\.)\bround\b/gi, 'Math.round')
-            .replaceAll(/(?<!Math\.)\bpow\b/gi, 'Math.pow')
-            .replaceAll(/(?<!Math\.)\bmax\b/gi, 'Math.max')
-            .replaceAll(/(?<!Math\.)\bmin\b/gi, 'Math.min')
-            .replaceAll(/(?<!Math\.)\brandom\b/gi, 'Math.random')
-            .replaceAll(/(?<!Math\.)\bhypot\b/gi, 'Math.hypot')
-            .replaceAll(/(?<!Math\.)\bexpm1\b/gi, 'Math.expm1')
-            .replaceAll(/(?<!Math\.)\blog1p\b/gi, 'Math.log1p')
-            .replaceAll(/(?<!Math\.)\bsign\b/gi, 'Math.sign')
+            .replaceAll(/(?&lt;!Math\.)\bexp\b/gi, 'Math.exp')
+            .replaceAll(/(?&lt;!Math\.)\blog\b/gi, 'Math.log')
+            .replaceAll(/(?&lt;!Math\.)\blog10\b/gi, 'Math.log10')
+            .replaceAll(/(?&lt;!Math\.)\bsqrt\b/gi, 'Math.sqrt')
+            .replaceAll(/(?&lt;!Math\.)\bcbrt\b/gi, 'Math.cbrt')
+            .replaceAll(/(?&lt;!Math\.)\babs\b/gi, 'Math.abs')
+            .replaceAll(/(?&lt;!Math\.)\bceil\b/gi, 'Math.ceil')
+            .replaceAll(/(?&lt;!Math\.)\bfloor\b/gi, 'Math.floor')
+            .replaceAll(/(?&lt;!Math\.)\bround\b/gi, 'Math.round')
+            .replaceAll(/(?&lt;!Math\.)\bpow\b/gi, 'Math.pow')
+            .replaceAll(/(?&lt;!Math\.)\bmax\b/gi, 'Math.max')
+            .replaceAll(/(?&lt;!Math\.)\bmin\b/gi, 'Math.min')
+            .replaceAll(/(?&lt;!Math\.)\brandom\b/gi, 'Math.random')
+            .replaceAll(/(?&lt;!Math\.)\bhypot\b/gi, 'Math.hypot')
+            .replaceAll(/(?&lt;!Math\.)\bexpm1\b/gi, 'Math.expm1')
+            .replaceAll(/(?&lt;!Math\.)\blog1p\b/gi, 'Math.log1p')
+            .replaceAll(/(?&lt;!Math\.)\bsign\b/gi, 'Math.sign')
 
 
         try {
@@ -168,9 +196,9 @@ export class Simulation {
         // Check for circular definitions
         if (history.includes(equation)) {
             history.push(equation);
-            document.getElementById("simErrorPopupDesc").innerHTML = "Circular Definition Detected:<br>" + equation + "<br><br>Stack Trace:<br>" + history.join("<br> -> ") + "<br><br>Please check your equations and try again.";
+            document.getElementById("simErrorPopupDesc").innerHTML = "Circular Definition Detected:&lt;br>" + equation + "&lt;br>&lt;br>Stack Trace:&lt;br>" + history.join("&lt;br> -> ") + "&lt;br>&lt;br>Please check your equations and try again.";
             showSimErrorPopup();
-            throw new Error("Circular Definition Detected:<br>" + equation + "<br><br>Stack Trace:<br>" + history.join("<br> -> ") + "<br><br>Please check your equations and try again.");
+            throw new Error("Circular Definition Detected:&lt;br>" + equation + "&lt;br>&lt;br>Stack Trace:&lt;br>" + history.join("&lt;br> -> ") + "&lt;br>&lt;br>Please check your equations and try again.");
         }
         history.push(equation);
 
@@ -179,9 +207,9 @@ export class Simulation {
         var res = this.safeEval(parsedEquation);
 
         if (isNaN(res)) {
-            document.getElementById("simErrorPopupDesc").innerHTML = "Invalid equation:<br>" + equation + "<br><br>Parsed equation:<br>" + parsedEquation + "<br><br>Please check your equations and try again.";
+            document.getElementById("simErrorPopupDesc").innerHTML = "Invalid equation:&lt;br>" + equation + "&lt;br>&lt;br>Parsed equation:&lt;br>" + parsedEquation + "&lt;br>&lt;br>Please check your equations and try again.";
             showSimErrorPopup();
-            throw new Error("Invalid equation:<br>" + equation + "<br><br>Parsed equation:<br>" + parsedEquation + "<br><br>Please check your equations and try again.");
+            throw new Error("Invalid equation:&lt;br>" + equation + "&lt;br>&lt;br>Parsed equation:&lt;br>" + parsedEquation + "&lt;br>&lt;br>Please check your equations and try again.");
         } else {
             return res;
         }
@@ -232,32 +260,32 @@ export class Simulation {
             let stock = this.data.stocks[stockName];
 
             if (stock["values"][0] == null) {
-                document.getElementById("simErrorPopupDesc").innerHTML = "Invalid equation (maybe circular definition):<br>" + stock["equation"] + "<br><br>Please check your equations and try again.";
+                document.getElementById("simErrorPopupDesc").innerHTML = "Invalid equation (maybe circular definition):&lt;br>" + stock["equation"] + "&lt;br>&lt;br>Please check your equations and try again.";
                 showSimErrorPopup();
-                throw new Error("Invalid equation (maybe circular definition):<br>" + stock["equation"] + "<br><br>Please check your equations and try again.");
+                throw new Error("Invalid equation (maybe circular definition):&lt;br>" + stock["equation"] + "&lt;br>&lt;br>Please check your equations and try again.");
             }
 
             for (var flowName in stock["inflows"]) {
                 if (stock["inflows"][flowName]["values"][0] == null) {
-                    document.getElementById("simErrorPopupDesc").innerHTML = "Invalid equation (maybe circular definition):<br>" + stock["inflows"][flowName]["equation"] + "<br><br>Please check your equations and try again.";
+                    document.getElementById("simErrorPopupDesc").innerHTML = "Invalid equation (maybe circular definition):&lt;br>" + stock["inflows"][flowName]["equation"] + "&lt;br>&lt;br>Please check your equations and try again.";
                     showSimErrorPopup()
-                    throw new Error("Invalid equation (maybe circular definition):<br>" + stock["inflows"][flowName]["equation"] + "<br><br>Please check your equations and try again.");
+                    throw new Error("Invalid equation (maybe circular definition):&lt;br>" + stock["inflows"][flowName]["equation"] + "&lt;br>&lt;br>Please check your equations and try again.");
                 }
             }
             for (var flowName in stock["outflows"]) {
                 if (stock["outflows"][flowName]["values"][0] == null) {
-                    document.getElementById("simErrorPopupDesc").innerHTML = "Invalid equation (maybe circular definition):<br>" + stock["outflows"][flowName]["equation"] + "<br><br>Please check your equations and try again.";
+                    document.getElementById("simErrorPopupDesc").innerHTML = "Invalid equation (maybe circular definition):&lt;br>" + stock["outflows"][flowName]["equation"] + "&lt;br>&lt;br>Please check your equations and try again.";
                     showSimErrorPopup();
-                    throw new Error("Invalid equation (maybe circular definition):<br>" + stock["outflows"][flowName]["equation"] + "<br><br>Please check your equations and try again.");
+                    throw new Error("Invalid equation (maybe circular definition):&lt;br>" + stock["outflows"][flowName]["equation"] + "&lt;br>&lt;br>Please check your equations and try again.");
                 }
             }
         }
 
         for (var converterName in this.data.converters) {
             if (this.data.converters[converterName]["values"][0] == null) {
-                document.getElementById("simErrorPopupDesc").innerHTML = "Invalid equation (maybe circular definition):<br>" + this.data.converters[converterName]["equation"] + "<br><br>Please check your equations and try again.";
+                document.getElementById("simErrorPopupDesc").innerHTML = "Invalid equation (maybe circular definition):&lt;br>" + this.data.converters[converterName]["equation"] + "&lt;br>&lt;br>Please check your equations and try again.";
                 showSimErrorPopup();
-                throw new Error("Invalid equation (maybe circular definition):<br>" + this.data.converters[converterName]["equation"] + "<br><br>Please check your equations and try again.");
+                throw new Error("Invalid equation (maybe circular definition):&lt;br>" + this.data.converters[converterName]["equation"] + "&lt;br>&lt;br>Please check your equations and try again.");
             }
         }
     }
@@ -332,7 +360,7 @@ export class Simulation {
      */
 
     euler() {
-        for (var t = this.startTime + this.dt; parseFloat(t.toFixed(5)) <= parseFloat(this.endTime.toFixed(5)); t += this.dt) { // (skip start time as that was covered in this.initObjects())
+        for (var t = this.startTime + this.dt; parseFloat(t.toFixed(5)) &lt;= parseFloat(this.endTime.toFixed(5)); t += this.dt) { // (skip start time as that was covered in this.initObjects())
             this.data.timesteps.push(parseFloat(t.toFixed(5)));
             
             // Calculate new values for all stocks
@@ -380,7 +408,7 @@ export class Simulation {
      */
 
     rk4() {
-        for (var t = this.startTime + this.dt; parseFloat(t.toFixed(5)) <= parseFloat(this.endTime.toFixed(5)); t += this.dt) { // use high precision to make sure correct number of iterations
+        for (var t = this.startTime + this.dt; parseFloat(t.toFixed(5)) &lt;= parseFloat(this.endTime.toFixed(5)); t += this.dt) { // use high precision to make sure correct number of iterations
             this.data.timesteps.push(parseFloat(t.toFixed(5)));
 
             let y0_dict = {};
@@ -516,4 +544,26 @@ export class Simulation {
         // return a copy of this.data
         return JSON.parse(JSON.stringify(this.data));
     }
-}
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-TabsManagement.html">TabsManagement</a></li><li><a href="module-editor.html">editor</a></li><li><a href="module-editor.module_CurvedLinkReshapingTool.html">CurvedLinkReshapingTool</a></li><li><a href="module-engine.html">engine</a></li><li><a href="module-translator.html">translator</a></li></ul><h3>Classes</h3><ul><li><a href="CurvedLinkReshapingTool.html">CurvedLinkReshapingTool</a></li></ul><h3>Global</h3><ul><li><a href="global.html#SD">SD</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sun Jun 08 2025 16:22:26 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

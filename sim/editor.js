@@ -1,13 +1,9 @@
-/* Authors: Karthik S. Vedula, Sienna Simms, adapted from https://gojs.net/latest/samples/systemDynamics.html
- * This file uses the GoJS library to create a system dynamics editor.  Additionally, there is an equation editing table,
- * which allows the user to edit the equations and characteristics of the objects in the model.
- */
 
 /**
- * @fileoverview System Dynamics Editor using GoJS.
+ * @fileoverview System Dynamics Editor using GoJS. This file uses the GoJS library to create a system dynamics editor.  Additionally, there is an equation editing table,
+ *   which allows the user to edit the equations and characteristics of the objects in the model.
  * @module editor
- * @author Authors: Karthik S. Vedula, Sienna Simms, Ryan Chung, Arjun Mujamdar, Akash Saran
- * adapted from https://gojs.net/latest/samples/systemDynamics.html
+ * @author Authors: Karthik S. Vedula, Sienna Simms, Ryan Chung, Arjun Mujudar, Akash Saran
  */
 
 /**
@@ -21,13 +17,11 @@ export {PERFORMANCE_MODE};
 
 /**
  * Simulation engine handling model execution and time-stepping logic.
- * @module engine
  * @memberof module:editor
  */
 import {Simulation} from "./engine.js";
 /**
  * Translation utility for language localization or string translation.
- * @module translator
  * @memberof module:editor
  */
 import {translate} from "./translator.js";
