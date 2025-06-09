@@ -57,7 +57,7 @@
 
 
   <div class="tutorialContainer"><div id="overview" class="tutorialBox"><div class="tutorialContents">
-    <video class="tutorialVideo" controls></video>
+    <video class="tutorialVideo" src="img/main.mp4" controls></video>
     <div class="tutorialInfo">
       <h1>Video Overview</h1>
       <p>In this tutorial, you'll learn how to use LunaSim to build and simulate system dynamics models directly in your browser. We'll walk through creating components like stocks, flows, variables, and clouds, defining equations, setting simulation parameters, and visualizing results with charts and tables. You'll also learn how to save and load models.
@@ -222,7 +222,7 @@
   </div></div></div>
 
   <div class="tutorialContainer"><div id="ghosting" class="tutorialBox"><div class="tutorialContents">
-    <div class="tutorialImage"><img src="img/Ghosting.png"></div>
+    <div class="tutorialImage" style="width: 400px; height: 300px;"><img src="img/Ghosting.png"></div>
     <div class="tutorialInfo">
       <h1>Ghosting</h1>
       <p>Ghosts are visual duplicates of existing elements, used to clean up complex diagrams.</p>
@@ -263,26 +263,17 @@
   <div class="tutorialContainer"><div id="importExport" class="tutorialBox"><div class="tutorialContents">
     <div class="tutorialInfo">
       <h1>Import/Export</h1>
-      <h3>Import</h3>
-      <p>1. Click the Load button.</p>
-      <p>2. Choose a .json file from your computer.</p>
-      <p>The diagram and equations will be restored as saved.</p>
-      <h3>Export</h3>
-      <p>Model Export: Go to "Modal View" and click Export to save the model as a .json file.</p>
-      <p>Charts: In a chart tab, click Export to download a .png image.</p>
-      <p>Tables: In a table tab, click Export to download a .csv file.</p>
+      <p>You can save your models by clicking the Save button and exporting them as .luna files, our custom file type. These files can be imported later or shared with others to continue working on the same model. From the Save menu, you can also export models with a custom margin, export charts as images, and export tables as .csv files for use in spreadsheets or reports.</p>
     </div>
   </div></div></div>
 
   <div class="tutorialContainer"><div id="sample1" class="tutorialBox"><div class="tutorialContents">
-    <video class="tutorialVideo" controls></video>
+    <video class="tutorialVideo" src="img/water vid.mp4" controls></video>
     <div class="tutorialInfo">
       <h1>Water Flow</h1>
       <p>In this tutorial we will cover how to simulate the behavior of water draining from a container with a hole in its bottom.
         The rate of water flow out of a container depends on the current water level which gives us a differential relation.
         This differential relation (for the water outflow velocity) is given by Torricelli's Law. The tutorial steps in written form are found below. </p>
-
-
     </div>
   </div></div></div>
 
@@ -342,7 +333,7 @@
 
 
   <div class="tutorialContainer"><div id="sample2" class="tutorialBox"><div class="tutorialContents">
-    <video class="tutorialVideo" controls></video>
+    <video class="tutorialVideo" src="img/oscilate vid.mp4" controls></video>
     <div class="tutorialInfo">
       <h1>Spring-Mass Oscillation</h1>
       <p>This tutorial simulates the motion of a mass attached to a spring, applying Hooke's Law and Newton's Second Law to model oscillations.
@@ -410,101 +401,6 @@
     </div>
   </div></div></div>
 
-  <div class="tutorialContainer"><div id="sample3" class="tutorialBox"><div class="tutorialContents">
-    <video class="tutorialVideo" controls></video>
-    <div class="tutorialInfo">
-      <h1>Heating a Metal Rod</h1>
-      <p>This tutorial models the temperature change along a metal rod heated at one end, applying heat conduction principles and visualizing the temperature profile over time.
-        The rate of heat flow is governed by Fourier's Law, which relates the temperature gradient to the heat transfer rate. This results in a partial differential equation that describes the evolution of temperature across the rod. The tutorial steps in written form are found below.
-      </p>
-
-    </div>
-  </div></div></div>
-  <div class="tutorialContainer"><div id="sample3content" class="tutorialBox"><div class="tutorialContents">
-    <div class="tutorialInfo">
-      <h1>Heating a Metal Rod Tutorial Steps</h1>
-
-      <h3>Step 1: Define System Components</h3>
-
-      <h4>Stock(s)</h4>
-      <p>[Temperature] = temperature distribution along the rod</p>
-
-      <h4>Variable(s)</h4>
-      <p>[HeatFlux] = rate of heat transfer</p>
-      <p>[RodLength] = length of the metal rod</p>
-      <p>[Conductivity] = thermal conductivity of the material</p>
-      <p>[AmbientTemp] = ambient temperature around the rod</p>
-
-      <br>
-      <h3>Step 2: Add Influences</h3>
-
-      <h4>Influence(s)</h4>
-      <p>[Temperature] and [Conductivity] to [HeatFlux]</p>
-      <p>[HeatFlux] and [RodLength] to [Temperature]</p>
-
-      <br>
-      <h3>Step 3: Input Equations</h3>
-      <h4>Differential Equations</h4>
-      <p>[HeatFlux] = -[Conductivity] * (d[Temperature]/dx)</p>
-      <p>d[Temperature]/dt = (1 / (density * specific_heat)) * (d[HeatFlux]/dx)</p>
-
-      <h4>Constants / Initial Values</h4>
-      <p>[Conductivity] = [value]</p>
-      <p>[RodLength] = [value]</p>
-      <p>[AmbientTemp] = [value]</p>
-      <p>Initial [Temperature] = ambient temperature</p>
-
-      <br>
-      <h3>Step 4: Generate a Chart</h3>
-
-      <p>Once the model is set up, run the simulation and plot the Temperature versus length. You can also change the simulation parameters if desired.</p>
-
-    </div>
-  </div></div></div>
-  <div class="tutorialContainer"><div id="sample4" class="tutorialBox"><div class="tutorialContents">
-    <video class="tutorialVideo" controls></video>
-    <div class="tutorialInfo">
-      <h1>Population Growth Model</h1>
-      <p>This tutorial models population growth using the logistic growth equation, incorporating carrying capacity limitations.
-        The rate of population change depends on both the current population size and the environmental constraints, which gives us a nonlinear differential equation.
-        This relation captures the realistic behavior of populations leveling off as they approach their carrying capacity.
-        The tutorial steps in written form are found below.</p>
-    </div>
-  </div></div></div>
-  <div class="tutorialContainer"><div id="sample4content" class="tutorialBox"><div class="tutorialContents">
-    <div class="tutorialInfo">
-      <h1>Population Growth Model Tutorial Steps</h1>
-      <h3>Step 1: Define System Components</h3>
-
-      <h4>Stock(s)</h4>
-      <p>[Population] = number of individuals</p>
-
-      <h4>Variable(s)</h4>
-      <p>[GrowthRate] = intrinsic growth rate</p>
-      <p>[CarryingCapacity] = maximum sustainable population</p>
-
-      <br>
-      <h3>Step 2: Add Influences</h3>
-
-      <h4>Influence(s)</h4>
-      <p>[Population], [GrowthRate], and [CarryingCapacity] to d[Population]/dt</p>
-
-      <br>
-      <h3>Step 3: Input Equations</h3>
-      <h4>Differential Equations</h4>
-      <p>d[Population]/dt = [GrowthRate] * [Population] * (1 - [Population] / [CarryingCapacity])</p>
-
-      <h4>Constants / Initial Values</h4>
-      <p>[GrowthRate] = intrinsic growth rate</p>
-      <p>[CarryingCapacity] = maximum sustainable population</p>
-      <p>[Population] = initial population</p>
-
-      <br>
-      <h3>Step 4: Generate a Chart</h3>
-
-      <p>Once the model is set up, run the simulation and plot the Population versus time. You can also change the simulation parameters if desired.</p>
-    </div>
-  </div></div></div>
 </div>
 
 
