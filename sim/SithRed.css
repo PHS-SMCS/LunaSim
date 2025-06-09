@@ -112,11 +112,11 @@ a:focus {
 }
 
 a span {
-    background-color: #442222; /* Darker hover red */
+    background-color: #2a2a2a; /* Darker hover red */
 }
 
 a span:before {
-    background-color: #442222; /* Darker hover red */
+    background-color: #2a2a2a; /* Darker hover red */
 }
 
 a.active {

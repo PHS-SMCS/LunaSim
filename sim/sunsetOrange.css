@@ -87,10 +87,12 @@ a {
 a:hover,
 a:focus {
     background-color: #ffa500; /* Orange */
+    color:white;
 }
 
 a span {
     background-color: #ffa500; /* Orange */
+    color: white;
 }
 
 a span:before {

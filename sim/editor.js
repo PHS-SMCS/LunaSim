@@ -551,11 +551,15 @@ function buildTemplates() {
         selectionAdornmentTemplate: $(go.Adornment, "Spot", $(go.Shape, "Ellipse", {
             fill: null, stroke: "dodgerblue", strokeWidth: 15, scale: 0.25
         }), $(go.Placeholder))
-    }, $(go.Shape, shapeStyle(), new go.Binding("fill", "color").makeTwoWay(), {
-        figure: "Ellipse", desiredSize: new go.Size(25, 25), fill: "#f0f0f0"
+    }, $(go.Shape, shapeStyle(), new go.Binding("fill", "", function (data) {
+        if (data.label && data.label.startsWith('$')) return "white";
+        return "#cfcfcf";
+    }).makeTwoWay(), {
+        figure: "Ellipse", desiredSize: new go.Size(25, 25)
     }), $(go.TextBlock, textStyle(), {
         _isNodeLabel: true, alignment: new go.Spot(0.5, 0.5, 0, 30), isMultiline: false, textValidation: labelValidator
     }, new go.Binding("alignment", "label_offset", go.Spot.parse).makeTwoWay(go.Spot.stringify))));
+
     myDiagram.linkTemplateMap.add("flow", $(go.Link, {
             toShortLength: 12, layerName: "Foreground", selectionAdornmentTemplate: $(go.Adornment, $(go.Shape, {
                 isPanelMain: true, stroke: "#3489eb",
@@ -728,7 +732,7 @@ function updateTable(load = false) {
 
     function finalizeRename() {
         const $input = $(this);
-        const oldName = $input.data('oldName');
+        const oldName = $input.data('oldName');  // <-- this is the correct reference
         const newName = $input.val();
 
         if (newName === oldName) return;
@@ -739,22 +743,42 @@ function updateTable(load = false) {
             return;
         }
 
+        // Commit label rename
         myDiagram.model.commit(() => {
             const nodeData = myDiagram.model.nodeDataArray.find(n => n.label === oldName);
             if (nodeData) {
                 myDiagram.model.setDataProperty(nodeData, 'label', newName);
-                if ('key' in nodeData && nodeData.key === oldName) {
+                if (nodeData.key === oldName) {
                     myDiagram.model.setDataProperty(nodeData, 'key', newName);
                 }
             }
-        }, 'rename node label');
+
+            // --- Equation reference refactor ---
+            const escapeRegExp = string =>
+                string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+            const pattern = new RegExp(`\\[${escapeRegExp(oldName)}\\]`, 'g');
+
+            myDiagram.model.nodeDataArray.forEach(n => {
+                if (typeof n.equation === 'string') {
+                    const updated = n.equation.replace(pattern, `[${newName}]`);
+                    console.log(updated);
+                    console.log(n.equation);
+                    if (updated !== n.equation) {
+                        myDiagram.model.setDataProperty(n, 'equation', updated);
+                        console.log(n.equation);
+                    }
+                }
+            }
+            );
+            updateTable(true);
+        }, 'Rename node and update references');
 
         $input.data('oldName', newName);
-
         updateTable(true);
-
         myDiagram.requestUpdate();
     }
+
 
     sortedItems.forEach(item => {
         const label = item.label;
