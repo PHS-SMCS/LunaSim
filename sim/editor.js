@@ -560,33 +560,54 @@ function buildTemplates() {
         _isNodeLabel: true, alignment: new go.Spot(0.5, 0.5, 0, 30), isMultiline: false, textValidation: labelValidator
     }, new go.Binding("alignment", "label_offset", go.Spot.parse).makeTwoWay(go.Spot.stringify))));
 
-    myDiagram.linkTemplateMap.add("flow", $(go.Link, {
-            toShortLength: 12, layerName: "Foreground", selectionAdornmentTemplate: $(go.Adornment, $(go.Shape, {
-                isPanelMain: true, stroke: "#3489eb",
-                strokeWidth: 7,
-            }))
-        }, new go.Binding("curviness", "curviness").makeTwoWay(),
+    myDiagram.linkTemplateMap.add("flow",
+        $(go.Link,
+            {
+                toShortLength: 10,
+                layerName: "Foreground",
+                selectionAdornmentTemplate:
+                    $(go.Adornment,
+                        $(go.Shape,
+                            {
+                                isPanelMain: true,
+                                stroke: "#3489eb",
+                                strokeWidth: 7
+                            })
+                    )
+            },
+            new go.Binding("curviness", "curviness").makeTwoWay(),
 
-        new go.Binding("fromShortLength", "", function (data) {
-            return isBiflow(data) ? 8 : 0;
-        }),
+            new go.Binding("fromShortLength", "", function(data) {
+                return isBiflow(data) ? 8 : 0;
+            }),
 
-        $(go.Shape, {
-            stroke: "#3489eb", strokeWidth: 5
-        }),
+            $(go.Shape, {
+                stroke: "#3489eb",
+                strokeWidth: 5
+            }),
 
-        $(go.Shape, {
-            fill: "#3489eb", stroke: "#3489eb", toArrow: "Standard", scale: 2.0,
-        }),
+            $(go.Shape, {
+                fill: "#3489eb",
+                stroke: "#3489eb",
+                toArrow: "Standard",
+                scale: 2.0
+            }),
 
-        $(go.Shape, new go.Binding("visible", "", isBiflow), {
-            fromArrow: "Backward", scale: 2.0
-        }, new go.Binding("fill", "isSelected", function (sel) {
-            return sel ? "#3489eb" : "#3489eb";
-        }).ofObject(), new go.Binding("stroke", "isSelected", function (sel) {
-            return sel ? "#3489eb" : "#3489eb";
-        }).ofObject())));
-
+            $(go.Shape,
+                new go.Binding("visible", "", isBiflow),
+                new go.Binding("stroke", "", function(_, shape) {
+                    return shape.part.isSelected ? "#3489eb" : "#808080";
+                }).ofObject(),
+                new go.Binding("fill", "", function(_, shape) {
+                    return shape.part.isSelected ? "#3489eb" : "#808080";
+                }).ofObject(),
+                {
+                    fromArrow: "Backward",
+                    scale: 2.0
+                }
+            )
+        )
+    );
 
     myDiagram.linkTemplateMap.add("influence", $(go.Link, {
         curve: go.Link.Bezier, toShortLength: 8, reshapable: true
