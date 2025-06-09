@@ -732,7 +732,7 @@ function updateTable(load = false) {
 
     function finalizeRename() {
         const $input = $(this);
-        const oldName = $input.data('oldName');
+        const oldName = $input.data('oldName');  // <-- this is the correct reference
         const newName = $input.val();
 
         if (newName === oldName) return;
@@ -743,22 +743,42 @@ function updateTable(load = false) {
             return;
         }
 
+        // Commit label rename
         myDiagram.model.commit(() => {
             const nodeData = myDiagram.model.nodeDataArray.find(n => n.label === oldName);
             if (nodeData) {
                 myDiagram.model.setDataProperty(nodeData, 'label', newName);
-                if ('key' in nodeData && nodeData.key === oldName) {
+                if (nodeData.key === oldName) {
                     myDiagram.model.setDataProperty(nodeData, 'key', newName);
                 }
             }
-        }, 'rename node label');
+
+            // --- Equation reference refactor ---
+            const escapeRegExp = string =>
+                string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+            const pattern = new RegExp(`\\[${escapeRegExp(oldName)}\\]`, 'g');
+
+            myDiagram.model.nodeDataArray.forEach(n => {
+                if (typeof n.equation === 'string') {
+                    const updated = n.equation.replace(pattern, `[${newName}]`);
+                    console.log(updated);
+                    console.log(n.equation);
+                    if (updated !== n.equation) {
+                        myDiagram.model.setDataProperty(n, 'equation', updated);
+                        console.log(n.equation);
+                    }
+                }
+            }
+            );
+            updateTable(true);
+        }, 'Rename node and update references');
 
         $input.data('oldName', newName);
-
         updateTable(true);
-
         myDiagram.requestUpdate();
     }
+
 
     sortedItems.forEach(item => {
         const label = item.label;
