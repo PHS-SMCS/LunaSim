@@ -706,161 +706,95 @@ function loadTableToDiagram() {
  */
 
 function updateTable(load = false) {
-    const $tbody = $('#eqTableBody');
-    console.log("s");
-    console.log(load);
+    const containers = ['#eqTableBody', '#equationEditorPopupContent'];
 
-    if (!load) {
-        $tbody.find('tr').each(function () {
-            const name = $(this).find('input[name="name"]').val();
-            const equation = $(this).find('input[name="equation"]').val();
-            const checkbox = $(this).find('input[name="checkbox"]').prop('checked');
+    containers.forEach(selector => {
+        const $tbody = $(selector);
 
-            const node = myDiagram.model.nodeDataArray.find(n => n.label === name);
-            if (node) {
-                myDiagram.model.setDataProperty(node, 'equation', equation);
-                myDiagram.model.setDataProperty(node, 'checkbox', checkbox);
-            }
-        });
-    }
+        if (!load) {
+            $tbody.find('tr').each(function () {
+                const name = $(this).find('input[name="name"]').val();
+                const equation = $(this).find('input[name="equation"]').val();
+                const checkbox = $(this).find('input[name="checkbox"]').prop('checked');
 
-    const data = myDiagram.model.toJson();
-    const json = JSON.parse(data);
-
-    $tbody.empty();
-
-    const sortedItems = json.nodeDataArray
-        .filter(item =>
-            item.label !== undefined &&
-            !isGhost(item.label) &&
-            (item.category === "stock" || item.category === "variable" || item.category === "valve")
-        )
-        .sort((a, b) => {
-            const order = { stock: 0, valve: 1, variable: 2 };
-            return order[a.category] - order[b.category];
-        });
-
-    /**
-     * Handles finalizing the renaming of a node label in the equation table.
-     *
-     * Validates the new name, updates the corresponding node in the GoJS model,
-     * and triggers a table and diagram update. If the name is invalid or unchanged,
-     * it reverts to the original name and optionally alerts the user.
-     *
-     * @function
-     * @memberof module:editor
-     * @this {HTMLInputElement} The input field that triggered the event.
-     */
-
-    function finalizeRename() {
-        const $input = $(this);
-        const oldName = $input.data('oldName');  // <-- this is the correct reference
-        const newName = $input.val();
-
-        if (newName === oldName) return;
-
-        if (!labelValidator(null, oldName, newName)) {
-            alert(`Invalid or duplicate name: "${newName}". Reverting to "${oldName}".`);
-            $input.val(oldName);
-            return;
-        }
-
-        // Commit label rename
-        myDiagram.model.commit(() => {
-            const nodeData = myDiagram.model.nodeDataArray.find(n => n.label === oldName);
-            if (nodeData) {
-                myDiagram.model.setDataProperty(nodeData, 'label', newName);
-                if (nodeData.key === oldName) {
-                    myDiagram.model.setDataProperty(nodeData, 'key', newName);
-                }
-            }
-
-            // --- Equation reference refactor ---
-            const escapeRegExp = string =>
-                string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-
-            const pattern = new RegExp(`\\[${escapeRegExp(oldName)}\\]`, 'g');
-
-            myDiagram.model.nodeDataArray.forEach(n => {
-                if (typeof n.equation === 'string') {
-                    const updated = n.equation.replace(pattern, `[${newName}]`);
-                    if (updated !== n.equation) {
-                        myDiagram.model.setDataProperty(n, 'equation', updated);
-                    }
-                }
-            }
-            );
-            console.log("3");
-            updateTable(true);
-        }, 'Rename node and update references');
-
-        $input.data('oldName', newName);
-        console.log("2");
-        updateTable(true);
-        myDiagram.requestUpdate();
-    }
-
-
-    sortedItems.forEach(item => {
-        console.log("1");
-        const label = item.label;
-        const category = item.category === "valve" ? "flow" : item.category;
-
-        if (!GOJS_ELEMENT_LABELS_SET.has(label)) {
-            GOJS_ELEMENT_LABELS.push(label);
-            GOJS_ELEMENT_LABELS_SET.add(label);
-        }
-
-        const $tr = $('<tr>');
-
-        $tr.append($('<td>').append(
-            $('<input class="eqTableInputBox" readonly>').attr({ type: 'text', name: 'type', value: category })
-        ));
-
-        const $nameInput = $('<input class="eqTableInputBox">')
-            .attr({ type: 'text', name: 'name', value: label })
-            .data('oldName', label)
-            .on('blur', finalizeRename)
-            .on('keydown', function (e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    $(this).blur();
+                const node = myDiagram.model.nodeDataArray.find(n => n.label === name);
+                if (node) {
+                    myDiagram.model.setDataProperty(node, 'equation', equation);
+                    myDiagram.model.setDataProperty(node, 'checkbox', checkbox);
                 }
             });
-
-        $tr.append($('<td>').append($nameInput));
-
-        const $eqInput = $('<input class="eqTableInputBox" style="width: inherit;">')
-            .attr({ type: 'text', name: 'equation' })
-            .css('width', '99%')
-            .val(load ? (item.equation || "") : (item.equation || ""));
-
-        $tr.append($('<td>').append($eqInput));
-
-        if (category === "stock" || category === "flow") {
-            const $checkbox = $('<input>')
-                .attr({ type: 'checkbox', name: 'checkbox', class: 'nncheckbox' })
-                .prop('checked', !!item.checkbox)
-                .on('change', () => loadTableToDiagram());
-            $tr.append($('<td>').append($checkbox));
-        } else {
-            $tr.append($('<td>'));
         }
 
-        const colorClass = category === "stock" ? "eqStockBox"
-            : category === "flow" ? "eqFlowBox"
-                : "eqVariableBox";
+        const data = myDiagram.model.toJson();
+        const json = JSON.parse(data);
 
-        $tr.find('td').slice(0, 3).addClass(colorClass);
+        $tbody.empty();
 
-        $tbody.append($tr);
+        const sortedItems = json.nodeDataArray
+            .filter(item =>
+                item.label !== undefined &&
+                !isGhost(item.label) &&
+                (item.category === "stock" || item.category === "variable" || item.category === "valve")
+            )
+            .sort((a, b) => {
+                const order = { stock: 0, valve: 1, variable: 2 };
+                return order[a.category] - order[b.category];
+            });
+
+        sortedItems.forEach(item => {
+            const label = item.label;
+            const category = item.category === "valve" ? "flow" : item.category;
+
+            const $tr = $('<tr>');
+
+            $tr.append($('<td>').append(
+                $('<input class="eqTableInputBox" readonly>').attr({ type: 'text', name: 'type', value: category })
+            ));
+
+            const $nameInput = $('<input class="eqTableInputBox">')
+                .attr({ type: 'text', name: 'name', value: label })
+                .data('oldName', label)
+                .on('blur', finalizeRename)
+                .on('keydown', function (e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        $(this).blur();
+                    }
+                });
+
+            $tr.append($('<td>').append($nameInput));
+
+            const $eqInput = $('<input class="eqTableInputBox" style="width: inherit;">')
+                .attr({ type: 'text', name: 'equation' })
+                .css('width', '99%')
+                .val(load ? (item.equation || "") : (item.equation || ""));
+
+            $tr.append($('<td>').append($eqInput));
+
+            if (category === "stock" || category === "flow") {
+                const $checkbox = $('<input>')
+                    .attr({ type: 'checkbox', name: 'checkbox', class: 'nncheckbox' })
+                    .prop('checked', !!item.checkbox)
+                    .on('change', () => loadTableToDiagram());
+                $tr.append($('<td>').append($checkbox));
+            } else {
+                $tr.append($('<td>'));
+            }
+
+            const colorClass = category === "stock" ? "eqStockBox"
+                : category === "flow" ? "eqFlowBox"
+                    : "eqVariableBox";
+
+            $tr.find('td').slice(0, 3).addClass(colorClass);
+
+            $tbody.append($tr);
+        });
     });
 
     GOJS_ELEMENT_LABELS = myDiagram.model.nodeDataArray
         .filter(n => n.label && !n.label.startsWith('$') && n.category !== "cloud")
         .map(n => n.label);
 }
-
 
 
 
