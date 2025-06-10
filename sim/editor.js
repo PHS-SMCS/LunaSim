@@ -306,7 +306,6 @@ function init() {
                 loadTableToDiagram();
             }
         });
-
         updateTable();
 
         if (myDiagram.model.nodeDataArray.length !== 0) {
@@ -708,6 +707,8 @@ function loadTableToDiagram() {
 
 function updateTable(load = false) {
     const $tbody = $('#eqTableBody');
+    console.log("s");
+    console.log(load);
 
     if (!load) {
         $tbody.find('tr').each(function () {
@@ -783,25 +784,25 @@ function updateTable(load = false) {
             myDiagram.model.nodeDataArray.forEach(n => {
                 if (typeof n.equation === 'string') {
                     const updated = n.equation.replace(pattern, `[${newName}]`);
-                    console.log(updated);
-                    console.log(n.equation);
                     if (updated !== n.equation) {
                         myDiagram.model.setDataProperty(n, 'equation', updated);
-                        console.log(n.equation);
                     }
                 }
             }
             );
+            console.log("3");
             updateTable(true);
         }, 'Rename node and update references');
 
         $input.data('oldName', newName);
+        console.log("2");
         updateTable(true);
         myDiagram.requestUpdate();
     }
 
 
     sortedItems.forEach(item => {
+        console.log("1");
         const label = item.label;
         const category = item.category === "valve" ? "flow" : item.category;
 
@@ -1454,7 +1455,6 @@ function loadModel(evt) {
         $('#eqTableBody').empty();
 
         myDiagram.model = go.Model.fromJson(evt.target.result);
-
         updateTable(true);
         loadTableToDiagram();
 
@@ -1510,6 +1510,8 @@ document.getElementById("popupNotifClose").addEventListener("click", function ()
 window.onload = function () {
     if (sessionStorage.modelData) {
         myDiagram.model = go.Model.fromJson(sessionStorage.modelData);
+
+        console.log("here");
         updateTable(true);
         loadTableToDiagram();
     }
@@ -1701,6 +1703,49 @@ function getTopBracketMatches(fragment) {
         .filter(label => label.toLowerCase().startsWith(lower))
         .slice(0, 5); // best 5 matches
 }
+function finalizeRename() {
+    const $input = $(this);
+    const newName = $input.val();
+    const oldName = $input.data('oldName');
+
+    if (!oldName || newName === oldName) return;
+
+    if (!labelValidator(null, oldName, newName)) {
+        alert(`Invalid or duplicate name: "${newName}". Reverting to "${oldName}".`);
+        $input.val(oldName);
+        return;
+    }
+
+    const escapeRegExp = (string) =>
+        string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+    myDiagram.model.commit(() => {
+        const nodeData = myDiagram.model.nodeDataArray.find(n => n.label === oldName);
+        if (nodeData) {
+            myDiagram.model.setDataProperty(nodeData, 'label', newName);
+            if (nodeData.key === oldName) {
+                myDiagram.model.setDataProperty(nodeData, 'key', newName);
+            }
+        }
+
+        const pattern = new RegExp(`\\[${escapeRegExp(oldName)}\\]`, 'g');
+        myDiagram.model.nodeDataArray.forEach(n => {
+            if (typeof n.equation === 'string') {
+                const updated = n.equation.replace(pattern, `[${newName}]`);
+                if (updated !== n.equation) {
+                    myDiagram.model.setDataProperty(n, 'equation', updated);
+                }
+            }
+        });
+
+        updateTable(true);
+    }, 'Rename node and update references');
+
+    $input.data('oldName', newName); // Set for future renames
+    updateTable(true);
+    myDiagram.requestUpdate();
+}
+
 
 
 /**
@@ -1714,7 +1759,9 @@ function getTopBracketMatches(fragment) {
 function setupAutocompleteForInputs() {
     const $tbody = $('#eqTableBody');
     const $tpopupbody = $('#equationEditorPopupContent');
+
     [$tbody, $tpopupbody].forEach($container => {
+        // === Autocomplete input for equations ===
         $container.on('input', 'input[name="equation"]', function (e) {
             if (e.originalEvent && ["ArrowUp", "ArrowDown", "Tab"].includes(e.originalEvent.key)) return;
             showAutocomplete($(this));
@@ -1783,15 +1830,17 @@ function setupAutocompleteForInputs() {
                     newCursor = before.length + withParens.indexOf("()") + 1;
                 }
 
-
                 $input.val(updated);
                 $input[0].setSelectionRange(newCursor, newCursor);
                 $('.autocomplete-list').remove();
-
             }
         });
 
+        $container.on('focusin', 'input[name="name"]', function () {
+            $(this).data('oldName', $(this).val());
+        });
 
+        // === Cleanup autocomplete on blur ===
         $container.on('blur', 'input[name="equation"]', function () {
             setTimeout(() => {
                 if (!$(':hover').hasClass('autocomplete-item')) {
@@ -1799,13 +1848,29 @@ function setupAutocompleteForInputs() {
                 }
             }, 150);
         });
-    })
+
+        // === Rename input logic for both table and fullscreen ===
+        $container.on('blur', 'input[name="name"]', function () {
+            finalizeRename.call(this);
+        });
+
+        $container.on('keydown', 'input[name="name"]', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                $(this).blur(); // Triggers finalizeRename via blur
+            }
+        });
+    });
+
+    // Dismiss dropdown if clicking outside
     $(document).on('mousedown', function (e) {
         if (!$(e.target).closest('.autocomplete-list, input[name="equation"]').length) {
             $('.autocomplete-list').remove();
         }
     });
 }
+
+
 
 /**
  * Shows an autocomplete dropdown for the given jQuery input element.
