@@ -1755,13 +1755,12 @@ function finalizeRename() {
  * @memberof module:editor
  * @function
  */
-
 function setupAutocompleteForInputs() {
     const $tbody = $('#eqTableBody');
     const $tpopupbody = $('#equationEditorPopupContent');
 
     [$tbody, $tpopupbody].forEach($container => {
-        // === Autocomplete input for equations ===
+        // === Autocomplete for equation fields ===
         $container.on('input', 'input[name="equation"]', function (e) {
             if (e.originalEvent && ["ArrowUp", "ArrowDown", "Tab"].includes(e.originalEvent.key)) return;
             showAutocomplete($(this));
@@ -1836,11 +1835,25 @@ function setupAutocompleteForInputs() {
             }
         });
 
+        // === Track original name when editing starts ===
         $container.on('focusin', 'input[name="name"]', function () {
             $(this).data('oldName', $(this).val());
         });
 
-        // === Cleanup autocomplete on blur ===
+        // === Trigger rename logic on blur ===
+        $container.on('blur', 'input[name="name"]', function () {
+            finalizeRename.call(this);
+        });
+
+        // === Also trigger rename on Enter ===
+        $container.on('keydown', 'input[name="name"]', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                $(this).blur(); // blur triggers finalizeRename
+            }
+        });
+
+        // === Cleanup autocomplete list on blur ===
         $container.on('blur', 'input[name="equation"]', function () {
             setTimeout(() => {
                 if (!$(':hover').hasClass('autocomplete-item')) {
@@ -1848,28 +1861,15 @@ function setupAutocompleteForInputs() {
                 }
             }, 150);
         });
-
-        // === Rename input logic for both table and fullscreen ===
-        $container.on('blur', 'input[name="name"]', function () {
-            finalizeRename.call(this);
-        });
-
-        $container.on('keydown', 'input[name="name"]', function (e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                $(this).blur(); // Triggers finalizeRename via blur
-            }
-        });
     });
 
-    // Dismiss dropdown if clicking outside
+    // === Dismiss autocomplete dropdown on outside click ===
     $(document).on('mousedown', function (e) {
         if (!$(e.target).closest('.autocomplete-list, input[name="equation"]').length) {
             $('.autocomplete-list').remove();
         }
     });
 }
-
 
 
 /**
