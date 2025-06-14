@@ -306,7 +306,6 @@ function init() {
                 loadTableToDiagram();
             }
         });
-
         updateTable();
 
         if (myDiagram.model.nodeDataArray.length !== 0) {
@@ -560,33 +559,54 @@ function buildTemplates() {
         _isNodeLabel: true, alignment: new go.Spot(0.5, 0.5, 0, 30), isMultiline: false, textValidation: labelValidator
     }, new go.Binding("alignment", "label_offset", go.Spot.parse).makeTwoWay(go.Spot.stringify))));
 
-    myDiagram.linkTemplateMap.add("flow", $(go.Link, {
-            toShortLength: 12, layerName: "Foreground", selectionAdornmentTemplate: $(go.Adornment, $(go.Shape, {
-                isPanelMain: true, stroke: "#3489eb",
-                strokeWidth: 7,
-            }))
-        }, new go.Binding("curviness", "curviness").makeTwoWay(),
+    myDiagram.linkTemplateMap.add("flow",
+        $(go.Link,
+            {
+                toShortLength: 10,
+                layerName: "Foreground",
+                selectionAdornmentTemplate:
+                    $(go.Adornment,
+                        $(go.Shape,
+                            {
+                                isPanelMain: true,
+                                stroke: "#3489eb",
+                                strokeWidth: 7
+                            })
+                    )
+            },
+            new go.Binding("curviness", "curviness").makeTwoWay(),
 
-        new go.Binding("fromShortLength", "", function (data) {
-            return isBiflow(data) ? 8 : 0;
-        }),
+            new go.Binding("fromShortLength", "", function(data) {
+                return isBiflow(data) ? 8 : 0;
+            }),
 
-        $(go.Shape, {
-            stroke: "#3489eb", strokeWidth: 5
-        }),
+            $(go.Shape, {
+                stroke: "#3489eb",
+                strokeWidth: 5
+            }),
 
-        $(go.Shape, {
-            fill: "#3489eb", stroke: "#3489eb", toArrow: "Standard", scale: 2.0,
-        }),
+            $(go.Shape, {
+                fill: "#3489eb",
+                stroke: "#3489eb",
+                toArrow: "Standard",
+                scale: 2.0
+            }),
 
-        $(go.Shape, new go.Binding("visible", "", isBiflow), {
-            fromArrow: "Backward", scale: 2.0
-        }, new go.Binding("fill", "isSelected", function (sel) {
-            return sel ? "#3489eb" : "#3489eb";
-        }).ofObject(), new go.Binding("stroke", "isSelected", function (sel) {
-            return sel ? "#3489eb" : "#3489eb";
-        }).ofObject())));
-
+            $(go.Shape,
+                new go.Binding("visible", "", isBiflow),
+                new go.Binding("stroke", "", function(_, shape) {
+                    return shape.part.isSelected ? "#3489eb" : "#808080";
+                }).ofObject(),
+                new go.Binding("fill", "", function(_, shape) {
+                    return shape.part.isSelected ? "#3489eb" : "#808080";
+                }).ofObject(),
+                {
+                    fromArrow: "Backward",
+                    scale: 2.0
+                }
+            )
+        )
+    );
 
     myDiagram.linkTemplateMap.add("influence", $(go.Link, {
         curve: go.Link.Bezier, toShortLength: 8, reshapable: true
@@ -686,159 +706,106 @@ function loadTableToDiagram() {
  */
 
 function updateTable(load = false) {
-    const $tbody = $('#eqTableBody');
+    const containers = ['#eqTableBody', '#equationEditorPopupContent'];
 
-    if (!load) {
-        $tbody.find('tr').each(function () {
-            const name = $(this).find('input[name="name"]').val();
-            const equation = $(this).find('input[name="equation"]').val();
-            const checkbox = $(this).find('input[name="checkbox"]').prop('checked');
+    containers.forEach(selector => {
+        const $tbody = $(selector);
 
-            const node = myDiagram.model.nodeDataArray.find(n => n.label === name);
-            if (node) {
-                myDiagram.model.setDataProperty(node, 'equation', equation);
-                myDiagram.model.setDataProperty(node, 'checkbox', checkbox);
-            }
-        });
-    }
+        if (!load) {
+            $tbody.find('tr').each(function () {
+                const name = $(this).find('input[name="name"]').val();
+                const equation = $(this).find('input[name="equation"]').val();
+                const checkbox = $(this).find('input[name="checkbox"]').prop('checked');
 
-    const data = myDiagram.model.toJson();
-    const json = JSON.parse(data);
-
-    $tbody.empty();
-
-    const sortedItems = json.nodeDataArray
-        .filter(item =>
-            item.label !== undefined &&
-            !isGhost(item.label) &&
-            (item.category === "stock" || item.category === "variable" || item.category === "valve")
-        )
-        .sort((a, b) => {
-            const order = { stock: 0, valve: 1, variable: 2 };
-            return order[a.category] - order[b.category];
-        });
-
-    /**
-     * Handles finalizing the renaming of a node label in the equation table.
-     *
-     * Validates the new name, updates the corresponding node in the GoJS model,
-     * and triggers a table and diagram update. If the name is invalid or unchanged,
-     * it reverts to the original name and optionally alerts the user.
-     *
-     * @function
-     * @memberof module:editor
-     * @this {HTMLInputElement} The input field that triggered the event.
-     */
-
-    function finalizeRename() {
-        const $input = $(this);
-        const oldName = $input.data('oldName');  // <-- this is the correct reference
-        const newName = $input.val();
-
-        if (newName === oldName) return;
-
-        if (!labelValidator(null, oldName, newName)) {
-            alert(`Invalid or duplicate name: "${newName}". Reverting to "${oldName}".`);
-            $input.val(oldName);
-            return;
-        }
-
-        // Commit label rename
-        myDiagram.model.commit(() => {
-            const nodeData = myDiagram.model.nodeDataArray.find(n => n.label === oldName);
-            if (nodeData) {
-                myDiagram.model.setDataProperty(nodeData, 'label', newName);
-                if (nodeData.key === oldName) {
-                    myDiagram.model.setDataProperty(nodeData, 'key', newName);
-                }
-            }
-
-            // --- Equation reference refactor ---
-            const escapeRegExp = string =>
-                string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-
-            const pattern = new RegExp(`\\[${escapeRegExp(oldName)}\\]`, 'g');
-
-            myDiagram.model.nodeDataArray.forEach(n => {
-                if (typeof n.equation === 'string') {
-                    const updated = n.equation.replace(pattern, `[${newName}]`);
-                    console.log(updated);
-                    console.log(n.equation);
-                    if (updated !== n.equation) {
-                        myDiagram.model.setDataProperty(n, 'equation', updated);
-                        console.log(n.equation);
-                    }
-                }
-            }
-            );
-            updateTable(true);
-        }, 'Rename node and update references');
-
-        $input.data('oldName', newName);
-        updateTable(true);
-        myDiagram.requestUpdate();
-    }
-
-
-    sortedItems.forEach(item => {
-        const label = item.label;
-        const category = item.category === "valve" ? "flow" : item.category;
-
-        if (!GOJS_ELEMENT_LABELS_SET.has(label)) {
-            GOJS_ELEMENT_LABELS.push(label);
-            GOJS_ELEMENT_LABELS_SET.add(label);
-        }
-
-        const $tr = $('<tr>');
-
-        $tr.append($('<td>').append(
-            $('<input class="eqTableInputBox" readonly>').attr({ type: 'text', name: 'type', value: category })
-        ));
-
-        const $nameInput = $('<input class="eqTableInputBox">')
-            .attr({ type: 'text', name: 'name', value: label })
-            .data('oldName', label)
-            .on('blur', finalizeRename)
-            .on('keydown', function (e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    $(this).blur();
+                const node = myDiagram.model.nodeDataArray.find(n => n.label === name);
+                if (node) {
+                    myDiagram.model.setDataProperty(node, 'equation', equation);
+                    myDiagram.model.setDataProperty(node, 'checkbox', checkbox);
                 }
             });
-
-        $tr.append($('<td>').append($nameInput));
-
-        const $eqInput = $('<input class="eqTableInputBox" style="width: inherit;">')
-            .attr({ type: 'text', name: 'equation' })
-            .css('width', '99%')
-            .val(load ? (item.equation || "") : (item.equation || ""));
-
-        $tr.append($('<td>').append($eqInput));
-
-        if (category === "stock" || category === "flow") {
-            const $checkbox = $('<input>')
-                .attr({ type: 'checkbox', name: 'checkbox', class: 'nncheckbox' })
-                .prop('checked', !!item.checkbox)
-                .on('change', () => loadTableToDiagram());
-            $tr.append($('<td>').append($checkbox));
-        } else {
-            $tr.append($('<td>'));
         }
 
-        const colorClass = category === "stock" ? "eqStockBox"
-            : category === "flow" ? "eqFlowBox"
-                : "eqVariableBox";
+        const data = myDiagram.model.toJson();
+        const json = JSON.parse(data);
 
-        $tr.find('td').slice(0, 3).addClass(colorClass);
+        $tbody.empty();
 
-        $tbody.append($tr);
+        const sortedItems = json.nodeDataArray
+            .filter(item =>
+                item.label !== undefined &&
+                !isGhost(item.label) &&
+                (item.category === "stock" || item.category === "variable" || item.category === "valve")
+            )
+            .sort((a, b) => {
+                const order = { stock: 0, valve: 1, variable: 2 };
+                return order[a.category] - order[b.category];
+            });
+
+        sortedItems.forEach(item => {
+            const label = item.label;
+            const category = item.category === "valve" ? "flow" : item.category;
+
+            const $tr = $('<tr>');
+
+            $tr.append($('<td>').append(
+                $('<input class="eqTableInputBox" readonly>').attr({ type: 'text', name: 'type', value: category })
+            ));
+
+            const $nameInput = $('<input class="eqTableInputBox">')
+                .attr({ type: 'text', name: 'name', value: label })
+                .data('oldName', label)
+                .on('blur', finalizeRename)
+                .on('keydown', function (e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        $(this).blur();
+                    }
+                });
+
+            $tr.append($('<td>').append($nameInput));
+
+            const $eqInput = $('<input class="eqTableInputBox" style="width: inherit;">')
+                .attr({ type: 'text', name: 'equation' })
+                .css('width', '99%')
+                .val(load ? (item.equation || "") : (item.equation || ""));
+
+            $tr.append($('<td>').append($eqInput));
+
+            if (category === "stock" || category === "flow") {
+                const $checkbox = $('<input>')
+                    .attr({ type: 'checkbox', name: 'checkbox', class: 'nncheckbox' })
+                    .prop('checked', !!item.checkbox)
+                    .on('change', () => loadTableToDiagram());
+                $tr.append($('<td>').append($checkbox));
+            } else {
+                $tr.append($('<td>'));
+            }
+
+            const colorClass = category === "stock" ? "eqStockBox"
+                : category === "flow" ? "eqFlowBox"
+                    : "eqVariableBox";
+
+            $tr.find('td').slice(0, 3).addClass(colorClass);
+
+            $tbody.append($tr);
+        });
     });
 
     GOJS_ELEMENT_LABELS = myDiagram.model.nodeDataArray
         .filter(n => n.label && !n.label.startsWith('$') && n.category !== "cloud")
         .map(n => n.label);
-}
 
+    // Ensure popup styling stays consistent after table update
+    const popup = document.getElementById("equationEditorPopup");
+    const popupContent = document.getElementById("equationEditorPopupContent");
+
+    if (popup && popup.style.display !== "none") {
+        const clonedTable = document.querySelector("#eqTable").cloneNode(true);
+        popupContent.innerHTML = ""; // Clear old
+        popupContent.appendChild(clonedTable); // Re-append
+    }
+
+}
 
 
 
@@ -1433,7 +1400,6 @@ function loadModel(evt) {
         $('#eqTableBody').empty();
 
         myDiagram.model = go.Model.fromJson(evt.target.result);
-
         updateTable(true);
         loadTableToDiagram();
 
@@ -1489,6 +1455,8 @@ document.getElementById("popupNotifClose").addEventListener("click", function ()
 window.onload = function () {
     if (sessionStorage.modelData) {
         myDiagram.model = go.Model.fromJson(sessionStorage.modelData);
+
+        console.log("here");
         updateTable(true);
         loadTableToDiagram();
     }
@@ -1680,6 +1648,49 @@ function getTopBracketMatches(fragment) {
         .filter(label => label.toLowerCase().startsWith(lower))
         .slice(0, 5); // best 5 matches
 }
+function finalizeRename() {
+    const $input = $(this);
+    const newName = $input.val();
+    const oldName = $input.data('oldName');
+
+    if (!oldName || newName === oldName) return;
+
+    if (!labelValidator(null, oldName, newName)) {
+        alert(`Invalid or duplicate name: "${newName}". Reverting to "${oldName}".`);
+        $input.val(oldName);
+        return;
+    }
+
+    const escapeRegExp = (string) =>
+        string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+    myDiagram.model.commit(() => {
+        const nodeData = myDiagram.model.nodeDataArray.find(n => n.label === oldName);
+        if (nodeData) {
+            myDiagram.model.setDataProperty(nodeData, 'label', newName);
+            if (nodeData.key === oldName) {
+                myDiagram.model.setDataProperty(nodeData, 'key', newName);
+            }
+        }
+
+        const pattern = new RegExp(`\\[${escapeRegExp(oldName)}\\]`, 'g');
+        myDiagram.model.nodeDataArray.forEach(n => {
+            if (typeof n.equation === 'string') {
+                const updated = n.equation.replace(pattern, `[${newName}]`);
+                if (updated !== n.equation) {
+                    myDiagram.model.setDataProperty(n, 'equation', updated);
+                }
+            }
+        });
+
+        updateTable(true);
+    }, 'Rename node and update references');
+
+    $input.data('oldName', newName); // Set for future renames
+    updateTable(true);
+    myDiagram.requestUpdate();
+}
+
 
 
 /**
@@ -1689,11 +1700,12 @@ function getTopBracketMatches(fragment) {
  * @memberof module:editor
  * @function
  */
-
 function setupAutocompleteForInputs() {
     const $tbody = $('#eqTableBody');
     const $tpopupbody = $('#equationEditorPopupContent');
+
     [$tbody, $tpopupbody].forEach($container => {
+        // === Autocomplete for equation fields ===
         $container.on('input', 'input[name="equation"]', function (e) {
             if (e.originalEvent && ["ArrowUp", "ArrowDown", "Tab"].includes(e.originalEvent.key)) return;
             showAutocomplete($(this));
@@ -1762,15 +1774,31 @@ function setupAutocompleteForInputs() {
                     newCursor = before.length + withParens.indexOf("()") + 1;
                 }
 
-
                 $input.val(updated);
                 $input[0].setSelectionRange(newCursor, newCursor);
                 $('.autocomplete-list').remove();
-
             }
         });
 
+        // === Track original name when editing starts ===
+        $container.on('focusin', 'input[name="name"]', function () {
+            $(this).data('oldName', $(this).val());
+        });
 
+        // === Trigger rename logic on blur ===
+        $container.on('blur', 'input[name="name"]', function () {
+            finalizeRename.call(this);
+        });
+
+        // === Also trigger rename on Enter ===
+        $container.on('keydown', 'input[name="name"]', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                $(this).blur(); // blur triggers finalizeRename
+            }
+        });
+
+        // === Cleanup autocomplete list on blur ===
         $container.on('blur', 'input[name="equation"]', function () {
             setTimeout(() => {
                 if (!$(':hover').hasClass('autocomplete-item')) {
@@ -1778,13 +1806,16 @@ function setupAutocompleteForInputs() {
                 }
             }, 150);
         });
-    })
+    });
+
+    // === Dismiss autocomplete dropdown on outside click ===
     $(document).on('mousedown', function (e) {
         if (!$(e.target).closest('.autocomplete-list, input[name="equation"]').length) {
             $('.autocomplete-list').remove();
         }
     });
 }
+
 
 /**
  * Shows an autocomplete dropdown for the given jQuery input element.
