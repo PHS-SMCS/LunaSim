@@ -18,7 +18,7 @@
     }
   </script>
   <!-- ================== Styling Sheets ================== -->
-  <link rel="stylesheet" href="simulation2.css" id="lightThemeCSS base-style">
+  <link rel="stylesheet" href="simulation.css" id="lightThemeCSS base-style">
   <link rel="stylesheet" href="" id="theme-style">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="icon" href="../img/lunaLogo.svg">
@@ -41,7 +41,7 @@
     <script id="code" type="module" src="editor.js"></script>
     <script id="code2" type="module" src="translator.js"></script>
     <script id="code3" type="module" src="engine.js"></script>
-    <script id="code4" type="module" src="tabsManagement2.js"></script>
+    <script id="code4" type="module" src="tabsManagement.js"></script>
 
     <div id="sample">
 
@@ -87,7 +87,7 @@
             <!-- Settings (Theme, Help, Simulation Parameters) -->
             <div class="settings-section">
               <li><a href="#" onclick="openSettings(event, 'themePopup')" class="no-active"><i class="fa-regular fa-paint-roller"></i><span>Theme</span></a></li>
-              <li><a href="../UserDocs.html" class="no-active" target="_blank"><i class="fa-regular fa-question"></i><span>Help</span></a></li>
+              <li><a href="../userDocs.html" class="no-active" target="_blank"><i class="fa-regular fa-question"></i><span>Help</span></a></li>
               <li><a href="#" onclick="openSettings(event, 'settingsPopup')" class="no-active"><i class="fa-regular fa-gear"></i><span>Settings</span></a></li>
             </div>
           </ul>
@@ -145,7 +145,7 @@
             <!-- Settings Area -->
             <div class="settings-section">
               <li><a href="#" onclick="openSettings(event, 'themePopup')" class="no-active"><i class="fa-regular fa-paint-roller"></i><span>Theme</span></a></li>
-              <li><a href="../UserDocs.html" class="no-active"><i class="fa-regular fa-question"></i><span>Help</span></a></li>
+              <li><a href="../userDocs.html" class="no-active"><i class="fa-regular fa-question"></i><span>Help</span></a></li>
               <li><a href="#" onclick="openSettings(event, 'settingsPopup')" class="no-active"><i class="fa-regular fa-gear"></i><span>Settings</span></a></li>
             </div>
           </ul>
@@ -611,7 +611,7 @@
   }
   // ================== When you click on image it goes to home page ==================
   document.getElementById('logoImage').addEventListener('click', function () {
-    window.location.href = '../landing/homePage1.html';
+    window.location.href = '../landing/homePage.html';
   });
 </script>
 <script>

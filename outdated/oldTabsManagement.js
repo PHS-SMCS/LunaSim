@@ -2,8 +2,8 @@
  * This file contains the code for the tabs management system and rendering of charts and tables.
  */
 
-import {data} from './editor.js';
-import { PERFORMANCE_MODE } from "./editor.js";
+import {data} from '../sim/editor.js';
+import { PERFORMANCE_MODE } from "../sim/editor.js";
 
 
 var TESTING_MODE = false;
