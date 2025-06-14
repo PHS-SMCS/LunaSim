@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!---
-  Authors: Sienna Simms, Karthik S. Vedula, Aditya Patil, William J. Park
+  Authors: Sienna Simms, Karthik S. Vedula, Aditya Patil, William J. Park, Ryan D. Chung, Akash Saran, Arjun M. Mujumdar, Caleb R. Wen
 -->
 
 <html lang="en">
@@ -17,35 +17,38 @@
       }
     }
   </script>
-  <!-- style sheets -->
+  <!-- ================== Styling Sheets ================== -->
   <link rel="stylesheet" href="simulation2.css" id="lightThemeCSS base-style">
   <link rel="stylesheet" href="" id="theme-style">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="icon" href="../img/lunaLogo.svg">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-
   <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.7.2/css/all.css">
 </head>
 <body>
+
+  <!-- ================== Scripts ================== -->
   <script src="https://unpkg.com/gojs@2.3.3/release/go.js"></script>
   <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
   <div id="allSampleContent" class="p-4 w-full">
     <script src="https://unpkg.com/gojs@2.3.3/extensions/Figures.js"></script>
     <script src="https://unpkg.com/gojs@2.3.3/extensions/NodeLabelDraggingTool.js"></script>
-  <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator.min.css" rel="stylesheet">
-  <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
-  <!-- Override CSS w/ Dark Mode Theme -->
-  <link rel="stylesheet" href="simulation_dark.css" disabled="disabled" id="darkThemeCSS">
-
-  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator.min.css" rel="stylesheet">
+    <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
+    <!-- Override CSS w/ Dark Mode Theme -->
+    <link rel="stylesheet" href="simulation_dark.css" disabled="disabled" id="darkThemeCSS">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script id="code" type="module" src="editor.js"></script>
     <script id="code2" type="module" src="translator.js"></script>
     <script id="code3" type="module" src="engine.js"></script>
     <script id="code4" type="module" src="tabsManagement2.js"></script>
 
     <div id="sample">
+
+      <!-- ================== Header (Action Bar + Model Name + Logo) ================== -->
       <div id ="header">
+
+        <!-- ================== Action Bar ================== -->
         <div class="actions">
           <p id="saveStatus">Last Cloud Save: -<br>Last Export: -</p>
           <button class="actionButton" id="runButton"><i class="fa-regular fa-play"></i> Run</button>
@@ -54,21 +57,24 @@
           <button class="actionButton" id="expButton" onclick="openSettings(event, 'exportPopup')"><i class="fa-regular fa-file-export"></i> Save</button>
           <button class="actionButton" id="clearButton"><i class="fa-regular fa-trash"></i> Clear</button>
         </div>
-
+        
         <input type="text" id="model_name" name="model_name" placeholder="Model Name" value="New Project">
-
         <img id="logoImage" src="../img/lunaLogo.svg" alt="LunaSim Logo" />
       </div>
 
-
+      <!-- ================== Tab Bar (Model View + Charts/Tables) ================== -->
       <div class="tabBar">
           <button class="tabButton" id="modelBtn">Model View</button>
           <button class="tabButton" id="chartBtn">Charts/Tables</button>
       </div>
+
+      <!-- ================== Model Viewer (Toolbar + Model Canvas + Equation Editor) ================== -->
       <div class="modelViewer">
-        <!-- Tool Bar -->
+
+        <!-- ================== Toolbar ================== -->
         <div class="toolbar">
           <ul>
+            <!-- Model Tools (Pointer, Stock, Cloud, Variable, Flow, Influence) -->
             <div class="tool-section">
               <li><a href="#" id="pointer_button" class="pointer_selected tool"><i class="fa-regular fa-arrow-pointer"></i><span>Pointer [P]</span></a></li>
               <li><a href="#" id="stock_button" class="node_normal tool"><i class="fa-regular fa-rectangle"></i><span>Stock [S]</span></a></li>
@@ -77,7 +83,8 @@
               <li><a href="#" id="flow_button" class="link_normal tool"><i class="fa-regular fa-arrows-left-right"></i><span>Flow [F]</span></a></li>
               <li><a href="#" id="influence_button" class="link_normal tool"><i class="fa-regular fa-repeat"></i><span>Influence [I]</span></a></li>
             </div>
-
+            
+            <!-- Settings (Theme, Help, Simulation Parameters) -->
             <div class="settings-section">
               <li><a href="#" onclick="openSettings(event, 'themePopup')" class="no-active"><i class="fa-regular fa-paint-roller"></i><span>Theme</span></a></li>
               <li><a href="../UserDocs.html" class="no-active" target="_blank"><i class="fa-regular fa-question"></i><span>Help</span></a></li>
@@ -86,21 +93,22 @@
           </ul>
         </div>
 
-
-
+        <!-- ================== Model Canvas ================== -->
         <div class="modelCanvas" id="modalView">
+          <!-- GoJS Diagram -->
           <div id="myDiagram">
             <canvas width="100%" height="100%">
               This text is displayed if your browser does not support the Canvas HTML element.
             </canvas>
           </div>
-
+          <!-- Center Model Button -->
           <button id="centerModelBtn" class="center-btn" title="Center Model">
             <i class="fa-solid fa-compress"></i>
           </button>
         </div>
 
 
+        <!-- ================== Equation Editor ================== -->
         <div id="eqEditor">
           <div class="equation-editor-header">
             <p class="equation-editor-title">Equation Editor</p>
@@ -117,21 +125,24 @@
                 </tr>
               </thead>
               <tbody id="eqTableBody">
+                <!-- All equations are build here from editor.js -->
               </tbody>
             </table>
           </div>
         </div>
       </div>
 
+      <!-- ================== Chart Viewer (Chart Sidebar, Chart Canvas, Chart Editor) ================== -->
       <div class="chartViewer">
-        <!-- Chart Sidebar -->
+
+        <!-- ================== Chart Sidebar ================== -->
         <div class="chartSidebar">
           <ul>
-            <!-- Chart Area Scrollable -->
+            <!-- Scrollable area whhere you can access all charts/tables -->
             <div class="chart-section" id="tabsList">
             </div>
 
-            <!-- Settings Area Fixed -->
+            <!-- Settings Area -->
             <div class="settings-section">
               <li><a href="#" onclick="openSettings(event, 'themePopup')" class="no-active"><i class="fa-regular fa-paint-roller"></i><span>Theme</span></a></li>
               <li><a href="../UserDocs.html" class="no-active"><i class="fa-regular fa-question"></i><span>Help</span></a></li>
@@ -140,28 +151,26 @@
           </ul>
         </div>
 
-
-
+        <!-- ================== Chart Canvas ================== -->
         <div class="chartCanvas">
           <div id="display">
-
             <div id="chart" style="width: 100%;"></div>
             <div id = "datatable">
             </div>
           </div>
         </div>
 
-
-
+        <!-- ================== Chart Editor ================== -->
         <div class="chartEditor">
           <p class="chart-title">Chart Editor</p>
-          <!-- Top Section -->
+          
+          <!-- Create Visual -->
           <div class="chartEditor-top">
             <button class="chart-btn full-width"  id="addTab" onclick="openSettings(event, 'chartsPopup')">Create New Visual</button>
             <hr>
           </div>
 
-          <!-- Middle Section (empty for now) -->
+          <!-- Chart Statistics -->
           <div class="chartEditor-middle">
             <p class="chart-title">Chart Statistics</p>
             <div id="chartStats" class="chart-stats">
@@ -173,41 +182,35 @@
 
           </div>
 
-          <!-- Bottom Section -->
+          <!-- Download/Delete Visual -->
           <div class="chartEditor-bottom">
             <hr>
             <button class="chart-btn full-width" id="downloadGraph">Download Visual</button>
             <button class="chart-btn full-width" id="deleteGraph">Delete Visual</button>
           </div>
         </div>
-
       </div>
 
-      <div id="overlay" class="overlay hidden"></div>
 
-      <!-- ================== Settings Popup ================== -->
+      <div id="overlay" class="overlay hidden"></div>
+      <!-- ================== Simulation Settings Popup ================== -->
       <div id="settingsPopup" class="settings-popup hidden">
         <div class="settings-header">
           <h2>Simulation Settings</h2>
           <button class="close-btn" onclick="closeSettings('settingsPopup')"><i class="fa-regular fa-xmark"></i></button>
         </div>
         <div class="setting-group">
-
           <label for="startTime">Start Time</label>
           <input type="text" id="startTime" class="settings-input" placeholder="Enter start time..." value="0" style="width: 70%;" autocomplete="off">
-
           <label for="endTime">End Time</label>
           <input type="text" id="endTime" class="settings-input" placeholder="Enter end time..." value="10" style="width: 70%;" autocomplete="off">
-
           <label for="dt">dt (Time Increment)</label>
           <input type="text" id="dt" class="settings-input" placeholder="Enter dt..." value="0.1" style="width: 50%;" autocomplete="off">
-
           <label for="integrationMethod">Integration Method</label>
           <select id="integrationMethod" class="settings-dropdown" style="width: 50%;">
             <option value="rk4">Runge-Kutta 4</option>
             <option value="euler">Euler</option>
           </select>
-
           <label class="switch-label">
           <span>Enable High Step Count Simulations</span>
             <label class="toggle-switch">
@@ -216,7 +219,6 @@
             </label>
           </label>
         </div>
-
         <button class="setting-button" onclick="closeSettings('settingsPopup')">Apply Settings</button>
         <p id="validationMessage" class="validation-message hidden">* Please don't leave boxes empty</p>
       </div>
@@ -257,10 +259,7 @@
             <option value="Comic Sans MS" style="font-family: 'Comic Sans MS';">Comic Sans</option>
             <option value="Wingdings" style="font-family: 'Wingdings';">Wingdings/option>
           </select>
-
-
         </div>
-
         <button class="setting-button" onclick="closeSettings('themePopup')">Apply Settings</button>
       </div>
 
@@ -301,14 +300,12 @@
       </div>
       </div>
 
-
       <!-- ================== Export Popup ================== -->
       <div id="exportPopup" class="export-popup hidden">
         <div class="settings-header">
           <h2>Export Settings</h2>
           <button class="close-btn" onclick="closeSettings('exportPopup')"><i class="fa-regular fa-xmark"></i></button>
         </div>
-
         <div class="setting-group">
           <label for="fileSelect">File Type</label>
           <select id="fileSelect" class="settings-dropdown" style="width: 72%;">
@@ -318,7 +315,6 @@
             <option>.tiff</option>
           </select>
         </div>
-
         <div id="imageSettingsSection" style="display: none;">
           <hr class="settings-divider">
           <div class="setting-group">
@@ -327,7 +323,6 @@
           </div>
           <button id="downloadImageButton" class="setting-button" onclick="closeSettings('exportPopup')">Download Image</button>
         </div>
-
         <button id="exportButton" class="setting-button" onclick="closeSettings('exportPopup')">Download File</button>
       </div>
 
@@ -342,9 +337,6 @@
         </div>
         <button id="simErrorPopupCancel" class="setting-button" onclick="closeSettings('simErrorPopup')">Dismiss</button>
       </div>
-
-
-
 
       <!-- ================== Equation Editor Popup ================== -->
       <div id="equationEditorOverlay" class="equation-editor-overlay" onclick="closePopup()"></div>
@@ -361,30 +353,21 @@
       <!-- Weird Stuff To Deal With Later -->
       <div class="weirdStuff">
         <div id="simErrorPopupDismiss"></div>
-        <div id="popupNotif">
-          <p id="popupNotifText"></p>
-          <button id="popupNotifClose"><b></b></button>
-        </div>
+        <div id="popupNotif"><p id="popupNotifText"></p><button id="popupNotifClose"><b></b></button></div>
         <div id="switchThemeButton"></div>
         <div id="closeNewTabPopup"></div>
-
         <button class="tablinks" id="defaultOpen">Model View</button>
         <button class="tablinks" id="secondaryOpen">Charts/Tables</button>
         <div id ="tabName"></div>
-        <div id="nav">
-        <div class="webTabs">
-        </div>
-        </div>
+        <div id="nav"><div class="webTabs"></div></div>
         <div class="tabContent" id="chartsTables">
-        <div id="tabManager">
-        </div>
-        <div id="grayEffectDiv"></div>
-      </div>
-      </div>
+        <div id="tabManager"></div>
+        <div id="grayEffectDiv"></div></div>
       </div>
 
-      </div>
     </div>
+  </div>
+</div>
 <script>
   // ================== Opening the settings popup ==================
   const popup = document.getElementById("settingsPopup");
@@ -859,33 +842,33 @@ document.addEventListener("DOMContentLoaded", () => {
     function applyTheme(selected) {
       let themeHref = '';
       if (selected === 'monochrome') {
-        themeHref = 'simulationMonochrome.css';
+        themeHref = '../themes/monochrome.css';
       } else if (selected === 'classic') {
-        themeHref = 'simulationClassic.css';
+        themeHref = '../themes/simulationClassic.css';
       } else if (selected === 'mlight') {
-        themeHref = 'minimalLight.css';
+        themeHref = '../themes/minimalLight.css';
       } else if (selected === 'oblue') {
-        themeHref = 'OceanBlue.css';
+        themeHref = '../themes/oceanBlue.css';
       } else if (selected === 'sorange') {
-        themeHref = 'sunsetOrange.css';
+        themeHref = '../themes/sunsetOrange.css';
       } else if (selected === 'fgreen') {
-        themeHref = 'forestGreen.css';
+        themeHref = '../themes/forestGreen.css';
       } else if (selected === 'cpurple') {
-        themeHref = 'cosmicPurple.css';
+        themeHref = '../themes/cosmicPurple.css';
       } else if (selected === 'bpink') {
-        themeHref = 'bubblegumPink.css';
+        themeHref = '../themes/bubblegumPink.css';
       } else if (selected === 'cred') {
-        themeHref = 'cherryRed.css';
+        themeHref = '../themes/cherryRed.css';
       } else if (selected === 'cblossom') {
-        themeHref = 'cherryBlossom.css';
+        themeHref = '../themes/cherryBlossom.css';
       } else if (selected === 'nvoid') {
-        themeHref = 'nebulaVoid.css';
+        themeHref = '../themes/nebulaVoid.css';
       } else if (selected === 'udark') {
-        themeHref = 'ultraDark.css';
+        themeHref = '../themes/ultraDark.css';
       } else if (selected === 'rduck') {
-        themeHref = 'rubberDuck.css';
+        themeHref = '../themes/rubberDuck.css';
       } else if (selected === 'sred') {
-        themeHref = 'SithRed.css';
+        themeHref = '../themes/sithRed.css';
       } else {
         themeHref = '';
       }
@@ -973,7 +956,5 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 </script>
-
-
 </body>
 </html>
