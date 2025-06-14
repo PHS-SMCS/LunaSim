@@ -450,7 +450,7 @@ function buildTemplates() {
      * const shape = $(go.Shape, shapeStyle(), ...);
      */
 
-    function shapeStyle() {
+    function shapeStyle() {3
         return {
             name: "SHAPE", stroke: "black", fill: fillColor, portId: "",
             fromLinkable: true, toLinkable: true
