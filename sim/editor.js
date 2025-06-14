@@ -794,6 +794,17 @@ function updateTable(load = false) {
     GOJS_ELEMENT_LABELS = myDiagram.model.nodeDataArray
         .filter(n => n.label && !n.label.startsWith('$') && n.category !== "cloud")
         .map(n => n.label);
+
+    // Ensure popup styling stays consistent after table update
+    const popup = document.getElementById("equationEditorPopup");
+    const popupContent = document.getElementById("equationEditorPopupContent");
+
+    if (popup && popup.style.display !== "none") {
+        const clonedTable = document.querySelector("#eqTable").cloneNode(true);
+        popupContent.innerHTML = ""; // Clear old
+        popupContent.appendChild(clonedTable); // Re-append
+    }
+
 }
 
 
