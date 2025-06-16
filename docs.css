@@ -1,0 +1,251 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    /*background-color: #35829f; */
+    background: #4f6bb8;
+    background: linear-gradient(60deg,rgba(79, 107, 184, 1) 0%, rgba(79, 165, 189, 1) 100%);
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.sidebar {
+    width: 15%;
+    position: fixed;
+    top: calc(74px/2);
+    left: 2svw;
+    height: calc(100svh - 74px);
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    color: #807c7c;
+    border: 1px solid #000000;
+}
+
+
+.sidebar ul {
+    list-style-type: none;
+    margin-left: 2px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding-left: 20px;
+}
+
+
+.sidebar ul li {
+    font-size: 15px;
+    padding: 6px 0;
+    position: relative;
+   
+}
+
+
+.sidebar ul::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 2%;
+    bottom: 2%;
+    width: 2px;
+    border-radius: 15px;
+    background: #b8d1e6;
+}
+
+
+.sidebar p {
+    font-size: 17px;
+    padding: 8px 0;
+    position: relative;
+    color: #176481ff;
+    font-weight: 600;
+}
+
+
+.sidebar a {
+    text-decoration: none;
+    color: #4c4a4a;
+}
+
+
+.sidebar a:hover {
+    color: #176481ff;
+    text-decoration: underline;
+}
+
+
+.sidebar::-webkit-scrollbar {
+    display: none;
+    width: 4px;
+}
+
+
+.tutorialList {
+    margin-left: 17%;
+}
+
+
+.tutorialContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 37px;
+    margin-bottom: 37px;
+    flex-wrap: wrap;
+}
+
+
+.tutorialBox {
+    display: flex;
+    width: calc(95% - 15px);
+    padding: 20px;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    min-height: 200px;
+    transition: transform 0.1s ease-in-out;
+    border: 1px solid #000000;
+}
+
+
+.tutorialContents {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+}
+
+
+.tutorialInfo {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding-left: 20px;
+}
+
+
+.tutorialInfo::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 1%;
+    bottom: 1%;
+    width: 2px;
+    border-radius: 15px;
+    background: #b8d1e6;
+}
+
+
+.tutorialInfo h1 {
+    font-size: 22px;
+    font-weight: 600;
+    color: #176481ff;
+    margin-bottom: 12px;
+}
+
+.tutorialInfo h3 {
+    font-size: 19px;
+    font-weight: 600;
+    color: #176481ff;
+    margin-top: 9px;
+    margin-bottom: 9px;
+}
+
+.tutorialInfo h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #176481ff;
+    margin-top: 6px;
+    margin-bottom: 4px;
+}
+
+
+
+.tutorialInfo p {
+    font-size: 16px; /* 16*/
+    font-weight: 400;
+    color: #4c4a4a;
+    line-height: 1.5;
+    margin-bottom: 4px;
+    margin-top: 4px;
+    line-height: 2;
+}
+
+
+.tutorialImage {
+    height: 300px;
+    width: 300px;
+    border-radius: 15px;
+    align-self: center;
+    overflow: hidden;
+    background-color: #b8d1e6;
+    flex-shrink: 0;
+    border: 1px solid black;
+}
+
+
+.tutorialImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: none;
+}
+
+
+.tutorialVideo {
+    width: 640px !important;
+    height: 360px !important;
+    border-radius: 20px;
+    border: 1px solid black;
+}
+
+
+.tutorialInfo table{
+    border-collapse: separate; 
+    border-radius: 15px;
+    text-align: center;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.tutorialInfo table tr {
+    margin: 15px;
+    height: 60px;
+}
+
+.tutorialInfo table tr:nth-child(even) {
+    background-color: #D6EEEE;
+}
+
+.tutorialInfo table tr:nth-child(odd) {
+    background-color: #edf7f7;
+}
+
+
+.tutorialInfo table th {
+    font-size: 18px;
+    font-weight: 600;
+    background-color: #354066;
+    color: white;
+    padding: 10px
+}
+
+.tutorialInfo table td {
+    font-size: 16px;
+    font-weight: 400;
+    color: black;
+    line-height: 1.5;
+    padding: 10px
+}

@@ -1,0 +1,372 @@
+/* Purple Cosmic Theme */
+body {
+    background: #2a1b3d;
+    box-shadow: none;
+}
+
+#model_name {
+    background-color: #1a0f26;
+    border: 1px solid #6a4c93;
+    color: #f0e6ff;
+}
+
+.actionButton {
+    background-color: rgba(106, 76, 147, 0.6);
+    color: #f0e6ff;
+}
+
+.actionButton:hover {
+    background-color: #3d2954;
+}
+
+#runButton {
+    background: rgba(46, 204, 113, 0.9);
+}
+
+#runButton:hover {
+    background-color: rgba(39, 174, 96, 0.9);
+}
+
+#loadButton,
+#expButton {
+    background: rgba(155, 89, 182, 0.9);
+}
+
+#loadButton:hover,
+#expButton:hover {
+    background: rgba(142, 68, 173, 0.9);
+}
+
+#clearButton {
+    background: rgba(138, 43, 226, 0.9); /* Blueviolet - cosmic purple */
+    color: #f0e6ff;
+}
+
+#clearButton:hover {
+    background: rgba(102, 51, 153, 0.9); /* Darker purple on hover */
+    color: #f0e6ff;
+}
+
+#saveStatus {
+    color: #f0e6ff;
+}
+
+.tabButton {
+    color: #f0e6ff;
+    background-color: #1a0f26;
+    box-shadow: none;
+}
+
+.tabButton.active {
+    background-color: #3d2954;
+    box-shadow: none;
+}
+
+.modelViewer {
+    background: #3d2954;
+    border: none;
+}
+
+.toolbar ul,
+.chartSidebar ul {
+    background-color: #1a0f26;
+}
+
+.settings-section {
+    border-top: 1px solid #6a4c93;
+}
+
+.graphTabsActive {
+    background-color: #6a4c93 !important;
+}
+
+a {
+    color: #bb86fc;
+}
+
+a:hover,
+a:focus {
+    background-color: #6a4c93;
+}
+
+a span {
+    background-color: #6a4c93;
+    color:white;
+}
+
+a span:before {
+    background-color: #6a4c93;
+}
+
+a.active {
+    background-color: #6a4c93;
+}
+
+.modelCanvas {
+    background-color: #ffffff;
+    color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+#myDiagram {
+    background-color: white;
+}
+
+.center-btn {
+    background-color: #1a0f26;
+    color: #f0e6ff;
+}
+
+.center-btn:hover i {
+    color: #bb86fc;
+}
+
+#eqEditor {
+    background-color: #1a0f26;
+    color: #f0e6ff;
+}
+
+.equation-editor-zoom-icon {
+    color: #f0e6ff;
+}
+
+.equation-editor-zoom-icon:hover {
+    color: #6a4c93;
+}
+
+.equation-editor-table th {
+    background-color: #1a0f26;
+}
+
+.eqTableInputBox {
+    background-color: #0f0619;
+    border: 1px solid #6a4c93;
+    color: #f0e6ff;
+}
+
+/* Purple cosmic-themed unique border colors for equation editor boxes */
+.eqStockBox input {
+    border: 1px solid #bb86fc; /* Light Purple - represents cosmic stored energy */
+}
+
+.eqVariableBox input {
+    border: 1px solid #4a148c; /* Deep Purple - represents dynamic cosmic variables */
+}
+
+.eqFlowBox input {
+    border: 1px solid #6a4c93; /* Medium Purple - represents cosmic flows (kept existing) */
+}
+
+.equation-editor-table thead th {
+    background-color: #1a0f26;
+}
+
+.nncheckbox,
+.yAxisCheckbox {
+    accent-color: #6a4c93;
+    background-color: #0f0619;
+    border: 2px solid #6a4c93;
+}
+
+.nncheckbox:checked,
+.yAxisCheckbox:checked {
+    background-color: #6a4c93;
+    border-color: #6a4c93;
+}
+
+.nncheckbox:hover,
+.yAxisCheckbox:hover {
+    border-color: #bb86fc;
+}
+
+.chartViewer {
+    background: #3d2954;
+}
+
+.chartCanvas {
+    background-color: #ffffff;
+    color: black;
+}
+
+.chartEditor {
+    background-color: #1a0f26;
+    color: #f0e6ff;
+}
+
+.chart-stats p {
+    color: #d1c4e9;
+}
+
+.chartEditor hr {
+    border-top: 1px solid #6a4c93;
+}
+
+.chart-btn {
+    background-color: #0f0619;
+    border: 1px solid #6a4c93;
+    color: #f0e6ff;
+}
+
+.chart-btn:hover {
+    background-color: #6a4c93;
+}
+
+#overlay {
+    background-color: rgba(26, 15, 38, 0.85);
+}
+
+.settings-header h2,
+.close-btn,
+.setting-group {
+    color: #f0e6ff;
+}
+
+.close-btn:hover {
+    color: #6a4c93;
+}
+
+.settings-input,
+.settings-dropdown {
+    background-color: #0f0619;
+    border: 1px solid #6a4c93;
+    color: #f0e6ff;
+}
+
+.settings-divider {
+    border-top: 1px solid #6a4c93;
+}
+
+.slider {
+    background-color: #0f0619;
+}
+
+.slider:before {
+    background-color: white;
+}
+
+.toggle-switch input:checked + .slider {
+    background-color: #6a4c93;
+}
+
+.setting-button {
+    background-color: #0f0619;
+    border: 1px solid #6a4c93;
+    color: #f0e6ff;
+}
+
+.setting-button:hover {
+    background-color: #6a4c93;
+}
+
+.settings-popup,
+.theme-popup,
+.charts-popup,
+.export-popup {
+    background-color: #1a0f26;
+    color: #f0e6ff;
+}
+
+#simErrorPopup {
+    background: rgba(41, 20, 82, 0.95); /* Deep cosmic purple background */
+    border: 1px solid #9370db; /* Medium purple border */
+    color: #f0e6ff;
+}
+
+#simErrorPopupTitle,
+#simErrorPopupDesc {
+    color: #f0e6ff;
+}
+
+#simErrorPopupCancel {
+    background: #9370db; /* Medium purple button */
+    border: 1px solid #9370db;
+    color: #f0e6ff;
+}
+
+#simErrorPopupCancel:hover {
+    background: #bb86fc; /* Lighter purple on hover */
+    border: 1px solid #bb86fc;
+    color: #1a0f26; /* Dark background for contrast */
+}
+
+.equation-editor-overlay {
+    background-color: rgba(26, 15, 38, 0.65);
+}
+
+.equation-editor-popup {
+    background-color: #1a0f26;
+}
+
+.close-icon {
+    color: #f0e6ff;
+}
+
+.close-icon:hover {
+    color: #6a4c93;
+}
+
+.equation-editor-popup,
+.equation-editor-popup * {
+    color: #f0e6ff;
+}
+
+#xAxis {
+    background-color: #0f0619;
+    border: 1px solid #6a4c93;
+    color: #f0e6ff;
+}
+
+#yAxis {
+    background-color: transparent;
+    color: #f0e6ff;
+}
+
+#submitModel {
+    background-color: #0f0619;
+    border: 1px solid #6a4c93;
+    color: #f0e6ff;
+}
+
+#submitModel:hover {
+    background-color: #6a4c93;
+}
+
+.autocomplete-list {
+    background-color: #0f0619;
+    border: 1px solid #6a4c93;
+    color: #f0e6ff;
+}
+
+.autocomplete-item {
+    border-bottom: 1px solid #6a4c93;
+}
+
+.autocomplete-item.selected,
+.autocomplete-item:hover {
+    background-color: #6a4c93;
+}
+
+.model-zoom-icon {
+    color: #f0e6ff;
+    background-color: #1a0f26;
+}
+
+.model-zoom-icon:hover {
+    background-color: #6a4c93;
+}
+
+.popup-overlay {
+    background-color: rgba(30, 20, 45, 0.95);
+}
+
+.popup-content {
+    background-color: #1a0f26;
+}
+
+.close-popup {
+    color: #f0e6ff;
+}
+.graphTabs::after {
+    background-color:#6a4c93;
+    color: white;
+}

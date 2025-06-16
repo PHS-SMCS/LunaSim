@@ -1,5 +1,8 @@
-/* Authors: Sienna Simms, Aditya Patil, Karthik S. Vedula
- * This file contains the code for the tabs management system and rendering of charts and tables.
+
+/**
+ * @fileoverview Manages Switching between editor and charts and tables tabs
+ * @module TabsManagement
+ * @author Authors: Karthik S. Vedula, Sienna Simms, Aditya Patil, Ryan Chung, Arjun Mujudar, Akash Saran
  */
 
 import {data} from './editor.js';
@@ -8,6 +11,12 @@ import { PERFORMANCE_MODE } from "./editor.js";
 
 var TESTING_MODE = false;
 
+/**
+ * Displays a popup notification with a given message.
+ * @function
+ * @param {string} msg - The message to show in the popup.
+ * @memberOf module:TabsManagement
+ */
 
 function showPopup(msg) {
   var popupNotif = document.getElementById("popupNotif");
@@ -45,8 +54,14 @@ var chart = new ApexCharts(document.querySelector("#chart"), {
 })
 chart.render()
 
-// Creates an array of series keys
-// @def true if only reuturns stocks for default
+/**
+ * Returns an array of available series keys from simulation data.
+ * @function
+ * @param {boolean} def - If true, only returns stock names (default display).
+ * @returns {string[]} An array of valid variable names for graphing.
+ * @memberOf module:TabsManagement
+ */
+
 function seriesKeys(def){
   const series = ["time"]; // time as an option
 
@@ -76,11 +91,20 @@ function seriesKeys(def){
   return series;
 }
 
-// Adds the options for the x and y axes
+/**
+ * Populates the X and Y axis selectors in the chart/table creation form.
+ * Dynamically creates options based on available simulation series.
+ * @function
+ * @memberOf module:TabsManagement
+ */
+
 function addOptions(){
   const series = seriesKeys(false);
   let x = document.getElementById("xAxis"); // refers to x-axis select node
   let y = document.getElementById("yAxis"); // refers to y-axis div node
+
+  x.innerHTML = "";
+  y.innerHTML = "";
   
   // Configuration for buttons of x-axis
   for (var i = 0; i < series.length; i++){
@@ -118,13 +142,19 @@ function addOptions(){
   }
 }
 
-// Opens and initializes the form popup
+/**
+ * Opens the tab configuration form for adding a new chart or table.
+ * Checks for valid simulation data before displaying the form.
+ * @function
+ * @memberOf module:TabsManagement
+ */
+
 function openForm(){
   if (data == null){ // ensures that the simulation has been run first
     showPopup("Run the simulation first.");
     return;
   }
-  if (seriesKeys(false).length == 1){
+  if (seriesKeys(false).length === 1){
     showPopup("Create a model first.");
     return;
   }
@@ -135,21 +165,58 @@ function openForm(){
   form.style.display = "block"; // display form
 }
 
-// Will validate and add tab data
-function submit(){
-  let inputs = document.getElementsByTagName('input');
+/**
+ * Validates form input and submits a new chart/table tab.
+ * @function
+ * @returns {boolean} False to prevent default form submission.
+ * @memberOf module:TabsManagement
+ */
+
+function submit() {
+  let form = document.forms["tabConfig"];
+  let nameInput = document.getElementById("tab_name");
+  let nameError = document.getElementById("nameValidation");
+
+  const name = nameInput.value.trim();
+
+  // Validate name
+  if (!name) {
+    nameInput.classList.add("invalid");
+    nameError.classList.remove("hidden");
+  } else {
+    nameInput.classList.remove("invalid");
+    nameError.classList.add("hidden");
+  }
+
+  // Validate Y-axis checkboxes
+  let ySelected = false;
+  let inputs = document.getElementsByClassName('yAxisCheckbox');
   for (let i = 0; i < inputs.length; i++) {
-    if (inputs.item(i).className == 'yAxisCheckbox') {
-      if (inputs.item(i).checked == true){
-        initializeTab(); // add data if valid
-        return false; // want to return false to disable default submission
-      }
+    if (inputs[i].checked) {
+      ySelected = true;
+      break;
     }
   }
-  showPopup("Check at least one box."); // no alert if at least one is checked
+
+  if (!ySelected) {
+    showPopup("Check at least one Y-axis box.");
+  }
+
+  // Abort submit if validations fail
+  if (!name || !ySelected) return false;
+
+  // Proceed
+  initializeTab(); // push new tab
+  return false;
 }
 
-// Resets the options so that it updates the options
+
+/**
+ * Clears all current X and Y axis options from the form UI.
+ * @function
+ * @memberOf module:TabsManagement
+ */
+
 function resetOptions(){
   let x = document.getElementById("xAxis"); // refers to x-axis select node
   while (x.firstChild) { // removes all child elements
@@ -162,7 +229,13 @@ function resetOptions(){
   }
 }
 
-// Enter objects into tabs data array
+/**
+ * Adds a new tab to the tabs array based on form input values.
+ * Automatically switches to the new tab after creation.
+ * @function
+ * @memberOf module:TabsManagement
+ */
+
 function initializeTab() {
   let form = document.forms["tabConfig"];
   
@@ -185,18 +258,24 @@ function initializeTab() {
   else
     x = form["xAxis"].value;
 
-  var tab = new Graphic(form["model_type"].value, x, y); // initializes the Graphic object
+  var tab = new Graphic(form["model_type"].value, x, y);
+  tab.name = form["tab_name"].value || "Chart " + (tabs.length); // fallback if blank
   tabs.push(tab); // add to end of array
+  setTimeout(() => list.lastChild.click(), 0);
   document.getElementById("popForm").style.display = "none"; // hide form
   document.getElementById("grayEffectDiv").style.display = "none";
   form.reset(); // reset input
   resetOptions(); // reset options
 }
 
-// Array listener
-/* @arr array you want to listen to
-   @callback function that will be called on any change inside array
+/**
+ * Watches an array for structural changes (e.g., push, pop, splice) and triggers a callback.
+ * @function
+ * @param {Array} arr - The array to observe.
+ * @param {Function} callback - The function to call when the array changes.
+ * @memberOf module:TabsManagement
  */
+
 function listenChangesinArray(arr,callback){
      // Add more methods here if you want to listen to them
     ['pop','push','reverse','shift','unshift','splice','sort'].forEach((m)=>{
@@ -208,233 +287,218 @@ function listenChangesinArray(arr,callback){
     });
 }
 
-// Configures dynamic tabs
-function configTabs(){
+/**
+ * Rebuilds the tab list UI from the current `tabs` array and sets up event listeners.
+ * Handles both chart and table rendering logic upon tab selection.
+ * @function
+ * @memberOf module:TabsManagement
+ */
+
+function configTabs() {
   sessionStorage.tabsData = JSON.stringify(tabs); // updates session storage
-  if(TESTING_MODE) 
-    console.log(tabs);
-  
-  // reset for updating
-  while (list.firstChild) { // removes all child elements
+  if (TESTING_MODE) console.log(tabs);
+
+  // Clear current tab list
+  while (list.firstChild) {
     list.removeChild(list.lastChild);
   }
-  
-  for(let j = 0; j < tabs.length; j++){
-    const delButton = document.createElement("button"); 
-    //delButton.innerHTML = '<i style="font-size: 2vw;" class="fa fa-close"></i>'; // Font Awesome 4 icon button
-    delButton.innerHTML = "<b>X</b>"; // looks cleaner and easier to customise imo
-    delButton.classList = "graphTabsDelButton";
-    delButton.style.backgroundColor = "inherit";
-    delButton.style.border = "none";
-    
-    const tab = document.createElement("div"); // Tabs are divs to allow button children
-    var node;
-    if(j == 0) 
-      node = document.createTextNode("Default");  // name of default tab
-    else
-      node = document.createTextNode("Tab " + j);  // Tab name based on index
-    
-    tab.classList = "graphTabs";
 
-    if(j != 0)  // default tab is not deletable
-      tab.appendChild(delButton);
-    tab.appendChild(node);
+  // Rebuild tab list
+  for (let j = 0; j < tabs.length; j++) {
+    const tab = document.createElement("li");
+    tab.className = "graphTabs";
+    if (j === 0) {
+      tab.classList.add("graphTabsActive"); // default selection
+    }
+
+    tab.dataset.index = j; // safer indexing
+
+    const tabLink = document.createElement("a");
+    tabLink.href = "#";
+
+    const icon = document.createElement("i");
+    // Use different icon classes based on tab type
+    icon.className = (tabs[j].type === "table")
+      ? "fa-regular fa-table"
+      : "fa-regular fa-chart-sine";
+
+    const label = document.createElement("span");
+    const chartName = tabs[j].name || ((j === 0) ? "Default" : "Chart " + j);
+    label.textContent = chartName;
+    tab.setAttribute("data-tooltip", chartName);
+
+
+    tabLink.appendChild(icon);
+    tabLink.appendChild(label);
+    tab.appendChild(tabLink);
     list.appendChild(tab);
-    
-    delButton.addEventListener("click", function tabDelete(){ 
-      let i = Number(tab.lastChild.nodeValue.charAt(4)); // gets the correct index
-      tabs.splice(i, 1); // removes one value from i
-      list.childNodes[i-1].click(); // switches to previous tab
-    });
 
+    // Tab click handler
     tab.addEventListener("click", function render() {
-      if (data == null){ // ensures that the simulation has been run first
+      if (!data) {
         showPopup("Run the simulation first.");
         return;
       }
-      var i = this.lastChild.nodeValue.charAt(4); // Reads the text node
-      if(i == "u") // i = 0 if default
-        i = 0;
-      else
-        i = Number(i); // gets the number
-      
-      var tabInfo = tabs[i];
-      if (tabInfo.type == "chart") {
-        if (PERFORMANCE_MODE == true)
-          console.time('Chart Render Time'); // Measuring chart render time
-        
-        document.getElementById('chart').hidden = false;
-        document.getElementById('datatable').hidden = true;
-        
-        var options = {
-          series: [
-          ],
+
+      let i = Number(this.dataset.index);
+      const tabInfo = tabs[i];
+
+      if (!tabInfo) {
+        showPopup("Tab data missing.");
+        return;
+      }
+
+      // Remove active class from all
+      tabsList.querySelectorAll("li").forEach(t => t.classList.remove("graphTabsActive"));
+
+      // Add active to clicked one
+      tab.classList.add("graphTabsActive");
+
+
+      updateChartStats(i);
+      // Visual active state
+      list.querySelectorAll("li").forEach(t => t.classList.remove("graphTabsActive"));
+      this.classList.add("graphTabsActive");
+
+      if (tabInfo.type === "chart") {
+        if (PERFORMANCE_MODE) console.time('Chart Render Time');
+
+        const chartEl = document.getElementById('chart');
+        const tableEl = document.getElementById('datatable');
+
+        if (!chartEl || !tableEl) {
+          showPopup("Chart or table container not found in DOM.");
+          return;
+        }
+
+        chartEl.hidden = false;
+        tableEl.hidden = true;
+
+        const options = {
+          series: [],
           chart: {
             type: 'scatter',
-            zoom: {
-              enabled: true,
-              type: 'xy'
-            },
+            zoom: { enabled: true, type: 'xy' },
             height: "100%",
             width: "100%"
-           },
-          dataLabels: {
-            enabled: false
           },
-
-          legend: {showForSingleSeries: true},
+          dataLabels: { enabled: false },
+          legend: { showForSingleSeries: true },
           xaxis: {
             tickAmount: 10,
             labels: {
-              formatter: function(val) {
-                return parseFloat(val).toFixed(1)
-              }
-            }
+              formatter: val => parseFloat(val).toFixed(1)
+            },
+            title: { text: tabInfo.xAxis }
           },
           yaxis: {
             forceNiceScale: false,
             labels: {
-              formatter: function(val) {
-                return parseFloat(val).toFixed(1)
-              }
+              formatter: val => parseFloat(val).toFixed(1)
             }
-          }, 
+          },
           tooltip: {
-            x: {
-              formatter: function(val) {
-                return parseFloat(val).toFixed(10)
-              }
-            },
-            y: {
-              formatter: function(val) {
-                return parseFloat(val).toFixed(10)
-              }
-            }
+            x: { formatter: val => parseFloat(val).toFixed(10) },
+            y: { formatter: val => parseFloat(val).toFixed(10) }
           }
-        }
+        };
 
-        var maxyValue = Number.MIN_VALUE;
-        var minyValue = Number.MAX_VALUE;
+        let maxyValue = Number.MIN_VALUE;
+        let minyValue = Number.MAX_VALUE;
 
-        for (var yName of tabInfo.yAxis) {
-          var yValues = getAllValues(yName, data);
-          for (var yValue of yValues) {
-            if (yValue > maxyValue) {
-              maxyValue = yValue;
-            }
-            if (yValue < minyValue) {
-              minyValue = yValue;
-            }
-          }
-        }
-
-        var xValues = getAllValues(tabInfo.xAxis, data);
-        if(xValues == null){ // deletes tab and sends alert when data is deleted
-          showPopup("There is missing data in this tab. (corrected)");
-          this.firstChild.click(); // Auto-clicks delete button
+        const xValues = getAllValues(tabInfo.xAxis, data);
+        if (!xValues) {
+          showPopup("There is missing data in this tab. Please delete or update it.");
           return;
         }
 
-        for (var yName of tabInfo.yAxis) {
-          var yValues = getAllValues(yName, data);
-          if(yValues == null){ // deletes tab and sends alert when data is deleted
-            showPopup("There is missing data in this tab. (corrected)");
-            this.firstChild.click(); // Auto-clicks delete button
+        for (let yName of tabInfo.yAxis) {
+          const yValues = getAllValues(yName, data);
+          if (!yValues) {
+            showPopup("There is missing data in this tab. Please delete or update it.");
             return;
           }
+
+          yValues.forEach(val => {
+            if (val > maxyValue) maxyValue = val;
+            if (val < minyValue) minyValue = val;
+          });
+
           options.series.push({
-            name : yName,
-            data : yValues.map((x, idx) => [xValues[idx], x])
+            name: yName,
+            data: yValues.map((y, idx) => [xValues[idx], y])
           });
         }
 
-        options.xaxis.title = {text: tabInfo.xAxis};
         options.yaxis.min = minyValue;
         options.yaxis.max = maxyValue;
 
-        chart.updateOptions(options, true)
+        chart.updateOptions(options, true);
 
-        if (PERFORMANCE_MODE == true) { // Measuring chart render time
-          console.timeEnd('Chart Render Time');
-        }
+        if (PERFORMANCE_MODE) console.timeEnd('Chart Render Time');
+
       } else {
-          if (PERFORMANCE_MODE == true)
-            console.time('Table Render Time'); // Measuring table render time
-        
-          document.getElementById('chart').hidden = true;
-          document.getElementById('datatable').hidden = false;
-        
-          var xValues = getAllValues(tabInfo.xAxis, data);
-          if(xValues == null){ // deletes tab and sends alert when data is deleted
-            showPopup("There is missing data in this tab. (corrected)");
-            this.firstChild.click(); // Auto-clicks delete button
+        // Table rendering
+        if (PERFORMANCE_MODE) console.time('Table Render Time');
+
+        const chartEl = document.getElementById('chart');
+        const tableEl = document.getElementById('datatable');
+        chartEl.hidden = true;
+        tableEl.hidden = false;
+
+        const xValues = getAllValues(tabInfo.xAxis, data);
+        if (!xValues) {
+          showPopup("There is missing data in this tab. Please delete or update it.");
+          return;
+        }
+
+        const tableData = [];
+        const tableColumns = [{
+          title: "time",
+          field: "time"
+        }];
+
+        xValues.forEach((val, i) => {
+          const row = { id: i };
+          row[tabInfo.xAxis] = val;
+          tableData.push(row);
+        });
+
+        for (let yName of tabInfo.yAxis) {
+          const yValues = getAllValues(yName, data);
+          if (!yValues) {
+            showPopup("There is missing data in this tab. Please delete or update it.");
             return;
           }
-        
-          var tableData = [];
-          var tableColumns = [{
-            title: "time",
-            field: "time"
-          }];
 
-          for (var i = 0; i < xValues.length; i++) {
-            var x = {id : i};
-            x[tabInfo.xAxis] = xValues[i];
-
-            tableData.push(x);
-          }
-          
-        
-          for (var yName of tabInfo.yAxis) {
-            var yValues = getAllValues(yName, data);
-            if(yValues == null){ // deletes tab and sends alert when data is deleted
-              showPopup("There is missing data in this tab. (corrected)");
-              this.firstChild.click();
-              return;
-            }
-            for (var i = 0; i < tableData.length; i++) {
-              tableData[i][yName] = yValues[i];
-            }
-            tableColumns.push({
-              title : yName,
-              field : yName,
-            });
-          }
-        
-          var table = new Tabulator("#datatable", {
-            // (THIS IS NOW SET IN CSS) height:640, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
-            data:tableData, //assign data to table
-            layout:"fitColumns", //fit columns to width of table (optional)
-            columns: tableColumns,
-          });
-        
-          table.on("tableBuilt", () => {
-            //making sure table is built
+          yValues.forEach((val, i) => {
+            tableData[i][yName] = val;
           });
 
-          if (PERFORMANCE_MODE == true) { // Measuring table render time
-            console.timeEnd('Table Render Time');
-          }
-      }
-      
-      // indicates the active tab
-      var dark = document.getElementById("darkThemeCSS");
-      if (dark.disabled) {
-        for (var t = 0; t < list.childNodes.length; t++){
-          list.childNodes[t].classList = "graphTabs graphTabsInactive";
+          tableColumns.push({ title: yName, field: yName });
         }
-        
-        this.classList = "graphTabs graphTabsActive";
-      } else {
-        for (var t = 0; t < list.childNodes.length; t++){
-          list.childNodes[t].classList = "graphTabs graphTabsInactive";
-        }
-        
-        this.classList = "graphTabs graphTabsActive";
+
+        window.tableInstance = new Tabulator("#datatable", {
+          data: tableData,
+          layout: "fitColumns",
+          columns: tableColumns,
+        });
+
+
+        if (PERFORMANCE_MODE) console.timeEnd('Table Render Time');
       }
-  })
+    });
+  }
 }
-}
+
+/**
+ * Retrieves all values for a given variable or flow name from the simulation data.
+ * @function
+ * @param {string} name - The name of the variable or flow.
+ * @param {Object} data - The simulation output data.
+ * @returns {number[]|undefined} An array of numeric values, or undefined if not found.
+ * @memberOf module:TabsManagement
+ */
 
 function getAllValues(name, data) {
   if (name == "time") {
@@ -472,15 +536,35 @@ listenChangesinArray(tabs, configTabs);
 
 // Event listeners
 
-document.addEventListener("DOMContentLoaded", function() { configTabs(); });
+document.addEventListener("DOMContentLoaded", function() {
+  configTabs();
+
+  const modelType = document.getElementById("model_type");
+  const xAxisGroup = document.getElementById("xAxisGroup");
+
+  modelType.addEventListener("change", () => {
+    const isTable = modelType.value === "table";
+    xAxisGroup.style.display = isTable ? "none" : "flex";
+  });
+
+  modelType.dispatchEvent(new Event("change"));
+
+  document.getElementById("submitModel").addEventListener("click", submit);
+});
+
+
 
  // updates data and goes to default
-document.getElementById("runButton").addEventListener("click", function() { 
-  tabs[0] = new Graphic("chart", "time", seriesKeys(true).splice(1)); 
-  configTabs(); 
-  list.firstChild.click(); 
-  if(TESTING_MODE) console.log(tabs);  
+document.getElementById("runButton").addEventListener("click", function () {
+  tabs[0] = new Graphic("chart", "time", seriesKeys(true).splice(1));
+  configTabs();
+  list.firstChild.click();
+
+  // AUTO SWITCH TO CHART/TABLES VIEW
+
+  if (TESTING_MODE) console.log(tabs);
 });
+
 
 document.getElementById("addTab").addEventListener("click", openForm);
 document.getElementById("submitModel").addEventListener("click", submit);
@@ -490,3 +574,106 @@ document.getElementById("closeNewTabPopup").addEventListener("click", function()
   form.reset(); // reset input
   resetOptions(); // reset options
 });
+
+// Handle Graph Download
+document.getElementById("downloadGraph").addEventListener("click", function () {
+  if (!tabs || tabs.length === 0) {
+    showPopup("No chart or table available to download.");
+    return;
+  }
+
+  const chartEl = document.getElementById("chart");
+  const tableEl = document.getElementById("datatable");
+
+  const chartVisible = chartEl && !chartEl.hidden;
+  const tableVisible = tableEl && !tableEl.hidden;
+
+  if (chartVisible) {
+    chart.dataURI().then(({ imgURI }) => {
+      const link = document.createElement("a");
+      link.href = imgURI;
+      link.download = "chart.png";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+  } else if (tableVisible && window.tableInstance) {
+    window.tableInstance.download("csv", "table.csv");
+  } else {
+    showPopup("No visible chart or table to download.");
+  }
+});
+
+
+document.getElementById("deleteGraph").addEventListener("click", function () {
+  if (tabs.length <= 1) {
+    showPopup("Cannot delete the default tab.");
+    return;
+  }
+
+  const activeTab = document.querySelector(".graphTabsActive");
+  if (!activeTab) {
+    showPopup("No chart is currently selected.");
+    return;
+  }
+
+  const index = Number(activeTab.dataset.index);
+
+  if (isNaN(index) || index === 0) {
+    showPopup("Cannot delete the default tab.");
+    return;
+  }
+
+  tabs.splice(index, 1); // Remove the tab
+
+  configTabs(); // Rebuild the tabs
+
+  // Activate the previous tab (or the first one if index - 1 is out of bounds)
+  const newIndex = Math.max(0, index - 1);
+  const newActiveTab = list.querySelector(`li[data-index="${newIndex}"]`);
+  if (newActiveTab) {
+    newActiveTab.click();
+  }
+});
+
+/**
+ * Updates the sidebar statistics display with information about the selected tab.
+ * Includes name, type, axes, and simulation configuration (start, end, dt, method).
+ * @function
+ * @param {number} index - The index of the currently selected tab.
+ * @memberOf module:TabsManagement
+ */
+
+function updateChartStats(index) {
+  const statsEl = document.getElementById("chartStats");
+  if (!statsEl || !tabs[index]) return;
+
+  const tab = tabs[index];
+  const name = (index === 0) ? "Default" : `Chart ${index}`;
+  const type = tab.type === "table" ? "Table" : "Chart";
+  const xAxis = tab.xAxis || "—";
+  const yAxis = Array.isArray(tab.yAxis) ? tab.yAxis.join(", ") : "—";
+
+  // Get simulation settings from input fields
+  const startTime = parseFloat(document.getElementById("startTime")?.value) || 0;
+  const endTime = parseFloat(document.getElementById("endTime")?.value) || 0;
+  const dt = parseFloat(document.getElementById("dt")?.value) || 0;
+  const stepCount = (endTime - startTime) / dt || 0;
+
+  const integrationMethod = document.getElementById("integrationMethod")?.value || "—";
+  const methodDisplay = (integrationMethod === "rk4") ? "Runge-Kutta 4" :
+                        (integrationMethod === "euler") ? "Euler" : integrationMethod;
+
+  statsEl.innerHTML = `
+    <p><strong>Name:</strong> ${tab.name || name}</p>
+    <p><strong>Type:</strong> ${tab.type.charAt(0).toUpperCase() + tab.type.slice(1)}</p>
+    <p><strong>X-Axis:</strong> ${tab.xAxis}</p>
+    <p><strong>Y-Axis:</strong> ${tab.yAxis.join(", ")}</p>
+    <hr>
+    <p><strong>Start Time:</strong> ${startTime}</p>
+    <p><strong>End Time:</strong> ${endTime}</p>
+    <p><strong>dt (Interval):</strong> ${dt}</p>
+    <p><strong>Step Count:</strong> ${Math.round(stepCount)}</p>
+    <p><strong>Integration Method:</strong> ${methodDisplay}</p>
+  `;
+}

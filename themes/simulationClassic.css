@@ -1,0 +1,384 @@
+body {
+  background: white;
+  box-shadow: none;
+}
+
+#model_name {
+  background-color: #eeeeee;
+  border: 1px solid black;
+  color: rgb(0, 0, 0);
+}
+
+.actionButton {
+  background-color: rgba(60, 84, 148, 0.5);
+  color: white;
+}
+
+.actionButton:hover {
+  background-color: #35829f;
+}
+
+#runButton {
+  background: #009933;
+}
+
+#runButton:hover {
+  background-color: #33cc33;
+}
+
+#loadButton,
+#expButton {
+  background: #35829f;
+}
+
+#loadButton:hover,
+#expButton:hover {
+  background: #3ab3df;
+}
+
+#clearButton {
+  background: #ff5050;
+}
+
+#clearButton:hover {
+  background: #ff7777;
+}
+
+#saveStatus {
+  color: #777777
+}
+
+.tabButton {
+  color: white;
+  background-color: #176481;
+  box-shadow: none;
+}
+
+.tabButton.active {
+  background-color: #35829f;
+  box-shadow: none;
+}
+
+.modelViewer {
+  background: #35829f;
+  
+}
+
+.toolbar ul,
+.chartSidebar ul {
+  background-color: white;
+}
+
+.settings-section {
+  border-top: 1px solid #4e525a;
+}
+
+.graphTabsActive {
+  background-color: #cccccc !important;
+  color: black !important;
+}
+
+.graphTabsActive i,
+.graphTabsActive span {
+  color: rgb(0, 0, 0) !important;
+}
+
+a {
+  color: #000000;
+}
+
+a:hover,
+a:focus {
+  background-color: #ddd;
+}
+
+a span {
+  background-color: #cccccc;
+}
+
+a span:before {
+  background-color: #cccccc;
+}
+
+a.active {
+  background-color: #cccccc;
+}
+
+.modelCanvas {
+  background-color: #ffffff;
+  color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+#myDiagram {
+  background-color: white;
+}
+
+.center-btn {
+  background-color: #ddd;
+  color: rgb(0, 0, 0);
+}
+
+.center-btn i {
+  color: #000000;
+}
+
+.center-btn:hover i {
+  color: #000000;
+}
+
+#eqEditor {
+  background-color: white;
+  color: rgb(0, 0, 0);
+}
+
+.equation-editor-zoom-icon {
+  color: #000000;
+}
+
+.equation-editor-zoom-icon:hover {
+  color: #4c5570;
+}
+
+.equation-editor-table th {
+  background-color: white;
+}
+
+.eqTableInputBox {
+  background-color: white;
+  border: 1px solid #4c5570;
+  color: #000000;
+}
+
+.eqStockBox input {
+  border: 1px solid #847640;
+}
+
+.eqVariableBox input {
+  border: 1px solid #3b773d;
+}
+
+.eqFlowBox input {
+  border: 1px solid #4c5570;
+}
+
+.equation-editor-table thead th {
+  background-color: white;
+}
+
+.nncheckbox, .yAxisCheckbox {
+  accent-color: #4c5570;
+  background-color: #ffffff;
+  border: 1px solid #4c5570;
+}
+
+.nncheckbox:checked, .yAxisCheckbox:checked {
+  background-color: black;
+  border-color: black;
+}
+
+.nncheckbox:hover, .yAxisCheckbox:hover {
+  border-color: #ffffff;
+}
+
+.chartViewer {
+  background: #35829f;
+}
+
+.chartCanvas {
+  background-color: #ffffff;
+  color: black;
+}
+
+.chartEditor {
+  background-color: white;
+  color: rgb(0, 0, 0);
+}
+
+.chart-stats p {
+  color: #000000;
+}
+
+.chartEditor hr {
+  border-top: 1px solid #4c5570;
+}
+
+.chart-btn {
+  background-color: white;
+  border: 1px solid #4c5570;
+  color: rgb(0, 0, 0);
+}
+
+.chart-btn:hover {
+  background-color: #ddd;
+}
+
+#overlay {
+  background-color: rgba(0, 0, 0, 0.85);
+}
+
+.settings-header h2,
+.close-btn,
+.setting-group {
+  color: #000000;
+}
+
+.close-btn:hover {
+  color: #4c5570;
+}
+
+.settings-input,
+.settings-dropdown {
+  background-color: white;
+  border: 1px solid #4c5570;
+  color: #000000;
+}
+
+.settings-divider {
+  border-top: 1px solid #4c5570;
+}
+
+.slider {
+  background-color: white;
+  border: 1px solid black;
+}
+
+.slider:before {
+  background-color: rgb(0, 0, 0);
+}
+
+.toggle-switch input:checked + .slider {
+  background-color: #ddd;
+}
+
+.setting-button {
+  background-color: white;
+  border: 1px solid #4c5570;
+  color: #000000;
+}
+
+.setting-button:hover {
+  background-color: #ddd;
+}
+
+.settings-popup,
+.theme-popup,
+.charts-popup,
+.export-popup {
+  background-color: white;
+  color: #000000;
+}
+
+#simErrorPopup {
+  background: rgba(114, 45, 45, 1);
+  border: 1px solid rgb(65, 27, 27);
+  color: #ffffff;
+}
+
+#simErrorPopupTitle, #simErrorPopupDesc {
+  color: white;
+}
+
+#simErrorPopupCancel {
+  background: rgb(80, 34, 34);
+  border: 1px solid rgb(80, 34, 34);
+}
+
+#simErrorPopupCancel:hover {
+  background: rgb(52, 20, 20);
+  border: 1px solid rgb(52, 20, 20);
+}
+
+.equation-editor-overlay {
+  background-color: rgba(0, 0, 0, 0.65);
+}
+
+.equation-editor-popup {
+  background-color: #ffffff;
+}
+
+.close-icon {
+  color: #ffffff;
+}
+
+.close-icon:hover {
+  color: #4c5570;
+}
+
+.equation-editor-popup,
+.equation-editor-popup * {
+  color: rgb(0, 0, 0);
+}
+
+#xAxis {
+  background-color: white;
+  border: 1px solid #4c5570;
+  color: #000000;
+}
+
+#yAxis {
+  background-color: transparent;
+  color: rgb(0, 0, 0);
+}
+
+#submitModel {
+  background-color: white;
+  border: 1px solid #4c5570;
+  color: #000000;
+}
+
+#submitModel:hover {
+  background-color: #ddd;
+}
+
+.autocomplete-list {
+  background-color: white;
+  border: 1px solid #4c5570;
+  color: rgb(0, 0, 0);
+}
+
+.autocomplete-item {
+  border-bottom: 1px solid #4c5570;
+}
+
+.autocomplete-item.selected,
+.autocomplete-item:hover {
+  background-color: #ddd;
+}
+
+.validation-message {
+  color: #ff0000;
+  font-style: italic;
+  font-size: 0.85rem;
+  margin: 0px;
+  margin-top: 5px;
+}
+
+input.settings-input.invalid {
+  border: 1px solid red !important;
+}
+
+input.settings-input.invalid:focus {
+  border: 1px solid red !important;
+}
+
+.model-zoom-icon {
+  color: rgb(255, 255, 255);
+  background-color: white;
+}
+
+.model-zoom-icon:hover {
+  background-color: #cccccc;
+}
+
+.popup-overlay {
+  background-color: rgba(10, 10, 30, 0.95);
+}
+
+.popup-content {
+  background-color: #1c2541;
+}
+
+.close-popup {
+  color: white;
+}

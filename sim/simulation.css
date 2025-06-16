@@ -1,692 +1,1372 @@
-body {
-  font-family: sans-serif;
-  margin: 0px;
-}
+/* Imports */
+@import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=Lexend:wght@300;400;500;600;700&display=swap');
 
-#grayEffectDiv {
-  position: fixed;
-  height: 100%; width: 100%;
-  border: none;
-  z-index: 1001;
-  display: none;
-  background-color: #00000077;
-}
 
-#header {
-  position: fixed;
-
-  height: 100px; width: 100%;
-  border-bottom: 2px solid black;
-  background-color: white;
-
-  z-index: 1000;
-}
-
-#logoContainer {
-  font-size: min(36px, 15vw);
-  font-weight: bold;
-  text-align: left;
-  position: relative;
-  font-family: sans-serif;
-  margin-left: 20px;
-  bottom: 5px;
-}
-
-#logoImage {
-  height: 4vb; position: relative; top: 5px;
-}
-
-#model_name {
+/* Universal Styling */
+*, *:after, *:before {
   box-sizing: border-box;
-  padding: 8px;
+}
+
+:root {
+  --simulation-font: 'Golos Text', sans-serif;
+}
+
+
+body {
+  font-family: var(--simulation-font);
+  margin: 0px;
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
   position: relative;
-  font-size: min(24px, 2.8vw);
-  border-radius: 5px;
-  border: 1px solid black;
-  float: right;
-
-  width: 25%;
-  height: 30px;
-  right: 25px;
-  bottom: 15px;
-
-  background-color: #eeeeee;
+  background: linear-gradient(60deg, #4f6bb8 0%, #4fa5bd 100%);
 }
 
-#saveStatus {
-  padding: 8px;
+input, button, select {
+  font-family: var(--simulation-font);
+}
+
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
+/* Animations */
+@keyframes scale {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.fade-out {
+  animation: fadeOut 0.3s ease-in forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0;; }
+  to { opacity: 1;; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1;; }
+  to { opacity: 0;; }
+}
+
+/* Top Action Bar */
+
+/* LunaSim Logo */
+#logoImage {
   position: absolute;
-  font-size: 12px;
-  font-style: italic;
-  color: #777777;
-
-  text-align: right;
-  
-  float: right;
-
-  right: calc(25px + 25%);
-  top: -4px;
+  top: calc(1vh + 3px);
+  right: 1vw;
+  height: 4vh;
+  z-index: 500;
+  cursor: pointer;
 }
 
-.action {
+/* Project Name Input */
+#model_name {
   position: absolute;
-  right: 25px;
-  bottom: 15px;
-}
-
-.action button {
-  padding: 5px;
-  background-color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: min(16px, 2.2vw);
-  transition: background-color 0.6s;
-}
-
-.action img {
-  position: relative;
-  float: left;
-  width: 18px;
-  height: 18px;
-}
-
-.action label {
-  padding: 5px;
-  background-color: white;
-  border: 1px solid black;
-  border-radius: 5px;
-  font-size: min(16px, 2.2vw);
-  transition: background-color 0.6s;
-}
-
-.action label:hover {
-  background-color: #ddd;
-}
-
-.action button:hover {
-  background-color: #ddd;
-}
-
-#runButton {
-  background-color: #009933;
+  top: 1vh;
+  right: calc(1vw + 40px);
+  height: 5vh;
+  width: 25vw;
+  padding: 0.5svh 1svw;
+  font-size: 1rem;
+  border-radius: 8px;
+  background-color: rgba(38, 50, 83, 0.95);
+  border: 1px solid #627bc0;
   color: white;
-  width: 100px;
+  z-index: 500;
+}
+
+/* Action Buttons Row */
+.actions {
+  position: absolute;
+  top: 1vh;
+  right: calc(1vw + 25vw + 40px + 0.5vw); /* logo + input + spacing */
+  display: flex;
+  gap: 0.5vw;
+  z-index: 500;
+}
+
+/* Action Buttons Overall */
+.actionButton {
+  height: 5vh;
+  padding: 0.5svh 1svw;
+  font-size: 0.9rem;
+  width: 6.7vw;
+  border-radius: 8px;
+  background-color: rgba(60, 84, 148, 0.5);
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.actionButton:hover {
+  background-color: rgba(60, 84, 148, 1);
+}
+
+.actionButton i {
+  margin-right: 0.4em;
+}
+
+/* Run Button */
+#runButton {
+  background: rgba(45, 114, 82, 0.9);
 }
 
 #runButton:hover {
-  background-color: #33cc33;
-  transition: 0.2s;
+  background-color: rgba(26, 73, 51, 0.9);
 }
 
+/* Import Button */
 #loadButton {
-  background-color: #35829f;
-  color: white;
-  width: 100px;
+  background: rgba(59, 45, 114, 0.9);
 }
 
 #loadButton:hover {
-  background-color: #3ab3df;
-  transition: 0.2s;
+  background: rgba(32, 24, 64, 0.9);
 }
 
-#exportButton {
-  background-color: #35829f;
-  color: white;
-  width: 100px;
+/* Export Button */
+#expButton {
+  background: rgba(59, 45, 114, 0.9);
 }
 
-#exportButton:hover {
-  background-color: #3ab3df;
-  transition: 0.2s;
+#expButton:hover {
+  background: rgba(32, 24, 64, 0.9);
 }
 
-#switchThemeButton {
-  background-color: #9933ff;
-  color: white;
-  width: 150px;
-}
-
-#switchThemeButton:hover {
-  background-color: #a77aff;
-  transition: 0.2s;
-}
-
-#helpButton {
-  background-color: #9933ff;
-  color: white;
-  width: 80px;
-}
-
-#helpButton:hover {
-  background-color: #a77aff;
-  color: white;
-}
-
+/* Clear Button */
 #clearButton {
-  background-color: #ff5050;
-  color: white;
-  width: 90px;
+  background: rgba(114, 45, 45, 0.9);
 }
 
 #clearButton:hover {
-  background-color: #ff7777;
-  transition: 0.2s;
+  background: rgba(59, 21, 21, 0.9);
 }
 
+/* Project Status */
 
-
-
-
-
-
-#nav {
-  width: 100% - 50px;
-  height: 15px;
-
-  padding-left: 25px;
-  padding-right: 25px;
-  padding-top: 120px;
-}
-
-
-.webTabs {
-  display: inline-block;
-  border: none;
-  height: 42px;
-  background-color: #35829fff;
-}
-
-.webTabs button {
-  background-color: #176481ff;
-  height: 100%;
-  border: none;
-  padding: 10px 14px;
-  font-weight: bold;
-  color: white;
-  font-size: min(20px, 2.8vw);
-  margin: 0px;
-  transition: background-color 0.3s;
-}
-
-.webTabs button:hover {
-  background-color: #307090ff;
-  font-weight: bold;
-  transition: background-color 0.3s;
-}
-
-.webTabs button.active {
-  background-color: #35829fff;
-  transition: background-color 0.3s;
-}
-
-.tabContent {
-  background-color: #35829fff;
-  position: relative;
-
-  width: 100% - 50px;
-  height: 600px;
-  
-  top: 25px;
-  padding-bottom: 20px;
-  margin-left: 25px;
-  margin-right: 25px;
-}
-
-
-#myDiagram {
-  width: 90%;
-  height: 94%;
-  border: 1px solid black;
-  background-color: white;
-  position: absolute;
-  right: 20px;
-  top: 15px;
-}
-
-canvas {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  z-index: 2;
-  user-select: none;
-  touch-action: none;
-  width: 598px;
-  height: 498px;
-}
-
-#tabManager {
-  border: 1px solid black;
-  background-color: white;
-  width: min(140px, 10%);
-  height: 95.8%;
-  position: relative;
-  left: 20px;
-  top: 15px;
-  padding: 5px;
-  margin-right: 5px;
-  z-index: 3;
-  overflow: scroll;
-  overflow-x: hidden;
-}
-
-#addTab {
-  width:100%;
-  height: 10%;
-  border: none;
-  background-color: inherit;
-  border-radius: 5px;
-  position: sticky;
-}
-
-#addTabButton {
-  font-size: 6vw; color: limegreen;
-}
-
-#tabsList {
-  height: 90%;
-  width: 100%;
-  padding-top: 15px;
-  border: none;
-  background-color: inherit;
-}
-
-#display {
-  width: 85%;
-  height: 94.5%;
-  border: 1px solid black;
-  background-color: white;
-  position: absolute;
-  right: 20px;
-  top: 15px;
+#saveStatus {
   display: flex;
-}
-
-#popForm {
-  border: 1px solid black;
-  position: fixed;
-  width: 70%;
-  height: 80%;
-  top: 10%;
-  left: 15%;
-  z-index: 1003;
-  background-color: white;
-  overflow: scroll;
-  overflow-x: hidden;
-  display: none;
-}
-
-#tabConfig {
-  padding: 0 5vw;
-  font-size: max(24px, 2vw);
-}
-
-#submitModel {
-  margin-top: 20px;
-  margin-bottom: 30px;
-  width: 100%;
-  height: 50px;
-  background-color: #33cc33;
+  flex-direction: column;
+  justify-content: center;
+  height: 5vh;
+  font-size: 0.7rem;
+  font-style: italic;
   color: white;
-  font-size: 20px;
-  border-radius: 3px;
-  border: none;
+  text-align: right;
+  padding-right: 0.5vw;
+  line-height: 1.2;
+  white-space: nowrap;
+  margin: 0px;
 }
 
-#submitModel:hover {
-  background-color: #009933;
-  transition: background-color 0.3s;
+@media (max-width: 900px) {
+  #clearButton,
+  #expButton,
+  #loadButton,
+  #logoImage,
+  #saveStatus {
+    display: none !important;
+  }
 }
 
-#submitModel:active {
-  background-color: #008822;
-  transition: background-color 0.3s;
-}
-
-
-#closeNewTabPopup {
-  width: 50px;
-  height: 50px;
-  color: white;
-  font-size: 30px;
-  background-color: #ff0000;
-  border-radius: 10px;
-  border: none;
+/* Tab Bar (Model Viewer / Chart Viewer) */
+.tabBar {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: calc(5vh - 1.5rem);
+  left: -4px;
+  display: flex;
+  gap: 0rem;
+  z-index: 0;
+  height: 3rem;
+  margin: 0;
 }
 
-#closeNewTabPopup:hover {
-  background-color: #dd0000;
-  transition: background-color 0.3s;
-}
-
-#closeNewTabPopup:active {
-  background-color: #bb0000;
-  transition: background-color 0.3s;
-}
-
-
-#datatable {
-  height: 100% - 2px;
-  width: 100%;
-}
-
-
-
-
-
-
-
-
-
-
-#eqEditorTitle {
-  position: relative;
-  color: #ffffff;
-  font-size: 25px;
-  margin-left: 20px;
-  top: 10px;
-}
-
-
-#eqEditor {
-  background-color: #2ea2ccff;
-  width: 100% - 50px;
-  position: relative;
-  
-  top: 30px;
-  font-size: min(18px, 2.8vw);
-
-  margin-left: 25px;
-  margin-right: 25px;
-}
-
-#eqTableDiv {
-  position: relative;
-  background-color: white;
-  border: 1px solid black;
-  margin-left: 20px;
-  margin-right: 20px;
-  width: 100% - 40px;
-  height: 350px;
-  overflow: scroll;
-  overflow-x: hidden;
-}
-
-
-#nnUniHeader {
-  position: relative;
-  display: inline-block;
-  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
-}
-
-#nnUniTooltip {
-  visibility: hidden;
-  width: 200px;
-  background-color: #bbbbbb;
-  color: black;
+/* Tab Button */
+.tabButton {
+  cursor: pointer;
+  border: none;
+  border-radius: 10px 10px 0 0;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  color: white;
+  background-color: rgba(60, 84, 148, 0.5);
+  box-shadow: none;
+  scale: 0.95;
+  padding: 0.6rem 1.2rem;
+  width: 10rem;
+  flex-grow: 1;
   text-align: center;
-  padding: 5px 0;
-  border-radius: 10px;
- 
-  /* Position the tooltip text - see examples below! */
+}
+
+.tabButton.active {
+  background-color: rgba(60, 84, 148, 1); /* brighter, matching modelViewer bg */
+  transform: scale(1.11);
+  box-shadow: 0 4px 15px rgba(79, 107, 184, 0.7);
+}
+
+/* Model Viewer */
+/* Model Viewer - Box*/
+.modelViewer {
   position: absolute;
-  z-index: 1;
-
-  top: -5px;
-  right: 105%;
-}
-
-/* Show the tooltip text when you mouse over the tooltip container */
-#nnUniHeader:hover #nnUniTooltip {
-  visibility: visible;
-}
-
-.eqStockBox {
-  background-color: #ffcc99;
-}
-
-.eqFlowBox {
-  background-color: #99ccff;
-}
-
-.eqVariableBox {
-  background-color: #99ff99;
-}
-
-
-#simParamsTitle {
-  position: relative;
-  color: #ffffff;
-  font-size: 25px;
-  margin-left: 20px;
-  top: 10px;
-}
-
-
-#simParams {
-  background-color: #35829fff;
-  width: 100% - 50px;
-  height: 220px;
-  position: relative;
-
-  top: 30px;
-  font-size: min(18px, 2.8vw);
-
-  margin-left: 25px;
-  margin-right: 25px;
-}
-
-.simParamCol {
-  width: 25%;
-  color: white;
-  font-size: min(20px, 2.8vw);
-}
-
-.simParamsInput {
-  box-sizing: border-box;
-  padding-left: 8px;
-  font-size: 18px;
-  width:80%;
-  height:40px;
-  border: 3px solid black;
-}
-
-.simParamsInputError {
-  border: 3px solid red;
-}
-
-.simParamsInputWarning {
-  border: 3px solid goldenrod;
-}
-
-#simParamsTable {
-  position: relative;
-  font-size: min(18px, 2.8vw);
-  margin-left: 30px;
-  width: 95%;
-}
-
-#simParamHighStepCountDesc {
-  color: yellow;
-}
-
-#simErrorPopup {
-  position: fixed;
-  width: 40%;
-  height: 60%;
-  border: 2px solid black;
-  border-radius: 15px;
-  background-color: white;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -70%);
-  z-index: 2000;
-
-  display: none;
-}
-
-#simErrorPopupTitle {
-  color: red;
-  font-size: 30px;
-  padding-left: 20px;
-}
-
-#simErrorPopupDesc {
-  font-size: 20px;
-  padding-left: 20px;
-  padding-right: 20px;
-}
-
-#simErrorPopupDismiss {
-  position: absolute;
-  left: 20px;
-  right: 20px;
-  bottom: 20px;
-  width: 100%-40px;
-  height: 50px;
-  background-color: #aa0000;
-  color: white;
-  font-size: 25px;
-  border: none;
-  border-radius: 15px;
-  transition: 0.2s;
-}
-
-#simErrorPopupDismiss:hover {
-  background-color: #dd0000;
-  transition: 0.2s;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-.tools {
-  display: block;
-  width: max(82px, min(100px, 10%));
-  height: 95%;
-  position: absolute;
-  left: 20px;
-  top: 15px;
-  border: none;
-  z-index: 3;
-}
-
-.tools button {
-  background-color: white;
-  border: 1px solid black;
+  top: calc(5vh + 1vw); 
   width: 100%;
-  height: 16.55%;
-  overflow-wrap: anywhere;
-  overflow-y: hidden;
-  font-size: min(18px, 2.4vw);
-  transition: background-color 0.6s;
+  left: 0vw; 
+  display: flex;
+  gap: 1vw; 
+  background: rgba(60, 84, 148, 1);
+  padding: 1vw;
 }
 
-.tools button:hover {
-  background-color: #ddd;
-  transition: background-color 0.6s;
+.modelViewer.hidden {
+  display: none; 
 }
 
-.tools button.active {
-  background-color: #ccc;
+/* Model Viewer - Toolbar */
+.toolbar {
+  position: relative;
+  width: 72px;
 }
 
+.toolbar ul {
+  list-style: none;
+  margin: 0;
+  padding: 0.75rem 0;
+  height: calc(95vh - 3vw);
+  width: 72px;
+  background-color: rgba(38, 50, 83, 0.95);
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
+  overflow: visible; /* Prevent overall overflow */
+}
 
-a:link { text-decoration: none;  color: black;}
+/* Universal Sidebar Styling (Applies to Toolbar and Chart Sidebar) */
 
-a:visited { text-decoration: none;  color: black;}
+li + li {
+  margin-top: 0.5rem;
+}
 
-a:hover { text-decoration: none; color: darkblue;}
-
-a:active { text-decoration: none;  color: black;}
-
-
-
-#popupNotif {
-  position: fixed;
-  top: 120px;
-  right: 20px;
-  z-index: 1234; /* should take prio over gray div due to use in new graph tab */
-
-  height: 50px;
-  font-size: 20px;
-  background-color: #ddddddaa;
-  border-radius: 5px;
-
-  /* Does this work? Yes. */
-  /* Do I know how? No. */
-  /* But all three of these need to present, apparently. */
+a {
+  color: #FFF;
+  text-decoration: none;
   display: flex;
   align-items: center;
   justify-content: center;
-
-  visibility: hidden;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 8px;
+  position: relative;
+  transition: background-color 0.3s ease;
 }
 
-#popupNotif p {
-  margin-left: 10px;
+a:hover,
+a:focus {
+  background-color: #374875;
+  outline: 0;
 }
 
-#popupNotifClose {
-  width: 35px;
-  height: 35px;
-  margin-left: 10px;
-  margin-right: 10px;
-  border: none;
-  border-radius: 5px;
-  background-color: #ff0000;
+a:hover span,
+a:focus span{
+  transform: scale(1);
+  opacity: 1;
+}
+
+a i {
+  font-size: 1.375rem;
+}
+
+a span {
+  position: absolute;
+  background-color: #46598e;
+  white-space: nowrap;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  left: calc(100% + 1.25rem);
+  transform-origin: center left;
+  transform: scale(0);
+  opacity: 0;
+  transition: 0.15s ease;
+  z-index: 501;
+}
+
+a span:before {
+  content: "";
+  display: block;
+  width: 12px;
+  height: 12px;
+  position: absolute;
+  background-color: #46598e;
+  left: -5px;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+  border-radius: 3px;
+  z-index: 501;
+}
+
+a.active {
+  background-color: #46598e;
+  outline: none;
+}
+
+/* Model Viewer - Canvas */
+.modelCanvas {
+  position: relative; 
+  background-color: #ffffff;
+  height: calc(95vh - 3vw);
+  width: 58vw;
+  border-radius: 10px;
+  box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
   color: white;
-  font-size: 20px;
-  transition: background-color 0.3s;
+  overflow: hidden;
+  border: none;
+  
 }
 
-#popupNotifClose:hover {
-  background-color: #dd0000;
-  transition: background-color 0.3s;
+.modelCanvas canvas {
+  position: relative;  
+  width: 100% !important; 
+  height: 100% !important;
+  border-radius: 10px; 
+  display: block; 
+  user-select: none;
+  touch-action: none;
+  z-index: 5;
+  border: none;
 }
 
-#popupNotifClose:active {
-  background-color: #bb0000;
-  transition: background-color 0.3s;
-}
-
-.graphTabs {
-  border: 1px solid black;
-  border-radius: 5px; 
-  font-size: 20px;
-  margin: 5px;
-  padding: 2px;
-  height: 30px;
-
-  display: flex;
-  align-items: center;
-}
-
-.graphTabsInactive {
+#myDiagram {
+  width: 100%;
+  height: 100%;
+  border: none;
   background-color: white;
+  position: absolute;
+  z-index:500;
+  overflow: auto; 
+  scrollbar-width: none; 
+  -ms-overflow-style: none;
+}
+
+#myDiagram::-webkit-scrollbar {
+  display: none; 
+}
+
+.center-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  height: 40px;
+  width: 40px;
+  z-index: 900;
+  background-color: rgba(38, 50, 83, 1);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: background-color 0.2s ease, opacity 0.3s ease;
+}
+
+.center-btn i {
+  transition: color 0.3s ease;
+}
+
+.center-btn:hover {
+  opacity: 1;
+}
+
+.center-btn:hover i {
+  color: #627bc0;
+}
+
+
+/* Model Viewer - Equation Editor */
+/* Equation Editor Box */
+#eqEditor {
+  background-color: rgba(38, 50, 83, 1);
+  height: calc(95vh - 3vw);
+  min-width: calc(100vw - 8.7vw - 58vw);
+  flex: 1;
+  border-radius: 10px;
+  box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
+  padding: 1rem;
+  color: white;
+}
+
+/* Equation Editor Header */
+.equation-editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+}
+
+.equation-editor-title {
+  font-size: 1.25rem;
+  margin: 0;
+  font-weight: 600;
+}
+
+.equation-editor-zoom-icon {
+  font-size: 1rem;
+  cursor: pointer;
+  color: #ffffff;
+  transition: color 0.3s ease;
+}
+
+.equation-editor-zoom-icon:hover {
+  color: #627bc0;
+}
+
+/* Equation Editor Table */
+.equation-editor-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.eq-col-type { width: 18%; }
+.eq-col-name { width: 22%; }
+.eq-col-equation { width: 65%; }
+.eq-col-toggle { width: 5%; }
+
+.equation-editor-table td {
+  text-align: center;
+  vertical-align: middle;
+  padding: 0.15rem;
+}
+
+.equation-editor-table th {
+  text-align: center;
+  vertical-align: middle;
+  padding-bottom: 0.5rem;
+  font-size: 1rem;
+  background-color: rgba(38, 50, 83, 1);
+}
+
+/* Equation Editor Input Box */
+.eqTableInputBox {
+  width: 100%;
+  padding: 0.5rem;
+  background-color: #1d253d;
+  border: 1px solid #627bc0;
+  border-radius: 0.5rem;
+  color: #ffffff;
+  font-size: 1rem;
+  font-size: 0.85rem;
+}
+
+.eqStockBox input {
+  border: 1px solid #847640;
+}
+
+.eqVariableBox input {
+  border: 1px solid #3b773d;
+}
+
+.eqFlowBox input {
+  border: 1px solid #627bc0;
+}
+
+#eqTableDiv {
+  max-height: calc(100% - 3.2rem);
+  overflow-y: auto;
+}
+
+.equation-editor-table thead th {
+  position: sticky;
+  top: 0;
+  background-color: rgba(38, 50, 83, 1);
+  z-index: 2;
+}
+
+/* Checkboxes */
+.nncheckbox, .yAxisCheckbox {
+  width: 1.2rem;
+  height: 1.2rem;
+  accent-color: #627bc0;
+  cursor: pointer;
+  background-color: #2a3350;
+  border: 1px solid #627bc0;
+  border-radius: 6px;
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  position: relative;
+  transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+}
+
+.nncheckbox::after, .yAxisCheckbox::after {
+  content: "";
+  position: absolute;
+  left: 0.35rem;
+  top: 0.1rem;
+  width: 0.25rem;
+  height: 0.5rem;
+  border: solid white;
+  border-width: 0 0.15rem 0.15rem 0;
+  transform: rotate(45deg);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.nncheckbox:checked, .yAxisCheckbox:checked {
+  background-color: #627bc0;
+  border-color: #627bc0;
+}
+
+.nncheckbox:checked::after, .yAxisCheckbox:checked::after {
+  opacity: 1;
+}
+
+.nncheckbox:hover, .yAxisCheckbox:hover {
+  transform: scale(1.05);
+  border-color: #8da5e6;
+}
+
+/* Chart Viewer */
+/* Chart Viewer - Box */
+.chartViewer {
+  position: absolute;
+  top: calc(5vh + 1vw); 
+  left: 0vw; 
+  width: 100%;
+  display: flex;
+  gap: 1vw; 
+  background: rgba(60, 84, 148, 1);
+  padding: 1vw;
+}
+
+.chartViewer.hidden {
+  display: none;
+}
+
+/* Chart Viewer - Sidebar */
+.chartSidebar {
+  position: relative;
+  width: 72px;
+  overflow: visible;  /* Ensure tooltips can escape */
+  z-index: 502;        /* On top of other elements */
+}
+
+.chartSidebar ul {
+  list-style: none;
+  margin: 0;
+  padding: 0.75rem 0;
+  height: calc(95vh - 3vw);
+  width: 72px;
+  background-color: rgba(38, 50, 83, 0.95);
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
+  overflow: visible;  /* Allow tooltips to escape */
+}
+
+.chart-section {
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  z-index: 1;      
+  isolation: isolate;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0 0.75rem;
+}
+
+.tool-section {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0 0.75rem 0.75rem 0.75rem;
+}
+
+.settings-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0 0.75rem 0.75rem 0.75rem;
+  margin-top: 1rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #374875;
 }
 
 .graphTabsActive {
-  background-color: #ddd;
+  background-color: #46598e !important;
+  border-radius: 8px !important;
 }
 
-.graphTabsDelButton {
+
+/* Chart Viewer - Canvas */
+.chartCanvas {
+  position: relative; 
+  background-color: #ffffff;
+  height: calc(95vh - 3vw);
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
+  padding: 1rem;
   color: black;
-  font-size: 15px;
-  margin-right: 5px;
+  overflow: auto;
 }
 
-input[type=radio] {
-  height: 20px;
-  width: 20px;
+#display {
+  width: 100%;
+  height: 100%;
 }
+
+/* Chart Viewer - Chart Editor */
+.chartEditor {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Keeps top and bottom at ends */
+  background-color: rgba(38, 50, 83, 0.95);
+  height: calc(95vh - 3vw);
+  min-width: calc(100vw - 8.7vw - 58vw);
+  flex: 1;
+  border-radius: 10px;
+  box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
+  padding: 1rem;
+  color: white;
+}
+
+.chart-title {
+  font-size: 1.25rem;
+  margin: 0;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.chartEditor-top,
+.chartEditor-bottom {
+  display: flex;
+  flex-direction: column;
+}
+
+.chartEditor-middle {
+  flex-grow: 1;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+.chart-stats p {
+  margin: 0.3svh 0;
+  font-size: 0.95em;
+  color: #ccc;
+}
+
+/* Add this class for horizontal lines */
+.chartEditor hr {
+  border: none;
+  border-top: 1px solid #627bc0;
+  margin: 1rem 0;
+}
+
+.chart-btn {
+  display: block;
+  padding: 0.75rem;
+  background-color: #1d253d;
+  border: 1px solid #627bc0;
+  color: white;
+  font-family: var(--simulation-font);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease-out;
+  border-radius: 0.5rem;
+}
+
+.chart-btn + .chart-btn {
+  margin-top: 0.5rem;
+}
+
+.chart-btn:hover {
+  background-color: #627bc0;
+}
+
+.full-width {
+  width: 100%;
+}
+
+/* Popups */
+/* Overlay Effect */
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;    
+  height: 100vh;      
+  background-color: rgba(0, 0, 0, 0.85); 
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+#overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Default Settings Popup CSS */
+
+/* Header */
+.settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.settings-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #ffffff;
+}
+
+/* Close Button */
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  color: #627bc0; 
+}
+
+/* Setting Group */
+.setting-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.1rem;
+  flex-wrap: wrap;
+  color: #ffffff;
+}
+
+/* Setting Label */
+.switch-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+/* Setting Input Box */
+.settings-input {
+  width: 100%;
+  padding: 0.5rem;
+  background-color: #1d253d;
+  border: 1px solid #627bc0;
+  border-radius: 0.5rem;
+  color: #ffffff;
+  font-size: 1rem;
+}
+
+/* Setting Dropdown */
+.settings-dropdown {
+  width: 100%;
+  padding: 0.5rem;
+  background-color: #1d253d;
+  border: 1px solid #627bc0;
+  border-radius: 0.5rem;
+  color: #ffffff;
+  font-size: 1rem;
+}
+
+.settings-dropdown {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position-x: calc(100% - 0.75rem);
+  background-position-y: center;
+  background-size: 1rem;
+  padding-right: 2rem;
+}
+
+.settings-divider {
+  border: none;
+  border-top: 1px solid #627bc0;
+  margin: 1.5rem 0;
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 2.5rem;
+  height: 1.4rem;
+  margin: 0px;
+}
+
+/* Setting Toggle Switch */
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  background-color: #1d253d;
+  border-radius: 1rem;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 1rem;
+  width: 1rem;
+  left: 0.2rem;
+  bottom: 0.2rem;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+.toggle-switch input:checked + .slider {
+  background-color: #627bc0;
+}
+
+.toggle-switch input:checked + .slider:before {
+  transform: translateX(1.1rem);
+}
+
+/* Error Validation For Popup */
+
+.validation-message {
+  color: #ff5555;
+  font-style: italic;
+  font-size: 0.85rem;
+  margin: 0px;
+  margin-top: 5px;
+}
+
+input.settings-input.invalid {
+  border: 1px solid red !important;
+}
+
+input.settings-input.invalid:focus {
+  border: 1px solid red !important;
+}
+
+.validation-message.hidden {
+  display: none;
+}
+
+/* Settings Button */
+.setting-button {
+  margin-top: 1.1rem;
+  width: 100%;
+  padding: 0.5rem;
+  background-color: #1d253d;
+  border: 1px solid #627bc0;
+  border-radius: 0.5rem;
+  color: #ffffff;
+  font-size: 1rem;
+  transition: background 0.3s ease-out;
+  cursor: pointer;
+}
+
+.setting-button:hover {
+  background-color: #627bc0;
+}
+
+/* Settings Popup */
+.settings-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  background-color: #283458;
+  color: #ffffff;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  width: 90vw;
+  max-width: 400px;
+  z-index: 1001;
+  box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+}
+
+.settings-popup.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  pointer-events: auto;
+}
+
+.settings-popup.hidden,
+#overlay.hidden {
+  display: none;
+}
+
+/* Theme Popup */
+.theme-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  background-color: #283458;
+  color: #ffffff;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  width: 90vw;
+  max-width: 400px;
+  z-index: 1001;
+  box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+}
+
+.theme-popup.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  pointer-events: auto;
+}
+
+.theme-popup.hidden,
+#overlay.hidden {
+  display: none;
+}
+
+/* Chart Creator Popup */
+.charts-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  background-color: #283458;
+  color: #ffffff;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  width: 90vw;
+  max-width: 425px;
+  max-height: 85vh;
+  overflow-y: auto;
+  z-index: 1003;
+  box-shadow: 0 10px 50px rgba(5, 4, 62, 0.25);
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+}
+
+.charts-popup.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  pointer-events: auto;
+}
+
+.charts-popup.hidden {
+  display: none;
+}
+
+/* Export Popup */
+.export-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  background-color: #283458;
+  color: #ffffff;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  width: 90vw;
+  max-width: 400px;
+  z-index: 1001;
+  box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+}
+
+.export-popup.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  pointer-events: auto;
+}
+
+.export-popup.hidden {
+  display: none;
+}
+
+/* Simulation Error Popup */
+#simErrorPopup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  background: rgba(114, 45, 45, 1);
+  border: 1px solid rgb(65, 27, 27);
+  color: #ffffff;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  width: 90vw;
+  max-width: 400px;
+  z-index: 1001;
+  box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+}
+
+#simErrorPopup.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  pointer-events: auto;
+}
+
+#simErrorPopup.hidden {
+  display: none;
+}
+
+#simErrorPopupTitle, #simErrorPopupDesc {
+  color: white;
+}
+
+#simErrorPopupCancel:hover {
+  background: rgb(52, 20, 20);
+  border: 1px solid rgb(52, 20, 20);
+}
+
+#simErrorPopupCancel {
+  background: rgb(80, 34, 34);
+  border: 1px solid rgb(80, 34, 34);
+}
+
+/* Equation Editor Overlay */
+.equation-editor-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.85); 
+  display: none;
+  z-index: 995;
+  transition: opacity 0.3s ease;
+}
+
+/* Equation Editor Popup */
+.equation-editor-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  background-color: rgba(38, 50, 83, 1);
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+  z-index: 2000;
+  display: none;
+  width: 95vw;
+  max-height: 90vh;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: auto;
+  overflow: auto;
+  
+}
+
+.equation-editor-popup.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.equation-editor-popup-header {
+  position: sticky;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+}
+
+#equationEditorPopupContent {
+  overflow-y: auto;
+}
+
+.close-icon {
+  font-size: 1.3rem;
+  color: #ffffff;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.close-icon:hover {
+  color: #627bc0;
+}
+
+.equation-editor-popup, 
+.equation-editor-popup * {
+  color: white;
+}
+
+#popForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+#tabConfig {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  font-size: 1rem;
+}
+
+#tabConfig p {
+  margin: 0;
+  font-weight: 600;
+}
+
+#tabConfig input[type="radio"] {
+  margin-right: 0.5rem;
+}
+
+#tabConfig label {
+  margin-right: 1.5rem;
+}
+
+#xAxis {
+  width: 100%;
+  padding: 0.5rem;
+  background-color: #1d253d;
+  border: 1px solid #627bc0;
+  border-radius: 0.5rem;
+  color: #ffffff;
+  font-size: 1rem;
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position-x: calc(100% - 0.75rem);
+  background-position-y: center;
+  background-size: 1rem;
+  padding-right: 2rem;
+}
+
+#yAxis {
+  width: 100%;
+  background-color: transparent;
+  border-collapse: collapse;
+  color: white;
+  font-size: 1rem;
+}
+
+#submitModel {
+  width: 100%;
+  padding: 0.6rem;
+  background-color: #1d253d;
+  border: 1px solid #627bc0;
+  border-radius: 0.5rem;
+  color: #ffffff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease-out;
+}
+
+#submitModel:hover {
+  background-color: #627bc0;
+}
+
+#datatable {
+  height: calc(100% - 2px);
+  width: 100%;
+}
+
+.weirdStuff {
+  display: none;
+}
+
+/* Ghosting */
+
+.ghost {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: gray;
+  pointer-events: none;
+  white-space: pre;
+  font-size: inherit;
+  font-family: inherit;
+  width: 100%;
+  z-index: 1;
+  transform: translateX(0.1975em);
+  padding-top: 0.175em;
+  box-sizing: border-box;
+
+}
+
+/* Math Autocomplete */
+
+.autocomplete-wrapper {
+  position: relative;
+  width: 100%;
+  z-index: 1010;
+}
+
+.math-autocomplete {
+  position: relative;
+  background: transparent;
+  color: black;
+  font-size: inherit;
+  font-family: inherit;
+  width: 100%;
+  z-index: 2000;
+}
+
+.autocomplete-list {
+  background-color: #1d253d;
+  border: 1px solid #627bc0;
+  color: white;
+  border-radius: 8px;
+  z-index: 2000;
+  max-height: 250px;
+  overflow-y: auto;
+  font-size: 14px;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+}
+
+.autocomplete-item {
+  padding: 6px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid #283251;
+}
+
+.autocomplete-item:last-child {
+  border-bottom: none;
+}
+
+.autocomplete-item.selected,
+.autocomplete-item:hover {
+  background-color: #283251;
+  font-weight: bold;
+}
+
+/* Stupid Stuff That Won't Make the Sim Run */
+
+.model-zoom-icon {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.2rem;
+  color: rgb(255, 255, 255);
+  background-color: rgba(38, 50, 83, 0.95);
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  z-index: 990;
+  transition: background-color 0.3s ease;
+}
+
+.model-zoom-icon:hover {
+  background-color: #46598e;
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(10, 10, 30, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.popup-content {
+  display: flex;
+  width: 95vw;
+  height: 95vh;
+  background-color: #1c2541;
+  border-radius: 10px;
+  overflow: hidden;
+  padding: 1rem;
+}
+
+.close-popup {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  color: white;
+  cursor: pointer;
+}
+
+.graphTabs {
+  position: relative;
+}
+
+.graphTabs::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #46598e;
+  color: #fff;
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  border-radius: 8px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 10;
+  max-width: 68px; /* adjust to suit your layout */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.graphTabs:hover::after {
+  opacity: 1;
+}
+

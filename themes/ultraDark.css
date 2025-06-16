@@ -1,0 +1,602 @@
+/* Ultra Dark Theme - No Dimming - Bright White Text */
+body {
+    background: #0a0a0a;
+    box-shadow: none;
+}
+
+#model_name {
+    background-color: #000000;
+    border: 1px solid #1a1a1a;
+    color: #ffffff; /* Changed from #999999 */
+}
+
+.actionButton {
+    background-color: #1e1e1e;
+    color: #ffffff; /* Changed from #999999 */
+}
+
+.actionButton:hover {
+    background-color: #1a1a1a;
+}
+
+#runButton {
+    background: #144614;
+}
+
+#runButton:hover {
+    background-color: #0f320f;
+}
+
+#loadButton,
+#expButton {
+    background: #1e1e3c;
+}
+
+#loadButton:hover,
+#expButton:hover {
+    background: #141428;
+}
+
+#clearButton {
+    background: #461414;
+}
+
+#clearButton:hover {
+    background: #320f0f;
+}
+
+#saveStatus {
+    color: #ffffff; /* Changed from #999999 */
+}
+
+.tabButton {
+    color: #ffffff; /* Changed from #999999 */
+    background-color: #000000;
+    box-shadow: none;
+}
+
+.tabButton.active {
+    background-color: #1a1a1a;
+    box-shadow: none;
+}
+
+.modelViewer {
+    background: #0f0f0f;
+}
+
+.toolbar ul,
+.chartSidebar ul {
+    background-color: #000000;
+}
+
+.settings-section {
+    border-top: 1px solid #1a1a1a;
+}
+
+.graphTabsActive {
+    background-color: #1a1a1a !important;
+}
+
+a {
+    color: #ffffff; /* Changed from #666666 */
+}
+
+a:hover,
+a:focus {
+    background-color: #1a1a1a;
+}
+
+a span {
+    background-color: #1a1a1a;
+}
+
+a span:before {
+    background-color: #1a1a1a;
+}
+
+a.active {
+    background-color: #1a1a1a;
+}
+
+.modelCanvas {
+    background-color: #ffffff;
+    color: #000000;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+#myDiagram {
+    background-color: #ffffff;
+}
+
+/* GoJS specific text styling */
+#myDiagram text,
+#myDiagram .go-text,
+.modelCanvas text,
+.modelCanvas .go-text {
+    fill: #000000 !important;
+    color: #000000 !important;
+}
+
+/* GoJS node text labels */
+#myDiagram g text,
+.modelCanvas g text {
+    fill: #000000 !important;
+}
+
+/* GoJS link labels */
+#myDiagram .go-link text,
+.modelCanvas .go-link text {
+    fill: #000000 !important;
+}
+
+/* Any SVG text within the model viewer */
+.modelViewer text,
+.modelViewer .go-text {
+    fill: #000000 !important;
+    color: #000000 !important;
+}
+
+.center-btn {
+    background-color: #000000;
+    color: #ffffff; /* Changed from #999999 */
+}
+
+.center-btn:hover i {
+    color: #ffffff; /* Changed from #666666 */
+}
+
+#eqEditor {
+    background-color: #000000;
+    color: #ffffff; /* Changed from #999999 */
+}
+
+.equation-editor-zoom-icon {
+    color: #ffffff; /* Changed from #999999 */
+}
+
+.equation-editor-zoom-icon:hover {
+    color: #ffffff; /* Changed from #666666 */
+}
+
+.equation-editor-table th {
+    background-color: #000000;
+}
+
+.eqTableInputBox {
+    background-color: #0a0a0a;
+    border: 1px solid #1a1a1a;
+    color: #ffffff; /* Changed from #999999 */
+}
+
+.eqStockBox input {
+    border: 1px solid #3a3000;
+}
+
+.eqVariableBox input {
+    border: 1px solid #1a3a1a;
+}
+
+.eqFlowBox input {
+    border: 1px solid #1a1a1a;
+}
+
+.equation-editor-table thead th {
+    background-color: #000000;
+}
+
+.nncheckbox,
+.yAxisCheckbox {
+    accent-color: #1a1a1a;
+    background-color: #0a0a0a;
+    border: 2px solid #1a1a1a;
+}
+
+.nncheckbox:checked,
+.yAxisCheckbox:checked {
+    background-color: #1a1a1a;
+    border-color: #1a1a1a;
+}
+
+.nncheckbox:hover,
+.yAxisCheckbox:hover {
+    border-color: #ffffff; /* Changed from #666666 */
+}
+
+.chartViewer {
+    background: #0f0f0f;
+}
+
+.chartCanvas {
+    background-color: #000000;
+    color: #ffffff; /* Changed from #999999 */
+}
+
+.chartEditor {
+    background-color: #000000;
+    color: #ffffff; /* Changed from #999999 */
+}
+
+.chart-stats p {
+    color: #ffffff; /* Changed from #666666 */
+}
+
+.chartEditor hr {
+    border-top: 1px solid #1a1a1a;
+}
+
+.chart-btn {
+    background-color: #0a0a0a;
+    border: 1px solid #1a1a1a;
+    color: #ffffff; /* Changed from #999999 */
+}
+
+.chart-btn:hover {
+    background-color: #1a1a1a;
+}
+
+#overlay {
+    background-color: #000000;
+}
+
+.settings-header h2,
+.close-btn,
+.setting-group {
+    color: #ffffff; /* Changed from #999999 */
+}
+
+.close-btn:hover {
+    color: #ffffff; /* Changed from #666666 */
+}
+
+.settings-input,
+.settings-dropdown {
+    background-color: #0a0a0a;
+    border: 1px solid #1a1a1a;
+    color: #ffffff; /* Changed from #999999 */
+}
+
+.settings-divider {
+    border-top: 1px solid #1a1a1a;
+}
+
+.slider {
+    background-color: #0a0a0a;
+}
+
+.slider:before {
+    background-color: #ffffff; /* Changed from #666666 */
+}
+
+.toggle-switch input:checked + .slider {
+    background-color: #1a1a1a;
+}
+
+.setting-button {
+    background-color: #0a0a0a;
+    border: 1px solid #1a1a1a;
+    color: #ffffff; /* Changed from #999999 */
+}
+
+.setting-button:hover {
+    background-color: #1a1a1a;
+}
+
+.settings-popup,
+.theme-popup,
+.charts-popup,
+.export-popup {
+    background-color: #000000;
+    color: #ffffff; /* Changed from #999999 */
+}
+
+#simErrorPopup {
+    background: #280a0a;
+    border: 1px solid rgb(50, 15, 15);
+    color: #ffffff; /* Changed from #999999 */
+}
+
+#simErrorPopupTitle,
+#simErrorPopupDesc {
+    color: #ffffff; /* Changed from #999999 */
+}
+
+#simErrorPopupCancel {
+    background: rgb(50, 15, 15);
+    border: 1px solid rgb(50, 15, 15);
+}
+
+#simErrorPopupCancel:hover {
+    background: rgb(70, 20, 20);
+    border: 1px solid rgb(70, 20, 20);
+}
+
+.equation-editor-overlay {
+    background-color: #000000;
+}
+
+.equation-editor-popup {
+    background-color: #000000;
+}
+
+.close-icon {
+    color: #ffffff; /* Changed from #999999 */
+}
+
+.close-icon:hover {
+    color: #ffffff; /* Changed from #666666 */
+}
+
+.equation-editor-popup,
+.equation-editor-popup * {
+    color: #ffffff; /* Changed from #999999 */
+}
+
+#xAxis {
+    background-color: #0a0a0a;
+    border: 1px solid #1a1a1a;
+    color: #ffffff; /* Changed from #999999 */
+}
+
+#yAxis {
+    background-color: transparent;
+    color: #ffffff; /* Changed from #999999 */
+}
+
+#submitModel {
+    background-color: #0a0a0a;
+    border: 1px solid #1a1a1a;
+    color: #ffffff; /* Changed from #999999 */
+}
+
+#submitModel:hover {
+    background-color: #1a1a1a;
+}
+
+.autocomplete-list {
+    background-color: #0a0a0a;
+    border: 1px solid #1a1a1a;
+    color: #ffffff; /* Changed from #999999 */
+}
+
+.autocomplete-item {
+    border-bottom: 1px solid #1a1a1a;
+}
+
+.autocomplete-item.selected,
+.autocomplete-item:hover {
+    background-color: #1a1a1a;
+}
+
+.model-zoom-icon {
+    color: #ffffff; /* Changed from #999999 */
+    background-color: #000000;
+}
+
+.model-zoom-icon:hover {
+    background-color: #1a1a1a;
+}
+
+.popup-overlay {
+    background-color: #000000;
+}
+
+.popup-content {
+    background-color: #000000;
+}
+
+.close-popup {
+    color: #ffffff; /* Changed from #999999 */
+}
+/* Apex Charts hover tooltip styling - with proper color markers *//* Apex Charts - Complete styling overhaul */
+.apexcharts-canvas,
+.apexcharts-svg,
+.apexcharts-inner,
+.apexcharts-graphical {
+    background-color: #0a0a0a !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.apexcharts-canvas svg {
+    background-color: #0a0a0a !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Remove borders and outlines except for grid lines */
+.apexcharts-canvas *,
+.apexcharts-svg *,
+.apexcharts-inner *,
+.apexcharts-graphical * {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Fix chart container and wrapper */
+.apexcharts-chart,
+.apexcharts-chart-wrapper {
+    background-color: #0a0a0a !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Legend text */
+.apexcharts-legend-text {
+    color: #ffffff !important;
+    fill: #ffffff !important;
+}
+
+/* Data labels */
+.apexcharts-datalabel,
+.apexcharts-datalabel-label,
+.apexcharts-datalabel-value {
+    fill: #ffffff !important;
+}
+
+/* Axis labels */
+.apexcharts-xaxis-label,
+.apexcharts-yaxis-label,
+.apexcharts-xaxis-texts-g text,
+.apexcharts-yaxis-texts-g text,
+.apexcharts-xaxis-label tspan,
+.apexcharts-yaxis-label tspan,
+.apexcharts-xaxis-texts-g tspan,
+.apexcharts-yaxis-texts-g tspan {
+    fill: #ffffff !important;
+}
+
+/* Grid lines */
+.apexcharts-gridlines-horizontal line {
+    stroke: #666666 !important;
+    stroke-width: 1px !important;
+}
+
+.apexcharts-gridlines-vertical line {
+    stroke: #ffffff !important;
+    stroke-width: 1px !important;
+}
+
+.apexcharts-gridline {
+    stroke: #666666 !important;
+    stroke-width: 1px !important;
+}
+
+/* Crosshairs */
+.apexcharts-xcrosshairs,
+.apexcharts-ycrosshairs,
+.apexcharts-crosshairs-x,
+.apexcharts-crosshairs-y {
+    stroke: #ffffff !important;
+    stroke-width: 1px !important;
+}
+
+/* Tooltip styling *//* Tooltip styling */
+.apexcharts-tooltip {
+    background-color: #0a0a0a !important;
+    border: 1px solid #444444 !important;
+    color: #ffffff !important;
+}
+
+.apexcharts-tooltip-title {
+    background-color: #1a1a1a !important;
+    color: #ffffff !important;
+    border-bottom: 1px solid #444444 !important;
+}
+
+.apexcharts-tooltip-series-group,
+.apexcharts-tooltip-text,
+.apexcharts-tooltip-text-label,
+.apexcharts-tooltip-text-value {
+    background-color: #0a0a0a !important;
+    color: #ffffff !important;
+    fill: #ffffff !important;
+}
+
+/* Crosshair labels */
+.apexcharts-xaxistooltip,
+.apexcharts-yaxistooltip {
+    background-color: #0a0a0a !important;
+    color: #ffffff !important;
+    border: 1px solid #444444 !important;
+}
+
+.apexcharts-xaxistooltip-text,
+.apexcharts-yaxistooltip-text {
+    fill: #ffffff !important;
+    color: #ffffff !important;
+}
+
+/* Background rects */
+.apexcharts-canvas rect[fill="#ffffff"],
+.apexcharts-svg rect[fill="#ffffff"] {
+    fill: #0a0a0a !important;
+    stroke: none !important;
+}
+
+/* Tabulator styling - Black theme with white text */
+.tabulator {
+    background-color: #1a1a1a !important;
+    border: 1px solid #333333 !important;
+    color: #ffffff !important;
+}
+
+.tabulator-header {
+    background-color: #0a0a0a !important;
+    border-bottom: 2px solid #ffffff !important;
+}
+
+.tabulator-header-contents {
+    background-color: #0a0a0a !important;
+}
+
+.tabulator-col {
+    background-color: #0a0a0a !important;
+    border-right: 1px solid #333333 !important;
+}
+
+.tabulator-col-title {
+    color: #ffffff !important;
+}
+
+.tabulator-col-content {
+    background-color: #0a0a0a !important;
+}
+
+.tabulator-row {
+    background-color: #1a1a1a !important;
+    border-bottom: 1px solid #333333 !important;
+    color: #ffffff !important;
+}
+
+.tabulator-row.tabulator-row-even {
+    background-color: #222222 !important;
+}
+
+.tabulator-row.tabulator-selected {
+    background-color: #333333 !important;
+}
+
+.tabulator-row.tabulator-row-hover {
+    background-color: #333333 !important;
+}
+
+.tabulator-cell {
+    border-right: 1px solid #333333 !important;
+}
+
+.tabulator-footer {
+    background-color: #0a0a0a !important;
+    border-top: 1px solid #333333 !important;
+}
+
+.tabulator-footer-contents {
+    background-color: #0a0a0a !important;
+    color: #ffffff !important;
+}
+
+.tabulator-paginator {
+    color: #ffffff !important;
+}
+
+.tabulator-page {
+    background-color: #1a1a1a !important;
+    color: #ffffff !important;
+    border: 1px solid #333333 !important;
+}
+
+.tabulator-page.active {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+}
+
+.tabulator-page:hover {
+    background-color: #333333 !important;
+}
+
+.graphTabs::after {
+    background-color: #1a1a1a;
+    color: white;
+}
+

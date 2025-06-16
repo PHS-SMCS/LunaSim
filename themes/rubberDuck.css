@@ -1,0 +1,402 @@
+/* Rubber Ducky Theme */
+body {
+  background: #ffff00; /* Yellow background */
+  box-shadow: none;
+}
+
+#model_name {
+  background-color: #ff9900; /* Orange */
+  border: 1px solid #ff6600; /* Darker orange */
+  color: #000000; /* Black text for contrast */
+}
+
+.actionButton {
+  background-color: rgba(255, 153, 0, 0.6); /* Semi-transparent orange */
+  color: #000000;
+}
+
+.actionButton:hover {
+  background-color: #ff6600; /* Darker orange on hover */
+}
+
+/* Button text color - Yellow */
+#runButton,
+#loadButton,
+#expButton,
+#clearButton {
+  color: #ffff00 !important; /* Bright yellow text */
+}
+
+#runButton {
+  background: rgba(255, 153, 0, 0.9); /* Orange run button */
+}
+
+#runButton:hover {
+  background-color: rgba(255, 102, 0, 0.9); /* Darker orange on hover */
+}
+
+#loadButton,
+#expButton {
+  background: rgba(255, 204, 0, 0.9); /* Yellow */
+}
+
+#loadButton:hover,
+#expButton:hover {
+  background: rgba(255, 153, 0, 0.9); /* Orange on hover */
+}
+
+#clearButton {
+  background: rgba(255, 102, 0, 0.9); /* Darker orange */
+}
+
+#clearButton:hover {
+  background: rgba(204, 82, 0, 0.9); /* Even darker orange on hover */
+}
+
+#saveStatus {
+  color: #000000;
+}
+
+/* Tab buttons text - Yellow */
+.tabButton {
+  color: #ffff00 !important; /* Bright yellow text for tabs */
+  background-color: #ff9900; /* Orange tabs as requested */
+  box-shadow: none;
+}
+
+.tabButton.active {
+  background-color: #ff6600; /* Darker orange for active tab */
+  box-shadow: none;
+}
+
+.modelViewer {
+  background: #ffff00; /* Yellow */
+}
+
+/* Toolbar - Orange as requested */
+.toolbar ul,
+.chartSidebar ul {
+  background-color: #ff9900; /* Orange toolbar */
+}
+
+/* FontAwesome icons in toolbar - Bright yellow as requested */
+.toolbar i,
+.toolbar .fa,
+.toolbar .fas,
+.toolbar .far,
+.toolbar .fab,
+.chartSidebar i,
+.chartSidebar .fa,
+.chartSidebar .fas,
+.chartSidebar .far,
+.chartSidebar .fab {
+  color: #ffff00 !important; /* Bright yellow FontAwesome icons */
+}
+
+/* Tab text for Model, View, Charts, Tables - Yellow */
+.toolbar ul li a,
+.chartSidebar ul li a {
+  color: #ffff00 !important; /* Bright yellow text */
+}
+
+.settings-section {
+  border-top: 1px solid #ff6600; /* Darker orange */
+}
+
+.graphTabsActive {
+  background-color: #ff9900 !important; /* Orange active tabs */
+}
+
+a {
+  color: #ff6600; /* Darker orange links */
+}
+
+a:hover,
+a:focus {
+  background-color: #ff9900; /* Orange on hover */
+}
+
+a span {
+  background-color: #ff9900; /* Orange */
+}
+
+a span:before {
+  background-color: #ff9900; /* Orange */
+}
+
+a.active {
+  background-color: #ff9900; /* Orange */
+}
+
+.modelCanvas {
+  background-color: #ffffff; /* White */
+  color: #000000;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* GoJS Canvas - White as requested */
+#myDiagram {
+  background-color: #ffffff; /* White GoJS canvas */
+}
+
+.center-btn {
+  background-color: #ff9900; /* Orange */
+  color: #000000;
+}
+
+.center-btn:hover i {
+  color: #ff6600; /* Darker orange on hover */
+}
+
+/* Equation Editor - Orange as requested */
+#eqEditor {
+  background-color: #ff9900; /* Orange equation editor */
+  color: #000000;
+}
+
+.equation-editor-zoom-icon {
+  color: #000000;
+}
+
+.equation-editor-zoom-icon:hover {
+  color: #ff6600; /* Darker orange on hover */
+}
+
+.equation-editor-table th {
+  background-color: #ff9900; /* Orange */
+}
+
+.eqTableInputBox {
+  background-color: #ffff00; /* Yellow */
+  border: 1px solid #ff6600; /* Darker orange */
+  color: #000000;
+}
+
+/* Rubber ducky themed unique border colors for equation editor boxes */
+.eqStockBox input {
+  border: 1px solid #ff6600; /* Darker orange - represents duck bill */
+}
+
+.eqVariableBox input {
+  border: 1px solid #ffff00; /* Yellow - represents duck body */
+}
+
+.eqFlowBox input {
+  border: 1px solid #ff9900; /* Orange - represents duck feet */
+}
+
+.equation-editor-table thead th {
+  background-color: #ff9900; /* Orange */
+}
+
+.nncheckbox,
+.yAxisCheckbox {
+  accent-color: #ff9900; /* Orange */
+  background-color: #ffff00; /* Yellow */
+  border: 2px solid #ff6600; /* Darker orange */
+}
+
+.nncheckbox:checked,
+.yAxisCheckbox:checked {
+  background-color: #ff9900; /* Orange */
+  border-color: #ff6600; /* Darker orange */
+}
+
+.nncheckbox:hover,
+.yAxisCheckbox:hover {
+  border-color: #ff6600; /* Darker orange */
+}
+
+/* Charts - Orange as requested */
+.chartViewer {
+  background: #ff9900; /* Orange */
+}
+
+.chartCanvas {
+  background-color: #ffffff; /* White */
+  color: #000000;
+}
+
+.chartEditor {
+  background-color: #ff9900; /* Orange */
+  color: #000000;
+}
+
+.chart-stats p {
+  color: #000000;
+}
+
+.chartEditor hr {
+  border-top: 1px solid #ff6600; /* Darker orange */
+}
+
+.chart-btn {
+  background-color: #ffff00; /* Yellow */
+  border: 1px solid #ff6600; /* Darker orange */
+  color: #000000;
+}
+
+.chart-btn:hover {
+  background-color: #ff9900; /* Orange on hover */
+}
+
+#overlay {
+  background-color: rgba(255, 204, 0, 0.85); /* Semi-transparent yellow */
+}
+
+.settings-header h2,
+.close-btn,
+.setting-group {
+  color: #000000;
+}
+
+.close-btn:hover {
+  color: #ff6600; /* Darker orange on hover */
+}
+
+.settings-input,
+.settings-dropdown {
+  background-color: #ffff00; /* Yellow */
+  border: 1px solid #ff6600; /* Darker orange */
+  color: #000000;
+}
+
+.settings-divider {
+  border-top: 1px solid #ff6600; /* Darker orange */
+}
+
+.slider {
+  background-color: #ffff00; /* Yellow */
+}
+
+.slider:before {
+  background-color: #000000;
+}
+
+.toggle-switch input:checked + .slider {
+  background-color: #ff9900; /* Orange */
+}
+
+.setting-button {
+  background-color: #ffff00; /* Yellow */
+  border: 1px solid #ff6600; /* Darker orange */
+  color: #000000;
+}
+
+.setting-button:hover {
+  background-color: #ff9900; /* Orange on hover */
+}
+
+.settings-popup,
+.theme-popup,
+.charts-popup,
+.export-popup {
+  background-color: #ff9900; /* Orange */
+  color: #000000;
+}
+
+#simErrorPopup {
+  background: rgba(255, 204, 0, 0.95); /* Semi-transparent yellow */
+  border: 1px solid #ff9900; /* Orange border */
+  color: #000000;
+}
+
+#simErrorPopupTitle,
+#simErrorPopupDesc {
+  color: #000000;
+}
+
+#simErrorPopupCancel {
+  background: #ff9900; /* Orange button */
+  border: 1px solid #ff6600; /* Darker orange */
+  color: #000000;
+}
+
+#simErrorPopupCancel:hover {
+  background: #ff6600; /* Darker orange on hover */
+  border: 1px solid #ff6600;
+  color: #000000;
+}
+
+.equation-editor-overlay {
+  background-color: rgba(255, 204, 0, 0.65); /* Semi-transparent yellow */
+}
+
+.equation-editor-popup {
+  background-color: #ff9900; /* Orange */
+}
+
+.close-icon {
+  color: #000000;
+}
+
+.close-icon:hover {
+  color: #ff6600; /* Darker orange on hover */
+}
+
+.equation-editor-popup,
+.equation-editor-popup * {
+  color: #000000;
+}
+
+#xAxis {
+  background-color: #ffff00; /* Yellow */
+  border: 1px solid #ff6600; /* Darker orange */
+  color: #000000;
+}
+
+#yAxis {
+  background-color: transparent;
+  color: #000000;
+}
+
+#submitModel {
+  background-color: #ffff00; /* Yellow */
+  border: 1px solid #ff6600; /* Darker orange */
+  color: #000000;
+}
+
+#submitModel:hover {
+  background-color: #ff9900; /* Orange on hover */
+}
+
+.autocomplete-list {
+  background-color: #ffff00; /* Yellow */
+  border: 1px solid #ff6600; /* Darker orange */
+  color: #000000;
+}
+
+.autocomplete-item {
+  border-bottom: 1px solid #ff6600; /* Darker orange */
+}
+
+.autocomplete-item.selected,
+.autocomplete-item:hover {
+  background-color: #ff9900; /* Orange */
+}
+
+.model-zoom-icon {
+  color: #000000;
+  background-color: #ff9900; /* Orange */
+}
+
+.model-zoom-icon:hover {
+  background-color: #ff6600; /* Darker orange on hover */
+}
+
+.popup-overlay {
+  background-color: rgba(255, 204, 0, 0.95); /* Semi-transparent yellow */
+}
+
+.popup-content {
+  background-color: #ff9900; /* Orange */
+}
+
+.close-popup {
+  color: #000000;
+}
+
+.graphTabs::after {
+  background-color:#ff9900;
+  color: #fff900;
+}

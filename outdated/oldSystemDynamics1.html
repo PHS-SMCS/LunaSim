@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<!---
+  Authors: Sienna Simms, Karthik S. Vedula, Aditya Patil, William J. Park
+-->
+
+
+<html lang="en">
+
+
+<head>
+  <title>LunaSim</title>
+  <meta id="vp" name="viewport" content="width=device-width">
+  <meta name="description" content="Design and run powerful simulations, all in the browser with LunaSim.">
+  <script>
+    // set the viewport width to no less than minimum
+    window.onload = function () {
+      if (screen.width < 600) {
+        var mvp = document.getElementById('vp');
+        mvp.setAttribute('content', 'minimum-scale=1,width=600');
+      }
+    }
+  </script>
+  <!-- style sheets -->
+  <link rel="stylesheet" href="simulation1.css" id="lightThemeCSS">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="icon" href="../img/lunaLogo.svg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+  <script src="https://unpkg.com/gojs@2.3.3/release/go.js"></script>
+  <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+  <div id="allSampleContent" class="p-4 w-full">
+    <script src="https://unpkg.com/gojs@2.3.3/extensions/Figures.js"></script>
+    <script src="https://unpkg.com/gojs@2.3.3/extensions/NodeLabelDraggingTool.js"></script>
+    <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator.min.css" rel="stylesheet">
+    <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
+    <!-- Override CSS w/ Dark Mode Theme -->
+    <link rel="stylesheet" href="simulation_dark.css" disabled="disabled" id="darkThemeCSS">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script id="code" type="module" src="editor.js"></script>
+    <script id="code2" type="module" src="translator.js"></script>
+    <script id="code3" type="module" src="engine.js"></script>
+    <script id="code4" type="module" src="tabsManagement.js"></script>
+    <div id="sample">
+      <!-- Header with the logo -->
+      <div id="header">
+        <p id="logoContainer">
+          <!--Add logo where both logo and text are same height-->
+          <img id="logoImage" src="../img/lunaLogo.svg" alt="LunaSim Logo"> <a id="logoText" href="../landing/homePage1.html">LunaSim</a>
+          <!--Add a textbox to the side-->
+          <input type="text" id="model_name" name="model_name" placeholder="Model Name" value="New Project">
+        </p>
+        <div class="action">
+          <button id="runButton"><img src="../images/run.png" alt="Run">Run</button>
+          <!-- file input same style as button-->
+          <input type="file" id="load-actual-button" accept=".luna, .txt" hidden/>
+          <button id="loadButton"><img src="../images/import.png" alt="Import">Load</button>
+          <button id="exportButton"><img src="../images/export.png" alt="Export">Export</button>
+          <button id="switchThemeButton"><img src="../images/palette.png" alt="Theme">Switch Theme</button>
+          <a href="../UserDocs.html" target="_blank"><button id="helpButton"><img src="../images/help.png" alt="Help">Help</button></a>
+          <button id="clearButton"><img src="../images/trash.png" alt="Clear Model">Clear</button>
+        </div>
+       
+        <p id="saveStatus">Last Cloud Save: -<br>Last Export: -</p>
+      </div>
+      <div id="grayEffectDiv">
+
+
+      </div>
+     
+      <!-- Popup Notification -->
+      <div id="popupNotif">
+        <p id="popupNotifText">Refresh to apply all changes</p>
+        <button id="popupNotifClose"><b>X</b></button>
+      </div>
+
+
+      <!-- Simulation Error Popup -->
+      <div id="simErrorPopup">
+        <p id="simErrorPopupTitle"><b>Simulation Error!</b></p>
+        <p id="simErrorPopupDesc">Placeholder Message</p>
+        <button id="simErrorPopupDismiss">Dismiss</button>
+      </div>
+
+
+      <div id="tabContainer">
+        <div class="tabButtons">
+          <button class="tabBtn active" data-tab="tab1">Model View</button>
+          <button class="tabBtn" data-tab="tab2">Simulation Parameters</button>
+          <button class="tabBtn" data-tab="tab3">Charts/Tables</button>
+        </div>
+        <div class="tabContent" id="tab1" style="background-color: #ffffff;">
+          <div id="myDiagram">
+            <canvas tabindex="0" width="100%" height="100%">This text is displayed if your browser does not support the Canvas HTML
+              element.</canvas>
+          </div>
+        </div>
+        <div class="tabContent" id="tab2" style="background-color: #ffffff; display: none;">Simulation Parameters</div>
+        <div class="tabContent" id="tab3" style="background-color: #ffffff; display: none;">Charts/Tables</div>
+      </div>
+
+
+
+
+
+
+      </div>
+    </div>
+    <script>
+      document.querySelectorAll('.tabBtn').forEach(button => {
+        button.addEventListener('click', () => {
+          const tabId = button.getAttribute('data-tab');
+   
+          document.querySelectorAll('.tabContent').forEach(tab => {
+            tab.style.display = 'none';
+          });
+   
+          document.querySelectorAll('.tabBtn').forEach(btn => {
+            btn.classList.remove('active');
+          });
+   
+          document.getElementById(tabId).style.display = 'block';
+          button.classList.add('active');
+        });
+      });
+    </script>
+   
+</body>
+
+
+</html>
+
+
+

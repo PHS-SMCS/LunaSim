@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <!---
-  Authors: Sienna Simms, Karthik S. Vedula, Aditya Patil, William J. Park
+  Authors: Sienna Simms, Karthik S. Vedula, Aditya Patil, William J. Park, Ryan D. Chung, Akash Saran, Arjun M. Mujumdar, Caleb R. Wen
 -->
 
 <html lang="en">
-
 <head>
   <title>LunaSim</title>
   <meta id="vp" name="viewport" content="width=device-width">
@@ -18,221 +17,944 @@
       }
     }
   </script>
-  <!-- style sheets -->
-  <link rel="stylesheet" href="simulation.css" id="lightThemeCSS">
-  
+  <!-- ================== Styling Sheets ================== -->
+  <link rel="stylesheet" href="simulation.css" id="lightThemeCSS base-style">
+  <link rel="stylesheet" href="" id="theme-style">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="icon" href="../img/lunaLogo.svg">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.7.2/css/all.css">
 </head>
 <body>
+
+  <!-- ================== Scripts ================== -->
   <script src="https://unpkg.com/gojs@2.3.3/release/go.js"></script>
   <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
   <div id="allSampleContent" class="p-4 w-full">
     <script src="https://unpkg.com/gojs@2.3.3/extensions/Figures.js"></script>
     <script src="https://unpkg.com/gojs@2.3.3/extensions/NodeLabelDraggingTool.js"></script>
-  <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator.min.css" rel="stylesheet">
-  <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
-  <!-- Override CSS w/ Dark Mode Theme -->
-  <link rel="stylesheet" href="simulation_dark.css" disabled="disabled" id="darkThemeCSS">
-  
-  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator.min.css" rel="stylesheet">
+    <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
+    <!-- Override CSS w/ Dark Mode Theme -->
+    <link rel="stylesheet" href="simulation_dark.css" disabled="disabled" id="darkThemeCSS">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script id="code" type="module" src="editor.js"></script>
     <script id="code2" type="module" src="translator.js"></script>
     <script id="code3" type="module" src="engine.js"></script>
     <script id="code4" type="module" src="tabsManagement.js"></script>
+
     <div id="sample">
-      <!-- Header with the logo -->
-      <div id="header">
-        <p id="logoContainer">
-          <!--Add logo where both logo and text are same height-->
-          <img id="logoImage" src="../img/lunaLogo.svg" alt="LunaSim Logo"> <a href="../landing/homePage.html">LunaSim</a>
-          <!--Add a textbox to the side-->
-          <input type="text" id="model_name" name="model_name" placeholder="Model Name" value="New Project">
-        </p>
-        <div class="action">
-          <button id="runButton"><img src="../images/run.png" alt="Run">Run</button>
-          <!-- file input same style as button-->
+
+      <!-- ================== Header (Action Bar + Model Name + Logo) ================== -->
+      <div id ="header">
+
+        <!-- ================== Action Bar ================== -->
+        <div class="actions">
+          <p id="saveStatus">Last Cloud Save: -<br>Last Export: -</p>
+          <button class="actionButton" id="runButton"><i class="fa-regular fa-play"></i> Run</button>
           <input type="file" id="load-actual-button" accept=".luna, .txt" hidden/>
-          <button id="loadButton"><img src="../images/import.png" alt="Import">Load</button>
-          <button id="exportButton"><img src="../images/export.png" alt="Export">Export</button>
-          <button id="switchThemeButton"><img src="../images/palette.png" alt="Theme">Switch Theme</button>
-          <a href="../UserDocumentation.html" target="_blank"><button id="helpButton"><img src="../images/help.png" alt="Help">Help</button></a>
-          <button id="clearButton"><img src="../images/trash.png" alt="Clear Model">Clear</button>
+          <button class="actionButton" id="loadButton"><i class="fa-regular fa-file-import"></i> Load</button>
+          <button class="actionButton" id="expButton" onclick="openSettings(event, 'exportPopup')"><i class="fa-regular fa-file-export"></i> Save</button>
+          <button class="actionButton" id="clearButton"><i class="fa-regular fa-trash"></i> Clear</button>
         </div>
         
-        <p id="saveStatus">Last Cloud Save: -<br>Last Export: -</p>
-      </div>
-      <div id="grayEffectDiv">
-
-      </div>
-      
-      <!-- Popup Notification -->
-      <div id="popupNotif">
-        <p id="popupNotifText">Refresh to apply all changes</p>
-        <button id="popupNotifClose"><b>X</b></button>
+        <input type="text" id="model_name" name="model_name" placeholder="Model Name" value="New Project">
+        <img id="logoImage" src="../img/lunaLogo.svg" alt="LunaSim Logo" />
       </div>
 
-      <!-- Simulation Error Popup -->
-      <div id="simErrorPopup">
-        <p id="simErrorPopupTitle"><b>Oh noes, Simulation Error! :(</b></p>
-        <p id="simErrorPopupDesc">Placeholder Message</p>
-        <button id="simErrorPopupDismiss">Dismiss</button>
+      <!-- ================== Tab Bar (Model View + Charts/Tables) ================== -->
+      <div class="tabBar">
+          <button class="tabButton" id="modelBtn">Model View</button>
+          <button class="tabButton" id="chartBtn">Charts/Tables</button>
       </div>
 
-      <!-- Navigation and actions -->
-      <div id="nav">
-        <div class="webTabs">
-          <button class="tablinks" id="defaultOpen">Model View</button>
-          <button class="tablinks" id="secondaryOpen">Charts/Tables</button>
+      <!-- ================== Model Viewer (Toolbar + Model Canvas + Equation Editor) ================== -->
+      <div class="modelViewer">
+
+        <!-- ================== Toolbar ================== -->
+        <div class="toolbar">
+          <ul>
+            <!-- Model Tools (Pointer, Stock, Cloud, Variable, Flow, Influence) -->
+            <div class="tool-section">
+              <li><a href="#" id="pointer_button" class="pointer_selected tool"><i class="fa-regular fa-arrow-pointer"></i><span>Pointer [P]</span></a></li>
+              <li><a href="#" id="stock_button" class="node_normal tool"><i class="fa-regular fa-rectangle"></i><span>Stock [S]</span></a></li>
+              <li><a href="#" id="cloud_button" class="node_normal tool"><i class="fa-regular fa-cloud"></i><span>Cloud [C]</span></a></li>
+              <li><a href="#" id="variable_button" class="node_normal tool"><i class="fa-regular fa-circle"></i><span>Variable [V]</span></a></li>
+              <li><a href="#" id="flow_button" class="link_normal tool"><i class="fa-regular fa-arrows-left-right"></i><span>Flow [F]</span></a></li>
+              <li><a href="#" id="influence_button" class="link_normal tool"><i class="fa-regular fa-repeat"></i><span>Influence [I]</span></a></li>
+            </div>
+            
+            <!-- Settings (Theme, Help, Simulation Parameters) -->
+            <div class="settings-section">
+              <li><a href="#" onclick="openSettings(event, 'themePopup')" class="no-active"><i class="fa-regular fa-paint-roller"></i><span>Theme</span></a></li>
+              <li><a href="../userDocs.html" class="no-active" target="_blank"><i class="fa-regular fa-question"></i><span>Help</span></a></li>
+              <li><a href="#" onclick="openSettings(event, 'settingsPopup')" class="no-active"><i class="fa-regular fa-gear"></i><span>Settings</span></a></li>
+            </div>
+          </ul>
         </div>
-      </div>
-      <!-- Content for the modal view -->
-      <div class="tabContent" id="modalView">
-        <div class="tools">
-          <button id="pointer_button" class="pointer_selected tool">Pointer</button>
-          <button id="stock_button" class="node_normal tool">Stock</button>
-          <button id="cloud_button" class="node_normal tool">Cloud</button>
-          <button id="variable_button" class="node_normal tool">Variable</button>
-          <button id="flow_button" class="link_normal tool">Flow</button>
-          <button id="influence_button" class="link_normal tool">Influence</button>
+
+        <!-- ================== Model Canvas ================== -->
+        <div class="modelCanvas" id="modalView">
+          <!-- GoJS Diagram -->
+          <div id="myDiagram">
+            <canvas width="100%" height="100%">
+              This text is displayed if your browser does not support the Canvas HTML element.
+            </canvas>
+          </div>
+          <!-- Center Model Button -->
+          <button id="centerModelBtn" class="center-btn" title="Center Model">
+            <i class="fa-solid fa-compress"></i>
+          </button>
         </div>
-        <div id="myDiagram">
-          <canvas tabindex="0" width="598" height="498">This text is displayed if your browser does not support the Canvas HTML
-            element.</canvas>
-        </div>
-      </div>
-      <!-- Content for the charts and tables -->
-      <div class="tabContent" id="chartsTables">
-        <div id="tabManager">
-          <button id="addTab">
-            <i id="addTabButton" class="fa fa-plus-square"></i></button>
-          <div id="tabsList">
-            <!-- Tabs added dynamically -->
+
+
+        <!-- ================== Equation Editor ================== -->
+        <div id="eqEditor">
+          <div class="equation-editor-header">
+            <p class="equation-editor-title">Equation Editor</p>
+            <i class="fa-solid fa-up-right-and-down-left-from-center equation-editor-zoom-icon" onclick="openEquationEditorPopup()"></i>
+          </div>
+          <div id = "eqTableDiv">
+            <table class="equation-editor-table" id="eqTable">
+              <thead>
+                <tr>
+                  <th class="eq-col-type">Type</th>
+                  <th class="eq-col-name">Name</th>
+                  <th class="eq-col-equation">Equation</th>
+                  <th class="eq-col-checkbox">NN/Uni</th>
+                </tr>
+              </thead>
+              <tbody id="eqTableBody">
+                <!-- All equations are build here from editor.js -->
+              </tbody>
+            </table>
           </div>
         </div>
-        <div id="display">
-          <div id="chart" style="width: 85%"></div>
-          <div id = "datatable">
+      </div>
+
+      <!-- ================== Chart Viewer (Chart Sidebar, Chart Canvas, Chart Editor) ================== -->
+      <div class="chartViewer">
+
+        <!-- ================== Chart Sidebar ================== -->
+        <div class="chartSidebar">
+          <ul>
+            <!-- Scrollable area whhere you can access all charts/tables -->
+            <div class="chart-section" id="tabsList">
+            </div>
+
+            <!-- Settings Area -->
+            <div class="settings-section">
+              <li><a href="#" onclick="openSettings(event, 'themePopup')" class="no-active"><i class="fa-regular fa-paint-roller"></i><span>Theme</span></a></li>
+              <li><a href="../userDocs.html" class="no-active"><i class="fa-regular fa-question"></i><span>Help</span></a></li>
+              <li><a href="#" onclick="openSettings(event, 'settingsPopup')" class="no-active"><i class="fa-regular fa-gear"></i><span>Settings</span></a></li>
+            </div>
+          </ul>
+        </div>
+
+        <!-- ================== Chart Canvas ================== -->
+        <div class="chartCanvas">
+          <div id="display">
+            <div id="chart" style="width: 100%;"></div>
+            <div id = "datatable">
+            </div>
+          </div>
+        </div>
+
+        <!-- ================== Chart Editor ================== -->
+        <div class="chartEditor">
+          <p class="chart-title">Chart Editor</p>
+          
+          <!-- Create Visual -->
+          <div class="chartEditor-top">
+            <button class="chart-btn full-width"  id="addTab" onclick="openSettings(event, 'chartsPopup')">Create New Visual</button>
+            <hr>
+          </div>
+
+          <!-- Chart Statistics -->
+          <div class="chartEditor-middle">
+            <p class="chart-title">Chart Statistics</p>
+            <div id="chartStats" class="chart-stats">
+              <p>Name: Default</p>
+              <p>Type: Chart</p>
+              <p>X-Axis: Time</p>
+              <p>Y-Axis: stock1, stock2</p>
+            </div>
+
+          </div>
+
+          <!-- Download/Delete Visual -->
+          <div class="chartEditor-bottom">
+            <hr>
+            <button class="chart-btn full-width" id="downloadGraph">Download Visual</button>
+            <button class="chart-btn full-width" id="deleteGraph">Delete Visual</button>
           </div>
         </div>
       </div>
-      <!-- The pop up to initialize the tables and charts -->
-      <div id="popForm">
+
+
+      <div id="overlay" class="overlay hidden"></div>
+      <!-- ================== Simulation Settings Popup ================== -->
+      <div id="settingsPopup" class="settings-popup hidden">
+        <div class="settings-header">
+          <h2>Simulation Settings</h2>
+          <button class="close-btn" onclick="closeSettings('settingsPopup')"><i class="fa-regular fa-xmark"></i></button>
+        </div>
+        <div class="setting-group">
+          <label for="startTime">Start Time</label>
+          <input type="text" id="startTime" class="settings-input" placeholder="Enter start time..." value="0" style="width: 70%;" autocomplete="off">
+          <label for="endTime">End Time</label>
+          <input type="text" id="endTime" class="settings-input" placeholder="Enter end time..." value="10" style="width: 70%;" autocomplete="off">
+          <label for="dt">dt (Time Increment)</label>
+          <input type="text" id="dt" class="settings-input" placeholder="Enter dt..." value="0.1" style="width: 50%;" autocomplete="off">
+          <label for="integrationMethod">Integration Method</label>
+          <select id="integrationMethod" class="settings-dropdown" style="width: 50%;">
+            <option value="rk4">Runge-Kutta 4</option>
+            <option value="euler">Euler</option>
+          </select>
+          <label class="switch-label">
+          <span>Enable High Step Count Simulations</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="simParamHighStepCount">
+              <span class="slider"></span>
+            </label>
+          </label>
+        </div>
+        <button class="setting-button" onclick="closeSettings('settingsPopup')">Apply Settings</button>
+        <p id="validationMessage" class="validation-message hidden">* Please don't leave boxes empty</p>
+      </div>
+
+      <!-- ================== Theme Popup ================== -->
+      <div id="themePopup" class="theme-popup hidden">
+        <div class="settings-header">
+          <h2>Theme Settings</h2>
+          <button class="close-btn" onclick="closeSettings('themePopup')"><i class="fa-regular fa-xmark"></i></button>
+        </div>
+        <div class="setting-group">
+          <label for="themeSelect">Theme</label>
+          <select id="themeSelect" class="settings-dropdown" style="width: 80%;">
+            <option selected value="normal">Normal</option>
+            <option value="classic">Classic</option>
+            <option value="monochrome">Monochrome</option>
+            <option value="nvoid">Nebula Void</option>
+            <option value="cred">Cherry Red</option>
+            <option value="cblossom">Cherry Blossom</option>
+            <option value="sorange">Channel Orange</option>
+            <option value="fgreen">Forest Green</option>
+            <option value="oblue">Ocean Blue</option>
+            <option value="cpurple">Cosmic Purple</option>
+            <option value="bpink">Bubblegum Pink</option>
+            <option value="sred">Sith Red</option>
+            <option value="mlight">Minimal Light</option>
+            <option value="rduck">Rubber Duck</option>
+            <option value="udark">Ultra Dark</option>
+          </select>
+          <label for="simulationFont">Font</label>
+          <select id="simulationFont" class="settings-dropdown" style="width: 80%;">
+            <option value="Golos Text" style="font-family: 'Golos Text';" selected>Golos Text</option>
+            <option value="Arial" style="font-family: Arial;">Arial</option>
+            <option value="Trebuchet MS" style="font-family: 'Trebuchet MS';">Trebuchet MS</option>
+            <option value="Times New Roman" style="font-family: 'Times New Roman';">Times New Roman</option>
+            <option value="Inter" style="font-family: 'Inter';">Inter</option>
+            <option value="Lexend" style="font-family: 'Lexend';">Lexend</option>
+            <option value="Comic Sans MS" style="font-family: 'Comic Sans MS';">Comic Sans</option>
+            <option value="Wingdings" style="font-family: 'Wingdings';">Wingdings/option>
+          </select>
+        </div>
+        <button class="setting-button" onclick="closeSettings('themePopup')">Apply Settings</button>
+      </div>
+
+      <!-- ================== Charts Popup ================== -->
+      <div id="chartsPopup" class="charts-popup hidden">
+        <div class="settings-header">
+          <h2>Create Visual</h2>
+          <button class="close-btn" onclick="closeSettings('chartsPopup')"><i class="fa-regular fa-xmark"></i></button>
+        </div>
+        <div id="popForm">
         <form id="tabConfig" name = "tabConfig" onsubmit="return false"> <!-- Will not refresh page -->
-          <div>
-            <p>Table or chart:</p>
-            <input type="radio" id="table" name="model_type" value="table" required>
-            <label for="table">Table</label><br>
-            <input type="radio" id="chart" name="model_type" value="chart" required>
-            <label for="chart">Chart</label>
+          <div class="setting-group">
+            <label for="tab_name">Visual Name</label>
+            <input type="text" id="tab_name" name="tab_name" class="settings-input" style="width: 63%;" placeholder="e.g., Population Chart" autocomplete="off" />
           </div>
-          <div>
-            <p>X-Axis:</p>
-            <select name="xAxis" id="xAxis" style="font-size: inherit;" required>
+          <div class="setting-group">
+            <label for="model_type">Type</label>
+            <select id="model_type" name="model_type" class="settings-dropdown" style="width: 63%;" required>
+              <option value="chart" selected>Chart</option>
+              <option value="table">Table</option>
+            </select>
+          </div>
+          <div class="setting-group" id="xAxisGroup">
+            <label for="xAxis">X-Axis</label>
+            <select name="xAxis" id="xAxis" style="font-size: inherit; width: 63%;" required>
               <!-- Options initialized dynamically -->
             </select>
           </div>
-          <div >
-            <p>Y-Axis:</p>
-            <table id="yAxis">
+          <div class="setting-group">
+            <label for="yAxis">Y-Axis</label>
+            <table id="yAxis" style="width: 63%;">
               <!-- Multiple checkboxes initialized dynamically -->
             </table>
           </div>
           <button id="submitModel">Create New Tab</button>
-          <button id="closeNewTabPopup"><b>X</b></button>
+          <p id="nameValidation" class="validation-message hidden">* Please enter a visual name.</p>
         </form>
       </div>
-      
-      <!-- Equation editor -->
-      <div id="eqEditor">
-        <p id="eqEditorTitle"><b>Equation Editor</b></p>
-        <div id="eqTableDiv">
-          <table id="eqTable" class="eqTable">
-            <tr>
-              <th class="eqTableHeader">Type</th>
-              <th class="eqTableHeader">Name</th>
-              <th class="eqTableHeader"style="width: 90%">Equation</th>
-              <th class="eqTableHeader" id="nnUniHeader">NN/Uni?<span id="nnUniTooltip">Non-negative/Uniflow</span></th>
-            </tr>
-            <tbody id="eqTableBody">
-            </tbody>
-          </table>
-        </div>
-        <br>
       </div>
-      <!-- Simulation parameters -->
-      <div id="simParams">
-        <p id="simParamsTitle"><b>Simulation Parameters</b></p>
-        <br>
-        <table id="simParamsTable">
-          <tr style="width: 100%">
-            <th class="simParamCol">Start Time</th>
-            <th class="simParamCol">End Time</th>
-            <th class="simParamCol">dt (Time Increment)</th>
-            <th class="simParamCol">Integration Method</th>
-          </tr>
-          <tr>
-            <th>
-              <input class="simParamsInput" id="startTime" placeholder="Enter a number" value="0">
-            </th>
-            <th>
-              <input class="simParamsInput" id="endTime" placeholder="Enter a number" value="10">
-            </th>
-            <th>
-              <input class="simParamsInput" id="dt" placeholder="Enter a number" value="0.1">
-            </th>
-            <th>
-              <select class="simParamsInput" id="integrationMethod">
-                <option value="rk4">Runge-Kutta 4</option>
-                <option value="euler">Euler</option>
-              </select>
-            </th>
-          </tr>
-        </table>
 
-        <table style="margin-left: 50px;">
-          <tr>
-            <th>
-              <input type="checkbox" id="simParamHighStepCount">
-            </th>
-            <th>
-              <p id="simParamHighStepCountDesc">Enable High Step-Count Simulations (Not Recommended)</p>
-            </th>
-          </tr>
-        </table>
-          
-          
+      <!-- ================== Export Popup ================== -->
+      <div id="exportPopup" class="export-popup hidden">
+        <div class="settings-header">
+          <h2>Export Settings</h2>
+          <button class="close-btn" onclick="closeSettings('exportPopup')"><i class="fa-regular fa-xmark"></i></button>
         </div>
-
-        <!--
-        <table id="modelConfigTable" class="modelConfigTable"
-          style="position: relative; top: 60px; font-size: min(18px, 2.8vw);">
-          <tr>
-            <th>Start Time</th>
-            <th><input id="startTime" style="width:100%; height:20px" value="0"></th>
-          </tr>
-          <tr>
-            <th>End Time</th>
-            <th><input id="endTime" style="width:100%; height:20px" value="10"></th>
-          </tr>
-          <tr>
-            <th>dt</th>
-            <th><input id="dt" style="width:100%; height:20px" value="0.1"></th>
-          </tr>
-          <tr>
-            <th>Integration Method</th>
-            <th><select id="integrationMethod" style="width:100%; height:20px">
-                <option value="rk4">Runge-Kutta 4</option>
-                <option value="euler">Euler</option>
-              </select></th>
-          </tr>
-        </table>-->
+        <div class="setting-group">
+          <label for="fileSelect">File Type</label>
+          <select id="fileSelect" class="settings-dropdown" style="width: 72%;">
+            <option selected>.luna</option>
+            <option>.png</option>
+            <option>.jpg</option>
+            <option>.tiff</option>
+          </select>
+        </div>
+        <div id="imageSettingsSection" style="display: none;">
+          <hr class="settings-divider">
+          <div class="setting-group">
+            <label for="imageMargin" class="dotted-underline">Image Margin</label>
+            <input type="text" id="imageMargin" class="px-visual-input settings-input" placeholder="Enter margin..." value="15" style="width: 65%;" autocomplete="off">
+          </div>
+          <button id="downloadImageButton" class="setting-button" onclick="closeSettings('exportPopup')">Download Image</button>
+        </div>
+        <button id="exportButton" class="setting-button" onclick="closeSettings('exportPopup')">Download File</button>
       </div>
-      <br>
-      <br>
-      <br>
+
+      <!-- ================== Simulation Error Popup ================== -->
+      <div id="simErrorPopup" class="sims-popup hidden">
+        <div class="settings-header">
+          <h2 id="simErrorPopupTitle">Simulation Error!</h2>
+          <button class="close-btn" onclick="closeSettings('simErrorPopup')"><i class="fa-regular fa-xmark"></i></button>
+        </div>
+        <div class="setting-group">
+          <p id="simErrorPopupDesc">This is the default popup. This should only appear during the debug process.</p>
+        </div>
+        <button id="simErrorPopupCancel" class="setting-button" onclick="closeSettings('simErrorPopup')">Dismiss</button>
+      </div>
+
+      <!-- ================== Equation Editor Popup ================== -->
+      <div id="equationEditorOverlay" class="equation-editor-overlay" onclick="closePopup()"></div>
+      <div id="equationEditorPopup" class="equation-editor-popup">
+        <div class="equation-editor-popup-content">
+          <div class="equation-editor-popup-header">
+            <p class="equation-editor-title">Equation Editor</p>
+            <i class="fa-regular fa-xmark close-icon" onclick="closePopup()"></i>
+          </div>
+          <div id="equationEditorPopupContent"></div>
+        </div>
+      </div>
+
+      <!-- Weird Stuff To Deal With Later -->
+      <div class="weirdStuff">
+        <div id="simErrorPopupDismiss"></div>
+        <div id="popupNotif"><p id="popupNotifText"></p><button id="popupNotifClose"><b></b></button></div>
+        <div id="switchThemeButton"></div>
+        <div id="closeNewTabPopup"></div>
+        <button class="tablinks" id="defaultOpen">Model View</button>
+        <button class="tablinks" id="secondaryOpen">Charts/Tables</button>
+        <div id ="tabName"></div>
+        <div id="nav"><div class="webTabs"></div></div>
+        <div class="tabContent" id="chartsTables">
+        <div id="tabManager"></div>
+        <div id="grayEffectDiv"></div></div>
+      </div>
+
     </div>
-</body>
+  </div>
+</div>
+<script>
+  // ================== Opening the settings popup ==================
+  const popup = document.getElementById("settingsPopup");
+  const overlay = document.getElementById("overlay");
 
+  // Function to open the popup with transition
+  function openSettings(event, popupWindow) {
+    const popup = document.getElementById(popupWindow);
+    event.preventDefault();
+    popup.classList.remove("hidden");
+    overlay.classList.remove("hidden");
+
+    // Trigger transition on next frame
+    requestAnimationFrame(() => {
+      popup.classList.add("show");
+      overlay.classList.add("show");
+    });
+  }
+
+  // Function to close the popup with transition
+  function closeSettings(popupWindow) {
+    if (popupWindow === "settingsPopup" && !validateAllInputs()) return;
+
+    const popup = document.getElementById(popupWindow);
+    popup.classList.remove("show");
+    overlay.classList.remove("show");
+
+    // After transition ends, hide elements
+    setTimeout(() => {
+      popup.classList.add("hidden");
+      overlay.classList.add("hidden");
+    }, 300); // duration matches CSS transition
+  } //chartsPopup
+
+  // Open popup on button click
+
+  // Close popup when clicking on overlay
+  overlay.addEventListener("click", () => {
+    // Only close settingsPopup if inputs are valid
+    if(!validateAllInputs()) {
+      return;
+    }
+
+    closeSettings("settingsPopup");
+    closeSettings("chartsPopup");
+    closeSettings("exportPopup");
+    closeSettings("simErrorPopup");
+    closeSettings("themePopup");
+  });
+
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !popup.classList.contains("hidden")) {
+      closeSettings();
+    }
+  });
+
+  // ================== Switching between tabs ==================
+  document.addEventListener("DOMContentLoaded", () => {
+    const modelViewer = document.querySelector('.modelViewer');
+    const chartViewer = document.querySelector('.chartViewer');
+    const modelBtn = document.getElementById('modelBtn');
+    const chartBtn = document.getElementById('chartBtn');
+
+    chartBtn.addEventListener('click', function (event) {
+      activateChartView_button(event);
+    });
+
+    // Initial state: show modelViewer, hide chartViewer, modelBtn active
+    modelViewer.classList.remove('hidden');
+    chartViewer.classList.add('hidden');
+    modelBtn.classList.add('active');
+
+    function showViewer(viewerToShow, viewerToHide) {
+      viewerToHide.classList.add('fade-out');
+      viewerToShow.classList.remove('hidden');
+      viewerToShow.classList.add('fade-in');
+
+      setTimeout(() => {
+        viewerToHide.classList.add('hidden');
+        viewerToHide.classList.remove('fade-out');
+        viewerToShow.classList.remove('fade-in');
+      }, 300); // match the CSS transition duration
+    }
+
+    function activateModelView() {
+      if (modelViewer.classList.contains('hidden')) {
+        showViewer(modelViewer, chartViewer);
+        modelBtn.classList.add('active');
+        chartBtn.classList.remove('active');
+      }
+    }
+
+    function activateChartView_tab(event) {
+      if (!window.simulationHasRunSuccessfully_tab) {
+        document.getElementById("simErrorPopupDesc").innerHTML =
+                "The model has not been successfully run yet. Please run the simulation to access Charts and Tables.";
+        openSettings(event, 'simErrorPopup');
+        return;
+      }
+
+
+      if (chartViewer.classList.contains('hidden')) {
+        showViewer(chartViewer, modelViewer);
+        chartBtn.classList.add('active');
+        modelBtn.classList.remove('active');
+      }
+    }
+    function activateChartView_button(event) {
+      if (!window.simulationHasRunSuccessfully_button) {
+        document.getElementById("simErrorPopupDesc").innerHTML =
+                "The model has not been successfully run yet. Please run the simulation to access Charts and Tables.";
+        openSettings(event, 'simErrorPopup');
+        return;
+      }
+
+
+      if (chartViewer.classList.contains('hidden')) {
+        showViewer(chartViewer, modelViewer);
+        chartBtn.classList.add('active');
+        modelBtn.classList.remove('active');
+      }
+    }
+
+    modelBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      activateModelView();
+    });
+
+    chartBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      activateChartView_tab();
+    });
+  });
+
+  // ================== Tooltips ==================
+  document.addEventListener('DOMContentLoaded', () => {
+    // Select all toolbar and chartSidebar buttons except those with 'no-active' class
+    const buttons = document.querySelectorAll('.toolbar a:not(.no-active), .chartSidebar a:not(.no-active)');
+
+    buttons.forEach(button => {
+      // Click toggles active mode
+      button.addEventListener('click', (e) => {
+        e.preventDefault(); // prevent link default behavior on mode buttons
+        // Remove active class from all buttons
+        buttons.forEach(btn => btn.classList.remove('active'));
+        // Add active class to clicked button
+        button.classList.add('active');
+
+        // Hide tooltip immediately on click
+        const tooltip = button.querySelector('span');
+        if (tooltip) {
+          tooltip.style.transform = 'scale(0)';
+          tooltip.style.opacity = '0';
+        }
+      });
+
+      // Show tooltip on hover only if NOT active
+      button.addEventListener('mouseenter', () => {
+        if (!button.classList.contains('active')) {
+          const tooltip = button.querySelector('span');
+          if (tooltip) {
+            tooltip.style.transform = 'scale(1)';
+            tooltip.style.opacity = '1';
+          }
+        }
+      });
+
+      // Hide tooltip on mouse leave only if NOT active
+      button.addEventListener('mouseleave', () => {
+        if (!button.classList.contains('active')) {
+          const tooltip = button.querySelector('span');
+          if (tooltip) {
+            tooltip.style.transform = 'scale(0)';
+            tooltip.style.opacity = '0';
+          }
+        }
+      });
+    });
+
+    // Help/settings buttons with 'no-active' class behave normally (no JS needed)
+  });
+
+  // ================== Opening the equation editor popup screen ==================
+  function openEquationEditorPopup() {
+    const table = document.querySelector(".equation-editor-table");
+    const popup = document.getElementById("equationEditorPopup");
+    const overlay = document.getElementById("equationEditorOverlay");
+    const popupContent = document.getElementById("equationEditorPopupContent");
+
+    popupContent.innerHTML = "";
+    popupContent.appendChild(table.cloneNode(true));
+
+    popup.classList.remove("fade-out");
+    overlay.classList.remove("fade-out");
+
+    popup.style.display = "block";
+    overlay.style.display = "block";
+
+    popup.classList.add("fade-in");
+    overlay.classList.add("fade-in");
+  }
+
+  function closePopup() {
+    // Sync before starting to close
+    syncEquationEditors();
+
+    const popup = document.getElementById("equationEditorPopup");
+    const overlay = document.getElementById("equationEditorOverlay");
+
+    popup.classList.remove("fade-in");
+    overlay.classList.remove("fade-in");
+
+    popup.classList.add("fade-out");
+    overlay.classList.add("fade-out");
+
+    setTimeout(() => {
+      popup.style.display = "none";
+      overlay.style.display = "none";
+      popup.classList.remove("fade-out");
+      overlay.classList.remove("fade-out");
+    }, 300);
+  }
+
+  function syncEquationEditors() {
+    const popupRows = document.querySelectorAll('#equationEditorPopupContent tbody tr');
+    const mainRows = document.querySelectorAll('.equation-editor-table tbody tr');
+
+    popupRows.forEach((popupRow, index) => {
+      const popupInputs = popupRow.querySelectorAll('input');
+      const mainInputs = mainRows[index].querySelectorAll('input');
+
+      popupInputs.forEach((popupInput, i) => {
+        if (popupInput.type === 'checkbox') {
+          mainInputs[i].checked = popupInput.checked;
+        } else {
+          mainInputs[i].value = popupInput.value;
+        }
+      });
+    });
+  }
+  // ================== When you click on image it goes to home page ==================
+  document.getElementById('logoImage').addEventListener('click', function () {
+    window.location.href = '../landing/homePage.html';
+  });
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const fileSelect = document.getElementById("fileSelect");
+  const imageSettingsSection = document.getElementById("imageSettingsSection");
+  const downloadFileButton = document.getElementById("downloadFileButton");
+  const downloadImageButton = document.getElementById("downloadImageButton");
+
+  function updateExportOptions() {
+    const selected = fileSelect.value;
+    if (selected === ".png" || selected === ".jpg" || selected === ".tiff") {
+      imageSettingsSection.style.display = "block";
+      downloadImageButton.style.display = "inline-block";
+      exportButton.style.display = "none";
+    } else {
+      imageSettingsSection.style.display = "none";
+      downloadImageButton.style.display = "none";
+      exportButton.style.display = "inline-block";
+    }
+  }
+
+  // Run on page load
+  updateExportOptions();
+
+  // Update when the dropdown changes
+  fileSelect.addEventListener("change", updateExportOptions);
+});
+
+</script>
+<script>
+  const inputIds = ["startTime", "endTime", "dt"];
+
+  function isNumeric(value) {
+    return !isNaN(value) && value.trim() !== "";
+  }
+
+  function highlightInputs(ids, color = "1px solid red") {
+    ids.forEach(id => {
+      const input = document.getElementById(id);
+      input.style.border = color;
+    });
+  }
+
+  function clearAllInputBorders() {
+    inputIds.forEach(id => {
+      document.getElementById(id).style.border = "";
+    });
+  }
+
+  function validateAllInputs() {
+    const warning = document.getElementById("validationMessage");
+    let allValid = true;
+    let errorMessages = [];
+
+    const startTimeEl = document.getElementById("startTime");
+    const endTimeEl = document.getElementById("endTime");
+    const dtEl = document.getElementById("dt");
+    const highStepCheckbox = document.getElementById("simParamHighStepCount");
+
+    const startTime = startTimeEl.value.trim();
+    const endTime = endTimeEl.value.trim();
+    const dt = dtEl.value.trim();
+
+    clearAllInputBorders(); // Reset all borders first
+
+    // Validate numeric input first
+    for (const id of inputIds) {
+      const el = document.getElementById(id);
+      if (!isNumeric(el.value)) {
+        el.style.border = "1px solid red";
+        allValid = false;
+      }
+    }
+
+    if (!isNumeric(startTime) || !isNumeric(endTime) || !isNumeric(dt)) {
+      errorMessages.push("Please only type in numerical inputs");
+      allValid = false;
+    } else {
+      const s = Number(startTime);
+      const e = Number(endTime);
+      const d = Number(dt);
+      const duration = e - s;
+
+      if (s >= e) {
+        highlightInputs(["startTime", "endTime"]);
+        errorMessages.push("Please ensure end time is greater than start time");
+        allValid = false;
+      }
+
+      if (d <= 0) {
+        highlightInputs(["dt"]);
+        errorMessages.push("Please ensure dt is positive");
+        allValid = false;
+      }
+
+      if (d > duration) {
+        highlightInputs(["startTime", "endTime", "dt"]);
+        errorMessages.push("Please ensure dt must be less than or equal to the duration");
+        allValid = false;
+      }
+
+      if ((Number(endTime) - Number(startTime)) / Number(dt) >= 1000 && !highStepCheckbox.checked) {
+        highlightInputs(["startTime", "endTime", "dt"]);
+        errorMessages.push("This simulation contains 1000+ steps; as such, running it may lead to lag or the website freezing. Please adjust dt or enable high step-count simulations.");
+        allValid = false;
+      }
+    }
+
+    // Display errors
+    if (errorMessages.length > 0) {
+      warning.innerHTML = errorMessages.map(msg => `• ${msg}`).join("<br>");
+      warning.classList.remove("hidden");
+    } else {
+      warning.classList.add("hidden");
+    }
+
+    return allValid;
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    inputIds.forEach(id => {
+      const input = document.getElementById(id);
+      input.addEventListener("blur", () => {
+        validateAllInputs(); // Validate on blur
+      });
+    });
+
+    const applyButton = document.querySelector('#settingsPopup .setting-button');
+    applyButton.addEventListener("click", (e) => {
+      if (!validateAllInputs()) {
+        e.stopPropagation(); // Prevent closing if invalid
+        return;
+      }
+
+      closeSettings('settingsPopup'); // Only close if valid
+    });
+  });
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const buttons = document.querySelectorAll('.toolbar a:not(.no-active), .chartSidebar a:not(.no-active)');
+
+    buttons.forEach(button => {
+      // Mouse click logic (already working)
+      button.addEventListener("click", (e) => {
+        e.preventDefault();
+        activateButton(button);
+      });
+
+      // Hover logic (tooltip)
+      button.addEventListener("mouseenter", () => {
+        if (!button.classList.contains("active")) {
+          const tooltip = button.querySelector("span");
+          if (tooltip) {
+            tooltip.style.transform = "scale(1)";
+            tooltip.style.opacity = "1";
+          }
+        }
+      });
+
+      button.addEventListener("mouseleave", () => {
+        if (!button.classList.contains("active")) {
+          const tooltip = button.querySelector("span");
+          if (tooltip) {
+            tooltip.style.transform = "scale(0)";
+            tooltip.style.opacity = "0";
+          }
+        }
+      });
+    });
+
+    // Activation logic shared by mouse and keyboard
+    function activateButton(button) {
+      buttons.forEach(btn => {
+        btn.classList.remove("active");
+        const tooltip = btn.querySelector("span");
+        if (tooltip) {
+          tooltip.style.transform = "scale(0)";
+          tooltip.style.opacity = "0";
+        }
+      });
+      button.classList.add("active");
+      button.click(); // Trigger the button’s click handler (if any custom behavior is attached)
+    }
+
+    // Keyboard shortcut handling
+    document.addEventListener("keydown", (event) => {
+      const tag = document.activeElement.tagName.toLowerCase();
+      if (tag === "input" || tag === "textarea") return;
+
+      const keyMap = {
+        p: "pointer_button",
+        s: "stock_button",
+        v: "variable_button",
+        c: "cloud_button",
+        i: "influence_button",
+        f: "flow_button"
+      };
+
+      const key = event.key.toLowerCase();
+      const buttonId = keyMap[key];
+      if (!buttonId) return;
+
+      const button = document.getElementById(buttonId);
+      if (button) {
+        activateButton(button);
+      }
+    });
+  });
+</script>
+  <script>
+    const themeSelect = document.getElementById('themeSelect');
+    const themeLink = document.getElementById('theme-style');
+
+    const savedTheme = localStorage.getItem('selectedTheme');
+    if (savedTheme) {
+      themeSelect.value = savedTheme;
+      applyTheme(savedTheme);
+    }
+
+    themeSelect.addEventListener('change', () => {
+      const selected = themeSelect.value.toLowerCase();
+      localStorage.setItem('selectedTheme', selected);
+      applyTheme(selected);
+    });
+
+    function applyTheme(selected) {
+      let themeHref = '';
+      if (selected === 'monochrome') {
+        themeHref = '../themes/monochrome.css';
+      } else if (selected === 'classic') {
+        themeHref = '../themes/simulationClassic.css';
+      } else if (selected === 'mlight') {
+        themeHref = '../themes/minimalLight.css';
+      } else if (selected === 'oblue') {
+        themeHref = '../themes/oceanBlue.css';
+      } else if (selected === 'sorange') {
+        themeHref = '../themes/sunsetOrange.css';
+      } else if (selected === 'fgreen') {
+        themeHref = '../themes/forestGreen.css';
+      } else if (selected === 'cpurple') {
+        themeHref = '../themes/cosmicPurple.css';
+      } else if (selected === 'bpink') {
+        themeHref = '../themes/bubblegumPink.css';
+      } else if (selected === 'cred') {
+        themeHref = '../themes/cherryRed.css';
+      } else if (selected === 'cblossom') {
+        themeHref = '../themes/cherryBlossom.css';
+      } else if (selected === 'nvoid') {
+        themeHref = '../themes/nebulaVoid.css';
+      } else if (selected === 'udark') {
+        themeHref = '../themes/ultraDark.css';
+      } else if (selected === 'rduck') {
+        themeHref = '../themes/rubberDuck.css';
+      } else if (selected === 'sred') {
+        themeHref = '../themes/sithRed.css';
+      } else {
+        themeHref = '';
+      }
+      themeLink.setAttribute('href', themeHref);
+    }
+  </script>
+<script>
+  const fontSelect = document.getElementById('simulationFont');
+
+  fontSelect.addEventListener('change', () => {
+    const selectedFont = fontSelect.value;
+    document.documentElement.style.setProperty('--simulation-font', `'${selectedFont}', sans-serif`);
+
+    // Optional: Save to session storage so font persists
+    sessionStorage.setItem("selectedFont", selectedFont);
+  });
+
+  // Apply font on page load from sessionStorage (if available)
+  window.addEventListener("DOMContentLoaded", () => {
+    const savedFont = sessionStorage.getItem("selectedFont");
+    if (savedFont) {
+      document.documentElement.style.setProperty('--simulation-font', `'${savedFont}', sans-serif`);
+      fontSelect.value = savedFont;
+    }
+  });
+</script>
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('input').forEach(input => {
+      input.setAttribute('autocomplete', 'off');
+    });
+  });
+</script>
+<script>
+  const modelTypeDropdown = document.getElementById("model_type");
+  const xAxisGroup = document.getElementById("xAxisGroup");
+  const yAxisLabel = document.querySelector('label[for="yAxis"]');
+  const nameInput = document.getElementById("tab_name");
+  const yAxisTable = document.getElementById("yAxis");
+  const nameValidationMsg = document.getElementById("nameValidation");
+  const submitButton = document.getElementById("submitModel");
+
+  // Show/hide X-Axis + rename Y-Axis label
+  modelTypeDropdown.addEventListener("change", () => {
+    if (modelTypeDropdown.value === "chart") {
+      xAxisGroup.style.display = "block";
+      yAxisLabel.textContent = "Y-Axis";
+    } else {
+      xAxisGroup.style.display = "none";
+      yAxisLabel.textContent = "Columns";
+    }
+  });
+
+  // Validate on submit
+  submitButton.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    let valid = true;
+    let messages = [];
+
+    // Check name input
+    if (nameInput.value.trim() === "") {
+      nameInput.style.border = "1px solid red";
+      messages.push("* Please enter a name for the graph");
+      valid = false;
+    } else {
+      nameInput.style.border = "";
+    }
+
+    // Check y-axis (columns) checkboxes
+    const checkboxes = yAxisTable.querySelectorAll('input[type="checkbox"]');
+    const oneChecked = Array.from(checkboxes).some(cb => cb.checked);
+    if (!oneChecked) {
+      messages.push("* Please select at least one option for the y-axis (or column for tables)");
+      valid = false;
+    }
+
+    // Update validation message if there are issues
+    if (!valid) {
+      nameValidationMsg.innerHTML = messages.join("<br>");
+      nameValidationMsg.classList.remove("hidden");
+    } else {
+      nameValidationMsg.classList.add("hidden");
+      closeSettings('chartsPopup');
+    }
+  });
+</script>
+</body>
 </html>

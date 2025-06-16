@@ -1,317 +1,608 @@
 <!DOCTYPE html>
-<!---
-  Authors: Karthik S. Vedula, Sienna Simms
--->
 <html lang="en">
-
 <head>
-  <title>LunaSim</title>
-  <meta id="vp" name="viewport" content="width=device-width">
-  <script>
-    // set the viewport width to no less than minimum
-    window.onload = function () {
-      if (screen.width < 600) {
-        var mvp = document.getElementById('vp');
-        mvp.setAttribute('content', 'minimum-scale=1,width=600');
-      }
-    }
-  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="icon" href="../img/lunaLogo.svg">
-  <link rel="stylesheet" href="home.css">
-</head>
 
-<style>
-  body {
-    font-family: sans-serif;
-    line-height: 60px;
-  }
+  <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.7.2/css/all.css">
 
-  * {
-    box-sizing: border-box
-  }
+  <title>LunaSim Launch</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@300;400;500;600;700;800;900&display=swap');
 
-  .mySlides {
-    display: none
-  }
+    /* For the whole page */
+    * {
+      scrollbar-width: none;         /* Firefox */
+      -ms-overflow-style: none;      /* IE and Edge */
+    }
 
-  img {
-    vertical-align: middle;
-  }
+    /* For WebKit browsers like Chrome, Safari */
+    *::-webkit-scrollbar {
+      display: none;
+    }
 
-  /* Slideshow container */
-  .slideshow-container {
-    max-width: 1000px;
+
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      overflow-x: hidden;
+     
+    }
+
+    .hero {
+      position: relative;
+      height: 100vh;
+      color: white;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background-color: #1e3a5f; /* fallback */
+    }
+
+    .background-slider {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .background-slider img {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out;
+    }
+
+    .background-slider img.active {
+      opacity: 1;
+    }
+
+    .blue-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(
+        ellipse at center,
+        rgba(38, 50, 83, 0.92) 0%,
+        rgba(38, 50, 83, 0.95) 60%,
+        rgba(28, 37, 63, 0.97) 100%
+      );
+      z-index: 1;
+      pointer-events: none; /* keeps it from interfering with interactions */
+    }
+
+
+    .hero {
     position: relative;
-    margin: auto;
-  }
-
-  /* Next & previous buttons */
-  .prev,
-  .next {
-    cursor: pointer;
-    position: absolute;
-    top: 50%;
-    width: auto;
-    padding: 16px;
-    margin-top: -22px;
-    color: rgb(43, 43, 48);
-    font-weight: bold;
-    font-size: 30px;
-    transition: 0.6s ease;
-    border-radius: 0 3px 3px 0;
-    user-select: none;
-  }
-
-  /* Position the "next button" to the right */
-  .next {
-    right: 0;
-    border-radius: 3px 0 0 3px;
-  }
-
-  /* On hover, add a black background color with a little bit see-through */
-  .prev:hover,
-  .next:hover {
-    background-color: rgba(0, 0, 0, 0.8);
-  }
-
-  /* Caption text */
-  .text {
-    color: #040303;
-    font-size: 28px;
-    font-weight: lighter;
-    padding: 8px 12px;
-    background-color: rgba(255, 255, 255, 0.8);
-    position: absolute;
-    bottom: 8px;
-    width: 100%;
-    text-align: center;
-  }
-
-  /* Number text (1/3 etc) */
-  .numbertext {
-    color: #f2f2f2;
-    font-size: 12px;
-    padding: 8px 12px;
-    position: absolute;
-    top: 0;
-  }
-
-  /* The dots/bullets/indicators */
-  .dot {
-    cursor: pointer;
-    height: 15px;
-    width: 15px;
-    margin: 0 2px;
-    background-color: #bbb;
-    border-radius: 50%;
-    display: inline-block;
-    transition: background-color 0.6s ease;
-  }
-
-  .active,
-  .dot:hover {
-    background-color: #717171;
-  }
-
-  /* Fading animation */
-  .fade {
-    animation-name: fade;
-    animation-duration: 1.5s;
-  }
-
-  @keyframes fade {
-    from {
-      opacity: .4
-    }
-
-    to {
-      opacity: 1
-    }
-  }
-
-  /* On smaller screens, decrease text size */
-  @media only screen and (max-width: 300px) {
-
-    .prev,
-    .next,
-    .text {
-      font-size: 11px
-    }
-  }
-
-  .tablinks {
-    background-color: inherit;
-    border: none;
-    width: 20vw;
-    height: 100%;
-    font-weight: bold;
+    height: 100vh;
     color: white;
-    font-size: min(40px, 3vw);
+    display: flex;
+    flex-direction: row; /* Row layout for side-by-side */
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 5vw;
+    background-color: #1e3a5f;
   }
 
-  .tablinks:hover {
-    font-weight: normal;
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 45%;
+    text-align: left;
   }
 
-  .tablinks.active {
-    background-color: rgb(0, 108, 191);
+  .hero h1 {
+    font-size: 2rem;
   }
 
-  .tabContent {
-    width: 100%;
-    height: 90vh;
+
+    .launch-btn {
+      position: relative;
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      background-color: #ffffff;
+      color: #1e3a5f;
+      border: 2px solid #4f6bb8;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: color 0.3s ease;
+      overflow: hidden;
+      z-index: 0;
+      font-family: "Golos Text", sans-serif;
+    }
+
+    .launch-btn::after {
+      content: '';
+      position: absolute;
+      bottom: 8px;
+      left: 15px;
+      height: 2px;
+      width: 0;
+      background: linear-gradient(60deg, rgba(79, 107, 184, 1) 0%, rgba(79, 165, 189, 1) 100%);
+      border-radius: 1px;
+      transition: width 0.4s ease;
+    }
+
+    .launch-btn:hover::after {
+      width: calc(100% - 30px);
+    }
+
+    .dots {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      gap: 10px;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: white;
+      opacity: 0.5;
+      cursor: pointer;
+      transition: opacity 0.3s;
+    }
+
+    .dot.active {
+      opacity: 1;
+    }
+
+    .content {
+      padding: 60px 20px;
+      background-color: #f4f4f4;
+      font-size: 1.1rem;
+      color: #333;
+    }
+
+    .intro-text {
+      font-size: 1.5rem;
+      margin: 0px;
+      color: rgba(255, 255, 255, 1);
+      font-family: "Golos Text", sans-serif;
+    }
+
+    .fade-in-text {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 2s ease forwards;
+      animation-delay: 0.5s; 
+      font-size: 150px;
+      color: rgba(255, 255, 255, 1);
+      font-family: "Golos Text", sans-serif;
+      font-size: 90px;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .info-box-section {
+      position: relative;
+      z-index: 2;
+      max-width: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 61%;
+    }
+
+    .info-box {
+      width: 100%;
+      height: 100%;
+      padding: 30px 30px;
+      background-color: #ffffff;
+      color: #1e3a5f;
+      border: 2px solid #4f6bb8;
+      border-radius: 10px;
+      font-family: "Golos Text", sans-serif;
+      text-align: left;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    .info-box h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0px;
+      margin-top: 0px;
+    }
+
+    .info-box p {
+      font-size: 1.1rem;
+      line-height: 1.7;
+    }
+
+    .dots {
+    bottom: 20px;
   }
 
-  table {
-    border-collapse: collapse;
-    width: 100%;
-  }
+  .credits-box {
+  margin-top: 25px;
+  padding: 15px 20px;
+  background-color: #ffffff;
+  color: #1e3a5f;
+  border: 2px solid #4f6bb8;
+  border-radius: 10px;
+  font-family: "Golos Text", sans-serif;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+  text-align: left;
+  max-width: 100%;
+}
 
-  tr,
-  td {
-    border-bottom: 2px solid #ccc;
-    padding: 10px;
-  }
+.credits-box h3 {
+  font-size: 1.3rem;
+  margin: 0 0 10px 0;
+}
 
-  a:link {
-    text-decoration: none;
-    color: black;
-  }
+.credits-box p {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 0;
+}
 
-  a:visited {
-    text-decoration: none;
-    color: black;
-  }
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+  max-width: 100%;
+  margin-top: 20px;
+}
 
-  a:hover {
-    text-decoration: none;
-    color: rgb(0, 105, 191);
-  }
+.launch-btn,
+.feedback-btn {
+  flex: 1;
+  padding: 15px 25px;
+  font-size: 1rem;
+  font-family: "Golos Text", sans-serif;
+  border-radius: 8px;
+  border: 2px solid white;
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  position: relative;
+  z-index: 0;
+}
 
-  a:active {
-    text-decoration: none;
-    color: black;
-  }
-</style>
+.launch-btn {
+  background-color: #0251a1;
+  color: white;
+  border-color: white;
+}
 
+.launch-btn::after {
+  content: '';
+  position: absolute;
+  bottom: 8px;
+  left: 15px;
+  height: 2px;
+  width: 0;
+  background: linear-gradient(60deg, white 0%, white 100%);
+  border-radius: 1px;
+  transition: width 0.4s ease;
+}
+
+.launch-btn:hover::after {
+  width: calc(100% - 30px);
+}
+
+.feedback-btn {
+  background-color: white;
+  color: #0251a1;
+  border-color: #0251a1;
+}
+
+.feedback-btn:hover {
+  background-color: #c8c0c0;
+}
+
+.features-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+.features-list li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.icon-circle {
+  width: 38px;
+  height: 38px;
+  background-color: #1e3a5f;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 18px;
+  flex-shrink: 0;
+  margin-right: 15px;
+}
+
+.feature-text strong {
+  font-size: 1.1rem;
+  display: block;
+  color: #1e3a5f;
+}
+
+.feature-text p {
+  margin: 2px 0 0;
+  font-size: 0.95rem;
+  color: #1e3a5f;
+}
+
+.features-columns {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.fade-in-left {
+  animation: fadeInLeft 1.2s ease-out forwards;
+  opacity: 0;
+  animation-delay: 0.1s;
+}
+
+.fade-in-right {
+  animation: fadeInRight 1.2s ease-out forwards;
+  opacity: 0;
+  animation-delay: 0.1s;
+}
+
+@keyframes fadeInFadeOut {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-toggle {
+  animation: fadeInFadeOut 0.6s ease-in-out forwards;
+}
+
+#creditsBox {
+  transition: opacity 0.3s ease-in-out;
+}
+
+
+
+  </style>
+</head>
 <body>
-  <div class="tabContent" id="home">
-    <p style="font-size: min(40px, 5vw); text-align: center; font-weight: bold;">Design and run powerful simulations,
-      all in the browser with...</p>
-    <p style="font-size: min(50px, 8vw); text-align: center; font-weight: bold; height: 5%"><img
-        src="../img/lunaLogo.svg" style="height: 1em; position: top; top: 10px; margin-right: 10px">LunaSim</p>
-    <button onclick="window.location.href='../sim/systemDynamics.html'"
-      style="width: min(360px, 40vw); height: 50px; border-radius: 20px; background-color: #212121ff; margin-left: calc((100% - min(360px, 40vw))/2); color: white; font-size: min(30px, 4vw);">
-      Click to launch
-    </button>
-    <img src="../img/modelView.png" alt="Model view"
-      style="width: min(100%, 80vw); margin-left: calc((100% - min(100%, 80vw))/2);">
-    <hr>
-    <p style="font-size: min(40px, 5vw); text-align: center; font-weight: bold;">What LunaSim offers</p>
-    <div class="slideshow-container">
+  <div class="hero">
+    <div class="background-slider">
+      <img src="../img/ModelSimView.png" class="active" alt="Slide 1">
+      <img src="../img/SpringView.png" alt="Slide 2">
+      <img src="../img/TableView.png" alt="Slide 3">
+      <img src="../img/ChartView.png" alt="Slide 4">
+    </div>
+    <div class="blue-overlay"></div>
 
-      <div class="mySlides fade">
-        <div class="numbertext">1 / 6</div>
-        <img src="../img/modelView2.png" style="width:100%">
-        <div class="text"><span>Design Stock and Flow Diagrams</span></div>
+    <div class="hero-content fade-in-left">
+      <h1 class="intro-text">
+        Design and Run All-Powerful Simulations With:<br>
+        <span class="fade-in-text">LunaSim</span>
+      </h1>
+      <div class="button-container">
+        <button class="launch-btn" onclick="launchLunaSim()">
+          Click Here to Launch <i class="fa-regular fa-arrow-up-right-from-square"></i>
+        </button>
+        <button class="feedback-btn" onclick="toggleCredits()">
+          Provide Feedback <i class="fa-regular fa-comment"></i>
+        </button>
       </div>
 
-      <div class="mySlides fade">
-        <div class="numbertext">2 / 6</div>
-        <img src="../img/GraphView2.png" style="width:100%">
-        <div class="text"><span>Visualize Data with Graphs...</span></div>
+
+      <div class="credits-box" id="creditsBox">
+        <h3>Credits</h3>
+        <p>
+          <b>Project Manager:</b> Ryan Chung<br>
+          <b>Lead Programmer:</b> Akash Saran<br>
+          <b>Lead Tester:</b> Arjun Mujumdar<br>
+          <b>Systems Analyst:</b> Caleb Wen<br>
+          <b>Original Creators:</b> Karthik Vedula, Aditya Patil, Sienna Simms<br>
+          <b>Functional Developer:</b> William Park<br>
+          <b>Special Thanks:</b> Ishan Kheterpal, Mark Estep, and the SMCS Community
+          
+        </p>
       </div>
-
-      <div class="mySlides fade">
-        <div class="numbertext">3 / 6</div>
-        <img src="../img/TableView3.png" style="width:100%">
-        <div class="text"><span>...and Tables</span></div>
-      </div>
-
-      <div class="mySlides fade">
-        <div class="numbertext">4 / 6</div>
-        <img src="../img/Ghosting.png" style="width:100%">
-        <div class="text"><span>Ghosting included - just add a dollar sign!</span></div>
-      </div>
-
-      <div class="mySlides fade">
-        <div class="numbertext">5 / 6</div>
-        <img src="../img/EquationEditor.png" style="width:100%">
-        <div class="text"><span>Edit equations using JavaScript code.</span></div>
-      </div>
-
-      <div class="mySlides fade">
-        <div class="numbertext">6 / 6</div>
-        <img src="../img/enjoy.png" style="width:100%">
-        <div class="text"><span>Enjoy!</span></div>
-      </div>
-
-      <a class="prev" onclick="plusSlides(-1)"><</a>
-      <a class="next" onclick="plusSlides(1)">></a>
-
     </div>
 
-    <div style="text-align:center">
-      <span class="dot" onclick="currentSlide(1)"></span>
-      <span class="dot" onclick="currentSlide(2)"></span>
-      <span class="dot" onclick="currentSlide(3)"></span>
-      <span class="dot" onclick="currentSlide(4)"></span>
-      <span class="dot" onclick="currentSlide(5)"></span>
-      <span class="dot" onclick="currentSlide(6)"></span>
+    <div class="info-box-section fade-in-right">
+      <div class="info-box">
+        <h2>What is LunaSim?</h2>
+        <p>LunaSim is an open-source, browser-based system dynamics software. Its use is to simulate physical situations by graphically representing solutions to sets of differential equations provided by the user. </p>
+
+        <h2>Important Features</h2>
+        <div class="features-columns">
+          <ul class="features-list">
+            <li>
+              <div class="icon-circle"><i class="fa-regular fa-circle-nodes"></i></div>
+              <div class="feature-text">
+                <strong>Nodes</strong>
+                <p>Stocks, Variables, Clouds</p>
+              </div>
+            </li>
+            <li>
+              <div class="icon-circle"><i class="fa-regular fa-arrows-left-right"></i></div>
+              <div class="feature-text">
+                <strong>Links</strong>
+                <p>Flows, Influences</p>
+              </div>
+            </li>
+            <li>
+              <div class="icon-circle"><i class="fa-regular fa-lambda"></i></div>
+              <div class="feature-text">
+                <strong>Equations</strong>
+                <p>Refrences, Java Math Functions</p>
+              </div>
+            </li>
+            <li>
+              <div class="icon-circle"><i class="fa-regular fa-integral"></i></div>
+              <div class="feature-text">
+                <strong>Integration Methods</strong>
+                <p>Euler's Method, Runge-Kutta 4</p>
+              </div>
+            </li>
+          </ul>
+
+          <ul class="features-list">
+            <li>
+              <div class="icon-circle"><i class="fa-regular fa-chart-line"></i></div>
+              <div class="feature-text">
+                <strong>Visuals</strong>
+                <p>Charts, Tables, PNGs, CSVs</p>
+              </div>
+            </li>
+            <li>
+              <div class="icon-circle"><i class="fa-regular fa-floppy-disk"></i></div>
+              <div class="feature-text">
+                <strong>Import/Export</strong>
+                <p>Save and Reuse Models</p>
+              </div>
+            </li>
+            <li>
+              <div class="icon-circle"><i class="fa-regular fa-palette"></i></div>
+              <div class="feature-text">
+                <strong>Customization</strong>
+                <p>Themes, Fonts</p>
+              </div>
+            </li>
+            <li>
+              <div class="icon-circle"><i class="fa-regular fa-ghost"></i></div>
+              <div class="feature-text">
+                <strong>And Much More!</strong>
+                <p>Ghosting, Logic, Docs, etc.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+
+      </div>
     </div>
-    <hr>
+
+    <div class="dots">
+      <div class="dot active" onclick="setSlide(0)"></div>
+      <div class="dot" onclick="setSlide(1)"></div>
+      <div class="dot" onclick="setSlide(2)"></div>
+      <div class="dot" onclick="setSlide(3)"></div>
+    </div>
   </div>
+
+
   <script>
-    let slideIndex = 1;
-    showSlides(slideIndex);
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.background-slider img');
+    const dots = document.querySelectorAll('.dot');
 
-    function plusSlides(n) {
-      showSlides(slideIndex += n);
+
+    function setSlide(index) {
+      slides.forEach((slide, i) => {
+        slide.classList.toggle('active', i === index);
+        dots[i].classList.toggle('active', i === index);
+      });
+      currentSlide = index;
     }
 
-    function currentSlide(n) {
-      showSlides(slideIndex = n);
+
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % slides.length;
+      setSlide(currentSlide);
     }
 
-    function showSlides(n) {
-      let i;
-      let slides = document.getElementsByClassName("mySlides");
-      let dots = document.getElementsByClassName("dot");
-      if (n > slides.length) { slideIndex = 1 }
-      if (n < 1) { slideIndex = slides.length }
-      for (i = 0; i < slides.length; i++) {
-        slides[i].style.display = "none";
-      }
-      for (i = 0; i < dots.length; i++) {
-        dots[i].className = dots[i].className.replace(" active", "");
-      }
-      slides[slideIndex - 1].style.display = "block";
-      dots[slideIndex - 1].className += " active";
+
+    setInterval(nextSlide, 6000);
+
+
+    function launchLunaSim() {
+      window.location.href = "../sim/systemDynamics.html";
     }
   </script>
-  <br></br>
-  <div style="margin-top: 10vb"></div>
-  <div class="tabContent" id="contact" style="padding-top: 10px"></div>
-  <p style="text-align: center; font-weight: bold; font-size: min(50px, 8vw)">Contact us</p>
-  <table style="line-height: 4vw; font-size: min(30px, 3vw);">
-    <tr style="background-color: #eee;">
-      <td><b>Karthik Vedula:</b><br>Lead Programmer</td>
-      <td><a href="mailto: karthik@vedula.me" target="_blank">karthik@vedula.me</a></td>
-    </tr>
-    <tr>
-      <td><b>Aditya Patil:</b><br>Systems Analyst<br>and Lead Tester</td>
-      <td><a href="mailto: adi24.patil@gmail.com" target="_blank">adi24.patil@gmail.com</a></td>
-    </tr>
-    <tr style="background-color: #eee;">
-      <td><b>Sienna Simms:</b><br>Project Manager<br>and Lead Tester</td>
-      <td><a href="mailto: sienna.simms27@gmail.com" target="_blank">sienna.simms27@gmail.com </a></td>
-    </tr>
-    <tr style="background-color: #eee;">
-      <td><b>William Park:</b><br>Frontend Developer<br>and Maintenance</td>
-      <td><a href="mailto: smartynotchy@gmail.com" target="_blank">smartynotchy@gmail.com </a></td>
-    </tr>
-  </table>
-  </div>
-</body>
+<script>
+  function toggleCredits() {
+  const creditsBox = document.getElementById('creditsBox');
 
+  // Define new content you want to show
+  const newContent = `
+    <h3>Send Us An Email!</h3>
+    <p>
+      <b>Karthik Vedula:</b> <a href="mailto:karthik@vedula.me">karthik@vedula.me</a><br>
+      <b>Ryan Chung:</b> <a href="mailto:ryanchung9984@gmail.com">ryanchung9984@gmail.com</a><br>
+      <b>Akash Saran:</b> <a href="mailto:akashsaran.ssp@gmail.com">akashsaran.ssp@gmail.com</a><br>
+      <b>Arjun Mujumdar:</b> <a href="mailto:arjun.m.mujumdar@gmail.com">arjun.m.mujumdar@gmail.com</a><br>
+      <b>Caleb Wen:</b> <a href="mailto:calebrwen@gmail.com">calebrwen@gmail.com</a><br>
+      <b>William Park:</b> <a href="mailto:smartynotchy@gmail.com">smartynotchy@gmail.com</a><br>
+      Your feedback will help us improve LunaSim for generations to come!
+    </p>
+  `;
+
+  // Add fade-out
+  creditsBox.classList.remove('fade-toggle');
+  creditsBox.style.opacity = '0';
+
+  setTimeout(() => {
+    creditsBox.innerHTML = newContent;
+
+    // Add fade-in
+    creditsBox.classList.add('fade-toggle');
+    creditsBox.style.opacity = '1';
+  }, 300); // Match fade-out time
+}
+
+</script>
+</body>
 </html>
+

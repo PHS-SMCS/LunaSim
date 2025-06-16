@@ -1,0 +1,367 @@
+/* Original Discord Theme */
+body {
+  background: #222049;
+  box-shadow: none;
+}
+
+#model_name {
+  background-color: #222049;
+  border: 1px solid #c38cdf;
+  color: white;
+}
+
+.actionButton {
+  background-color: rgba(60, 84, 148, 0.5);
+  color: white;
+}
+
+.actionButton:hover {
+  background-color: #413d7f;
+}
+
+#runButton {
+  background: #299676;
+}
+
+#runButton:hover {
+  background-color: #1d7057;
+}
+
+#loadButton,
+#expButton {
+  background: #5a50bd;
+}
+
+#loadButton:hover,
+#expButton:hover {
+  background: #453c93;
+}
+
+#clearButton {
+  background: #9d4886;
+}
+
+#clearButton:hover {
+  background: #7b3769;
+}
+
+#saveStatus {
+  color: white;
+}
+
+.tabButton {
+  color: white;
+  background-color: #5860a7;
+  box-shadow: none;
+}
+
+.tabButton.active {
+  background-color: #413d7f;
+  box-shadow: none;
+}
+
+.modelViewer {
+  background: #413d7f;
+}
+
+.toolbar ul,
+.chartSidebar ul {
+  background-color: #222049;
+}
+
+.settings-section {
+  border-top: 1px solid #4e525a;
+}
+
+.graphTabsActive {
+  background-color: #361f92 !important;
+}
+
+a {
+  color: #c38cdf;
+}
+
+a:hover,
+a:focus {
+  background-color: #312f65;
+}
+
+a span {
+  background-color: #c38cdf;
+  color: white;
+}
+
+a span:before {
+  background-color: #c38cdf;
+}
+
+a.active {
+  background-color: #361f92;
+}
+
+.modelCanvas {
+  background-color: #ffffff;
+  color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+#myDiagram {
+  background-color: white;
+}
+
+.center-btn {
+  background-color: #222049;
+  color: white;
+}
+
+.center-btn:hover i {
+  color: #55689d;
+}
+
+#eqEditor {
+  background-color: #222049;
+  color: white;
+}
+
+.equation-editor-zoom-icon {
+  color: #ffffff;
+}
+
+.equation-editor-zoom-icon:hover {
+  color: #c38cdf;
+}
+
+.equation-editor-table th {
+  background-color: #222049;
+}
+
+.eqTableInputBox {
+  background-color: #383568 ;
+  border: 1px solid #c38cdf;
+  color: #ffffff;
+}
+
+/* Discord-themed unique border colors for equation editor boxes */
+.eqStockBox input {
+  border: 1px solid #9d4886; /* White - represents stored Discord resources */
+}
+
+.eqVariableBox input {
+  border: 1px solid #299676; /* Discord Light Gray - represents dynamic variables */
+}
+
+.eqFlowBox input {
+  border: 1px solid #5a50bd; /* Discord Dark Gray - represents flows (kept existing) */
+}
+
+.equation-editor-table thead th {
+  background-color: #222049;
+}
+
+.nncheckbox,
+.yAxisCheckbox {
+  accent-color: #c38cdf;
+  background-color: #383568;
+  border: 2px solid #c38cdf;
+}
+
+.nncheckbox:checked,
+.yAxisCheckbox:checked {
+  background-color: #c38cdf;
+  border-color: #c38cdf;
+}
+
+.nncheckbox:hover,
+.yAxisCheckbox:hover {
+  border-color: #ffffff;
+}
+
+.chartViewer {
+  background: #413d7f;
+}
+
+.chartCanvas {
+  background-color: #ffffff;
+  color: black;
+}
+
+.chartEditor {
+  background-color: #222049;
+  color: white;
+}
+
+.chart-stats p {
+  color: #ccc;
+}
+
+.chartEditor hr {
+  border-top: 1px solid #c38cdf;
+}
+
+.chart-btn {
+  background-color: #383568;
+  border: 1px solid #c38cdf;
+  color: white;
+}
+
+.chart-btn:hover {
+  background-color: #c38cdf;
+}
+
+#overlay {
+  background-color: rgba(49, 37, 53, 0.85);
+}
+
+.settings-header h2,
+.close-btn,
+.setting-group {
+  color: #ffffff;
+}
+
+.close-btn:hover {
+  color: #c38cdf;
+}
+
+.settings-input,
+.settings-dropdown {
+  background-color: #383568;
+  border: 1px solid #c38cdf;
+  color: #ffffff;
+}
+
+.settings-divider {
+  border-top: 1px solid #c38cdf;
+}
+
+.slider {
+  background-color: #383568;
+}
+
+.slider:before {
+  background-color: white;
+}
+
+.toggle-switch input:checked + .slider {
+  background-color: #c38cdf;
+}
+
+.setting-button {
+  background-color: #383568;
+  border: 1px solid #c38cdf;
+  color: #ffffff;
+}
+
+.setting-button:hover {
+  background-color: #c38cdf;
+}
+
+.settings-popup,
+.theme-popup,
+.charts-popup,
+.export-popup {
+  background-color: #222049;
+  color: #ffffff;
+}
+
+#simErrorPopup {
+  background: #9d4886;
+  border: 1px solid #683259;
+  color: #ffffff;
+}
+
+#simErrorPopupTitle,
+#simErrorPopupDesc {
+  color: white;
+}
+
+#simErrorPopupCancel {
+  background: #683259;
+  border: 1px solid #683259;
+}
+
+#simErrorPopupCancel:hover {
+  background: rgb(52, 20, 20);
+  border: 1px solid rgb(52, 20, 20);
+}
+
+.equation-editor-overlay {
+  background-color: rgba(49, 37, 53, 0.85);
+}
+
+.equation-editor-popup {
+  background-color: #222049;
+}
+
+.close-icon {
+  color: #ffffff;
+}
+
+.close-icon:hover {
+  color: #c38cdf;
+}
+
+.equation-editor-popup,
+.equation-editor-popup * {
+  color: white;
+}
+
+#xAxis {
+  background-color: #383568;
+  border: 1px solid #c38cdf;
+  color: #ffffff;
+}
+
+#yAxis {
+  background-color: transparent;
+  color: white;
+}
+
+#submitModel {
+  background-color: #383568;
+  border: 1px solid #c38cdf;
+  color: #ffffff;
+}
+
+#submitModel:hover {
+  background-color: #c38cdf;
+}
+
+.autocomplete-list {
+  background-color: #383568;
+  border: 1px solid #c38cdf;
+  color: white;
+}
+
+.autocomplete-item {
+  border-bottom: 1px solid #c38cdf;
+}
+
+.autocomplete-item.selected,
+.autocomplete-item:hover {
+  background-color: #c38cdf;
+}
+
+.model-zoom-icon {
+  color: rgb(255, 255, 255);
+  background-color: #222049;
+}
+
+.model-zoom-icon:hover {
+  background-color: #361f92;
+}
+
+.popup-overlay {
+  background-color: rgba(49, 37, 53, 0.85);
+}
+
+.popup-content {
+  background-color: #1c2541;
+}
+
+.close-popup {
+  color: white;
+}
+.graphTabs::after {
+  background-color: #c38cdf;
+  color: white;
+}

@@ -1,0 +1,810 @@
+@import url(https://fonts.googleapis.com/css?family=Lexend);
+
+
+body {
+  margin: 0px;
+  background: #4f6bb8;
+  font-family: 'Lexend', sans-serif;
+}
+
+#grayEffectDiv {
+  position: fixed;
+  height: 100%; width: 100%;
+  border: none;
+  z-index: 1001;
+  display: none;
+  background-color: #00000077;
+}
+
+
+#header {
+  position: fixed;
+  height: 90px; width: 100%;
+  border-bottom: 2px solid black;
+  /* background-color: #CFE2F3; */
+  background: #4F99BC;
+  z-index: 1000;
+}
+
+
+#logoContainer {
+  font-size: min(34px, 15vw);
+  font-weight: bold;
+  text-align: left;
+  position: relative;
+  font-family: sans-serif;
+  margin-left: 20px;
+  bottom: 5px;
+}
+
+
+#logoImage {
+  height: 4vb; position: relative; top: 5px;
+}
+
+
+#model_name {
+  box-sizing: border-box;
+  padding: 8px;
+  position: relative;
+  font-size: min(18px, 2.8vw);
+  border-radius: 5px;
+  border: 1px solid black;
+  float: right;
+
+
+  width: 25%;
+  height: 30px;
+  right: 25px;
+  bottom: 15px;
+
+
+  background-color: #eeeeee;
+}
+
+
+#saveStatus {
+  padding: 8px;
+  position: absolute;
+  font-size: 12px;
+  font-style: italic;
+  color: white;
+  text-align: right;
+  float: right;
+  right: calc(25px + 25%);
+  top: -4px;
+}
+
+
+.action {
+  position: absolute;
+  right: 25px;
+  bottom: 10px;
+}
+
+
+.action button {
+  padding: 5px;
+  background-color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: min(14px, 2.2vw);
+  transition: background-color 0.6s;
+  border: 1px solid black;
+}
+
+
+.action img {
+  position: relative;
+  float: left;
+  width: 18px;
+  height: 18px;
+}
+
+
+.action label {
+  padding: 5px;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 5px;
+  font-size: min(16px, 2.2vw);
+  transition: background-color 0.6s;
+}
+
+
+.action label:hover {
+  background-color: #ddd;
+}
+
+
+.action button:hover {
+  background-color: #ddd;
+}
+
+
+#runButton {
+  background-color: #009933;
+  color: white;
+  width: 100px;
+}
+
+
+#runButton:hover {
+  background-color: #33cc33;
+  transition: 0.2s;
+}
+
+
+#loadButton {
+  background-color: #35829f;
+  color: white;
+  width: 100px;
+}
+
+
+#loadButton:hover {
+  background-color: #3ab3df;
+  transition: 0.2s;
+}
+
+
+#exportButton {
+  background-color: #35829f;
+  color: white;
+  width: 100px;
+}
+
+
+#exportButton:hover {
+  background-color: #3ab3df;
+  transition: 0.2s;
+}
+
+
+#switchThemeButton {
+  background-color: #9933ff;
+  color: white;
+  width: 150px;
+}
+
+
+#switchThemeButton:hover {
+  background-color: #a77aff;
+  transition: 0.2s;
+}
+
+
+#helpButton {
+  background-color: #9933ff;
+  color: white;
+  width: 80px;
+}
+
+
+#helpButton:hover {
+  background-color: #a77aff;
+  color: white;
+}
+
+
+#clearButton {
+  background-color: #ff5050;
+  color: white;
+  width: 90px;
+}
+
+
+#clearButton:hover {
+  background-color: #ff7777;
+  transition: 0.2s;
+}
+
+
+/* Everything past here needs to be changed */
+
+
+#tabContainer {
+  position: relative;
+  top: 90px;
+  margin-left: 15%;
+  margin-right: 15%;
+  width: 70%;
+}
+
+
+.tabButtons {
+  display: flex;
+  justify-content: left;
+  background-color: #35829f;
+  border-bottom: 2px solid #ccc;
+}
+
+
+.tabBtn {
+  padding: 10px 20px;
+  cursor: pointer;
+  border: none;
+  background-color: #4f6bb8;
+  color: white;
+  font-size: 16px;
+  transition: 0.3s;
+  border: 1px solid black;
+}
+
+
+.tabBtn:hover {
+  background-color: #ccc;
+}
+
+
+.tabBtn.active {
+  background-color: #bbb;
+  /*font-weight: bold;*/
+}
+
+
+.tabContent {
+  display: block;
+  padding: 20px;
+  height: calc(100vh - 130px); /* Adjust for navbar + buttons */
+}
+
+/* #nav {
+  width: 100% - 16%;
+  height: 15px;
+  padding-left: 8%;
+  padding-right: 25px;
+  padding-top: 90px;
+}
+
+
+.webTabs {
+  display: inline-block;
+  border: none;
+  height: 42px;
+  background-color: #35829fff;
+}
+
+
+.webTabs button {
+  background-color: #176481ff;
+  height: 100%;
+  border: none;
+  padding: 10px 14px;
+  font-weight: bold;
+  color: white;
+  font-size: min(20px, 2.8vw);
+  margin: 0px;
+  transition: background-color 0.3s;
+}
+
+
+.webTabs button:hover {
+  background-color: #307090ff;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+
+.webTabs button.active {
+  background-color: #35829fff;
+  transition: background-color 0.3s;
+}
+
+
+.tabContent {
+  background-color: #35829fff;
+  position: relative;
+  width: 84%;
+  height: 610px;
+  top: 25px;
+  margin-left: 8%;
+} */
+
+
+#myDiagram {
+  width: 100%;
+  height: calc(100vh - 130px);
+  border: 1px solid black;
+  background-color: white;
+  position: absolute;
+  left: 0px;
+  top: 40px;
+}
+
+
+canvas {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  z-index: 2;
+  user-select: none;
+  touch-action: none;
+  width: 598px;
+  height: 498px;
+}
+
+
+#tabManager {
+  border: 1px solid black;
+  background-color: white;
+  width: min(140px, 10%);
+  height: 95.8%;
+  position: relative;
+  left: 20px;
+  top: 15px;
+  padding: 5px;
+  margin-right: 5px;
+  z-index: 3;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+
+
+#addTab {
+  width:100%;
+  height: 10%;
+  border: none;
+  background-color: inherit;
+  border-radius: 5px;
+  position: sticky;
+}
+
+
+#addTabButton {
+  font-size: 6vw; color: limegreen;
+}
+
+
+#tabsList {
+  height: 90%;
+  width: 100%;
+  padding-top: 15px;
+  border: none;
+  background-color: inherit;
+}
+
+
+#display {
+  width: 85%;
+  height: 94.5%;
+  border: 1px solid black;
+  background-color: white;
+  position: absolute;
+  right: 20px;
+  top: 15px;
+  display: flex;
+}
+
+
+#popForm {
+  border: 1px solid black;
+  position: fixed;
+  width: 70%;
+  height: 80%;
+  top: 10%;
+  left: 15%;
+  z-index: 1003;
+  background-color: white;
+  overflow: scroll;
+  overflow-x: hidden;
+  display: none;
+}
+
+
+#tabConfig {
+  padding: 0 5vw;
+  font-size: max(24px, 2vw);
+}
+
+
+#submitModel {
+  margin-top: 20px;
+  margin-bottom: 30px;
+  width: 100%;
+  height: 50px;
+  background-color: #33cc33;
+  color: white;
+  font-size: 20px;
+  border-radius: 3px;
+  border: none;
+}
+
+
+#submitModel:hover {
+  background-color: #009933;
+  transition: background-color 0.3s;
+}
+
+
+#submitModel:active {
+  background-color: #008822;
+  transition: background-color 0.3s;
+}
+
+
+
+
+#closeNewTabPopup {
+  width: 50px;
+  height: 50px;
+  color: white;
+  font-size: 30px;
+  background-color: #ff0000;
+  border-radius: 10px;
+  border: none;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+
+#closeNewTabPopup:hover {
+  background-color: #dd0000;
+  transition: background-color 0.3s;
+}
+
+
+#closeNewTabPopup:active {
+  background-color: #bb0000;
+  transition: background-color 0.3s;
+}
+
+
+
+
+#datatable {
+  height: 100% - 2px;
+  width: 100%;
+}
+
+
+#eqEditorTitle {
+  position: relative;
+  color: #ffffff;
+  font-size: 25px;
+  margin-left: 20px;
+  top: 10px;
+}
+
+
+
+
+#eqEditor {
+  background-color: #2ea2ccff;
+  width: 100% - 50px;
+  position: relative;
+  top: 30px;
+  font-size: min(18px, 2.8vw);
+  margin-left: 25px;
+  margin-right: 25px;
+}
+
+
+#eqTableDiv {
+  position: relative;
+  background-color: white;
+  border: 1px solid black;
+  margin-left: 20px;
+  margin-right: 20px;
+  width: 100% - 40px;
+  height: 350px;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+
+
+
+
+#nnUniHeader {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+
+#nnUniTooltip {
+  visibility: hidden;
+  width: 200px;
+  background-color: #bbbbbb;
+  color: black;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 10px;
+ 
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+
+
+  top: -5px;
+  right: 105%;
+}
+
+
+/* Show the tooltip text when you mouse over the tooltip container */
+#nnUniHeader:hover #nnUniTooltip {
+  visibility: visible;
+}
+
+
+.eqStockBox {
+  background-color: #ffcc99;
+}
+
+
+.eqFlowBox {
+  background-color: #99ccff;
+}
+
+
+.eqVariableBox {
+  background-color: #99ff99;
+}
+
+
+
+
+#simParamsTitle {
+  position: relative;
+  color: #ffffff;
+  font-size: 25px;
+  margin-left: 20px;
+  top: 10px;
+}
+
+
+#simParams {
+  background-color: #35829fff;
+  width: 100% - 50px;
+  height: 220px;
+  position: relative;
+
+
+  top: 30px;
+  font-size: min(18px, 2.8vw);
+
+
+  margin-left: 25px;
+  margin-right: 25px;
+}
+
+
+.simParamCol {
+  width: 25%;
+  color: white;
+  font-size: min(20px, 2.8vw);
+}
+
+
+.simParamsInput {
+  box-sizing: border-box;
+  padding-left: 8px;
+  font-size: 18px;
+  width:80%;
+  height:40px;
+  border: 3px solid black;
+}
+
+
+.simParamsInputError {
+  border: 3px solid red;
+}
+
+
+.simParamsInputWarning {
+  border: 3px solid goldenrod;
+}
+
+
+#simParamsTable {
+  position: relative;
+  font-size: min(18px, 2.8vw);
+  margin-left: 30px;
+  width: 95%;
+}
+
+
+#simParamHighStepCountDesc {
+  color: yellow;
+}
+
+
+#simErrorPopup {
+  position: fixed;
+  width: 40%;
+  height: 60%;
+  border: 2px solid black;
+  border-radius: 15px;
+  background-color: white;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -70%);
+  z-index: 2000;
+
+
+  display: none;
+}
+
+
+#simErrorPopupTitle {
+  color: red;
+  font-size: 30px;
+  padding-left: 20px;
+}
+
+
+#simErrorPopupDesc {
+  font-size: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+
+#simErrorPopupDismiss {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
+  width: 100%-40px;
+  height: 50px;
+  background-color: #aa0000;
+  color: white;
+  font-size: 25px;
+  border: none;
+  border-radius: 15px;
+  transition: 0.2s;
+}
+
+
+#simErrorPopupDismiss:hover {
+  background-color: #dd0000;
+  transition: 0.2s;
+}
+
+
+.tools {
+  display: block;
+  width: max(82px, min(100px, 10%));
+  height: 95%;
+  position: absolute;
+  left: 20px;
+  top: 15px;
+  border: none;
+  z-index: 3;
+}
+
+
+.tools button {
+  background-color: white;
+  border: 1px solid black;
+  width: 100%;
+  height: 16.55%;
+  overflow-wrap: anywhere;
+  overflow-y: hidden;
+  font-size: min(18px, 2.4vw);
+  transition: background-color 0.6s;
+}
+
+
+.tools button:hover {
+  background-color: #ddd;
+  transition: background-color 0.6s;
+}
+
+
+.tools button.active {
+  background-color: #ccc;
+}
+
+
+
+
+a:link { text-decoration: none;  color: black;}
+
+
+a:visited { text-decoration: none;  color: black;}
+
+
+a:hover { text-decoration: none; color: darkblue;}
+
+
+a:active { text-decoration: none;  color: black;}
+
+
+
+
+
+
+#popupNotif {
+  position: fixed;
+  top: 120px;
+  right: 20px;
+  z-index: 1234; /* should take prio over gray div due to use in new graph tab */
+
+
+  height: 50px;
+  font-size: 20px;
+  background-color: #ddddddaa;
+  border-radius: 5px;
+
+
+  /* Does this work? Yes. */
+  /* Do I know how? No. */
+  /* But all three of these need to present, apparently. */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+
+  visibility: hidden;
+}
+
+
+#popupNotif p {
+  margin-left: 10px;
+}
+
+
+#popupNotifClose {
+  width: 35px;
+  height: 35px;
+  margin-left: 10px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #ff0000;
+  color: white;
+  font-size: 20px;
+  transition: background-color 0.3s;
+}
+
+
+#popupNotifClose:hover {
+  background-color: #dd0000;
+  transition: background-color 0.3s;
+}
+
+
+#popupNotifClose:active {
+  background-color: #bb0000;
+  transition: background-color 0.3s;
+}
+
+
+.graphTabs {
+  border: 1px solid black;
+  border-radius: 5px;
+  font-size: 20px;
+  margin: 5px;
+  padding: 2px;
+  height: 30px;
+
+
+  display: flex;
+  align-items: center;
+}
+
+
+.graphTabsInactive {
+  background-color: white;
+}
+
+
+.graphTabsActive {
+  background-color: #ddd;
+}
+
+
+.graphTabsDelButton {
+  color: black;
+  font-size: 15px;
+  margin-right: 5px;
+}
+
+
+input[type=radio] {
+  height: 20px;
+  width: 20px;
+}
+

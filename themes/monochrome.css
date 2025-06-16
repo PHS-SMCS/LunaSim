@@ -1,0 +1,375 @@
+/* Original Discord Theme - Monochrome with Dull Green Run Button */
+body {
+  background: #575c65;
+  box-shadow: none;
+}
+
+#model_name {
+  background-color: #2f3136;
+  border: 1px solid #4c5570;
+  color: white;
+}
+
+.actionButton {
+  background-color: rgba(60, 84, 148, 0.5);
+  color: white;
+}
+
+.actionButton:hover {
+  background-color: #43454c;
+}
+
+#runButton {
+  background: rgba(76, 102, 76, 0.9); /* Dull green */
+  color: white;
+}
+
+#runButton:hover {
+  background-color: rgba(92, 118, 92, 0.9); /* Slightly lighter dull green on hover */
+  color: white;
+}
+
+#loadButton,
+#expButton {
+  background: rgba(60, 65, 70, 0.9); /* Darker gray */
+  color: white;
+}
+
+#loadButton:hover,
+#expButton:hover {
+  background: rgba(80, 85, 90, 0.9); /* Medium-dark gray on hover */
+  color: white;
+}
+
+#clearButton {
+  background: rgba(40, 45, 50, 0.9); /* Very dark gray */
+  color: white;
+}
+
+#clearButton:hover {
+  background: rgba(60, 65, 70, 0.9); /* Darker gray on hover */
+  color: white;
+}
+
+#saveStatus {
+  color: white;
+}
+
+.tabButton {
+  color: white;
+  background-color: #35363c;
+  box-shadow: none;
+}
+
+.tabButton.active {
+  background-color: #43454c;
+  box-shadow: none;
+}
+
+.modelViewer {
+  background: #43454c;
+}
+
+.toolbar ul,
+.chartSidebar ul {
+  background-color: #2f3136;
+}
+
+.settings-section {
+  border-top: 1px solid #4e525a;
+}
+
+.graphTabsActive {
+  background-color: #636770 !important;
+}
+
+a {
+  color: #fff;
+}
+
+a:hover,
+a:focus {
+  background-color: #4e525a;
+}
+
+a span {
+  background-color: #636770;
+}
+
+a span:before {
+  background-color: #636770;
+}
+
+a.active {
+  background-color: #636770;
+}
+
+.modelCanvas {
+  background-color: #ffffff;
+  color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+#myDiagram {
+  background-color: white;
+}
+
+.center-btn {
+  background-color: #2f3136;
+  color: white;
+}
+
+.center-btn:hover i {
+  color: #55689d;
+}
+
+#eqEditor {
+  background-color: #2f3136;
+  color: white;
+}
+
+.equation-editor-zoom-icon {
+  color: #ffffff;
+}
+
+.equation-editor-zoom-icon:hover {
+  color: #4c5570;
+}
+
+.equation-editor-table th {
+  background-color: #2f3136;
+}
+
+.eqTableInputBox {
+  background-color: #25272d;
+  border: 1px solid #4c5570;
+  color: #ffffff;
+}
+
+/* Discord-themed unique border colors for equation editor boxes */
+.eqStockBox input {
+  border: 1px solid #ffffff; /* White - represents stored Discord resources */
+}
+
+.eqVariableBox input {
+  border: 1px solid #99aab5; /* Discord Light Gray - represents dynamic variables */
+}
+
+.eqFlowBox input {
+  border: 1px solid #4c5570; /* Discord Dark Gray - represents flows (kept existing) */
+}
+
+.equation-editor-table thead th {
+  background-color: #2f3136;
+}
+
+.nncheckbox,
+.yAxisCheckbox {
+  accent-color: #4c5570;
+  background-color: #2b2e35;
+  border: 2px solid #4c5570;
+}
+
+.nncheckbox:checked,
+.yAxisCheckbox:checked {
+  background-color: #4c5570;
+  border-color: #4c5570;
+}
+
+.nncheckbox:hover,
+.yAxisCheckbox:hover {
+  border-color: #ffffff;
+}
+
+.chartViewer {
+  background: #43454c;
+}
+
+.chartCanvas {
+  background-color: #ffffff;
+  color: black;
+}
+
+.chartEditor {
+  background-color: #2f3136;
+  color: white;
+}
+
+.chart-stats p {
+  color: #ccc;
+}
+
+.chartEditor hr {
+  border-top: 1px solid #4c5570;
+}
+
+.chart-btn {
+  background-color: #25272d;
+  border: 1px solid #4c5570;
+  color: white;
+}
+
+.chart-btn:hover {
+  background-color: #4c5570;
+}
+
+#overlay {
+  background-color: rgba(0, 0, 0, 0.85);
+}
+
+.settings-header h2,
+.close-btn,
+.setting-group {
+  color: #ffffff;
+}
+
+.close-btn:hover {
+  color: #4c5570;
+}
+
+.settings-input,
+.settings-dropdown {
+  background-color: #25272d;
+  border: 1px solid #4c5570;
+  color: #ffffff;
+}
+
+.settings-divider {
+  border-top: 1px solid #4c5570;
+}
+
+.slider {
+  background-color: #25272d;
+}
+
+.slider:before {
+  background-color: white;
+}
+
+.toggle-switch input:checked + .slider {
+  background-color: #4c5570;
+}
+
+.setting-button {
+  background-color: #25272d;
+  border: 1px solid #4c5570;
+  color: #ffffff;
+}
+
+.setting-button:hover {
+  background-color: #4c5570;
+}
+
+.settings-popup,
+.theme-popup,
+.charts-popup,
+.export-popup {
+  background-color: #2f3136;
+  color: #ffffff;
+}
+
+#simErrorPopup {
+  background: rgba(35, 37, 42, 0.95); /* Dark gray background */
+  border: 1px solid #4e525a; /* Medium gray border */
+  color: #ffffff;
+}
+
+#simErrorPopupTitle,
+#simErrorPopupDesc {
+  color: white;
+}
+
+#simErrorPopupCancel {
+  background: #4e525a; /* Medium gray button */
+  border: 1px solid #4e525a;
+  color: white;
+}
+
+#simErrorPopupCancel:hover {
+  background: #636770; /* Lighter gray on hover */
+  border: 1px solid #636770;
+  color: white;
+}
+
+.equation-editor-overlay {
+  background-color: rgba(0, 0, 0, 0.65);
+}
+
+.equation-editor-popup {
+  background-color: #2f3136;
+}
+
+.close-icon {
+  color: #ffffff;
+}
+
+.close-icon:hover {
+  color: #4c5570;
+}
+
+.equation-editor-popup,
+.equation-editor-popup * {
+  color: white;
+}
+
+#xAxis {
+  background-color: #25272d;
+  border: 1px solid #4c5570;
+  color: #ffffff;
+}
+
+#yAxis {
+  background-color: transparent;
+  color: white;
+}
+
+#submitModel {
+  background-color: #25272d;
+  border: 1px solid #4c5570;
+  color: #ffffff;
+}
+
+#submitModel:hover {
+  background-color: #4c5570;
+}
+
+.autocomplete-list {
+  background-color: #25272d;
+  border: 1px solid #4c5570;
+  color: white;
+}
+
+.autocomplete-item {
+  border-bottom: 1px solid #4c5570;
+}
+
+.autocomplete-item.selected,
+.autocomplete-item:hover {
+  background-color: #4c5570;
+}
+
+.model-zoom-icon {
+  color: rgb(255, 255, 255);
+  background-color: #2f3136;
+}
+
+.model-zoom-icon:hover {
+  background-color: #636770;
+}
+
+.popup-overlay {
+  background-color: rgba(10, 10, 30, 0.95);
+}
+
+.popup-content {
+  background-color: #1c2541;
+}
+
+.close-popup {
+  color: white;
+}
+
+.graphTabs::after {
+  background-color: #636770;
+  color: white;
+}

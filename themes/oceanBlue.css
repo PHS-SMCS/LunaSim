@@ -1,0 +1,372 @@
+/* Ocean Blue Theme */
+body {
+    background: #1a2332;
+    box-shadow: none;
+}
+
+#model_name {
+    background-color: #0f1419;
+    border: 1px solid #2d5a87;
+    color: #e6f3ff;
+}
+
+.actionButton {
+    background-color: rgba(45, 85, 135, 0.6);
+    color: #e6f3ff;
+}
+
+.actionButton:hover {
+    background-color: #1e3a52;
+}
+
+#runButton {
+    background: rgba(34, 139, 34, 0.9);
+}
+
+#runButton:hover {
+    background-color: rgba(25, 100, 25, 0.9);
+}
+
+#loadButton,
+#expButton {
+    background: rgba(70, 130, 180, 0.9);
+}
+
+#loadButton:hover,
+#expButton:hover {
+    background: rgba(50, 90, 130, 0.9);
+}
+
+#clearButton {
+    background: rgba(32, 99, 155, 0.9); /* Deep ocean blue instead of red */
+    color: #e6f3ff;
+}
+
+#clearButton:hover {
+    background: rgba(23, 64, 108, 0.9); /* Darker ocean blue on hover */
+    color: #e6f3ff;
+}
+
+#saveStatus {
+    color: #e6f3ff;
+}
+
+.tabButton {
+    color: #e6f3ff;
+    background-color: #0f1419;
+    box-shadow: none;
+}
+
+.tabButton.active {
+    background-color: #1e3a52;
+    box-shadow: none;
+}
+
+.modelViewer {
+    background: #1e3a52;
+}
+
+.toolbar ul,
+.chartSidebar ul {
+    background-color: #0f1419;
+}
+
+.settings-section {
+    border-top: 1px solid #2d5a87;
+}
+
+.graphTabsActive {
+    background-color: #2d5a87 !important;
+}
+
+a {
+    color: #87ceeb;
+}
+
+a:hover,
+a:focus {
+    background-color: #2d5a87;
+}
+
+a span {
+    background-color: #2d5a87;
+    color:white;
+}
+
+a span:before {
+    background-color: #2d5a87;
+}
+
+a.active {
+    background-color: #2d5a87;
+}
+
+.modelCanvas {
+    background-color: #ffffff;
+    color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+#myDiagram {
+    background-color: white;
+}
+
+.center-btn {
+    background-color: #0f1419;
+    color: #e6f3ff;
+}
+
+.center-btn:hover i {
+    color: #87ceeb;
+}
+
+#eqEditor {
+    background-color: #0f1419;
+    color: #e6f3ff;
+}
+
+.equation-editor-zoom-icon {
+    color: #e6f3ff;
+}
+
+.equation-editor-zoom-icon:hover {
+    color: #2d5a87;
+}
+
+.equation-editor-table th {
+    background-color: #0f1419;
+}
+
+.eqTableInputBox {
+    background-color: #0a0e13;
+    border: 1px solid #2d5a87;
+    color: #e6f3ff;
+}
+
+/* Ocean-themed unique border colors for equation editor boxes */
+.eqStockBox input {
+    border: 1px solid #20b2aa; /* Light Sea Green - represents stored ocean resources */
+}
+
+.eqVariableBox input {
+    border: 1px solid #00bfff; /* Deep Sky Blue - represents dynamic ocean variables */
+}
+
+.eqFlowBox input {
+    border: 1px solid #2d5a87; /* Steel Blue - represents ocean currents and flows */
+}
+
+.equation-editor-table thead th {
+    background-color: #0f1419;
+}
+
+.nncheckbox,
+.yAxisCheckbox {
+    accent-color: #2d5a87;
+    background-color: #0a0e13;
+    border: 2px solid #2d5a87;
+}
+
+.nncheckbox:checked,
+.yAxisCheckbox:checked {
+    background-color: #2d5a87;
+    border-color: #2d5a87;
+}
+
+.nncheckbox:hover,
+.yAxisCheckbox:hover {
+    border-color: #87ceeb;
+}
+
+.chartViewer {
+    background: #1e3a52;
+}
+
+.chartCanvas {
+    background-color: #ffffff;
+    color: black;
+}
+
+.chartEditor {
+    background-color: #0f1419;
+    color: #e6f3ff;
+}
+
+.chart-stats p {
+    color: #b0c4de;
+}
+
+.chartEditor hr {
+    border-top: 1px solid #2d5a87;
+}
+
+.chart-btn {
+    background-color: #0a0e13;
+    border: 1px solid #2d5a87;
+    color: #e6f3ff;
+}
+
+.chart-btn:hover {
+    background-color: #2d5a87;
+}
+
+#overlay {
+    background-color: rgba(0, 20, 40, 0.85);
+}
+
+.settings-header h2,
+.close-btn,
+.setting-group {
+    color: #e6f3ff;
+}
+
+.close-btn:hover {
+    color: #2d5a87;
+}
+
+.settings-input,
+.settings-dropdown {
+    background-color: #0a0e13;
+    border: 1px solid #2d5a87;
+    color: #e6f3ff;
+}
+
+.settings-divider {
+    border-top: 1px solid #2d5a87;
+}
+
+.slider {
+    background-color: #0a0e13;
+}
+
+.slider:before {
+    background-color: white;
+}
+
+.toggle-switch input:checked + .slider {
+    background-color: #2d5a87;
+}
+
+.setting-button {
+    background-color: #0a0e13;
+    border: 1px solid #2d5a87;
+    color: #e6f3ff;
+}
+
+.setting-button:hover {
+    background-color: #2d5a87;
+}
+
+.settings-popup,
+.theme-popup,
+.charts-popup,
+.export-popup {
+    background-color: #0f1419;
+    color: #e6f3ff;
+}
+
+#simErrorPopup {
+    background: rgba(15, 40, 70, 0.95); /* Deep ocean blue background */
+    border: 1px solid #4682b4; /* Steel blue border */
+    color: #e6f3ff;
+}
+
+#simErrorPopupTitle,
+#simErrorPopupDesc {
+    color: #e6f3ff;
+}
+
+#simErrorPopupCancel {
+    background: #4682b4; /* Steel blue button */
+    border: 1px solid #4682b4;
+    color: #e6f3ff;
+}
+
+#simErrorPopupCancel:hover {
+    background: #5f9ea0; /* Cadet blue on hover */
+    border: 1px solid #5f9ea0;
+    color: #e6f3ff;
+}
+
+.equation-editor-overlay {
+    background-color: rgba(0, 20, 40, 0.65);
+}
+
+.equation-editor-popup {
+    background-color: #0f1419;
+}
+
+.close-icon {
+    color: #e6f3ff;
+}
+
+.close-icon:hover {
+    color: #2d5a87;
+}
+
+.equation-editor-popup,
+.equation-editor-popup * {
+    color: #e6f3ff;
+}
+
+#xAxis {
+    background-color: #0a0e13;
+    border: 1px solid #2d5a87;
+    color: #e6f3ff;
+}
+
+#yAxis {
+    background-color: transparent;
+    color: #e6f3ff;
+}
+
+#submitModel {
+    background-color: #0a0e13;
+    border: 1px solid #2d5a87;
+    color: #e6f3ff;
+}
+
+#submitModel:hover {
+    background-color: #2d5a87;
+}
+
+.autocomplete-list {
+    background-color: #0a0e13;
+    border: 1px solid #2d5a87;
+    color: #e6f3ff;
+}
+
+.autocomplete-item {
+    border-bottom: 1px solid #2d5a87;
+}
+
+.autocomplete-item.selected,
+.autocomplete-item:hover {
+    background-color: #2d5a87;
+}
+
+.model-zoom-icon {
+    color: #e6f3ff;
+    background-color: #0f1419;
+}
+
+.model-zoom-icon:hover {
+    background-color: #2d5a87;
+}
+
+.popup-overlay {
+    background-color: rgba(10, 25, 45, 0.95);
+}
+
+.popup-content {
+    background-color: #0f1419;
+}
+
+.close-popup {
+    color: #e6f3ff;
+}
+
+.graphTabs::after {
+    background-color: #2d5a87;
+    color: white;,
+}

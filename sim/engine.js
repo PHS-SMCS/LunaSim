@@ -1,15 +1,29 @@
-/* Author: Karthik S. Vedula
- * This file contains the main engine for the simulation.  It runs both euler's method and the RK4 method, given input in the form of a json.
+/**
+ * @fileoverview Handles parsing and calculations for LunaSim
+ * @module engine
+ * @author Authors: Karthik S. Vedula, Ryan Chung,Arjun Mujudar, Akash Saran
  */
 
-// SIMULATION ERROR POPUP (Author: William J. Park)
-// Displays the Simulation Error Popup
+
+/**
+ * Displays the simulation error popup and dims the background.
+ * Triggered when an equation or model setup fails validation.
+ * @function
+ * @memberOf module:engine
+ */
+
 function showSimErrorPopup() {
     document.getElementById("simErrorPopup").style.display = "block";
     document.getElementById("grayEffectDiv").style.display = "block";
 }
 document.getElementById("simErrorPopupDismiss").addEventListener("click", closeSimErrorPopup);
-// Closes the Simulation Error Popup
+
+/**
+ * Hides the simulation error popup and restores background visibility.
+ * @function
+ * @memberOf module:engine
+ */
+
 function closeSimErrorPopup() {
     document.getElementById("simErrorPopup").style.display = "none";
     document.getElementById("grayEffectDiv").style.display = "none";
@@ -23,13 +37,65 @@ export class Simulation {
         this.endTime;
     }
 
-    /*
-    Wrapper for eval().
-    */
+    /**
+     * Safely evaluates a mathematical expression string using JavaScript's `eval`,
+     * while replacing known mathematical terms and correcting syntax patterns.
+     *
+     * @method
+     * @memberof Simulation
+     * @param {string} expression - The math expression to evaluate.
+     * @returns {number} The result of the evaluated expression or NaN on error.
+     * @memberOf module:engine
+     */
+
     safeEval(expression) {
         // if there are two -- or two ++, remove one
         expression = expression.replaceAll("--", "+");
-        expression = expression.replaceAll("++", "+");
+        expression = expression
+            // Inverse hyperbolic trig
+            .replaceAll(/(?<!Math\.)\basinh\b/gi, 'Math.asinh')
+            .replaceAll(/(?<!Math\.)\bacosh\b/gi, 'Math.acosh')
+            .replaceAll(/(?<!Math\.)\batanh\b/gi, 'Math.atanh')
+            // Hyperbolic trig
+            .replaceAll(/(?<!Math\.)\bsinh\b/gi, 'Math.sinh')
+            .replaceAll(/(?<!Math\.)\bcosh\b/gi, 'Math.cosh')
+            .replaceAll(/(?<!Math\.)\btanh\b/gi, 'Math.tanh')
+            // Inverse trig
+            .replaceAll(/(?<!Math\.)\basin\b/gi, 'Math.asin')
+            .replaceAll(/(?<!Math\.)\bacos\b/gi, 'Math.acos')
+            .replaceAll(/(?<!Math\.)\batan\b/gi, 'Math.atan')
+            // Basic trig
+            .replaceAll(/(?<!Math\.)\bsin\b/gi, 'Math.sin')
+            .replaceAll(/(?<!Math\.)\bcos\b/gi, 'Math.cos')
+            .replaceAll(/(?<!Math\.)\btan\b/gi, 'Math.tan')
+            // Roots
+            .replaceAll(/(?<!Math\.)\bsqrt\b/gi, 'Math.sqrt')
+            .replaceAll(/(?<!Math\.)\bcbrt\b/gi, 'Math.cbrt')
+            // Min/Max
+            .replaceAll(/(?<!Math\.)\bmax\b/gi, 'Math.max')
+            .replaceAll(/(?<!Math\.)\bmin\b/gi, 'Math.min')
+            // Constants
+            .replaceAll(/(?<!Math\.)\bpi\b/gi, 'Math.PI')
+            .replaceAll(/(?<!Math\.)\be\b/gi, 'Math.E')
+            // rest of the functions
+            .replaceAll(/(?<!Math\.)\bexp\b/gi, 'Math.exp')
+            .replaceAll(/(?<!Math\.)\blog\b/gi, 'Math.log')
+            .replaceAll(/(?<!Math\.)\blog10\b/gi, 'Math.log10')
+            .replaceAll(/(?<!Math\.)\bsqrt\b/gi, 'Math.sqrt')
+            .replaceAll(/(?<!Math\.)\bcbrt\b/gi, 'Math.cbrt')
+            .replaceAll(/(?<!Math\.)\babs\b/gi, 'Math.abs')
+            .replaceAll(/(?<!Math\.)\bceil\b/gi, 'Math.ceil')
+            .replaceAll(/(?<!Math\.)\bfloor\b/gi, 'Math.floor')
+            .replaceAll(/(?<!Math\.)\bround\b/gi, 'Math.round')
+            .replaceAll(/(?<!Math\.)\bpow\b/gi, 'Math.pow')
+            .replaceAll(/(?<!Math\.)\bmax\b/gi, 'Math.max')
+            .replaceAll(/(?<!Math\.)\bmin\b/gi, 'Math.min')
+            .replaceAll(/(?<!Math\.)\brandom\b/gi, 'Math.random')
+            .replaceAll(/(?<!Math\.)\bhypot\b/gi, 'Math.hypot')
+            .replaceAll(/(?<!Math\.)\bexpm1\b/gi, 'Math.expm1')
+            .replaceAll(/(?<!Math\.)\blog1p\b/gi, 'Math.log1p')
+            .replaceAll(/(?<!Math\.)\bsign\b/gi, 'Math.sign')
+
 
         try {
             return eval?.(expression);
@@ -39,10 +105,18 @@ export class Simulation {
         }
     }
 
-    /* 
-    Replaces names in equation with values.
-    Example: 'converter1*converter2+stock1' --> '(1)*(2)+(3)'
-    */
+    /**
+     * Recursively replaces all references to variables, stocks, inflows, and outflows
+     * in the equation with their actual equation expressions or initial values.
+     *
+     * @method
+     * @memberof Simulation
+     * @param {string} equation - The expression to resolve.
+     * @param {string[]} [history=[]] - Keeps track of recursion depth and avoids circular references.
+     * @returns {string} A fully-resolved equation string ready for evaluation.
+     * @memberOf module:engine
+     */
+
     parseObject(equation, history = []) {
         let objects = {} // stores all stocks, converters, and flows and their respective equation/safeval
 
@@ -75,16 +149,28 @@ export class Simulation {
         return equation;
     }
 
-    /*
-    Combines parseObject and safeEval to parse and evaluate an equation. It alerts the user if the equation is invalid.
-    */
+    /**
+     * Parses and evaluates an expression by resolving dependencies recursively,
+     * then safely evaluates the result. Detects and reports circular definitions.
+     *
+     * @method
+     * @memberof Simulation
+     * @param {string} equation - The expression to parse and evaluate.
+     * @param {string[]} [history=[]] - Used to track recursion and detect cycles.
+     * @returns {number} The numeric result of evaluating the expression.
+     * @throws Will show a popup and throw if evaluation fails or cycle is detected.
+     * @memberOf module:engine
+     */
+
     parseAndEval(equation, history = []) {
+
+
         // Check for circular definitions
         if (history.includes(equation)) {
             history.push(equation);
-            document.getElementById("simErrorPopupDesc").innerHTML = "Error: Circular Definition Detected:<br>" + equation + "<br><br>Stack Trace:<br>" + history.join("<br> -> ") + "<br><br>Please check your equations and try again.";
+            document.getElementById("simErrorPopupDesc").innerHTML = "Circular Definition Detected:<br>" + equation + "<br><br>Stack Trace:<br>" + history.join("<br> -> ") + "<br><br>Please check your equations and try again.";
             showSimErrorPopup();
-            throw new Error("Invalid equation");
+            throw new Error("Circular Definition Detected:<br>" + equation + "<br><br>Stack Trace:<br>" + history.join("<br> -> ") + "<br><br>Please check your equations and try again.");
         }
         history.push(equation);
 
@@ -93,17 +179,24 @@ export class Simulation {
         var res = this.safeEval(parsedEquation);
 
         if (isNaN(res)) {
-            document.getElementById("simErrorPopupDesc").innerHTML = "Error: Invalid equation:<br>" + equation + "<br><br>Parsed equation:<br>" + parsedEquation + "<br><br>Please check your equations and try again.";
+            document.getElementById("simErrorPopupDesc").innerHTML = "Invalid equation:<br>" + equation + "<br><br>Parsed equation:<br>" + parsedEquation + "<br><br>Please check your equations and try again.";
             showSimErrorPopup();
-            throw new Error("Invalid equation");
+            throw new Error("Invalid equation:<br>" + equation + "<br><br>Parsed equation:<br>" + parsedEquation + "<br><br>Please check your equations and try again.");
         } else {
             return res;
         }
     }
 
-    /*
-    Applies parseObject initially all values to figure out timestep 0.
-    */
+    /**
+     * Initializes the simulation state by evaluating all stock, flow, and converter
+     * equations for timestep 0. Stores initial values and performs safety checks.
+     *
+     * @method
+     * @memberof Simulation
+     * @throws Will show a popup and throw if any value cannot be resolved.
+     * @memberOf module:engine
+     */
+
     initObjects() {
         for (var stockName in this.data.stocks) {
             let stock = this.data.stocks[stockName];
@@ -139,39 +232,44 @@ export class Simulation {
             let stock = this.data.stocks[stockName];
 
             if (stock["values"][0] == null) {
-                document.getElementById("simErrorPopupDesc").innerHTML = "Error: Invalid equation (maybe circular definition):<br>" + stock["equation"] + "<br><br>Please check your equations and try again.";
+                document.getElementById("simErrorPopupDesc").innerHTML = "Invalid equation (maybe circular definition):<br>" + stock["equation"] + "<br><br>Please check your equations and try again.";
                 showSimErrorPopup();
-                throw new Error("Invalid equation");
+                throw new Error("Invalid equation (maybe circular definition):<br>" + stock["equation"] + "<br><br>Please check your equations and try again.");
             }
 
             for (var flowName in stock["inflows"]) {
                 if (stock["inflows"][flowName]["values"][0] == null) {
-                    document.getElementById("simErrorPopupDesc").innerHTML = "Error: Invalid equation (maybe circular definition):<br>" + stock["inflows"][flowName]["equation"] + "<br><br>Please check your equations and try again.";
+                    document.getElementById("simErrorPopupDesc").innerHTML = "Invalid equation (maybe circular definition):<br>" + stock["inflows"][flowName]["equation"] + "<br><br>Please check your equations and try again.";
                     showSimErrorPopup()
-                    throw new Error("Invalid equation");
+                    throw new Error("Invalid equation (maybe circular definition):<br>" + stock["inflows"][flowName]["equation"] + "<br><br>Please check your equations and try again.");
                 }
             }
             for (var flowName in stock["outflows"]) {
                 if (stock["outflows"][flowName]["values"][0] == null) {
-                    document.getElementById("simErrorPopupDesc").innerHTML = "Error: Invalid equation (maybe circular definition):<br>" + stock["outflows"][flowName]["equation"] + "<br><br>Please check your equations and try again.";
+                    document.getElementById("simErrorPopupDesc").innerHTML = "Invalid equation (maybe circular definition):<br>" + stock["outflows"][flowName]["equation"] + "<br><br>Please check your equations and try again.";
                     showSimErrorPopup();
-                    throw new Error("Invalid equation");
+                    throw new Error("Invalid equation (maybe circular definition):<br>" + stock["outflows"][flowName]["equation"] + "<br><br>Please check your equations and try again.");
                 }
             }
         }
 
         for (var converterName in this.data.converters) {
             if (this.data.converters[converterName]["values"][0] == null) {
-                document.getElementById("simErrorPopupDesc").innerHTML = "Error: Invalid equation (maybe circular definition):<br>" + this.data.converters[converterName]["equation"] + "<br><br>Please check your equations and try again.";
+                document.getElementById("simErrorPopupDesc").innerHTML = "Invalid equation (maybe circular definition):<br>" + this.data.converters[converterName]["equation"] + "<br><br>Please check your equations and try again.";
                 showSimErrorPopup();
-                throw new Error("Invalid equation");
+                throw new Error("Invalid equation (maybe circular definition):<br>" + this.data.converters[converterName]["equation"] + "<br><br>Please check your equations and try again.");
             }
         }
     }
 
-    /*
-    Resets the model to the initial state.  Deletes all values for all objects and sets safevals to null.
-    */
+    /**
+     * Resets the simulation to its initial state by clearing all values
+     * and resetting all `safeval` fields to null.
+     *
+     * @method
+     * @memberOf module:engine
+     */
+
     reset() {
         for (var stockName in this.data.stocks) {
             let stock = this.data.stocks[stockName];
@@ -195,9 +293,17 @@ export class Simulation {
         this.data.timesteps = [];
     }
 
-    /* 
-    Uses stock name to return sum of inflows and outflows.
-    */
+    /**
+     * Calculates the net rate of change (dy/dt) for a given stock by summing
+     * all its inflows and outflows using current values.
+     *
+     * @method
+     * @memberof Simulation
+     * @param {Object} stock - A stock object containing inflows and outflows.
+     * @returns {number} The computed net change for the stock.
+     * @memberof Simulation
+     */
+
     dydt(stock) {
         // Locally define the inflow and outflows in stock
         let inflows = stock["inflows"];
@@ -217,9 +323,14 @@ export class Simulation {
         return sumInflow - sumOutflow;
     }
 
-    /*
-    Runs model using Euler's method.
-    */
+    /**
+     * Runs the simulation using Euler's method for numerical integration.
+     * Iterates from startTime to endTime, updating all stocks, flows, and converters.
+     *
+     * @method
+     * @memberof Simulation
+     */
+
     euler() {
         for (var t = this.startTime + this.dt; parseFloat(t.toFixed(5)) <= parseFloat(this.endTime.toFixed(5)); t += this.dt) { // (skip start time as that was covered in this.initObjects())
             this.data.timesteps.push(parseFloat(t.toFixed(5)));
@@ -260,9 +371,14 @@ export class Simulation {
         }
     }
 
-    /*
-    Runs model using 4th order Runge-Kutta method.
-    */
+    /**
+     * Runs the simulation using the 4th-order Runge-Kutta method.
+     * Provides more accurate results than Euler's method for the same step size.
+     *
+     * @method
+     * @memberof Simulation
+     */
+
     rk4() {
         for (var t = this.startTime + this.dt; parseFloat(t.toFixed(5)) <= parseFloat(this.endTime.toFixed(5)); t += this.dt) { // use high precision to make sure correct number of iterations
             this.data.timesteps.push(parseFloat(t.toFixed(5)));
@@ -360,9 +476,15 @@ export class Simulation {
         }
     }
 
-    /*
-    Sets the data for the model.  This also resets the model (safevals and values list).
-    */
+    /**
+     * Loads a structured model dataset and initializes internal simulation parameters.
+     * Also triggers a full reset of the simulation state.
+     *
+     * @method
+     * @memberof Simulation
+     * @param {Object} structData - The structured model data object.
+     */
+
     setData(structData) {
         this.data = structData;
         this.dt = parseFloat(structData.dt);
@@ -371,10 +493,15 @@ export class Simulation {
         this.reset();
     }
 
-    /* 
-    Runs the model. 
-    This is the function called by frontend.
-    */
+    /**
+     * Executes the full simulation using the configured integration method.
+     * Returns a deep copy of the resulting data.
+     *
+     * @method
+     * @returns {Object} The completed simulation output data.
+     * @memberof Simulation
+     */
+
     run() {
         this.initObjects(); // set initial values
 

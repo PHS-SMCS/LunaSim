@@ -1,0 +1,373 @@
+/* Forest Green Theme */
+body {
+    background: #2d3e2d;
+    box-shadow: none;
+}
+
+#model_name {
+    background-color: #1a2e1a;
+    border: 1px solid #4a6741;
+    color: #e8f5e8;
+}
+
+.actionButton {
+    background-color: rgba(74, 103, 65, 0.6);
+    color: #e8f5e8;
+}
+
+.actionButton:hover {
+    background-color: #3a4f35;
+}
+
+#runButton {
+    background: rgba(60, 179, 113, 0.9);
+}
+
+#runButton:hover {
+    background-color: rgba(46, 139, 87, 0.9);
+}
+
+#loadButton,
+#expButton {
+    background: rgba(34, 139, 34, 0.9); /* Forest green instead of purple */
+    color: #e8f5e8;
+}
+
+#loadButton:hover,
+#expButton:hover {
+    background: rgba(46, 125, 50, 0.9); /* Darker forest green on hover */
+    color: #e8f5e8;
+}
+
+#clearButton {
+    background: rgba(85, 107, 47, 0.9); /* Dark olive green - earthy forest tone */
+    color: #e8f5e8;
+}
+
+#clearButton:hover {
+    background: rgba(107, 142, 35, 0.9); /* Olive drab on hover */
+    color: #e8f5e8;
+}
+
+#saveStatus {
+    color: #e8f5e8;
+}
+
+.tabButton {
+    color: #e8f5e8;
+    background-color: #1a2e1a;
+    box-shadow: none;
+}
+
+.tabButton.active {
+    background-color: #3a4f35;
+    box-shadow: none;
+}
+
+.modelViewer {
+    background: #3a4f35;
+}
+
+.toolbar ul,
+.chartSidebar ul {
+    background-color: #1a2e1a;
+}
+
+.settings-section {
+    border-top: 1px solid #4a6741;
+}
+
+.graphTabsActive {
+    background-color: #4a6741 !important;
+}
+
+a {
+    color: #90ee90;
+}
+
+a:hover,
+a:focus {
+    background-color: #4a6741;
+}
+
+a span {
+    background-color: #4a6741;
+    color:white;
+}
+
+a span:before {
+    background-color: #4a6741;
+}
+
+a.active {
+    background-color: #4a6741;
+}
+
+.modelCanvas {
+    background-color: #ffffff;
+    color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+#myDiagram {
+    background-color: white;
+}
+
+.center-btn {
+    background-color: #1a2e1a;
+    color: #e8f5e8;
+}
+
+.center-btn:hover i {
+    color: #90ee90;
+}
+
+#eqEditor {
+    background-color: #1a2e1a;
+    color: #e8f5e8;
+}
+
+.equation-editor-zoom-icon {
+    color: #e8f5e8;
+}
+
+.equation-editor-zoom-icon:hover {
+    color: #4a6741;
+}
+
+.equation-editor-table th {
+    background-color: #1a2e1a;
+}
+
+.eqTableInputBox {
+    background-color: #0f1f0f;
+    border: 1px solid #4a6741;
+    color: #e8f5e8;
+}
+
+/* Forest green-themed unique border colors for equation editor boxes */
+.eqStockBox input {
+    border: 1px solid #228b22; /* Forest Green - represents stored forest resources */
+}
+
+.eqVariableBox input {
+    border: 1px solid #32cd32; /* Lime Green - represents growing forest variables */
+}
+
+.eqFlowBox input {
+    border: 1px solid #4a6741; /* Dark Forest Green - represents forest flows (kept existing) */
+}
+
+.equation-editor-table thead th {
+    background-color: #1a2e1a;
+}
+
+.nncheckbox,
+.yAxisCheckbox {
+    accent-color: #4a6741;
+    background-color: #0f1f0f;
+    border: 2px solid #4a6741;
+}
+
+.nncheckbox:checked,
+.yAxisCheckbox:checked {
+    background-color: #4a6741;
+    border-color: #4a6741;
+}
+
+.nncheckbox:hover,
+.yAxisCheckbox:hover {
+    border-color: #90ee90;
+}
+
+.chartViewer {
+    background: #3a4f35;
+}
+
+.chartCanvas {
+    background-color: #ffffff;
+    color: black;
+}
+
+.chartEditor {
+    background-color: #1a2e1a;
+    color: #e8f5e8;
+}
+
+.chart-stats p {
+    color: #c8e6c9;
+}
+
+.chartEditor hr {
+    border-top: 1px solid #4a6741;
+}
+
+.chart-btn {
+    background-color: #0f1f0f;
+    border: 1px solid #4a6741;
+    color: #e8f5e8;
+}
+
+.chart-btn:hover {
+    background-color: #4a6741;
+}
+
+#overlay {
+    background-color: rgba(20, 40, 20, 0.85);
+}
+
+.settings-header h2,
+.close-btn,
+.setting-group {
+    color: #e8f5e8;
+}
+
+.close-btn:hover {
+    color: #4a6741;
+}
+
+.settings-input,
+.settings-dropdown {
+    background-color: #0f1f0f;
+    border: 1px solid #4a6741;
+    color: #e8f5e8;
+}
+
+.settings-divider {
+    border-top: 1px solid #4a6741;
+}
+
+.slider {
+    background-color: #0f1f0f;
+}
+
+.slider:before {
+    background-color: white;
+}
+
+.toggle-switch input:checked + .slider {
+    background-color: #4a6741;
+}
+
+.setting-button {
+    background-color: #0f1f0f;
+    border: 1px solid #4a6741;
+    color: #e8f5e8;
+}
+
+.setting-button:hover {
+    background-color: #4a6741;
+}
+
+.settings-popup,
+.theme-popup,
+.charts-popup,
+.export-popup {
+    background-color: #1a2e1a;
+    color: #e8f5e8;
+}
+
+#simErrorPopup {
+    background: rgba(26, 46, 26, 0.95); /* Deep forest green background */
+    border: 1px solid #6b8e23; /* Olive drab border */
+    color: #e8f5e8;
+}
+
+#simErrorPopupTitle,
+#simErrorPopupDesc {
+    color: #e8f5e8;
+}
+
+#simErrorPopupCancel {
+    background: #6b8e23; /* Olive drab button */
+    border: 1px solid #6b8e23;
+    color: #e8f5e8;
+}
+
+#simErrorPopupCancel:hover {
+    background: #9acd32; /* Yellow green on hover */
+    border: 1px solid #9acd32;
+    color: #1a2e1a; /* Dark background for contrast */
+}
+
+.equation-editor-overlay {
+    background-color: rgba(20, 40, 20, 0.65);
+}
+
+.equation-editor-popup {
+    background-color: #1a2e1a;
+}
+
+.close-icon {
+    color: #e8f5e8;
+}
+
+.close-icon:hover {
+    color: #4a6741;
+}
+
+.equation-editor-popup,
+.equation-editor-popup * {
+    color: #e8f5e8;
+}
+
+#xAxis {
+    background-color: #0f1f0f;
+    border: 1px solid #4a6741;
+    color: #e8f5e8;
+}
+
+#yAxis {
+    background-color: transparent;
+    color: #e8f5e8;
+}
+
+#submitModel {
+    background-color: #0f1f0f;
+    border: 1px solid #4a6741;
+    color: #e8f5e8;
+}
+
+#submitModel:hover {
+    background-color: #4a6741;
+}
+
+.autocomplete-list {
+    background-color: #0f1f0f;
+    border: 1px solid #4a6741;
+    color: #e8f5e8;
+}
+
+.autocomplete-item {
+    border-bottom: 1px solid #4a6741;
+}
+
+.autocomplete-item.selected,
+.autocomplete-item:hover {
+    background-color: #4a6741;
+}
+
+.model-zoom-icon {
+    color: #e8f5e8;
+    background-color: #1a2e1a;
+}
+
+.model-zoom-icon:hover {
+    background-color: #4a6741;
+}
+
+.popup-overlay {
+    background-color: rgba(25, 45, 25, 0.95);
+}
+
+.popup-content {
+    background-color: #1a2e1a;
+}
+
+.close-popup {
+    color: #e8f5e8;
+}
+.graphTabs::after {
+    background-color: #4a6741;
+    color: white;
+}

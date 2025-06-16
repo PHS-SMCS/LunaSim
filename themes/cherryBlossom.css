@@ -1,0 +1,379 @@
+/* Cherry Blossom Theme */
+body {
+    background: #fdf2f8;
+    box-shadow: none;
+}
+
+#model_name {
+    background-color: #fce7f3;
+    border: 1px solid #f8bbd9;
+    color: #831843;
+}
+
+.actionButton {
+    background-color: rgba(248, 187, 217, 0.4);
+    color: #831843;
+}
+
+.actionButton:hover {
+    background-color: #f8bbd9;
+}
+
+#runButton {
+    background: rgba(34, 139, 34, 0.9);
+    color: white;
+}
+
+#runButton:hover {
+    background-color: rgba(25, 100, 25, 0.9);
+    color: white;
+}
+
+#loadButton,
+#expButton {
+    background: rgba(233, 30, 99, 0.8);
+    color: white;
+}
+
+#loadButton:hover,
+#expButton:hover {
+    background: rgba(194, 24, 91, 0.9);
+    color: white;
+}
+
+#clearButton {
+    background: rgba(173, 20, 87, 0.8);
+    color: white;
+}
+
+#clearButton:hover {
+    background: rgba(136, 14, 79, 0.9);
+    color: white;
+}
+
+#saveStatus {
+    color: #831843;
+}
+
+.tabButton {
+    color: #831843;
+    background-color: #fce7f3;
+    box-shadow: 0 1px 3px rgba(248, 187, 217, 0.3);
+}
+
+.tabButton.active {
+    background-color: #fbcfe8;
+    box-shadow: 0 1px 3px rgba(248, 187, 217, 0.5);
+}
+
+.modelViewer {
+    background: #fce7f3;
+    border: 1px solid #f8bbd9;
+}
+
+.toolbar ul,
+.chartSidebar ul {
+    background-color: #fce7f3;
+    border: 1px solid #f8bbd9;
+}
+
+.settings-section {
+    border-top: 1px solid #f8bbd9;
+}
+
+.graphTabsActive {
+    background-color: #f8bbd9 !important;
+}
+
+a {
+    color: #be185d;
+}
+
+a:hover,
+a:focus {
+    background-color: #fbcfe8;
+}
+
+a span {
+    background-color: #f8bbd9;
+}
+
+a span:before {
+    background-color: #f8bbd9;
+}
+
+a.active {
+    background-color: #f8bbd9;
+}
+
+.modelCanvas {
+    background-color: #fce7f3;
+    color: #831843;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.center-btn {
+    background-color: #fce7f3;
+    color: #831843;
+    border: 1px solid #f8bbd9;
+}
+
+.center-btn:hover i {
+    color: #be185d;
+}
+
+#eqEditor {
+    background-color: #fce7f3;
+    color: #831843;
+    border: 1px solid #f8bbd9;
+}
+
+.equation-editor-zoom-icon {
+    color: #831843;
+}
+
+.equation-editor-zoom-icon:hover {
+    color: #be185d;
+}
+
+.equation-editor-table th {
+    background-color: #fbcfe8;
+}
+
+.eqTableInputBox {
+    background-color: #fdf2f8;
+    border: 1px solid #f8bbd9;
+    color: #831843;
+}
+
+/* Cherry blossom-themed unique border colors for equation editor boxes */
+.eqStockBox input {
+    border: 1px solid #be185d; /* Deep Rose Pink - represents stored cherry blossom resources */
+}
+
+.eqVariableBox input {
+    border: 1px solid #ec407a; /* Medium Pink - represents blooming variables */
+}
+
+.eqFlowBox input {
+    border: 1px solid #f8bbd9; /* Soft Pink - represents gentle flows (kept existing) */
+}
+
+.equation-editor-table thead th {
+    background-color: #fce7f3;
+}
+
+.nncheckbox,
+.yAxisCheckbox {
+    accent-color: #be185d;
+    background-color: #fdf2f8;
+    border: 2px solid #f8bbd9;
+}
+
+.nncheckbox:checked,
+.yAxisCheckbox:checked {
+    background-color: #be185d;
+    border-color: #be185d;
+}
+
+.nncheckbox:hover,
+.yAxisCheckbox:hover {
+    border-color: #9d174d;
+}
+
+.chartViewer {
+    background: #fce7f3;
+    border: 1px solid #f8bbd9;
+}
+
+.chartCanvas {
+    background-color: #fdf2f8;
+    color: #831843;
+}
+
+.chartEditor {
+    background-color: #fbcfe8;
+    color: #831843;
+    border: 1px solid #f8bbd9;
+}
+
+.chart-stats p {
+    color: #9d174d;
+}
+
+.chartEditor hr {
+    border-top: 1px solid #f8bbd9;
+}
+
+.chart-btn {
+    background-color: #fce7f3;
+    border: 1px solid #f8bbd9;
+    color: #831843;
+}
+
+.chart-btn:hover {
+    background-color: #fbcfe8;
+}
+
+#overlay {
+    background-color: rgba(248, 187, 217, 0.8);
+}
+
+.settings-header h2,
+.close-btn,
+.setting-group {
+    color: #831843;
+}
+
+.close-btn:hover {
+    color: #be185d;
+}
+
+.settings-input,
+.settings-dropdown {
+    background-color: #fdf2f8;
+    border: 1px solid #f8bbd9;
+    color: #831843;
+}
+
+.settings-divider {
+    border-top: 1px solid #f8bbd9;
+}
+
+.slider {
+    background-color: #f8bbd9;
+}
+
+.slider:before {
+    background-color: #fdf2f8;
+}
+
+.toggle-switch input:checked + .slider {
+    background-color: #be185d;
+}
+
+.setting-button {
+    background-color: #fce7f3;
+    border: 1px solid #f8bbd9;
+    color: #831843;
+}
+
+.setting-button:hover {
+    background-color: #fbcfe8;
+}
+
+.settings-popup,
+.theme-popup,
+.charts-popup,
+.export-popup {
+    background-color: #fce7f3;
+    color: #831843;
+}
+
+#simErrorPopup {
+    background: rgba(252, 231, 243, 1);
+    border: 1px solid rgb(173, 20, 87);
+    color: #831843;
+}
+
+#simErrorPopupTitle,
+#simErrorPopupDesc {
+    color: #831843;
+}
+
+#simErrorPopupCancel {
+    background: rgb(173, 20, 87);
+    border: 1px solid rgb(173, 20, 87);
+    color: white;
+}
+
+#simErrorPopupCancel:hover {
+    background: rgb(136, 14, 79);
+    border: 1px solid rgb(136, 14, 79);
+}
+
+.equation-editor-overlay {
+    background-color: rgba(248, 187, 217, 0.6);
+}
+
+.equation-editor-popup {
+    background-color: #fce7f3;
+    border: 1px solid #f8bbd9;
+}
+
+.close-icon {
+    color: #831843;
+}
+
+.close-icon:hover {
+    color: #be185d;
+}
+
+.equation-editor-popup,
+.equation-editor-popup * {
+    color: #831843;
+}
+
+#xAxis {
+    background-color: #fdf2f8;
+    border: 1px solid #f8bbd9;
+    color: #831843;
+}
+
+#yAxis {
+    background-color: transparent;
+    color: #831843;
+}
+
+#submitModel {
+    background-color: #fce7f3;
+    border: 1px solid #f8bbd9;
+    color: #831843;
+}
+
+#submitModel:hover {
+    background-color: #fbcfe8;
+}
+
+.autocomplete-list {
+    background-color: #fdf2f8;
+    border: 1px solid #f8bbd9;
+    color: #831843;
+}
+
+.autocomplete-item {
+    border-bottom: 1px solid #f8bbd9;
+}
+
+.autocomplete-item.selected,
+.autocomplete-item:hover {
+    background-color: #fbcfe8;
+}
+
+.model-zoom-icon {
+    color: #831843;
+    background-color: #fce7f3;
+    border: 1px solid #f8bbd9;
+}
+
+.model-zoom-icon:hover {
+    background-color: #fbcfe8;
+}
+
+.popup-overlay {
+    background-color: rgba(248, 187, 217, 0.7);
+}
+
+.popup-content {
+    background-color: #fce7f3;
+    border: 1px solid #f8bbd9;
+}
+
+.close-popup {
+    color: #831843;
+}
+
+.graphTabs::after {
+    background-color:#f8bbd9;
+    color: #d45f96;
+}

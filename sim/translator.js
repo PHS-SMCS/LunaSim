@@ -1,13 +1,52 @@
-/* Author: Karthik S. Vedula
- * Converts the json file exported by gojs (from editor.js) to a json data file that can be used by engine.js
- * Caution! This uses label and not keys to identify nodes, as the user identifies nodes by label in equations.
+/**
+ * @fileoverview Translates the GOJS model into JSON for processing
+ * @module translator
+ * @author Authors: Karthik S.Vedula, Ryan Chung, Arjun Mujudar, Akash Saran
+ */
+/**
+ * Converts a GoJS diagram JSON object into a structured simulation-ready format.
+ *
+ * Extracts stocks, variables, converters, valves, and influences from the diagram model.
+ * This function relies on node labels (not keys) for equation referencing,
+ * and handles ghost nodes (prefixed with `$`) by resolving them to real nodes when needed.
+ *
+ * The output object is compatible with the simulation engine used in `engine.js`.
+ *
+ * @function
+ * @memberof module:translator
+ * @param {Object} obj - The JSON object representing a GoJS model, typically from `myDiagram.model.toJson()`.
+ * @returns {Object} A structured object containing:
+ * - `stocks`: stock definitions keyed by label
+ * - `converters`: variable-equivalent nodes for plotting
+ * - `variables`: array of raw variables with key, label, and equation
+ * - `valves`: array of flow controllers (valves)
+ * - `influences`: influence connections between nodes
+ * - `labelsandkeys`: mapping of label-to-key used for reference resolution
+ *
+ * @example
+ * const engineJson = translate(myDiagram.model.toJson());
  */
 
 export function translate(obj) {
     var res = {
         "stocks": {},
         "converters": {},
-    }; // the rest of the information (start and end times, dt, and integration method ae added lator in editor.js)
+        "variables":[],
+        "influences":[],
+        "valves":[],
+        "labelsandkeys": []
+    };
+
+    class influence {
+        to;
+        toEq;
+        from;
+        tolabel;
+        fromlabel;
+    }
+    var valves = obj.nodeDataArray.filter(node => node.category === "valve");
+
+    // the rest of the information (start and end times, dt, and integration method ae added lator in editor.js)
 
     var stockKeyToName = {}; // used for checking of a stock exists in the model (specifically in the inflows and outflows)
 
@@ -16,6 +55,8 @@ export function translate(obj) {
         var node = obj.nodeDataArray[i];
 
         if (node.category == "stock") {
+            res.labelsandkeys.push({key: node.key, label: node.label});
+
             stockKeyToName[node.key] = node.label;
 
             if (node.label[0] === "$") {
@@ -30,7 +71,13 @@ export function translate(obj) {
                 "inflows": {},
                 "outflows": {}
             };
-        } else if (node.category == "variable") {
+        }
+        if (node.category == "variable") {
+
+            res.labelsandkeys.push({key: node.key, label: node.label});
+
+            res.variables.push({key: node.key, equation: node.equation, label: node.label});
+
             if (node.label[0] === "$") {
                 continue;
             }
@@ -40,6 +87,14 @@ export function translate(obj) {
                 "equation": node.equation
             };
         }
+
+        if (node.category == "valve") {
+            res.valves.push({equation: node.equation, label: node.label, key: node.key});
+            res.labelsandkeys.push({key: node.key, label: node.label});
+
+        }
+
+
     }
 
     // add all the flows to the res object
@@ -47,68 +102,64 @@ export function translate(obj) {
         var link = obj.linkDataArray[i];
 
         if (link.category == "influence") {
-            continue;
+            var currentInfluence = new influence;
+
+            for (var h =0; h< obj.nodeDataArray.length; h++){
+                if(obj.nodeDataArray[h].key == link.to){
+                    currentInfluence.to = obj.nodeDataArray[h].key;
+                    currentInfluence.toEq = obj.nodeDataArray[h].equation;
+                    currentInfluence.tolabel = obj.nodeDataArray[h].label;
+                }
+                if(obj.nodeDataArray[h].key == link.from){
+                    currentInfluence.from = obj.nodeDataArray[h].key;
+                    currentInfluence.fromlabel = obj.nodeDataArray[h].label;
+                }
+            }
+            res.influences.push(currentInfluence);
         }
 
         if (link.category == "flow") {
-            // get the flow equation from the link (in the corresponding valve in node data array)
-            var flowEq;
-            var flowName;
-            var isUniflow;
-            for (var j = 0; j < obj.nodeDataArray.length; j++) { // find the corresponding valve
-                if (obj.nodeDataArray[j].key == link.labelKeys[0]) {
-                    flowEq = obj.nodeDataArray[j].equation;
-                    flowName = obj.nodeDataArray[j].label.toString();
-                    isUniflow = obj.nodeDataArray[j].checkbox;
-                    break;
-                }
+            if (!link.labelKeys || link.labelKeys.length === 0) continue;
+
+            const valveKey = link.labelKeys[0];
+            const valveNode = obj.nodeDataArray.find(n => n.key === valveKey);
+            if (!valveNode) {
+                console.warn(`⚠️ Flow link with valveKey ${valveKey} not found. Skipping.`);
+                continue;
             }
 
+            let flowEq = valveNode.equation;
+            let flowName = valveNode.label.toString();
+            let isUniflow = valveNode.checkbox;
+
+            // Ghost valve? Use its non-ghost counterpart
             if (flowName[0] === "$") {
-                // get the corresponding info on flowEq and isUniflow from the non-ghost flow
-                for (var j = 0; j < obj.nodeDataArray.length; j++) {
-                    if (obj.nodeDataArray[j].label == flowName.substring(1)) {
-                        flowEq = obj.nodeDataArray[j].equation;
-                        flowName = obj.nodeDataArray[j].label.toString();
-                        isUniflow = obj.nodeDataArray[j].checkbox;
-                        break;
-                    }
+                const ghostRef = obj.nodeDataArray.find(n => n.label === flowName.substring(1));
+                if (ghostRef) {
+                    flowEq = ghostRef.equation;
+                    flowName = ghostRef.label.toString();
+                    isUniflow = ghostRef.checkbox;
                 }
             }
 
-            // add a '#' to the flow equation if it is a uniflow (processed in engine.js)
             if (isUniflow) {
                 flowEq = "Math.max(0," + flowEq + ")";
             }
 
-            // check if the from is a stock
-            var stockName = stockKeyToName[link.from];
-            if (stockName !== undefined) {
-                if (stockName[0] === "$") {
-                    stockName = stockName.substring(1);
-                }
-
-                // add the flow to the outflows of the source
-                res.stocks[stockName].outflows[flowName] = {
-                    "equation": flowEq,
-                    "values": []
-                }
+            // add to stock outflows/inflows
+            let stockName = stockKeyToName[link.from];
+            if (stockName) {
+                if (stockName[0] === "$") stockName = stockName.substring(1);
+                res.stocks[stockName].outflows[flowName] = { equation: flowEq, values: [] };
             }
 
-            // check if the to is a stock
             stockName = stockKeyToName[link.to];
-            if (stockName !== undefined) {
-                if (stockName[0] === "$") {
-                    stockName = stockName.substring(1);
-                }
-
-                // add the flow to the inflows of the destination
-                res.stocks[stockName].inflows[flowName] = {
-                    "equation": flowEq,
-                    "values": []
-                }
+            if (stockName) {
+                if (stockName[0] === "$") stockName = stockName.substring(1);
+                res.stocks[stockName].inflows[flowName] = { equation: flowEq, values: [] };
             }
         }
+
     }
 
     return res;
