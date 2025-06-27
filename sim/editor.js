@@ -221,8 +221,17 @@ function init() {
             this.archetypeLabelNodeData = (SD.itemType === "flow") ? {category: "valve"} : null;
             this.archetypeLinkData.text = SD.itemType;
 
-            if (SD.itemType === "flow" && (fromnode.category !== "stock" && fromnode.category !== "cloud" || tonode.category !== "stock" && tonode.category !== "cloud")) {
-                return null;
+            if (SD.itemType === "flow") {
+                const from = fromnode.category;
+                const to = tonode.category;
+                const valid = (from === "stock" || from === "cloud") &&
+                    (to === "stock" || to === "cloud");
+
+                const bothClouds = from === "cloud" && to === "cloud";
+
+                if (!valid || bothClouds) {
+                    return null;
+                }
             }
 
             if (SD.itemType === "influence" && (tonode.category === "stock" || tonode.category === "cloud")) {
