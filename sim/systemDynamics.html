@@ -78,27 +78,89 @@
           <ul>
             <!-- Model Tools (Pointer, Stock, Cloud, Variable, Flow, Influence) -->
             <div class="tool-section">
-              <li><a href="#" id="pointer_button" class="pointer_selected tool"><i class="fa-light fa-arrow-pointer"></i><span>Pointer [P]</span></a></li>
-              <li><a href="#" id="stock_button" class="node_normal tool"><i class="fa-light fa-rectangle"></i><span>Stock [S]</span></a></li>
-              <li><a href="#" id="cloud_button" class="node_normal tool"><i class="fa-light fa-cloud"></i><span>Cloud [C]</span></a></li>
-              <li><a href="#" id="variable_button" class="node_normal tool"><i class="fa-light fa-circle"></i><span>Variable [V]</span></a></li>
-              <li><a href="#" id="flow_button" class="link_normal tool"><i class="fa-light fa-arrows-left-right"></i><span>Flow [F]</span></a></li>
-              <li><a href="#" id="influence_button" class="link_normal tool"><i class="fa-light fa-rotate-left fa-flip-horizontal"></i><span>Influence [I]</span></a></li>
-              <li><a href="#" id="conveyor_button" class="node_normal tool"><i class="fa-light fa-conveyor-belt-boxes"></i><span>Conveyor [O]</span></a></li>
-              <li><a href="#" id="queue_button" class="node_normal tool"><i class="fa-light fa-users-rectangle"></i><span>Queue [Q]</span></a></li>
-              <li><a href="#" id="oven_button" class="node_normal tool"><i class="fa-light fa-microwave"></i></i><span>Microwave [M]</span></a></li>
-              <li><a href="#" id="text_button" class="link_normal tool"><i class="fa-light fa-text"></i><span>Text [T]</span></a></li>
-              <li><a href="#" id="text_button" class="link_normal tool"><i class="fa-light fa-ghost"></i><span>Ghosting [G]</span></a></li>
+
+              <!-- Pointer Tool -->
+              <li><a href="#" id="pointer_button" class="pointer_selected tool">
+                <i class="fa-light fa-arrow-pointer"></i><span>Pointer [P]</span>
+              </a></li>
+
+              <!-- Stock Tool with Variants -->
+              <li class="variant-group">
+                <a href="#" id="stock_button" class="node_normal tool">
+                  <i class="fa-light fa-rectangle"></i><span>Stock [S]</span>
+                </a>
+
+                <div class="variant-popup" id="stock_variants">
+                  <a href="#" id="conveyor_button" class="node_normal tool">
+                    <i class="fa-light fa-conveyor-belt-boxes"></i><span>Conveyor</span>
+                  </a>
+                  <a href="#" id="queue_button" class="node_normal tool">
+                    <i class="fa-light fa-users-rectangle"></i><span>Queue</span>
+                  </a>
+                  <a href="#" id="microwave_button" class="node_normal tool">
+                    <i class="fa-light fa-microwave"></i><span>Microwave</span>
+                  </a>
+                </div>
+              </li>
+
+              <!-- Other Tools -->
+              <li><a href="#" id="cloud_button" class="node_normal tool">
+                <i class="fa-light fa-cloud"></i><span>Cloud [C]</span>
+              </a></li>
+
+              <li><a href="#" id="variable_button" class="node_normal tool">
+                <i class="fa-light fa-circle"></i><span>Variable [V]</span>
+              </a></li>
+
+              <li><a href="#" id="flow_button" class="link_normal tool">
+                <i class="fa-light fa-arrows-left-right"></i><span>Flow [F]</span>
+              </a></li>
+
+              <li class="variant-group">
+                <a href="#" id="influence_button" class="link_normal tool">
+                  <i class="fa-light fa-repeat"></i><span>Influence [I]</span>
+                </a>
+
+                <div class="variant-popup" id="text_variants">
+                  <a href="#" id="info_influence_button" class="link_normal tool">
+                    <i class="fa-light fa-circle-info"></i><span>Info Influence</span>
+                  </a>
+                </div>
+              </li>
+
+              <!-- Text Tool with Variants -->
+              <li class="variant-group">
+                <a href="#" id="text_button" class="node_normal tool">
+                  <i class="fa-light fa-text"></i><span>Text [T]</span>
+                </a>
+
+                <div class="variant-popup" id="text_variants">
+                  <a href="#" id="loop_label_button" class="node_normal tool">
+                    <i class="fa-light fa-rotate-left fa-flip-horizontal"></i><span>Loop Label</span>
+                  </a>
+                </div>
+              </li>
+
             </div>
-            
+
             <!-- Settings (Theme, Help, Simulation Parameters) -->
             <div class="settings-section">
-              <li><a href="#" onclick="openSettings(event, 'themePopup')" class="no-active"><i class="fa-light fa-paint-roller"></i><span>Theme</span></a></li>
-              <li><a href="../UserDocs.html" class="no-active" target="_blank"><i class="fa-light fa-question"></i><span>Help</span></a></li>
-              <li><a href="#" onclick="openSettings(event, 'settingsPopup')" class="no-active"><i class="fa-light fa-gear"></i><span>Settings</span></a></li>
+              <li><a href="#" onclick="openSettings(event, 'themePopup')" class="no-active">
+                <i class="fa-light fa-paint-roller"></i><span>Theme</span>
+              </a></li>
+
+              <li><a href="../UserDocs.html" class="no-active" target="_blank">
+                <i class="fa-light fa-question"></i><span>Help</span>
+              </a></li>
+
+              <li><a href="#" onclick="openSettings(event, 'settingsPopup')" class="no-active">
+                <i class="fa-light fa-gear"></i><span>Settings</span>
+              </a></li>
             </div>
           </ul>
         </div>
+
+
 
         <!-- ================== Model Canvas ================== -->
         <div class="modelCanvas" id="modalView">
@@ -119,7 +181,7 @@
         <div id="eqEditor">
           <div class="equation-editor-header">
             <p class="equation-editor-title">Equation Editor</p>
-            <i class="fa-solid fa-up-right-and-down-left-from-center equation-editor-zoom-icon" onclick="openEquationEditorPopup()"></i>
+            <i class="fa-light fa-expand equation-editor-zoom-icon" onclick="openEquationEditorPopup()"></i>
           </div>
           <div id = "eqTableDiv">
             <table class="equation-editor-table" id="eqTable">
@@ -963,5 +1025,78 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 </script>
+<script>
+let holdTimer;
+let isPopupOpen = false;
+let currentToolbarButton = null;
+let activePopup = null;
+
+document.querySelectorAll('.variant-group').forEach(group => {
+  const toolbarButton = group.querySelector('a:not(.variant-popup a)');
+  const popup = group.querySelector('.variant-popup');
+
+  function attachLongPress(button) {
+    button.addEventListener('mousedown', () => {
+      if (isPopupOpen) return;
+      holdTimer = setTimeout(() => {
+        popup.classList.add('visible');
+        isPopupOpen = true;
+        activePopup = popup;
+        currentToolbarButton = button;
+      }, 200);
+    });
+
+    ['mouseup', 'mouseleave', 'click'].forEach(evt => {
+      button.addEventListener(evt, () => {
+        clearTimeout(holdTimer);
+      });
+    });
+  }
+
+  attachLongPress(toolbarButton);
+
+  popup.addEventListener('click', (event) => {
+    const selectedButton = event.target.closest('a');
+    if (!selectedButton) return;
+    event.preventDefault();
+
+    popup.appendChild(currentToolbarButton);
+
+    const buttonOrder = Array.from(popup.querySelectorAll('a')).map(btn => btn.id);
+    buttonOrder.forEach(id => {
+      const btn = popup.querySelector(`#${id}`);
+      if (btn) popup.appendChild(btn);
+    });
+
+    group.insertBefore(selectedButton, popup);
+    currentToolbarButton = selectedButton;
+
+    attachLongPress(currentToolbarButton);
+
+    closeVarientPopup();
+
+    currentToolbarButton.click();
+  });
+});
+
+function closeVarientPopup() {
+  if (isPopupOpen && activePopup) {
+    activePopup.classList.remove('visible');
+    isPopupOpen = false;
+    clearTimeout(holdTimer);
+    activePopup = null;
+  }
+}
+
+document.addEventListener('click', (event) => {
+  if (!event.target.closest('.variant-group')) {
+    closeVarientPopup();
+  }
+});
+
+
+</script>
+
+
 </body>
 </html>
