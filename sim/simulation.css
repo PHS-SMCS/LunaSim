@@ -68,6 +68,10 @@ input, button, select {
 
 /* Top Action Bar */
 
+#header {
+  gap: 0.5vw;
+}
+
 /* LunaSim Logo */
 #logoImage {
   position: absolute;
@@ -265,7 +269,7 @@ input, button, select {
 /* Universal Sidebar Styling (Applies to Toolbar and Chart Sidebar) */
 
 li + li {
-  margin-top: 0.5rem;
+  margin-top: 0.2rem;
 }
 
 a {
@@ -1370,3 +1374,25 @@ input.settings-input.invalid:focus {
   opacity: 1;
 }
 
+/* New Stuff */
+
+.tool-dropdown {
+  position: absolute;
+  top: 3.7rem; /* adjust to position below the button */
+  left: 3.75rem;
+  display: flex;
+  flex-direction: column;
+  background-color: #627bc0;
+  border-radius: 8px;
+  padding: 0.75rem;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  z-index: 999;
+}
+
+.tool-dropdown.hidden {
+  display: none;
+}
+
+.dropdown-tool + .dropdown-tool {
+  margin-top: 0.5rem;
+}
