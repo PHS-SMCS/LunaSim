@@ -1370,3 +1370,52 @@ input.settings-input.invalid:focus {
   opacity: 1;
 }
 
+#customConfirmPopup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  background: rgba(60, 84, 148, 1);
+  border: 1px solid #283458;
+  color: #ffffff;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  width: 90vw;
+  max-width: 400px;
+  z-index: 1001;
+  box-shadow: 0 10px 50px rgba(5, 4, 62, 0.25);
+  display: flex;
+  flex-direction: column;
+  opacity: 1;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  cursor: default;
+}
+
+.button-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.setting-button.primary {
+  background-color: #2d7252;
+  border: 1px solid #2d7252;
+}
+
+.setting-button.secondary {
+  background-color: #4a4a4a;
+  border: 1px solid #4a4a4a;
+}
+
+.setting-button.primary:hover {
+  background-color: #1a4933;
+}
+
+.setting-button.secondary:hover {
+  background-color: #2a2a2a;
+}
+
+.hidden {
+  display: none !important;
+}

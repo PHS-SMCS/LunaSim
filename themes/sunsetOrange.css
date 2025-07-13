@@ -401,3 +401,27 @@ i[class*="fa-"],
 .center-btn i {
     color: white !important;
 }
+
+#customConfirmPopup {
+    background: #ff8c00;
+    border: 1px solid #ffa500;
+    color: white;
+}
+
+.setting-button.primary {
+    background-color: #ffa500;
+    border: 1px solid #ffa500;
+    color: white;
+}
+.setting-button.primary:hover {
+    background-color: #ff7000;
+}
+
+.setting-button.secondary {
+    background-color: white;
+    border: 1px solid #ffa500;
+    color: #ff8c00;
+}
+.setting-button.secondary:hover {
+    background-color: #fff5e6;
+}

@@ -373,3 +373,27 @@ a.active {
   background-color: #636770;
   color: white;
 }
+
+#customConfirmPopup {
+  background: #2f3136;
+  border: 1px solid #4c5570;
+  color: white;
+}
+
+.setting-button.primary {
+  background-color: #4c5570;
+  border: 1px solid #4c5570;
+  color: white;
+}
+.setting-button.primary:hover {
+  background-color: #636770;
+}
+
+.setting-button.secondary {
+  background-color: #25272d;
+  border: 1px solid #4c5570;
+  color: white;
+}
+.setting-button.secondary:hover {
+  background-color: #4c5570;
+}

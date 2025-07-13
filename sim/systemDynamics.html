@@ -338,6 +338,20 @@
         <button id="simErrorPopupCancel" class="setting-button" onclick="closeSettings('simErrorPopup')">Dismiss</button>
       </div>
 
+      <!-- ================== Custom Confirmation Popup ================== -->
+      <div id="customConfirmPopup" class="sims-popup hidden">
+        <div class="settings-header">
+          <h2 id="customConfirmTitle">Are you sure?</h2>
+        </div>
+        <div class="setting-group">
+          <p id="customConfirmMessage">You are about to clear the current model.</p>
+        </div>
+        <div class="button-row">
+          <button id="customConfirmCancelBtn" class="setting-button secondary">Cancel</button>
+          <button id="customConfirmOkBtn" class="setting-button primary">Continue</button>
+        </div>
+      </div>
+
       <!-- ================== Equation Editor Popup ================== -->
       <div id="equationEditorOverlay" class="equation-editor-overlay" onclick="closePopup()"></div>
       <div id="equationEditorPopup" class="equation-editor-popup">

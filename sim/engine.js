@@ -1,7 +1,7 @@
 /**
  * @fileoverview Handles parsing and calculations for LunaSim
  * @module engine
- * @author Authors: Karthik S. Vedula, Ryan Chung,Arjun Mujudar, Akash Saran
+ * @author Authors: Karthik S. Vedula, Ryan Chung, Arjun Mujumdar, Akash Saran
  */
 
 

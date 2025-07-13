@@ -382,3 +382,28 @@ input.settings-input.invalid:focus {
 .close-popup {
   color: white;
 }
+
+#customConfirmPopup {
+  background: #eeeeee;
+  border: 1px solid #4c5570;
+  color: black;
+}
+
+.setting-button.primary {
+  background-color: #35829f;
+  border: 1px solid #35829f;
+  color: white;
+}
+.setting-button.primary:hover {
+  background-color: #3ab3df;
+}
+
+.setting-button.secondary {
+  background-color: white;
+  border: 1px solid #4c5570;
+  color: black;
+}
+.setting-button.secondary:hover {
+  background-color: #ddd;
+}
+

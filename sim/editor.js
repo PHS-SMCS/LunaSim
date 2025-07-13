@@ -938,6 +938,87 @@ function showSimErrorPopup() {
 
 document.getElementById("simErrorPopupDismiss").addEventListener("click", closeSimErrorPopup);
 
+function showConfirmPopup({ title, message, onConfirm, onCancel }) {
+    const popup = document.getElementById("customConfirmPopup");
+    const overlay = document.getElementById("overlay");
+
+    document.getElementById("customConfirmTitle").textContent = title;
+    document.getElementById("customConfirmMessage").textContent = message;
+
+    // Enable both buttons
+    document.getElementById("customConfirmCancelBtn").style.display = "inline-block";
+    document.getElementById("customConfirmOkBtn").textContent = "Continue";
+
+    popup.classList.remove("hidden");
+    overlay.classList.remove("hidden");
+
+    requestAnimationFrame(() => {
+        popup.classList.add("show");
+        overlay.classList.add("show");
+    });
+
+    // Assign click behavior
+    document.getElementById("customConfirmCancelBtn").onclick = () => {
+        closePopup();
+        if (onCancel) onCancel();
+    };
+    document.getElementById("customConfirmOkBtn").onclick = () => {
+        closePopup();
+        if (onConfirm) onConfirm();
+    };
+}
+
+function showAlertPopup({ title, message, onContinue }) {
+    const popup = document.getElementById("customConfirmPopup");
+    const overlay = document.getElementById("overlay");
+
+    document.getElementById("customConfirmTitle").textContent = title;
+    document.getElementById("customConfirmMessage").textContent = message;
+
+    // Hide Cancel
+    document.getElementById("customConfirmCancelBtn").style.display = "none";
+    document.getElementById("customConfirmOkBtn").textContent = "OK";
+
+    popup.classList.remove("hidden");
+    overlay.classList.remove("hidden");
+
+    requestAnimationFrame(() => {
+        popup.classList.add("show");
+        overlay.classList.add("show");
+    });
+
+    document.getElementById("customConfirmOkBtn").onclick = () => {
+        closePopup();
+        if (onContinue) onContinue();
+    };
+}
+
+// Utility to clean up both buttons and overlay
+function closePopup() {
+    const popup = document.getElementById("customConfirmPopup");
+    const overlay = document.getElementById("overlay");
+
+    popup.classList.remove("show");
+    overlay.classList.remove("show");
+
+    setTimeout(() => {
+        popup.classList.add("hidden");
+        overlay.classList.add("hidden");
+
+        // Clean up handlers to prevent multiple triggers
+        document.getElementById("customConfirmOkBtn").onclick = null;
+        document.getElementById("customConfirmCancelBtn").onclick = null;
+    }, 100);
+}
+
+// Enable closing the popup when clicking outside
+document.getElementById("overlay").addEventListener("click", () => {
+    closePopup();
+});
+
+
+
+
 /**
  * Closes the simulation error popup and hides the gray overlay effect.
  * @memberof module:editor
@@ -1374,59 +1455,87 @@ function download(filename, text) {
  * @param {Event} evt - The file input change event containing the selected file.
  */
 function loadModel(evt) {
-    var reader = new FileReader();
-    var file = evt.target.files[0];
-    console.log(file);
+    const file = evt.target.files[0];
+    if (!file) return;
 
-    reader.onload = function (evt) {
-        var json;
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+        let parsedJson;
         try {
-            json = JSON.parse(evt.target.result);
-        } catch (e) {
-            alert(`Something went wrong while parsing this file! Most likely, the file you uploaded isn't a valid LunaSim model.\n\nDetailed Error Log:\n${e.message}`);
+            parsedJson = JSON.parse(e.target.result);
+        } catch (err) {
+            showAlertPopup({
+                title: "Invalid File Format",
+                message: `Something went wrong while parsing this file. It may not be a valid LunaSim model.\n\nDetails:\n${err.message}`,
+                onContinue: () => {}
+            });
             return;
         }
 
-        if (go.Model.fromJson(evt.target.result).Pc.length == 0) {
-            let confirmBlankLoad = confirm("This model appears to be blank! Are you sure you want to load it?");
-            if (!confirmBlankLoad) return;
+        const isBlank = Array.isArray(parsedJson.Pc) && parsedJson.Pc.length === 0;
+
+        const applyModel = () => {
+            // Set simulation parameters
+            if (parsedJson.simulationParameters) {
+                document.getElementById("startTime").value = parsedJson.simulationParameters.startTime;
+                document.getElementById("endTime").value = parsedJson.simulationParameters.endTime;
+                document.getElementById("dt").value = parsedJson.simulationParameters.dt;
+                document.getElementById("integrationMethod").value = parsedJson.simulationParameters.integrationMethod;
+            } else {
+                document.getElementById("startTime").value = 0;
+                document.getElementById("endTime").value = 10;
+                document.getElementById("dt").value = 0.1;
+                document.getElementById("integrationMethod").value = "rk4";
+            }
+
+            // Reset model & table
+            myDiagram.model = go.Model.fromJson(`{
+        "class": "GraphLinksModel",
+        "linkLabelKeysProperty": "labelKeys",
+        "nodeDataArray": [],
+        "linkDataArray": []
+      }`);
+            $('#eqTableBody').empty();
+
+            // Load new model
+            myDiagram.model = go.Model.fromJson(parsedJson);
+            updateTable(true);
+            loadTableToDiagram();
+            myDiagram.initialPosition = myDiagram.position;
+
+            if (file.name) {
+                document.getElementById("model_name").value = file.name.replace(/\.[^/.]+$/, "");
+            }
+
+            lastEditDate = new Date();
+            unsavedEdits = false;
+            lastExportDate = new Date();
+            hasExportedYet = false;
+            updateSaveStatus();
+        };
+
+        if (isBlank) {
+            showConfirmPopup({
+                title: "Load Blank Model?",
+                message: "This model appears to be blank! Are you sure you want to load it?",
+                onConfirm: applyModel,
+                onCancel: () => {
+                    console.log("User cancelled blank model load.");
+                }
+            });
+
+            return;
         }
 
+        applyModel();
+    };
 
-        if (json.simulationParameters) {
-            document.getElementById("startTime").value = json.simulationParameters.startTime;
-            document.getElementById("endTime").value = json.simulationParameters.endTime;
-            document.getElementById("dt").value = json.simulationParameters.dt;
-            document.getElementById("integrationMethod").value = json.simulationParameters.integrationMethod;
-        } else {
-            document.getElementById("startTime").value = 0;
-            document.getElementById("endTime").value = 10;
-            document.getElementById("dt").value = 0.1;
-            document.getElementById("integrationMethod").value = "rk4";
-        }
-
-        myDiagram.model = go.Model.fromJson("{ \"class\": \"GraphLinksModel\", \"linkLabelKeysProperty\": \"labelKeys\", \"nodeDataArray\": [],\"linkDataArray\": [] }");
-        $('#eqTableBody').empty();
-
-        myDiagram.model = go.Model.fromJson(evt.target.result);
-        updateTable(true);
-        loadTableToDiagram();
-
-        myDiagram.initialPosition = myDiagram.position;
-        if (file && file.name) {
-            console.log(file.name);
-            document.getElementById("model_name").value = file.name.replace(/\.[^/.]+$/, "");
-        }
-
-        lastEditDate = new Date();
-        unsavedEdits = false;
-        lastExportDate = new Date();
-        hasExportedYet = false;
-        updateSaveStatus();
-    }
-
-    reader.readAsText(evt.target.files[0]);
+    reader.readAsText(file);
 }
+
+
+
 
 /**
  * Toggles the dark theme stylesheet on or off.
@@ -1476,12 +1585,20 @@ window.onload = function () {
 
 document.getElementById("loadButton").addEventListener("click", function () {
     if (unsavedEdits) {
-        let confirmLoad = confirm(`You've made changes to this model since the last time you exported it (if at all). If you load a new model now without exporting, your changes will be lost! Are you sure you want to proceed?\n\n(Press CANCEL to go back and export your model.)`);
-        if (!confirmLoad) return;
+        showConfirmPopup({
+            title: "Unsaved Changes Detected",
+            message: "You've made changes to this model. If you load a new one now without exporting, your changes will be lost! Continue?",
+            onConfirm: () => {
+                document.getElementById("load-actual-button").click();
+                closePopup();
+            }
+        });
+    } else {
+        document.getElementById("load-actual-button").click();
     }
-
-    document.getElementById("load-actual-button").click();
 });
+
+
 
 init();
 
@@ -1556,25 +1673,45 @@ document.getElementById("exportButton").addEventListener("click", function () {
 });
 
 document.getElementById("clearButton").addEventListener("click", function () {
-    let confirmNewModel = confirm("Do you want to clear this model and start a new one? Your current project will be wiped!");
-    if (confirmNewModel) {
-        let doubleConfirm = confirm("Are you REALLY sure? If you want to save the project you are currently working on, press CANCEL and export it first; otherwise, the data will be cleared. You've been warned!");
-        if (!doubleConfirm) return;
+    showConfirmPopup({
+        title: "Clear Model?",
+        message: "Do you want to clear this model and start a new one? Your current project will be wiped!",
+        onConfirm: () => {
+            closePopup(); // Hide first popup
 
-        document.getElementById("model_name").value = "New Project";
-        document.getElementById("startTime").value = 0;
-        document.getElementById("endTime").value = 10;
-        document.getElementById("dt").value = 0.1;
-        document.getElementById("integrationMethod").value = "rk4";
-        myDiagram.model = go.Model.fromJson("{ \"class\": \"GraphLinksModel\", \"linkLabelKeysProperty\": \"labelKeys\", \"nodeDataArray\": [],\"linkDataArray\": [] }");
-        $('#eqTableBody').empty();
+            setTimeout(() => {
+                showConfirmPopup({
+                    title: "Final Confirmation",
+                    message: "Are you REALLY sure? If you want to save the project you're working on, press CANCEL and export it first. Otherwise, the data will be cleared. You've been warned!",
+                    onConfirm: () => {
+                        closePopup(); // Hide second popup
 
-        lastEditDate = new Date();
-        unsavedEdits = false;
-        lastExportDate = new Date();
-        hasExportedYet = false;
-        updateSaveStatus();
-    }
+                        // ✅ Clear Model Logic
+                        document.getElementById("model_name").value = "New Project";
+                        document.getElementById("startTime").value = 0;
+                        document.getElementById("endTime").value = 10;
+                        document.getElementById("dt").value = 0.1;
+                        document.getElementById("integrationMethod").value = "rk4";
+
+                        myDiagram.model = go.Model.fromJson(`{
+              "class": "GraphLinksModel",
+              "linkLabelKeysProperty": "labelKeys",
+              "nodeDataArray": [],
+              "linkDataArray": []
+            }`);
+
+                        $('#eqTableBody').empty();
+
+                        lastEditDate = new Date();
+                        unsavedEdits = false;
+                        lastExportDate = new Date();
+                        hasExportedYet = false;
+                        updateSaveStatus();
+                    }
+                });
+            }, 150); // 🔁 match fade-out duration of first popup
+        }
+    });
 });
 
 window.addEventListener('beforeunload', function (e) {
@@ -1665,10 +1802,17 @@ function finalizeRename() {
     if (!oldName || newName === oldName) return;
 
     if (!labelValidator(null, oldName, newName)) {
-        alert(`Invalid or duplicate name: "${newName}". Reverting to "${oldName}".`);
+        showAlertPopup({
+            title: "Invalid or Duplicate Name",
+            message: `The name "${newName}" is invalid or already in use.\nIt will be reset to "${oldName}".`,
+            onConfirm: () => {
+
+            },
+        });
         $input.val(oldName);
         return;
     }
+
 
     const escapeRegExp = (string) =>
         string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -2007,7 +2151,11 @@ document.getElementById("downloadImageButton").addEventListener("click", functio
     const filename = (document.getElementById("model_name").value || "diagram").trim();
 
     if (!myDiagram) {
-        alert("Diagram not initialized.");
+        showAlertPopup({
+            title: "Export Error",
+            message: "Diagram is not initialized. Unable to proceed with export.",
+            onConfirm: () => {}
+        });
         return;
     }
 
@@ -2022,8 +2170,13 @@ document.getElementById("downloadImageButton").addEventListener("click", functio
             saveDiagramAsTiff(myDiagram, filename + ".tiff", margin);
             break;
         default:
-            alert("Unsupported export format: " + type);
+            showAlertPopup({
+                title: "Unsupported Export Type",
+                message: `The selected export format (${type}) is not supported.`,
+                onConfirm: () => {},
+            });
             return;
+
     }
 
     lastExportDate = new Date();
