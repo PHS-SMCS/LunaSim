@@ -444,6 +444,7 @@
 
   // Function to open the popup with transition
   function openSettings(event, popupWindow) {
+
     const popup = document.getElementById(popupWindow);
     event.preventDefault();
     popup.classList.remove("hidden");
@@ -982,12 +983,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Show/hide X-Axis + rename Y-Axis label
   modelTypeDropdown.addEventListener("change", () => {
-    if (modelTypeDropdown.value === "chart") {
-      xAxisGroup.style.display = "block";
-      yAxisLabel.textContent = "Y-Axis";
-    } else {
+    if (modelTypeDropdown.value === "table") {
       xAxisGroup.style.display = "none";
       yAxisLabel.textContent = "Columns";
+    } else {
+      xAxisGroup.style.display = "block";
+      yAxisLabel.textContent = "Y-Axis";
     }
   });
 
