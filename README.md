@@ -8,8 +8,6 @@ and-flow diagrams](https://thesystemsthinker.com/step-by-step-stocks-and-flows-c
 LunaSim includes a graphical editor that facilitates the creation of stock and flow diagrams, incorporates JavaScript-based equations for elements in the simulation, 
 simulates using numerical methods, and facilitates the creation of web-based, user-defined charts and tables that display simulation results. 
 
-**Try a demo at: [www.karthikvedula.com/LunaSim](https://www.karthikvedula.com/LunaSim)**
-
 ## User Manual & Hosting
 
 Check out the `UserDocumentation.html` file for information on how to use LunaSim.  LunaSim is a static web app, so any static webpage hosting service (such as Github Pages or 
@@ -24,10 +22,10 @@ Each entity corresponds to an entry in the equation editor table, in which the u
 are signified by a dollar symbol (`$`) being included in front of the element name.  These equations are written in JavaScript code (meaning all JS syntax like if-statements and 
 even `Math` library are included).
 
-![Image](./img/modelView.png)
+![Image](./img/ModelSimView.png)
 _Model Editor_
 
-![Image](./img/EquationEditor.png)
+![Image](./img/newEqEditor.png)
 _Equation Editor Table_
 
 ### Data Visualization
@@ -35,8 +33,8 @@ _Equation Editor Table_
 LunaSim allows custom tables and charts to be created to record and visualize model results.  Tables are created through the [tabulator.js](https://tabulator.info/) library and charts
 are created through the [ApexCharts.js](https://apexcharts.com/) library.
 
-![Image](./img/TableView3.png)
+![Image](./img/TableView.png)
 _Tables in LunaSim_
 
-![Image](./img/GraphView1.png)
+![Image](./img/SpringView.png)
 _Graphs in LunaSim_
