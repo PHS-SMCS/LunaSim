@@ -622,6 +622,40 @@ function buildTemplates() {
     }, new go.Binding("curviness", "curviness").makeTwoWay(), $(go.Shape, {strokeWidth: 1.5}, new go.Binding("stroke", "isSelected", sel => sel ? "#3489eb" : "orange").ofObject()), $(go.Shape, {
         stroke: null, toArrow: "Standard", scale: 1.5
     }, new go.Binding("fill", "isSelected", sel => sel ? "#3489eb" : "orange").ofObject())));
+
+    myDiagram.nodeTemplateMap.add("textbox",
+        $(go.Node, nodeStyle(),
+            {
+                selectionAdornmentTemplate: $(go.Adornment, "Auto",
+                    $(go.Shape, {
+                        fill: null,
+                        stroke: "dodgerblue",
+                        strokeWidth: 3
+                    }),
+                    $(go.Placeholder)
+                )
+            },
+            $(go.Panel, "Auto",
+                $(go.Shape, {
+                    fill: "white",
+                    stroke: "#ccc",
+                    strokeWidth: 1,
+                    name: "SHAPE"
+                }),
+                $(go.TextBlock, textStyle(),
+                    {
+                        margin: 6,
+                        isMultiline: true,
+                        minSize: new go.Size(100, 40),
+                        wrap: go.TextBlock.WrapFit,
+                        editable: true
+                    },
+                    new go.Binding("text", "label").makeTwoWay()
+                )
+            )
+        )
+    );
+
 }
 
 /**
