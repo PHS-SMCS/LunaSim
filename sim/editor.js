@@ -608,6 +608,35 @@ function buildTemplates() {
         )
     );
 
+    myDiagram.nodeTemplateMap.add("textbox",
+        $(go.Node, "Auto",
+            {
+                selectionAdornmentTemplate:
+                    $(go.Adornment, "Auto",
+                        $(go.Shape, { fill: null, stroke: "dodgerblue", strokeWidth: 2 }),
+                        $(go.Placeholder)
+                    )
+            },
+            $(go.Shape, "Rectangle",
+                {
+                    fill: "#ffffe0", stroke: "#d4af37", strokeWidth: 1,
+                    portId: "", fromLinkable: false, toLinkable: false
+                }
+            ),
+            $(go.TextBlock,
+                {
+                    margin: 6,
+                    stroke: "black",
+                    font: "12pt sans-serif",
+                    editable: true,
+                    wrap: go.TextBlock.WrapFit,
+                    width: 200
+                },
+                new go.Binding("text").makeTwoWay()
+            )
+        )
+    );
+
     myDiagram.linkTemplateMap.add("influence", $(go.Link, {
         curve: go.Link.Bezier, toShortLength: 8, reshapable: true
     }, new go.Binding("curviness", "curviness").makeTwoWay(), $(go.Shape, {strokeWidth: 1.5}, new go.Binding("stroke", "isSelected", sel => sel ? "#3489eb" : "orange").ofObject()), $(go.Shape, {
