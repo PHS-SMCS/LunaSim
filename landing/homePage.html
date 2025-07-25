@@ -7,265 +7,115 @@
   <link rel="icon" href="../img/lunaLogo.svg">
 
   <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.7.2/css/all.css">
+  <meta meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
   <title>LunaSim Launch</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@300;400;500;600;700;800;900&display=swap');
 
-    /* For the whole page */
-    * {
-      scrollbar-width: none;         /* Firefox */
-      -ms-overflow-style: none;      /* IE and Edge */
-    }
-
-    /* For WebKit browsers like Chrome, Safari */
-    *::-webkit-scrollbar {
-      display: none;
-    }
-
-
-    body, html {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: Arial, sans-serif;
-      overflow-x: hidden;
-     
-    }
-
-    .hero {
-      position: relative;
-      height: 100vh;
-      color: white;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      background-color: #1e3a5f; /* fallback */
-    }
-
-    .background-slider {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      overflow: hidden;
-    }
-
-    .background-slider img {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      left: 0;
-      top: 0;
-      object-fit: cover;
-      opacity: 0;
-      transition: opacity 1.5s ease-in-out;
-    }
-
-    .background-slider img.active {
-      opacity: 1;
-    }
-
-    .blue-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(
-        ellipse at center,
-        rgba(38, 50, 83, 0.92) 0%,
-        rgba(38, 50, 83, 0.95) 60%,
-        rgba(28, 37, 63, 0.97) 100%
-      );
-      z-index: 1;
-      pointer-events: none; /* keeps it from interfering with interactions */
-    }
-
-
-    .hero {
-    position: relative;
-    height: 100vh;
-    color: white;
-    display: flex;
-    flex-direction: row; /* Row layout for side-by-side */
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 5vw;
-    background-color: #1e3a5f;
-  }
-
-  .hero-content {
-    position: relative;
-    z-index: 2;
-    max-width: 45%;
-    text-align: left;
-  }
-
-  .hero h1 {
-    font-size: 2rem;
-  }
-
-
-    .launch-btn {
-      position: relative;
-      padding: 15px 30px;
-      font-size: 1.2rem;
-      background-color: #ffffff;
-      color: #1e3a5f;
-      border: 2px solid #4f6bb8;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: color 0.3s ease;
-      overflow: hidden;
-      z-index: 0;
-      font-family: "Golos Text", sans-serif;
-    }
-
-    .launch-btn::after {
-      content: '';
-      position: absolute;
-      bottom: 8px;
-      left: 15px;
-      height: 2px;
-      width: 0;
-      background: linear-gradient(60deg, rgba(79, 107, 184, 1) 0%, rgba(79, 165, 189, 1) 100%);
-      border-radius: 1px;
-      transition: width 0.4s ease;
-    }
-
-    .launch-btn:hover::after {
-      width: calc(100% - 30px);
-    }
-
-    .dots {
-      position: absolute;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 2;
-      display: flex;
-      gap: 10px;
-    }
-
-    .dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background-color: white;
-      opacity: 0.5;
-      cursor: pointer;
-      transition: opacity 0.3s;
-    }
-
-    .dot.active {
-      opacity: 1;
-    }
-
-    .content {
-      padding: 60px 20px;
-      background-color: #f4f4f4;
-      font-size: 1.1rem;
-      color: #333;
-    }
-
-    .intro-text {
-      font-size: 1.5rem;
-      margin: 0px;
-      color: rgba(255, 255, 255, 1);
-      font-family: "Golos Text", sans-serif;
-    }
-
-    .fade-in-text {
-      display: inline-block;
-      opacity: 0;
-      transform: translateY(20px);
-      animation: fadeInUp 2s ease forwards;
-      animation-delay: 0.5s; 
-      font-size: 150px;
-      color: rgba(255, 255, 255, 1);
-      font-family: "Golos Text", sans-serif;
-      font-size: 90px;
-    }
-
-    @keyframes fadeInUp {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .info-box-section {
-      position: relative;
-      z-index: 2;
-      max-width: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 61%;
-    }
-
-    .info-box {
-      width: 100%;
-      height: 100%;
-      padding: 30px 30px;
-      background-color: #ffffff;
-      color: #1e3a5f;
-      border: 2px solid #4f6bb8;
-      border-radius: 10px;
-      font-family: "Golos Text", sans-serif;
-      text-align: left;
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-    }
-
-    .info-box h2 {
-      font-size: 1.5rem;
-      margin-bottom: 0px;
-      margin-top: 0px;
-    }
-
-    .info-box p {
-      font-size: 1.1rem;
-      line-height: 1.7;
-    }
-
-    .dots {
-    bottom: 20px;
-  }
-
-  .credits-box {
-  margin-top: 25px;
-  padding: 15px 20px;
-  background-color: #ffffff;
-  color: #1e3a5f;
-  border: 2px solid #4f6bb8;
-  border-radius: 10px;
-  font-family: "Golos Text", sans-serif;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
-  text-align: left;
-  max-width: 100%;
+/* ========== General Resets & Scrollbar Hiding ========== */
+* {
+  scrollbar-width: none;          /* Firefox */
+  -ms-overflow-style: none;       /* IE and Edge */
 }
-
-.credits-box h3 {
-  font-size: 1.3rem;
-  margin: 0 0 10px 0;
+*::-webkit-scrollbar {
+  display: none;                  /* WebKit */
 }
-
-.credits-box p {
-  font-size: 1rem;
-  line-height: 1.5;
+html, body {
   margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow-x: hidden;
+  font-family: Arial, sans-serif;
 }
 
+/* ========== HERO Section Layout ========== */
+.hero {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 5vw;
+  background-color: #1e3a5f;
+  color: white;
+  text-align: center;
+}
+
+/* ========== Hero Content and Text ========== */
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 45%;
+  text-align: left;
+}
+.hero h1 {
+  font-size: 2rem;
+}
+.intro-text {
+  font-size: 1.5rem;
+  margin: 0;
+  color: white;
+  font-family: "Golos Text", sans-serif;
+}
+.fade-in-text {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 2s ease forwards;
+  animation-delay: 0.5s;
+  font-size: 90px;
+  font-family: "Golos Text", sans-serif;
+  color: white;
+}
+
+/* ========== Background & Overlay ========== */
+.background-slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.background-slider img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out;
+}
+
+.background-slider img.active {
+  opacity: 1;
+}
+.blue-overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(38, 50, 83, 0.92) 0%,
+    rgba(38, 50, 83, 0.95) 60%,
+    rgba(28, 37, 63, 0.97) 100%
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ========== Buttons ========== */
 .button-container {
   display: flex;
   justify-content: space-between;
   gap: 20px;
   width: 100%;
-  max-width: 100%;
   margin-top: 20px;
 }
 
@@ -276,15 +126,15 @@
   font-size: 1rem;
   font-family: "Golos Text", sans-serif;
   border-radius: 8px;
-  border: 2px solid white;
   cursor: pointer;
-  transition: background 0.3s ease, color 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
+  border: 2px solid;
   position: relative;
   z-index: 0;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 .launch-btn {
@@ -292,7 +142,6 @@
   color: white;
   border-color: white;
 }
-
 .launch-btn::after {
   content: '';
   position: absolute;
@@ -304,7 +153,6 @@
   border-radius: 1px;
   transition: width 0.4s ease;
 }
-
 .launch-btn:hover::after {
   width: calc(100% - 30px);
 }
@@ -314,23 +162,83 @@
   color: #0251a1;
   border-color: #0251a1;
 }
-
 .feedback-btn:hover {
   background-color: #c8c0c0;
 }
 
+/* ========== Info Box Section ========== */
+.info-box-section {
+  position: relative;
+  z-index: 2;
+  max-width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 61%;
+}
+
+.info-box {
+  width: 100%;
+  height: 100%;
+  padding: 30px;
+  background-color: #fff;
+  color: #1e3a5f;
+  border: 2px solid #4f6bb8;
+  border-radius: 10px;
+  font-family: "Golos Text", sans-serif;
+  text-align: left;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+.info-box h2 {
+  font-size: 1.5rem;
+  margin: 0 0 10px 0;
+}
+.info-box p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+}
+
+/* ========== Credits Box ========== */
+.credits-box {
+  margin-top: 25px;
+  padding: 15px 20px;
+  background-color: #fff;
+  color: #1e3a5f;
+  border: 2px solid #4f6bb8;
+  border-radius: 10px;
+  font-family: "Golos Text", sans-serif;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+  text-align: left;
+}
+.credits-box h3 {
+  font-size: 1.3rem;
+  margin: 0 0 10px;
+}
+.credits-box p {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 0;
+}
+#creditsBox {
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* ========== Feature List ========== */
+.features-columns {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+}
 .features-list {
   list-style: none;
   padding: 0;
   margin-top: 20px;
 }
-
 .features-list li {
   display: flex;
   align-items: center;
   margin-bottom: 20px;
 }
-
 .icon-circle {
   width: 38px;
   height: 38px;
@@ -344,25 +252,47 @@
   flex-shrink: 0;
   margin-right: 15px;
 }
-
 .feature-text strong {
   font-size: 1.1rem;
   display: block;
   color: #1e3a5f;
 }
-
 .feature-text p {
   margin: 2px 0 0;
   font-size: 0.95rem;
   color: #1e3a5f;
 }
 
-.features-columns {
+/* ========== Dots/Slider Controls ========== */
+.dots {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
   display: flex;
-  gap: 40px;
-  flex-wrap: wrap;
+  gap: 10px;
+}
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: white;
+  opacity: 0.5;
+  cursor: pointer;
+  transition: opacity 0.3s;
+}
+.dot.active {
+  opacity: 1;
 }
 
+/* ========== Animations ========== */
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 @keyframes fadeInLeft {
   from {
     opacity: 0;
@@ -373,7 +303,6 @@
     transform: translateX(0);
   }
 }
-
 @keyframes fadeInRight {
   from {
     opacity: 0;
@@ -384,19 +313,6 @@
     transform: translateX(0);
   }
 }
-
-.fade-in-left {
-  animation: fadeInLeft 1.2s ease-out forwards;
-  opacity: 0;
-  animation-delay: 0.1s;
-}
-
-.fade-in-right {
-  animation: fadeInRight 1.2s ease-out forwards;
-  opacity: 0;
-  animation-delay: 0.1s;
-}
-
 @keyframes fadeInFadeOut {
   0% {
     opacity: 0;
@@ -408,17 +324,165 @@
   }
 }
 
+.fade-in-left {
+  animation: fadeInLeft 1.2s ease-out forwards;
+  opacity: 0;
+  animation-delay: 0.1s;
+}
+.fade-in-right {
+  animation: fadeInRight 1.2s ease-out forwards;
+  opacity: 0;
+  animation-delay: 0.1s;
+}
 .fade-toggle {
   animation: fadeInFadeOut 0.6s ease-in-out forwards;
 }
 
-#creditsBox {
-  transition: opacity 0.3s ease-in-out;
+/* ========== Fixed Background Elements ========== */
+.background-slider,
+.blue-overlay {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.dots {
+  position: fixed !important;
+  bottom: 30px !important;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+/* ========== Ensure Hero Content Visible on Scroll ========== */
+.hero {
+  position: relative;
+  z-index: 2;
+}
+
+/* ========== Feature Strip Section ========== */
+.feature-strip {
+  position: relative;
+  z-index: 2;
+  width: 85vw;
+  margin: 0 auto;
+  padding: 10px 30px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+  border: 2px solid #4f6bb8;
+  font-family: "Golos Text", sans-serif;
+  color: #1e3a5f;
+  height: auto;
+  /* no height or flexbox here = natural flow & top-aligned text */
+}
+
+
+.feature-strip h2 {
+  font-size: 1.7rem;
+  margin-bottom: 15px;
+}
+
+.feature-strip p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.feature-strips {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;         /* smaller space between each feature-strip */
+  margin-top: 0px; /* less space from the section above */
+  margin-bottom: 80px; /* less space before the next section */
+}
+
+.image-block {
+  display: inline-block;
+  max-width: 35%;          /* prevent from exceeding the box */
+  margin: 10px;
+  vertical-align: top;
+}
+
+.image-block img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  display: block;
+}
+
+.image-block.right {
+  float: right;
+  margin-left: 20px;
+}
+
+.image-block.left {
+  float: left;
+  margin-right: 20px;
+}
+
+.image-block .caption {
+  display: block;
+  font-size: 0.9rem;
+  color: #444;
+  margin-top: 5px;
+  text-align: center;
+}
+
+.about-team .team-carousel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: nowrap;
+}
+
+.about-team .team-member {
+  display: flex;
+  align-items: center;
+  max-width: 800px;
+  gap: 30px;
+}
+
+.about-team .team-photo {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid #4f6bb8;
+}
+
+.about-team .team-info h3 {
+  margin: 0;
+  font-size: 1.4rem;
+  color: #1e3a5f;
+}
+
+.about-team .team-info h4 {
+  margin: 5px 0 10px;
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: #4f6bb8;
+}
+
+.about-team .team-info p {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #333;
+}
+
+.about-team .arrow {
+  font-size: 2rem;
+  cursor: pointer;
+  user-select: none;
+  color: #1e3a5f;
 }
 
 
 
-  </style>
+</style>
+
 </head>
 <body>
   <div class="hero">
@@ -542,6 +606,126 @@
     </div>
   </div>
 
+  <!-- Additional Feature Strip Section -->
+  <section class="feature-strips">
+    <div class="feature-strip">
+      <h2>Why Was LunaSim Created?</h2>
+      <p>
+        "System dynamics modeling software allows the user to graphically describe and run simulations of real-world systems. My school&apos;s 9th Grade Foundations of Computer Science class uses this kind of software, where students learn about how modeling and simulation works and how it can be applied to the fields of engineering, physics, and biology.<br><br>
+
+        Previously, my school used licensed, commercial (and expensive) software for systems modeling. A system-wide software upgrade made the previous modeling software at our school inoperable on Windows and school-issued Chromebooks, upending students&apos; curriculum.<br><br>
+
+        This motivated me to propose and lead the development of our app LunaSim, a free, open-source alternative that can be accessed from any computer with a standard browser, allowing students to use both the desktop computers and Chromebooks to build their simulations."<br><br>
+
+        - <a href="https://karthikvedula.com/2024/04/14/congressional-app-challenge-house-of-code" target="_blank" rel="noopener noreferrer">Karthik Vedula <i>(Original Co-Creator of LunaSim)</i></a>
+      </p>
+    </div>
+    <div class="feature-strip">
+      <h2>History of LunaSim</h2>
+      <p>
+        <span class="image-block right">
+          <img src="image8.png" alt="Early Development of LunaSim">
+          <span class="caption">Initial LunaSim’s interface in early 2023</span>
+        </span>
+
+        LunaSim began in April 2023 as an initiative to provide a free, open-source alternative to commercial system dynamics modeling software used in our high school's 9th grade Foundations of Computer Science course. The project was born out of necessity: a system-wide device upgrade rendered our school's licensed modeling software incompatible with both Windows and school-issued Chromebooks. To ensure continuity in the curriculum, students Karthik Vedula, Aditya Patil, and Sienna Simms (then sophomores) collaborated to develop the structure of LunaSim from the ground up.<br><br>     
+        
+        By October 2023, LunaSim had reached its first major milestone: full deployment to over 60 students in the 9th grade computer science class. The tool empowered students to build interactive models of physical and engineering systems directly in the browser. Its success demonstrated that a browser-based simulation environment could be both powerful and accessible in a classroom setting. Students who used the software were amazed at its simplicity.
+      </p>
+
+      <p>
+
+        <span class="image-block left">
+          <img src="CongressionalChallenge.jpg" alt="House of Code Presentation" style="width: 400px; height: auto;">
+          <span class="caption">Team presenting LunaSim at the Maryland State House</span>
+        </span>
+
+
+        LunaSim's momentum continued into April 2024, when the project was recognized at the state level. The team had the honor of presenting LunaSim at the U.S. Capitol as part of the Congressional App Challenge's House of Code event. There, team members met Congressman David Trone and showcased how LunaSim is reshaping STEM education through open-source innovation. The app was then named the winner of the 2023 Congressional App Challenge for Maryland's 6th District!
+      </p>
+
+      <p>
+        In August 2024, LunaSim was showcased at the prestigious International System Dynamics Conference, thanks to the efforts of Karthik Vedula and Mark Estep, our 10th grade computer science teacher. The presentation brought international recognition to LunaSim for its innovative approach to system dynamics education. You can read more about the presentation on the System Dynamics Society’s official site: 
+        <a href="https://proceedings.systemdynamics.org/2024/papers/P1049.pdf" target="_blank">LunaSim Paper</a>.
+      </p>
+
+
+      <p>
+        Following its second full year in use, LunaSim had expanded to over 120 students and became a core part of the 9th grade curriculum. As the original creators graduated and moved on to college, ownership of the project passed to a new team of freshmen (Ryan Chung, Akash Saran, Arjun Mujumdar, and Caleb Wen) — four students who had been part of LunaSim's first pilot run in 2023. Under their leadership, LunaSim received a complete UI refresh and major refinements to the software's infrastructure, laying the groundwork for a new generation of features and broader usability.
+
+        <span class="image-block right">
+          <img src="ModelSimView.png" alt="New Team Updating LunaSim">
+          <span class="caption">New LunaSim interface in 2025</span>
+        </span>
+      </p>
+
+      <p>
+        In June 2025, LunaSim was deployed to its official web domain, LunaSim.org, thanks to the support of Ben Ross and Ishan Kheterpal, the school's computer science teacher. This move marked a key milestone in making LunaSim more accessible to everyone outside of our school community.
+      </p>
+
+      <p>
+        LunaSim still continues to evolve with contributions from students passionate about making system dynamics modeling accessible to all learners.
+      </p>
+    </div>
+
+    <div class="feature-strip">
+      <h2>References</h2>
+      <ul style="list-style-type: disc; padding-left: 20px; line-height: 1.8;">
+        <li>
+          <a href="https://www.youtube.com/watch?v=luRWuwhCkec&t=14s&ab_channel=LunaSim" target="_blank">
+            <strong>Congressional App Design Video</strong> (YouTube)
+          </a>
+        </li>
+        <li>
+          <a href="https://www.congressionalappchallenge.us/23-md06/" target="_blank">
+            <strong>Congressional App Design Challenge</strong>: MD-06 District Winner
+          </a>
+        </li>
+        <li>
+          <a href="https://poolesvillepulse.org/5585/technology/smcs-juniors-developed-working-software-for-9th-grade-class/" target="_blank">
+            <strong>The Poolesville Pulse</strong>: SMCS Juniors Develop Software for 9th Grade Class
+          </a>
+        </li>
+        <li>
+          <a href="https://karthikvedula.com/2024/04/14/congressional-app-challenge-house-of-code/" target="_blank">
+            <strong>Karthik's Blog</strong>: Congressional App Challenge – House of Code
+          </a>
+        </li>
+        <li>
+          <a href="https://proceedings.systemdynamics.org/2024/papers/P1049.pdf" target="_blank">
+            <strong>System Dynamics Society</strong>: International Conference Paper (2024)
+          </a>
+        </li>
+        <li>
+          <a href="https://github.com/PHS-SMCS/LunaSim" target="_blank">
+            <strong>GitHub Repository</strong>: LunaSim Source Code
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="feature-strip about-team">
+  <h2>About the Team</h2>
+  <div class="team-carousel">
+    <div class="arrow left" onclick="prevTeamMember()">&#8592;</div>
+
+    <div class="team-member" id="teamMemberDisplay">
+      <div class="image-block left">
+        <img src="placeholder.png" alt="Team Member Photo" class="team-photo">
+      </div>
+      <div class="team-info">
+        <h3 id="memberName">Karthik Vedula</h3>
+        <h4 id="memberRole">Lead Programmer (Original)</h4>
+        <p id="memberBio">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quam tortor, sagittis eget pellentesque vitae, vulputate quis velit. Donec sit amet volutpat ex. Nunc id nisi eleifend, congue nulla sit amet, vulputate tortor. Integer ultrices non nisl ut facilisis. Cras sollicitudin semper interdum. Donec nec eros rhoncus, commodo odio non, tincidunt justo. Donec vehicula vulputate odio a aliquet. Vestibulum metus odio, rhoncus id euismod vulputate, accumsan a sem. Quisque ut maximus urna, et bibendum risus. Phasellus in ipsum enim. Vestibulum non dui ut purus blandit finibus sed ac est.</p>
+      </div>
+    </div>
+
+    <div class="arrow right" onclick="nextTeamMember()">&#8594;</div>
+  </div>
+</div>
+
+  </section>
+
 
   <script>
     let currentSlide = 0;
@@ -603,6 +787,108 @@
 }
 
 </script>
+<script>
+  const teamMembers = [
+    {
+      name: "Karthik Vedula",
+      role: "Lead Programmer (Original)",
+      bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quam tortor, sagittis eget pellentesque vitae, vulputate quis velit. Donec sit amet volutpat ex. Nunc id nisi eleifend, congue nulla sit amet, vulputate tortor. Integer ultrices non nisl ut facilisis. Cras sollicitudin semper interdum. Donec nec eros rhoncus, commodo odio non, tincidunt justo. Donec vehicula vulputate odio a aliquet. Vestibulum metus odio, rhoncus id euismod vulputate, accumsan a sem. Quisque ut maximus urna, et bibendum risus. Phasellus in ipsum enim. Vestibulum non dui ut purus blandit finibus sed ac est.",
+      img: "karthik.png"
+    },
+    {
+      name: "Sienna Simms",
+      role: "Project Manager and Lead Tester (Original)",
+      bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      img: "sienna.png"
+    },
+    {
+      name: "Aditya Patil",
+      role: "Systems Analyst and Lead Tester (Original)",
+      bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      img: "aditya.png"
+    },
+    {
+      name: "William Park",
+      role: "Functional Developer",
+      bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      img: "william.png"
+    },
+    {
+      name: "Ryan Chung",
+      role: "Project Manager (New)",
+      bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      img: "ryan.png"
+    },
+    {
+      name: "Akash Saran",
+      role: "Lead Programmer (New)",
+      bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      img: "akash.png"
+    },
+    {
+      name: "Arjun Mujumdar",
+      role: "Lead Tester (New)",
+      bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      img: "arjun.png"
+    },
+    {
+      name: "Caleb Wen",
+      role: "Systems Analyst (New)",
+      bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      img: "caleb.png"
+    },
+    {
+      name: "Ben Ross",
+      role: "Domain Owner",
+      bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      img: "ben.png"
+    },
+    {
+      name: "Ishan Kheterpal",
+      role: "Computer Science Teacher (Client)",
+      bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      img: "ishan.png"
+    },
+    {
+      name: "Mark Estep",
+      role: "Computer Science Teacher (Client)",
+      bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      img: "mark.png"
+    },
+    {
+      name: "Kevin Lee",
+      role: "Teacher (Supporter)",
+      bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      img: "kevin.png"
+    }
+  ];
+
+  let currentMember = 0;
+
+  function showMember(index) {
+    const member = teamMembers[index];
+    document.getElementById("memberName").textContent = member.name;
+    document.getElementById("memberRole").textContent = member.role;
+    document.getElementById("memberBio").textContent = member.bio;
+    document.querySelector(".team-photo").src = member.img;
+  }
+
+  function nextTeamMember() {
+    currentMember = (currentMember + 1) % teamMembers.length;
+    showMember(currentMember);
+  }
+
+  function prevTeamMember() {
+    currentMember = (currentMember - 1 + teamMembers.length) % teamMembers.length;
+    showMember(currentMember);
+  }
+
+  // Initialize on page load
+  document.addEventListener("DOMContentLoaded", () => {
+    showMember(currentMember);
+  });
+</script>
+
 </body>
 </html>
 
