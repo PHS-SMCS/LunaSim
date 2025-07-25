@@ -201,6 +201,8 @@ function init() {
         "undoManager.isEnabled": true,
         allowLink: false,
         "animationManager.isEnabled": false,
+        "allowTextEdit": true,
+        "isReadOnly": false,
 
         "linkingTool.portGravity": 0,
         "linkingTool.doActivate": function () {
@@ -611,28 +613,35 @@ function buildTemplates() {
     myDiagram.nodeTemplateMap.add("textbox",
         $(go.Node, "Auto",
             {
+                resizable: true,
+                resizeObjectName: "TEXTBOX_SHAPE",
                 selectionAdornmentTemplate:
                     $(go.Adornment, "Auto",
-                        $(go.Shape, { fill: null, stroke: "dodgerblue", strokeWidth: 2 }),
+                        $(go.Shape, { stroke: "dodgerblue", strokeWidth: 2, fill: null }),
                         $(go.Placeholder)
                     )
             },
             $(go.Shape, "Rectangle",
                 {
-                    fill: "#ffffe0", stroke: "#d4af37", strokeWidth: 1,
-                    portId: "", fromLinkable: false, toLinkable: false
+                    name: "TEXTBOX_SHAPE",
+                    fill: "#fffacd",
+                    stroke: "#d4af37",
+                    strokeWidth: 1,
+                    minSize: new go.Size(80, 40)
                 }
             ),
             $(go.TextBlock,
                 {
-                    margin: 6,
-                    stroke: "black",
-                    font: "12pt sans-serif",
                     editable: true,
+                    isMultiline: true,
+                    margin: 8,
                     wrap: go.TextBlock.WrapFit,
-                    width: 200
+                    overflow: go.TextBlock.OverflowClip,
+                    font: "12pt sans-serif",
+                    stroke: "black",
+                    width: 160
                 },
-                new go.Binding("text").makeTwoWay()
+                new go.Binding("text", "text").makeTwoWay()
             )
         )
     );
@@ -1573,6 +1582,11 @@ document.getElementById("runButton").addEventListener("click", function () {
 });
 document.getElementById("exportButton").addEventListener("click", function () {
     exportData();
+});
+
+document.getElementById("text_button").addEventListener("click", function () {
+    setMode("node", "text");
+    toolSelect(event);
 });
 
 document.getElementById("clearButton").addEventListener("click", function () {
