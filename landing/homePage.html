@@ -608,6 +608,25 @@ html, body {
 
   <!-- Additional Feature Strip Section -->
   <section class="feature-strips">
+    <div class="feature-strip about-team">
+      <h2>About the Team</h2>
+      <div class="team-carousel">
+        <div class="arrow left" onclick="prevTeamMember()">&#8592;</div>
+
+        <div class="team-member" id="teamMemberDisplay">
+          <div class="image-block left">
+            <img src="placeholder.png" alt="Team Member Photo" class="team-photo">
+          </div>
+          <div class="team-info">
+            <h3 id="memberName">Karthik Vedula</h3>
+            <h4 id="memberRole">Lead Programmer (Original)</h4>
+            <p id="memberBio">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quam tortor, sagittis eget pellentesque vitae, vulputate quis velit. Donec sit amet volutpat ex. Nunc id nisi eleifend, congue nulla sit amet, vulputate tortor. Integer ultrices non nisl ut facilisis. Cras sollicitudin semper interdum. Donec nec eros rhoncus, commodo odio non, tincidunt justo. Donec vehicula vulputate odio a aliquet. Vestibulum metus odio, rhoncus id euismod vulputate, accumsan a sem. Quisque ut maximus urna, et bibendum risus. Phasellus in ipsum enim. Vestibulum non dui ut purus blandit finibus sed ac est.</p>
+          </div>
+        </div>
+
+        <div class="arrow right" onclick="nextTeamMember()">&#8594;</div>
+      </div>
+    </div>
     <div class="feature-strip">
       <h2>Why Was LunaSim Created?</h2>
       <p>
@@ -704,26 +723,6 @@ html, body {
       </ul>
     </div>
 
-    <div class="feature-strip about-team">
-  <h2>About the Team</h2>
-  <div class="team-carousel">
-    <div class="arrow left" onclick="prevTeamMember()">&#8592;</div>
-
-    <div class="team-member" id="teamMemberDisplay">
-      <div class="image-block left">
-        <img src="placeholder.png" alt="Team Member Photo" class="team-photo">
-      </div>
-      <div class="team-info">
-        <h3 id="memberName">Karthik Vedula</h3>
-        <h4 id="memberRole">Lead Programmer (Original)</h4>
-        <p id="memberBio">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quam tortor, sagittis eget pellentesque vitae, vulputate quis velit. Donec sit amet volutpat ex. Nunc id nisi eleifend, congue nulla sit amet, vulputate tortor. Integer ultrices non nisl ut facilisis. Cras sollicitudin semper interdum. Donec nec eros rhoncus, commodo odio non, tincidunt justo. Donec vehicula vulputate odio a aliquet. Vestibulum metus odio, rhoncus id euismod vulputate, accumsan a sem. Quisque ut maximus urna, et bibendum risus. Phasellus in ipsum enim. Vestibulum non dui ut purus blandit finibus sed ac est.</p>
-      </div>
-    </div>
-
-    <div class="arrow right" onclick="nextTeamMember()">&#8594;</div>
-  </div>
-</div>
-
   </section>
 
 
@@ -790,75 +789,63 @@ html, body {
 <script>
   const teamMembers = [
     {
-      name: "Karthik Vedula",
-      role: "Lead Programmer (Original)",
-      bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quam tortor, sagittis eget pellentesque vitae, vulputate quis velit. Donec sit amet volutpat ex. Nunc id nisi eleifend, congue nulla sit amet, vulputate tortor. Integer ultrices non nisl ut facilisis. Cras sollicitudin semper interdum. Donec nec eros rhoncus, commodo odio non, tincidunt justo. Donec vehicula vulputate odio a aliquet. Vestibulum metus odio, rhoncus id euismod vulputate, accumsan a sem. Quisque ut maximus urna, et bibendum risus. Phasellus in ipsum enim. Vestibulum non dui ut purus blandit finibus sed ac est.",
-      img: "karthik.png"
-    },
-    {
-      name: "Sienna Simms",
-      role: "Project Manager and Lead Tester (Original)",
-      bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      img: "sienna.png"
-    },
-    {
-      name: "Aditya Patil",
-      role: "Systems Analyst and Lead Tester (Original)",
-      bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      img: "aditya.png"
-    },
-    {
-      name: "William Park",
-      role: "Functional Developer",
-      bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      img: "william.png"
-    },
-    {
       name: "Ryan Chung",
       role: "Project Manager (New)",
-      bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
       img: "ryan.png"
     },
     {
       name: "Akash Saran",
       role: "Lead Programmer (New)",
-      bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
       img: "akash.png"
     },
     {
       name: "Arjun Mujumdar",
       role: "Lead Tester (New)",
-      bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
       img: "arjun.png"
     },
     {
       name: "Caleb Wen",
       role: "Systems Analyst (New)",
-      bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
       img: "caleb.png"
+    },
+    {
+      name: "Karthik Vedula",
+      role: "Lead Programmer (Original)",
+      img: "karthik.png"
+    },
+    {
+      name: "Aditya Patil",
+      role: "Systems Analyst and Lead Tester (Original)",
+      img: "aditya.png"
+    },
+    {
+      name: "Sienna Simms",
+      role: "Project Manager and Lead Tester (Original)",
+      img: "sienna.png"
+    },
+    {
+      name: "William Park",
+      role: "Functional Developer",
+      img: "william.png"
     },
     {
       name: "Ben Ross",
       role: "Domain Owner",
-      bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
       img: "ben.png"
     },
     {
       name: "Ishan Kheterpal",
       role: "Computer Science Teacher (Client)",
-      bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
       img: "ishan.png"
     },
     {
       name: "Mark Estep",
       role: "Computer Science Teacher (Client)",
-      bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
       img: "mark.png"
     },
     {
       name: "Kevin Lee",
       role: "Teacher (Supporter)",
-      bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
       img: "kevin.png"
     }
   ];
