@@ -5,848 +5,978 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="icon" href="../img/lunaLogo.svg">
-
   <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.7.2/css/all.css">
-  <meta meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>LunaSim Launch</title>
   <style>
-@import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@300;400;500;600;700;800;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@300;400;500;600;700;800;900&display=swap');
 
-/* ========== General Resets & Scrollbar Hiding ========== */
-* {
-  scrollbar-width: none;          /* Firefox */
-  -ms-overflow-style: none;       /* IE and Edge */
-}
-*::-webkit-scrollbar {
-  display: none;                  /* WebKit */
-}
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  overflow-x: hidden;
-  font-family: Arial, sans-serif;
-}
+    /* ========== General Resets & Scrollbar Hiding ========== */
+    * {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      box-sizing: border-box;
+    }
+    *::-webkit-scrollbar {
+      display: none;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow-x: hidden;
+      font-family: "Golos Text", Arial, sans-serif;
+    }
 
-/* ========== HERO Section Layout ========== */
-.hero {
-  position: relative;
-  height: 100vh;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 5vw;
-  background-color: #1e3a5f;
-  color: white;
-  text-align: center;
-}
+    /* ========== HERO Section Layout ========== */
+    .hero {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 2rem;
+      background-color: #1e3a5f;
+      color: white;
+      text-align: center;
+      gap: 2rem;
+    }
 
-/* ========== Hero Content and Text ========== */
-.hero-content {
-  position: relative;
-  z-index: 2;
-  max-width: 45%;
-  text-align: left;
-}
-.hero h1 {
-  font-size: 2rem;
-}
-.intro-text {
-  font-size: 1.5rem;
-  margin: 0;
-  color: white;
-  font-family: "Golos Text", sans-serif;
-}
-.fade-in-text {
-  display: inline-block;
-  opacity: 0;
-  transform: translateY(20px);
-  animation: fadeInUp 2s ease forwards;
-  animation-delay: 0.5s;
-  font-size: 90px;
-  font-family: "Golos Text", sans-serif;
-  color: white;
-}
+    /* ========== Hero Content and Text ========== */
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      flex: 1;
+      max-width: 50%;
+      text-align: left;
+    }
 
-/* ========== Background & Overlay ========== */
-.background-slider {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
+    .hero h1 {
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      margin: 0;
+    }
 
-.background-slider img {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  left: 0;
-  top: 0;
-  object-fit: cover;
-  opacity: 0;
-  transition: opacity 1.5s ease-in-out;
-}
+    .intro-text {
+      font-size: clamp(1.2rem, 3vw, 1.8rem);
+      margin: 0;
+      color: white;
+      font-family: "Golos Text", sans-serif;
+      line-height: 1.3;
+    }
 
-.background-slider img.active {
-  opacity: 1;
-}
-.blue-overlay {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(38, 50, 83, 0.92) 0%,
-    rgba(38, 50, 83, 0.95) 60%,
-    rgba(28, 37, 63, 0.97) 100%
-  );
-  z-index: 1;
-  pointer-events: none;
-}
+    .fade-in-text {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 2s ease forwards;
+      animation-delay: 0.5s;
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-family: "Golos Text", sans-serif;
+      color: white;
+      font-weight: 800;
+    }
 
-/* ========== Buttons ========== */
-.button-container {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  width: 100%;
-  margin-top: 20px;
-}
+    /* ========== Background & Overlay ========== */
+    .background-slider {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
 
-.launch-btn,
-.feedback-btn {
-  flex: 1;
-  padding: 15px 25px;
-  font-size: 1rem;
-  font-family: "Golos Text", sans-serif;
-  border-radius: 8px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  border: 2px solid;
-  position: relative;
-  z-index: 0;
-  transition: background 0.3s ease, color 0.3s ease;
-}
+    .background-slider img {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out;
+    }
 
-.launch-btn {
-  background-color: #0251a1;
-  color: white;
-  border-color: white;
-}
-.launch-btn::after {
-  content: '';
-  position: absolute;
-  bottom: 8px;
-  left: 15px;
-  height: 2px;
-  width: 0;
-  background: linear-gradient(60deg, white 0%, white 100%);
-  border-radius: 1px;
-  transition: width 0.4s ease;
-}
-.launch-btn:hover::after {
-  width: calc(100% - 30px);
-}
+    .background-slider img.active {
+      opacity: 1;
+    }
 
-.feedback-btn {
-  background-color: white;
-  color: #0251a1;
-  border-color: #0251a1;
-}
-.feedback-btn:hover {
-  background-color: #c8c0c0;
-}
+    .blue-overlay {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: radial-gradient(
+              ellipse at center,
+              rgba(38, 50, 83, 0.92) 0%,
+              rgba(38, 50, 83, 0.95) 60%,
+              rgba(28, 37, 63, 0.97) 100%
+      );
+      z-index: 1;
+      pointer-events: none;
+    }
 
-/* ========== Info Box Section ========== */
-.info-box-section {
-  position: relative;
-  z-index: 2;
-  max-width: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 61%;
-}
+    /* ========== Buttons ========== */
+    .button-container {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      width: 100%;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
 
-.info-box {
-  width: 100%;
-  height: 100%;
-  padding: 30px;
-  background-color: #fff;
-  color: #1e3a5f;
-  border: 2px solid #4f6bb8;
-  border-radius: 10px;
-  font-family: "Golos Text", sans-serif;
-  text-align: left;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-}
-.info-box h2 {
-  font-size: 1.5rem;
-  margin: 0 0 10px 0;
-}
-.info-box p {
-  font-size: 1.1rem;
-  line-height: 1.7;
-}
+    .launch-btn,
+    .feedback-btn {
+      flex: 1;
+      min-width: 200px;
+      padding: clamp(0.8rem, 2vw, 1.2rem) clamp(1rem, 3vw, 2rem);
+      font-size: clamp(0.9rem, 2vw, 1.1rem);
+      font-family: "Golos Text", sans-serif;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      border: 2px solid;
+      position: relative;
+      z-index: 0;
+      transition: background 0.3s ease, color 0.3s ease;
+      font-weight: 500;
+    }
 
-/* ========== Credits Box ========== */
-.credits-box {
-  margin-top: 25px;
-  padding: 15px 20px;
-  background-color: #fff;
-  color: #1e3a5f;
-  border: 2px solid #4f6bb8;
-  border-radius: 10px;
-  font-family: "Golos Text", sans-serif;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
-  text-align: left;
-}
-.credits-box h3 {
-  font-size: 1.3rem;
-  margin: 0 0 10px;
-}
-.credits-box p {
-  font-size: 1rem;
-  line-height: 1.5;
-  margin: 0;
-}
-#creditsBox {
-  transition: opacity 0.3s ease-in-out;
-}
+    .launch-btn {
+      background-color: #0251a1;
+      color: white;
+      border-color: white;
+    }
 
-/* ========== Feature List ========== */
-.features-columns {
-  display: flex;
-  gap: 40px;
-  flex-wrap: wrap;
-}
-.features-list {
-  list-style: none;
-  padding: 0;
-  margin-top: 20px;
-}
-.features-list li {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-}
-.icon-circle {
-  width: 38px;
-  height: 38px;
-  background-color: #1e3a5f;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  font-size: 18px;
-  flex-shrink: 0;
-  margin-right: 15px;
-}
-.feature-text strong {
-  font-size: 1.1rem;
-  display: block;
-  color: #1e3a5f;
-}
-.feature-text p {
-  margin: 2px 0 0;
-  font-size: 0.95rem;
-  color: #1e3a5f;
-}
+    .launch-btn::after {
+      content: '';
+      position: absolute;
+      bottom: 8px;
+      left: 15px;
+      height: 2px;
+      width: 0;
+      background: linear-gradient(60deg, white 0%, white 100%);
+      border-radius: 1px;
+      transition: width 0.4s ease;
+    }
 
-/* ========== Dots/Slider Controls ========== */
-.dots {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 2;
-  display: flex;
-  gap: 10px;
-}
-.dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background-color: white;
-  opacity: 0.5;
-  cursor: pointer;
-  transition: opacity 0.3s;
-}
-.dot.active {
-  opacity: 1;
-}
+    .launch-btn:hover::after {
+      width: calc(100% - 30px);
+    }
 
-/* ========== Animations ========== */
-@keyframes fadeInUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-@keyframes fadeInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-60px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-@keyframes fadeInRight {
-  from {
-    opacity: 0;
-    transform: translateX(60px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-@keyframes fadeInFadeOut {
-  0% {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+    .feedback-btn {
+      background-color: white;
+      color: #0251a1;
+      border-color: #0251a1;
+    }
 
-.fade-in-left {
-  animation: fadeInLeft 1.2s ease-out forwards;
-  opacity: 0;
-  animation-delay: 0.1s;
-}
-.fade-in-right {
-  animation: fadeInRight 1.2s ease-out forwards;
-  opacity: 0;
-  animation-delay: 0.1s;
-}
-.fade-toggle {
-  animation: fadeInFadeOut 0.6s ease-in-out forwards;
-}
+    .feedback-btn:hover {
+      background-color: #c8c0c0;
+    }
 
-/* ========== Fixed Background Elements ========== */
-.background-slider,
-.blue-overlay {
-  position: fixed !important;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
+    /* ========== Info Box Section ========== */
+    .info-box-section {
+      position: relative;
+      z-index: 2;
+      flex: 1;
+      max-width: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: auto;
+      min-height: 70vh;
+    }
 
-.dots {
-  position: fixed !important;
-  bottom: 30px !important;
-  transform: translateX(-50%);
-  z-index: 10;
-}
+    .info-box {
+      width: 100%;
+      height: 100%;
+      padding: clamp(1.5rem, 4vw, 2.5rem);
+      background-color: #fff;
+      color: #1e3a5f;
+      border: 2px solid #4f6bb8;
+      border-radius: 10px;
+      font-family: "Golos Text", sans-serif;
+      text-align: left;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
 
-/* ========== Ensure Hero Content Visible on Scroll ========== */
-.hero {
-  position: relative;
-  z-index: 2;
-}
+    .info-box h2 {
+      font-size: clamp(1.3rem, 3vw, 1.8rem);
+      margin: 0 0 1rem 0;
+      font-weight: 600;
+    }
 
-/* ========== Feature Strip Section ========== */
-.feature-strip {
-  position: relative;
-  z-index: 2;
-  width: 85vw;
-  margin: 0 auto;
-  padding: 10px 30px;
-  background-color: white;
-  border-radius: 12px;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
-  border: 2px solid #4f6bb8;
-  font-family: "Golos Text", sans-serif;
-  color: #1e3a5f;
-  height: auto;
-  /* no height or flexbox here = natural flow & top-aligned text */
-}
+    .info-box p {
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
 
+    /* ========== Credits Box ========== */
+    .credits-box {
+      margin-top: 1.5rem;
+      padding: clamp(1rem, 3vw, 1.5rem);
+      background-color: #fff;
+      color: #1e3a5f;
+      border: 2px solid #4f6bb8;
+      border-radius: 10px;
+      font-family: "Golos Text", sans-serif;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+      text-align: left;
+    }
 
-.feature-strip h2 {
-  font-size: 1.7rem;
-  margin-bottom: 15px;
-}
+    .credits-box h3 {
+      font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+      margin: 0 0 0.8rem;
+      font-weight: 600;
+    }
 
-.feature-strip p {
-  font-size: 1.1rem;
-  line-height: 1.6;
-}
+    .credits-box p {
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      line-height: 1.5;
+      margin: 0;
+    }
 
-.feature-strips {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;         /* smaller space between each feature-strip */
-  margin-top: 0px; /* less space from the section above */
-  margin-bottom: 80px; /* less space before the next section */
-}
+    #creditsBox {
+      transition: opacity 0.3s ease-in-out;
+    }
 
-.image-block {
-  display: inline-block;
-  max-width: 35%;          /* prevent from exceeding the box */
-  margin: 10px;
-  vertical-align: top;
-}
+    /* ========== Feature List ========== */
+    .features-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(1rem, 3vw, 2rem);
+      margin-top: 1rem;
+      flex-grow: 1;
+    }
 
-.image-block img {
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
-  display: block;
-}
+    .features-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(0.8rem, 2vw, 1.2rem);
+    }
 
-.image-block.right {
-  float: right;
-  margin-left: 20px;
-}
+    .features-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: clamp(0.8rem, 2vw, 1rem);
+    }
 
-.image-block.left {
-  float: left;
-  margin-right: 20px;
-}
+    .icon-circle {
+      width: clamp(2rem, 4vw, 2.5rem);
+      height: clamp(2rem, 4vw, 2.5rem);
+      background-color: #1e3a5f;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: clamp(0.9rem, 2vw, 1.1rem);
+      flex-shrink: 0;
+    }
 
-.image-block .caption {
-  display: block;
-  font-size: 0.9rem;
-  color: #444;
-  margin-top: 5px;
-  text-align: center;
-}
+    .feature-text {
+      flex: 1;
+    }
 
-.about-team .team-carousel {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 30px;
-  flex-wrap: nowrap;
-}
+    .feature-text strong {
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      display: block;
+      color: #1e3a5f;
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
 
-.about-team .team-member {
-  display: flex;
-  align-items: center;
-  max-width: 800px;
-  gap: 30px;
-}
+    .feature-text p {
+      margin: 0;
+      font-size: clamp(0.85rem, 2vw, 0.95rem);
+      color: #1e3a5f;
+      line-height: 1.4;
+    }
 
-.about-team .team-photo {
-  width: 150px;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 8px;
-  border: 2px solid #4f6bb8;
-}
+    /* ========== Dots/Slider Controls ========== */
+    .dots {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      gap: 0.8rem;
+    }
 
-.about-team .team-info h3 {
-  margin: 0;
-  font-size: 1.4rem;
-  color: #1e3a5f;
-}
+    .dot {
+      width: clamp(0.7rem, 1.5vw, 1rem);
+      height: clamp(0.7rem, 1.5vw, 1rem);
+      border-radius: 50%;
+      background-color: white;
+      opacity: 0.5;
+      cursor: pointer;
+      transition: opacity 0.3s;
+    }
 
-.about-team .team-info h4 {
-  margin: 5px 0 10px;
-  font-size: 1.1rem;
-  font-weight: 400;
-  color: #4f6bb8;
-}
+    .dot.active {
+      opacity: 1;
+    }
 
-.about-team .team-info p {
-  margin: 0;
-  font-size: 1rem;
-  line-height: 1.5;
-  color: #333;
-}
+    /* ========== Animations ========== */
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-.about-team .arrow {
-  font-size: 2rem;
-  cursor: pointer;
-  user-select: none;
-  color: #1e3a5f;
-}
+    @keyframes fadeInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-60px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
 
+    @keyframes fadeInRight {
+      from {
+        opacity: 0;
+        transform: translateX(60px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
 
+    @keyframes fadeInFadeOut {
+      0% {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-</style>
+    .fade-in-left {
+      animation: fadeInLeft 1.2s ease-out forwards;
+      opacity: 0;
+      animation-delay: 0.1s;
+    }
 
+    .fade-in-right {
+      animation: fadeInRight 1.2s ease-out forwards;
+      opacity: 0;
+      animation-delay: 0.1s;
+    }
+
+    .fade-toggle {
+      animation: fadeInFadeOut 0.6s ease-in-out forwards;
+    }
+
+    /* ========== Fixed Background Elements ========== */
+    .background-slider,
+    .blue-overlay {
+      position: fixed !important;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .dots {
+      position: fixed !important;
+      bottom: 2rem !important;
+      transform: translateX(-50%);
+      z-index: 10;
+    }
+
+    /* ========== Ensure Hero Content Visible on Scroll ========== */
+    .hero {
+      position: relative;
+      z-index: 2;
+    }
+
+    /* ========== Feature Strip Section ========== */
+    .feature-strip {
+      position: relative;
+      z-index: 2;
+      width: min(90vw, 1200px);
+      margin: 0 auto;
+      padding: clamp(1.5rem, 4vw, 2.5rem);
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+      border: 2px solid #4f6bb8;
+      font-family: "Golos Text", sans-serif;
+      color: #1e3a5f;
+    }
+
+    .feature-strip h2 {
+      font-size: clamp(1.5rem, 4vw, 2.2rem);
+      margin-bottom: clamp(1rem, 3vw, 1.5rem);
+      font-weight: 700;
+    }
+
+    .feature-strip p {
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .feature-strips {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(1.5rem, 4vw, 2.5rem);
+      margin-top: 0;
+      margin-bottom: clamp(3rem, 6vw, 5rem);
+      padding: clamp(1rem, 3vw, 2rem) 0;
+    }
+
+    .image-block {
+      display: inline-block;
+      max-width: min(35%, 300px);
+      margin: clamp(0.5rem, 2vw, 1rem);
+      vertical-align: top;
+    }
+
+    .image-block img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      display: block;
+    }
+
+    .image-block.right {
+      float: right;
+      margin-left: clamp(1rem, 3vw, 1.5rem);
+    }
+
+    .image-block.left {
+      float: left;
+      margin-right: clamp(1rem, 3vw, 1.5rem);
+    }
+
+    .image-block .caption {
+      display: block;
+      font-size: clamp(0.8rem, 2vw, 0.9rem);
+      color: #444;
+      margin-top: 0.5rem;
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    .about-team .team-carousel {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(1rem, 4vw, 2rem);
+      flex-wrap: nowrap;
+    }
+
+    .about-team .team-member {
+      display: flex;
+      align-items: center;
+      max-width: 800px;
+      gap: clamp(1rem, 4vw, 2rem);
+      flex: 1;
+    }
+
+    .about-team .team-photo {
+      width: clamp(100px, 15vw, 150px);
+      height: clamp(100px, 15vw, 150px);
+      object-fit: cover;
+      border-radius: 8px;
+      border: 2px solid #4f6bb8;
+      flex-shrink: 0;
+    }
+
+    .about-team .team-info {
+      flex: 1;
+    }
+
+    .about-team .team-info h3 {
+      margin: 0;
+      font-size: clamp(1.2rem, 3vw, 1.6rem);
+      color: #1e3a5f;
+      font-weight: 600;
+    }
+
+    .about-team .team-info h4 {
+      margin: 0.3rem 0 0.8rem;
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      font-weight: 400;
+      color: #4f6bb8;
+    }
+
+    .about-team .team-info p {
+      margin: 0;
+      font-size: clamp(0.9rem, 2.2vw, 1rem);
+      line-height: 1.5;
+      color: #333;
+    }
+
+    .about-team .arrow {
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      cursor: pointer;
+      user-select: none;
+      color: #1e3a5f;
+      padding: 0.5rem;
+      transition: color 0.3s ease;
+    }
+
+    .about-team .arrow:hover {
+      color: #4f6bb8;
+    }
+
+    /* ========== Responsive Design ========== */
+    @media (max-width: 1024px) {
+      .hero {
+        flex-direction: column;
+        padding: 2rem 1rem;
+        gap: 2rem;
+      }
+
+      .hero-content,
+      .info-box-section {
+        max-width: 100%;
+        flex: none;
+      }
+
+      .info-box-section {
+        min-height: auto;
+      }
+
+      .features-columns {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .button-container {
+        flex-direction: column;
+      }
+
+      .launch-btn,
+      .feedback-btn {
+        min-width: auto;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .about-team .team-member {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+      }
+
+      .about-team .team-carousel {
+        flex-direction: column;
+      }
+
+      .image-block.left,
+      .image-block.right {
+        float: none;
+        display: block;
+        margin: 1rem auto;
+        max-width: 80%;
+      }
+
+      .feature-strip {
+        width: 95vw;
+        padding: 1.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero {
+        padding: 1rem;
+      }
+
+      .fade-in-text {
+        font-size: clamp(2rem, 12vw, 4rem);
+      }
+
+      .dots {
+        bottom: 1rem !important;
+      }
+    }
+  </style>
 </head>
 <body>
-  <div class="hero">
-    <div class="background-slider">
-      <img src="../img/ModelSimView.png" class="active" alt="Slide 1">
-      <img src="../img/SpringView.png" alt="Slide 2">
-      <img src="../img/TableView.png" alt="Slide 3">
-      <img src="../img/ChartView.png" alt="Slide 4">
-    </div>
-    <div class="blue-overlay"></div>
+<div class="hero">
+  <div class="background-slider">
+    <img src="../img/ModelSimView.png" class="active" alt="Slide 1">
+    <img src="../img/SpringView.png" alt="Slide 2">
+    <img src="../img/TableView.png" alt="Slide 3">
+    <img src="../img/ChartView.png" alt="Slide 4">
+  </div>
+  <div class="blue-overlay"></div>
 
-    <div class="hero-content fade-in-left">
-      <h1 class="intro-text">
-        Design and Run All-Powerful Simulations With:<br>
-        <span class="fade-in-text">LunaSim</span>
-      </h1>
-      <div class="button-container">
-        <button class="launch-btn" onclick="launchLunaSim()">
-          Click Here to Launch <i class="fa-regular fa-arrow-up-right-from-square"></i>
-        </button>
-        <button class="feedback-btn" onclick="toggleCredits()">
-          Provide Feedback <i class="fa-regular fa-comment"></i>
-        </button>
-      </div>
-
-
-      <div class="credits-box" id="creditsBox">
-        <h3>Credits</h3>
-        <p>
-          <b>Project Manager:</b> Ryan Chung<br>
-          <b>Lead Programmer:</b> Akash Saran<br>
-          <b>Lead Tester:</b> Arjun Mujumdar<br>
-          <b>Systems Analyst:</b> Caleb Wen<br>
-          <b>Original Creators:</b> Karthik Vedula, Aditya Patil, Sienna Simms<br>
-          <b>Functional Developer:</b> William Park<br>
-          <b>Special Thanks:</b> Ishan Kheterpal, Mark Estep, and the SMCS Community
-          
-        </p>
-      </div>
+  <div class="hero-content fade-in-left">
+    <h1 class="intro-text">
+      Design and Run All-Powerful Simulations With:<br>
+      <span class="fade-in-text">LunaSim</span>
+    </h1>
+    <div class="button-container">
+      <button class="launch-btn" onclick="launchLunaSim()">
+        Click Here to Launch <i class="fa-regular fa-arrow-up-right-from-square"></i>
+      </button>
+      <button class="feedback-btn" onclick="toggleCredits()">
+        Provide Feedback <i class="fa-regular fa-comment"></i>
+      </button>
     </div>
 
-    <div class="info-box-section fade-in-right">
-      <div class="info-box">
-        <h2>What is LunaSim?</h2>
-        <p>LunaSim is an open-source, browser-based system dynamics software. Its use is to simulate physical situations by graphically representing solutions to sets of differential equations provided by the user. </p>
-
-        <h2>Important Features</h2>
-        <div class="features-columns">
-          <ul class="features-list">
-            <li>
-              <div class="icon-circle"><i class="fa-regular fa-circle-nodes"></i></div>
-              <div class="feature-text">
-                <strong>Nodes</strong>
-                <p>Stocks, Variables, Clouds</p>
-              </div>
-            </li>
-            <li>
-              <div class="icon-circle"><i class="fa-regular fa-arrows-left-right"></i></div>
-              <div class="feature-text">
-                <strong>Links</strong>
-                <p>Flows, Influences</p>
-              </div>
-            </li>
-            <li>
-              <div class="icon-circle"><i class="fa-regular fa-lambda"></i></div>
-              <div class="feature-text">
-                <strong>Equations</strong>
-                <p>Refrences, Java Math Functions</p>
-              </div>
-            </li>
-            <li>
-              <div class="icon-circle"><i class="fa-regular fa-integral"></i></div>
-              <div class="feature-text">
-                <strong>Integration Methods</strong>
-                <p>Euler's Method, Runge-Kutta 4</p>
-              </div>
-            </li>
-          </ul>
-
-          <ul class="features-list">
-            <li>
-              <div class="icon-circle"><i class="fa-regular fa-chart-line"></i></div>
-              <div class="feature-text">
-                <strong>Visuals</strong>
-                <p>Charts, Tables, PNGs, CSVs</p>
-              </div>
-            </li>
-            <li>
-              <div class="icon-circle"><i class="fa-regular fa-floppy-disk"></i></div>
-              <div class="feature-text">
-                <strong>Import/Export</strong>
-                <p>Save and Reuse Models</p>
-              </div>
-            </li>
-            <li>
-              <div class="icon-circle"><i class="fa-regular fa-palette"></i></div>
-              <div class="feature-text">
-                <strong>Customization</strong>
-                <p>Themes, Fonts</p>
-              </div>
-            </li>
-            <li>
-              <div class="icon-circle"><i class="fa-regular fa-ghost"></i></div>
-              <div class="feature-text">
-                <strong>And Much More!</strong>
-                <p>Ghosting, Logic, Docs, etc.</p>
-              </div>
-            </li>
-          </ul>
-        </div>
-
-
-      </div>
-    </div>
-
-    <div class="dots">
-      <div class="dot active" onclick="setSlide(0)"></div>
-      <div class="dot" onclick="setSlide(1)"></div>
-      <div class="dot" onclick="setSlide(2)"></div>
-      <div class="dot" onclick="setSlide(3)"></div>
+    <div class="credits-box" id="creditsBox">
+      <h3>Credits</h3>
+      <p>
+        <b>Project Manager:</b> Ryan Chung<br>
+        <b>Lead Programmer:</b> Akash Saran<br>
+        <b>Lead Tester:</b> Arjun Mujumdar<br>
+        <b>Systems Analyst:</b> Caleb Wen<br>
+        <b>Original Creators:</b> Karthik Vedula, Aditya Patil, Sienna Simms<br>
+        <b>Functional Developer:</b> William Park<br>
+        <b>Special Thanks:</b> Ishan Kheterpal, Mark Estep, and the SMCS Community
+      </p>
     </div>
   </div>
 
-  <!-- Additional Feature Strip Section -->
-  <section class="feature-strips">
-    <div class="feature-strip about-team">
-      <h2>About the Team</h2>
-      <div class="team-carousel">
-        <div class="arrow left" onclick="prevTeamMember()">&#8592;</div>
+  <div class="info-box-section fade-in-right">
+    <div class="info-box">
+      <h2>What is LunaSim?</h2>
+      <p>LunaSim is an open-source, browser-based system dynamics software. Its use is to simulate physical situations by graphically representing solutions to sets of differential equations provided by the user.</p>
 
-        <div class="team-member" id="teamMemberDisplay">
-          <div class="image-block left">
-            <img src="placeholder.png" alt="Team Member Photo" class="team-photo">
-          </div>
-          <div class="team-info">
-            <h3 id="memberName">Karthik Vedula</h3>
-            <h4 id="memberRole">Lead Programmer (Original)</h4>
-            <p id="memberBio">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quam tortor, sagittis eget pellentesque vitae, vulputate quis velit. Donec sit amet volutpat ex. Nunc id nisi eleifend, congue nulla sit amet, vulputate tortor. Integer ultrices non nisl ut facilisis. Cras sollicitudin semper interdum. Donec nec eros rhoncus, commodo odio non, tincidunt justo. Donec vehicula vulputate odio a aliquet. Vestibulum metus odio, rhoncus id euismod vulputate, accumsan a sem. Quisque ut maximus urna, et bibendum risus. Phasellus in ipsum enim. Vestibulum non dui ut purus blandit finibus sed ac est.</p>
-          </div>
-        </div>
+      <h2>Important Features</h2>
+      <div class="features-columns">
+        <ul class="features-list">
+          <li>
+            <div class="icon-circle"><i class="fa-regular fa-circle-nodes"></i></div>
+            <div class="feature-text">
+              <strong>Nodes</strong>
+              <p>Stocks, Variables, Clouds</p>
+            </div>
+          </li>
+          <li>
+            <div class="icon-circle"><i class="fa-regular fa-arrows-left-right"></i></div>
+            <div class="feature-text">
+              <strong>Links</strong>
+              <p>Flows, Influences</p>
+            </div>
+          </li>
+          <li>
+            <div class="icon-circle"><i class="fa-regular fa-lambda"></i></div>
+            <div class="feature-text">
+              <strong>Equations</strong>
+              <p>References, Java Math Functions</p>
+            </div>
+          </li>
+          <li>
+            <div class="icon-circle"><i class="fa-regular fa-integral"></i></div>
+            <div class="feature-text">
+              <strong>Integration Methods</strong>
+              <p>Euler's Method, Runge-Kutta 4</p>
+            </div>
+          </li>
+        </ul>
 
-        <div class="arrow right" onclick="nextTeamMember()">&#8594;</div>
+        <ul class="features-list">
+          <li>
+            <div class="icon-circle"><i class="fa-regular fa-chart-line"></i></div>
+            <div class="feature-text">
+              <strong>Visuals</strong>
+              <p>Charts, Tables, PNGs, CSVs</p>
+            </div>
+          </li>
+          <li>
+            <div class="icon-circle"><i class="fa-regular fa-floppy-disk"></i></div>
+            <div class="feature-text">
+              <strong>Import/Export</strong>
+              <p>Save and Reuse Models</p>
+            </div>
+          </li>
+          <li>
+            <div class="icon-circle"><i class="fa-regular fa-palette"></i></div>
+            <div class="feature-text">
+              <strong>Customization</strong>
+              <p>Themes, Fonts</p>
+            </div>
+          </li>
+          <li>
+            <div class="icon-circle"><i class="fa-regular fa-ghost"></i></div>
+            <div class="feature-text">
+              <strong>And Much More!</strong>
+              <p>Ghosting, Logic, Docs, etc.</p>
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
-    <div class="feature-strip">
-      <h2>Why Was LunaSim Created?</h2>
-      <p>
-        "System dynamics modeling software allows the user to graphically describe and run simulations of real-world systems. My school&apos;s 9th Grade Foundations of Computer Science class uses this kind of software, where students learn about how modeling and simulation works and how it can be applied to the fields of engineering, physics, and biology.<br><br>
+  </div>
 
-        Previously, my school used licensed, commercial (and expensive) software for systems modeling. A system-wide software upgrade made the previous modeling software at our school inoperable on Windows and school-issued Chromebooks, upending students&apos; curriculum.<br><br>
+  <div class="dots">
+    <div class="dot active" onclick="setSlide(0)"></div>
+    <div class="dot" onclick="setSlide(1)"></div>
+    <div class="dot" onclick="setSlide(2)"></div>
+    <div class="dot" onclick="setSlide(3)"></div>
+  </div>
+</div>
 
-        This motivated me to propose and lead the development of our app LunaSim, a free, open-source alternative that can be accessed from any computer with a standard browser, allowing students to use both the desktop computers and Chromebooks to build their simulations."<br><br>
+<!-- Additional Feature Strip Section -->
+<section class="feature-strips">
+  <div class="feature-strip about-team">
+    <h2>About the Team</h2>
+    <div class="team-carousel">
+      <div class="arrow left" onclick="prevTeamMember()">&#8592;</div>
 
-        - <a href="https://karthikvedula.com/2024/04/14/congressional-app-challenge-house-of-code" target="_blank" rel="noopener noreferrer">Karthik Vedula <i>(Original Co-Creator of LunaSim)</i></a>
-      </p>
+      <div class="team-member" id="teamMemberDisplay">
+        <div class="image-block left">
+          <img src="placeholder.png" alt="Team Member Photo" class="team-photo">
+        </div>
+        <div class="team-info">
+          <h3 id="memberName">Karthik Vedula</h3>
+          <h4 id="memberRole">Lead Programmer (Original)</h4>
+          <p id="memberBio">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quam tortor, sagittis eget pellentesque vitae, vulputate quis velit. Donec sit amet volutpat ex. Nunc id nisi eleifend, congue nulla sit amet, vulputate tortor. Integer ultrices non nisl ut facilisis. Cras sollicitudin semper interdum. Donec nec eros rhoncus, commodo odio non, tincidunt justo. Donec vehicula vulputate odio a aliquet. Vestibulum metus odio, rhoncus id euismod vulputate, accumsan a sem. Quisque ut maximus urna, et bibendum risus. Phasellus in ipsum enim. Vestibulum non dui ut purus blandit finibus sed ac est.</p>
+        </div>
+      </div>
+
+      <div class="arrow right" onclick="nextTeamMember()">&#8594;</div>
     </div>
-    <div class="feature-strip">
-      <h2>History of LunaSim</h2>
-      <p>
+  </div>
+
+  <div class="feature-strip">
+    <h2>Why Was LunaSim Created?</h2>
+    <p>
+      "System dynamics modeling software allows the user to graphically describe and run simulations of real-world systems. My school&apos;s 9th Grade Foundations of Computer Science class uses this kind of software, where students learn about how modeling and simulation works and how it can be applied to the fields of engineering, physics, and biology.<br><br>
+
+      Previously, my school used licensed, commercial (and expensive) software for systems modeling. A system-wide software upgrade made the previous modeling software at our school inoperable on Windows and school-issued Chromebooks, upending students&apos; curriculum.<br><br>
+
+      This motivated me to propose and lead the development of our app LunaSim, a free, open-source alternative that can be accessed from any computer with a standard browser, allowing students to use both the desktop computers and Chromebooks to build their simulations."<br><br>
+
+      - <a href="https://karthikvedula.com/2024/04/14/congressional-app-challenge-house-of-code" target="_blank" rel="noopener noreferrer">Karthik Vedula <i>(Original Co-Creator of LunaSim)</i></a>
+    </p>
+  </div>
+
+  <div class="feature-strip">
+    <h2>History of LunaSim</h2>
+    <p>
         <span class="image-block right">
           <img src="image8.png" alt="Early Development of LunaSim">
-          <span class="caption">Initial LunaSim’s interface in early 2023</span>
+          <span class="caption">Initial LunaSim's interface in early 2023</span>
         </span>
 
-        LunaSim began in April 2023 as an initiative to provide a free, open-source alternative to commercial system dynamics modeling software used in our high school's 9th grade Foundations of Computer Science course. The project was born out of necessity: a system-wide device upgrade rendered our school's licensed modeling software incompatible with both Windows and school-issued Chromebooks. To ensure continuity in the curriculum, students Karthik Vedula, Aditya Patil, and Sienna Simms (then sophomores) collaborated to develop the structure of LunaSim from the ground up.<br><br>     
-        
-        By October 2023, LunaSim had reached its first major milestone: full deployment to over 60 students in the 9th grade computer science class. The tool empowered students to build interactive models of physical and engineering systems directly in the browser. Its success demonstrated that a browser-based simulation environment could be both powerful and accessible in a classroom setting. Students who used the software were amazed at its simplicity.
-      </p>
+      LunaSim began in April 2023 as an initiative to provide a free, open-source alternative to commercial system dynamics modeling software used in our high school's 9th grade Foundations of Computer Science course. The project was born out of necessity: a system-wide device upgrade rendered our school's licensed modeling software incompatible with both Windows and school-issued Chromebooks. To ensure continuity in the curriculum, students Karthik Vedula, Aditya Patil, and Sienna Simms (then sophomores) collaborated to develop the structure of LunaSim from the ground up.<br><br>
 
-      <p>
+      By October 2023, LunaSim had reached its first major milestone: full deployment to over 60 students in the 9th grade computer science class. The tool empowered students to build interactive models of physical and engineering systems directly in the browser. Its success demonstrated that a browser-based simulation environment could be both powerful and accessible in a classroom setting. Students who used the software were amazed at its simplicity.
+    </p>
 
+    <p>
         <span class="image-block left">
-          <img src="CongressionalChallenge.jpg" alt="House of Code Presentation" style="width: 400px; height: auto;">
+          <img src="CongressionalChallenge.jpg" alt="House of Code Presentation">
           <span class="caption">Team presenting LunaSim at the Maryland State House</span>
         </span>
 
+      LunaSim's momentum continued into April 2024, when the project was recognized at the state level. The team had the honor of presenting LunaSim at the U.S. Capitol as part of the Congressional App Challenge's House of Code event. There, team members met Congressman David Trone and showcased how LunaSim is reshaping STEM education through open-source innovation. The app was then named the winner of the 2023 Congressional App Challenge for Maryland's 6th District!
+    </p>
 
-        LunaSim's momentum continued into April 2024, when the project was recognized at the state level. The team had the honor of presenting LunaSim at the U.S. Capitol as part of the Congressional App Challenge's House of Code event. There, team members met Congressman David Trone and showcased how LunaSim is reshaping STEM education through open-source innovation. The app was then named the winner of the 2023 Congressional App Challenge for Maryland's 6th District!
-      </p>
+    <p>
+      In August 2024, LunaSim was showcased at the prestigious International System Dynamics Conference, thanks to the efforts of Karthik Vedula and Mark Estep, our 10th grade computer science teacher. The presentation brought international recognition to LunaSim for its innovative approach to system dynamics education. You can read more about the presentation on the System Dynamics Society's official site:
+      <a href="https://proceedings.systemdynamics.org/2024/papers/P1049.pdf" target="_blank">LunaSim Paper</a>.
+    </p>
 
-      <p>
-        In August 2024, LunaSim was showcased at the prestigious International System Dynamics Conference, thanks to the efforts of Karthik Vedula and Mark Estep, our 10th grade computer science teacher. The presentation brought international recognition to LunaSim for its innovative approach to system dynamics education. You can read more about the presentation on the System Dynamics Society’s official site: 
-        <a href="https://proceedings.systemdynamics.org/2024/papers/P1049.pdf" target="_blank">LunaSim Paper</a>.
-      </p>
+    <p>
+      Following its second full year in use, LunaSim had expanded to over 120 students and became a core part of the 9th grade curriculum. As the original creators graduated and moved on to college, ownership of the project passed to a new team of freshmen (Ryan Chung, Akash Saran, Arjun Mujumdar, and Caleb Wen) — four students who had been part of LunaSim's first pilot run in 2023. Under their leadership, LunaSim received a complete UI refresh and major refinements to the software's infrastructure, laying the groundwork for a new generation of features and broader usability.
 
-
-      <p>
-        Following its second full year in use, LunaSim had expanded to over 120 students and became a core part of the 9th grade curriculum. As the original creators graduated and moved on to college, ownership of the project passed to a new team of freshmen (Ryan Chung, Akash Saran, Arjun Mujumdar, and Caleb Wen) — four students who had been part of LunaSim's first pilot run in 2023. Under their leadership, LunaSim received a complete UI refresh and major refinements to the software's infrastructure, laying the groundwork for a new generation of features and broader usability.
-
-        <span class="image-block right">
+      <span class="image-block right">
           <img src="ModelSimView.png" alt="New Team Updating LunaSim">
           <span class="caption">New LunaSim interface in 2025</span>
         </span>
-      </p>
-
-      <p>
-        In June 2025, LunaSim was deployed to its official web domain, LunaSim.org, thanks to the support of Ben Ross and Ishan Kheterpal, the school's computer science teacher. This move marked a key milestone in making LunaSim more accessible to everyone outside of our school community.
-      </p>
-
-      <p>
-        LunaSim still continues to evolve with contributions from students passionate about making system dynamics modeling accessible to all learners.
-      </p>
-    </div>
-
-    <div class="feature-strip">
-      <h2>References</h2>
-      <ul style="list-style-type: disc; padding-left: 20px; line-height: 1.8;">
-        <li>
-          <a href="https://www.youtube.com/watch?v=luRWuwhCkec&t=14s&ab_channel=LunaSim" target="_blank">
-            <strong>Congressional App Design Video</strong> (YouTube)
-          </a>
-        </li>
-        <li>
-          <a href="https://www.congressionalappchallenge.us/23-md06/" target="_blank">
-            <strong>Congressional App Design Challenge</strong>: MD-06 District Winner
-          </a>
-        </li>
-        <li>
-          <a href="https://poolesvillepulse.org/5585/technology/smcs-juniors-developed-working-software-for-9th-grade-class/" target="_blank">
-            <strong>The Poolesville Pulse</strong>: SMCS Juniors Develop Software for 9th Grade Class
-          </a>
-        </li>
-        <li>
-          <a href="https://karthikvedula.com/2024/04/14/congressional-app-challenge-house-of-code/" target="_blank">
-            <strong>Karthik's Blog</strong>: Congressional App Challenge – House of Code
-          </a>
-        </li>
-        <li>
-          <a href="https://proceedings.systemdynamics.org/2024/papers/P1049.pdf" target="_blank">
-            <strong>System Dynamics Society</strong>: International Conference Paper (2024)
-          </a>
-        </li>
-        <li>
-          <a href="https://github.com/PHS-SMCS/LunaSim" target="_blank">
-            <strong>GitHub Repository</strong>: LunaSim Source Code
-          </a>
-        </li>
-      </ul>
-    </div>
-
-  </section>
-
-
-  <script>
-    let currentSlide = 0;
-    const slides = document.querySelectorAll('.background-slider img');
-    const dots = document.querySelectorAll('.dot');
-
-
-    function setSlide(index) {
-      slides.forEach((slide, i) => {
-        slide.classList.toggle('active', i === index);
-        dots[i].classList.toggle('active', i === index);
-      });
-      currentSlide = index;
-    }
-
-
-    function nextSlide() {
-      currentSlide = (currentSlide + 1) % slides.length;
-      setSlide(currentSlide);
-    }
-
-
-    setInterval(nextSlide, 6000);
-
-
-    function launchLunaSim() {
-      window.location.href = "../sim/systemDynamics.html";
-    }
-  </script>
-<script>
-  function toggleCredits() {
-  const creditsBox = document.getElementById('creditsBox');
-
-  // Define new content you want to show
-  const newContent = `
-    <h3>Send Us An Email!</h3>
-    <p>
-      <b>Karthik Vedula:</b> <a href="mailto:karthik@vedula.me">karthik@vedula.me</a><br>
-      <b>Ryan Chung:</b> <a href="mailto:ryanchung9984@gmail.com">ryanchung9984@gmail.com</a><br>
-      <b>Akash Saran:</b> <a href="mailto:akashsaran.ssp@gmail.com">akashsaran.ssp@gmail.com</a><br>
-      <b>Arjun Mujumdar:</b> <a href="mailto:arjun.m.mujumdar@gmail.com">arjun.m.mujumdar@gmail.com</a><br>
-      <b>Caleb Wen:</b> <a href="mailto:calebrwen@gmail.com">calebrwen@gmail.com</a><br>
-      <b>William Park:</b> <a href="mailto:smartynotchy@gmail.com">smartynotchy@gmail.com</a><br>
-      Your feedback will help us improve LunaSim for generations to come!
     </p>
-  `;
 
-  // Add fade-out
-  creditsBox.classList.remove('fade-toggle');
-  creditsBox.style.opacity = '0';
+    <p>
+      In June 2025, LunaSim was deployed to its official web domain, LunaSim.org, thanks to the support of Ben Ross and Ishan Kheterpal, the school's computer science teacher. This move marked a key milestone in making LunaSim more accessible to everyone outside of our school community.
+    </p>
 
-  setTimeout(() => {
-    creditsBox.innerHTML = newContent;
+    <p>
+      LunaSim still continues to evolve with contributions from students passionate about making system dynamics modeling accessible to all learners.
+    </p>
+  </div>
 
-    // Add fade-in
-    creditsBox.classList.add('fade-toggle');
-    creditsBox.style.opacity = '1';
-  }, 300); // Match fade-out time
-}
+  <div class="feature-strip">
+    <h2>References</h2>
+    <ul style="list-style-type: disc; padding-left: 20px; line-height: 1.8;">
+      <li>
+        <a href="https://www.youtube.com/watch?v=luRWuwhCkec&t=14s&ab_channel=LunaSim" target="_blank">
+          <strong>Congressional App Design Video</strong> (YouTube)
+        </a>
+      </li>
+      <li>
+        <a href="https://www.congressionalappchallenge.us/23-md06/" target="_blank">
+          <strong>Congressional App Design Challenge</strong>: MD-06 District Winner
+        </a>
+      </li>
+      <li>
+        <a href="https://poolesvillepulse.org/5585/technology/smcs-juniors-developed-working-software-for-9th-grade-class/" target="_blank">
+          <strong>The Poolesville Pulse</strong>: SMCS Juniors Develop Software for 9th Grade Class
+        </a>
+      </li>
+      <li>
+        <a href="https://karthikvedula.com/2024/04/14/congressional-app-challenge-house-of-code/" target="_blank">
+          <strong>Karthik's Blog</strong>: Congressional App Challenge – House of Code
+        </a>
+      </li>
+      <li>
+        <a href="https://proceedings.systemdynamics.org/2024/papers/P1049.pdf" target="_blank">
+          <strong>System Dynamics Society</strong>: International Conference Paper (2024)
+        </a>
+      </li>
+      <li>
+        <a href="https://github.com/PHS-SMCS/LunaSim" target="_blank">
+          <strong>GitHub Repository</strong>: LunaSim Source Code
+        </a>
+      </li>
+    </ul>
+  </div>
+</section>
 
+<script>
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.background-slider img');
+  const dots = document.querySelectorAll('.dot');
+
+  function setSlide(index) {
+    slides.forEach((slide, i) => {
+      slide.classList.toggle('active', i === index);
+      dots[i].classList.toggle('active', i === index);
+    });
+    currentSlide = index;
+  }
+
+  function nextSlide() {
+    currentSlide = (currentSlide + 1) % slides.length;
+    setSlide(currentSlide);
+  }
+
+  setInterval(nextSlide, 6000);
+
+  function launchLunaSim() {
+    window.location.href = "../sim/systemDynamics.html";
+  }
 </script>
+
+<script>
+  let showingCredits = true;
+  function toggleCredits() {
+    const creditsBox = document.getElementById('creditsBox');
+
+    let newContent;
+
+    if (showingCredits) {
+      // Switch to showing emails
+      newContent = `
+      <h3>Send Us An Email!</h3>
+      <p>
+        <b>Karthik Vedula:</b> <a href="mailto:karthik@vedula.me">karthik@vedula.me</a><br>
+        <b>Ryan Chung:</b> <a href="mailto:ryanchung9984@gmail.com">ryanchung9984@gmail.com</a><br>
+        <b>Akash Saran:</b> <a href="mailto:akashsaran.ssp@gmail.com">akashsaran.ssp@gmail.com</a><br>
+        <b>Arjun Mujumdar:</b> <a href="mailto:arjun.m.mujumdar@gmail.com">arjun.m.mujumdar@gmail.com</a><br>
+        <b>Caleb Wen:</b> <a href="mailto:calebrwen@gmail.com">calebrwen@gmail.com</a><br>
+        <b>William Park:</b> <a href="mailto:smartynotchy@gmail.com">smartynotchy@gmail.com</a><br>
+        Your feedback will help us improve LunaSim for generations to come!
+      </p>
+    `;
+    } else {
+      // Switch back to showing credits
+      newContent = `
+      <h3>Credits</h3>
+      <p>
+        <b>Project Manager:</b> Ryan Chung<br>
+        <b>Lead Programmer:</b> Akash Saran<br>
+        <b>Lead Tester:</b> Arjun Mujumdar<br>
+        <b>Systems Analyst:</b> Caleb Wen<br>
+        <b>Original Creators:</b> Karthik Vedula, Aditya Patil, Sienna Simms<br>
+        <b>Functional Developer:</b> William Park<br>
+        <b>Special Thanks:</b> Ishan Kheterpal, Mark Estep, and the SMCS Community
+      </p>
+    `;
+    }
+
+    // Toggle the state
+    showingCredits = !showingCredits;
+
+    // Add fade-out
+    creditsBox.classList.remove('fade-toggle');
+    creditsBox.style.opacity = '0';
+
+    setTimeout(() => {
+      creditsBox.innerHTML = newContent;
+      creditsBox.classList.add('fade-toggle');
+      creditsBox.style.opacity = '1';
+    }, 300);
+  }
+</script>
+
 <script>
   const teamMembers = [
     {
       name: "Ryan Chung",
       role: "Project Manager (New)",
-      img: "ryan.png"
+      img: "ryan.png",
+      bio: ""
     },
     {
       name: "Akash Saran",
       role: "Lead Programmer (New)",
-      img: "akash.png"
+      img: "akash.png",
+      bio: ""
     },
     {
       name: "Arjun Mujumdar",
       role: "Lead Tester (New)",
-      img: "arjun.png"
+      img: "arjun.png",
+      bio: ""
     },
     {
       name: "Caleb Wen",
       role: "Systems Analyst (New)",
-      img: "caleb.png"
+      img: "caleb.png",
+      bio: ""
     },
     {
       name: "Karthik Vedula",
       role: "Lead Programmer (Original)",
-      img: "karthik.png"
+      img: "karthik.png",
+      bio: ""
     },
     {
       name: "Aditya Patil",
       role: "Systems Analyst and Lead Tester (Original)",
-      img: "aditya.png"
+      img: "aditya.png",
+      bio: ""
     },
     {
       name: "Sienna Simms",
       role: "Project Manager and Lead Tester (Original)",
-      img: "sienna.png"
+      img: "sienna.png",
+      bio: ""
     },
     {
       name: "William Park",
       role: "Functional Developer",
-      img: "william.png"
-    },
-    {
-      name: "Ben Ross",
-      role: "Domain Owner",
-      img: "ben.png"
-    },
-    {
-      name: "Ishan Kheterpal",
-      role: "Computer Science Teacher (Client)",
-      img: "ishan.png"
-    },
-    {
-      name: "Mark Estep",
-      role: "Computer Science Teacher (Client)",
-      img: "mark.png"
-    },
-    {
-      name: "Kevin Lee",
-      role: "Teacher (Supporter)",
-      img: "kevin.png"
+      img: "william.png",
+      bio: ""
     }
   ];
 
@@ -870,12 +1000,9 @@ html, body {
     showMember(currentMember);
   }
 
-  // Initialize on page load
   document.addEventListener("DOMContentLoaded", () => {
     showMember(currentMember);
   });
 </script>
-
 </body>
 </html>
-
