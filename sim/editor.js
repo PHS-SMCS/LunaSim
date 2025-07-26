@@ -59,7 +59,7 @@ var SD = {
      * @memberof module:editor
      */
 
-    nodeCounter: {stock: 0, cloud: 0, variable: 0, valve: 0}
+    nodeCounter: {stock: 0, cloud: 0, variable: 0, valve: 0, text: 0}
 };
 
 /**
@@ -240,6 +240,9 @@ function init() {
             return SD.mode === "node" && go.ClickCreatingTool.prototype.canStart.call(this);
         },
         "clickCreatingTool.insertPart": function (loc) {
+            if (!(SD.itemType in SD.nodeCounter)) {
+                SD.nodeCounter[SD.itemType] = 0;
+            }
             SD.nodeCounter[SD.itemType] += 1;
             let newNodeId = SD.itemType + SD.nodeCounter[SD.itemType];
 
@@ -610,7 +613,7 @@ function buildTemplates() {
         )
     );
 
-    myDiagram.nodeTemplateMap.add("textbox",
+    myDiagram.nodeTemplateMap.add("text",
         $(go.Node, "Auto",
             {
                 resizable: true,
@@ -624,8 +627,8 @@ function buildTemplates() {
             $(go.Shape, "Rectangle",
                 {
                     name: "TEXTBOX_SHAPE",
-                    fill: "#fffacd",
-                    stroke: "#d4af37",
+                    fill: "#ffffff",
+                    stroke: "#050505",
                     strokeWidth: 1,
                     minSize: new go.Size(80, 40)
                 }
@@ -772,8 +775,10 @@ function updateTable(load = false) {
             .filter(item =>
                 item.label !== undefined &&
                 !isGhost(item.label) &&
-                (item.category === "stock" || item.category === "variable" || item.category === "valve")
+                (item.category === "stock" || item.category === "variable" || item.category === "valve") &&
+                item.category !== "text" && item.category !== "textbox"
             )
+
             .sort((a, b) => {
                 const order = { stock: 0, valve: 1, variable: 2 };
                 return order[a.category] - order[b.category];
@@ -830,7 +835,13 @@ function updateTable(load = false) {
     });
 
     GOJS_ELEMENT_LABELS = myDiagram.model.nodeDataArray
-        .filter(n => n.label && !n.label.startsWith('$') && n.category !== "cloud")
+        .filter(n =>
+            n.label &&
+            !n.label.startsWith('$') &&
+            n.category !== "cloud" &&
+            n.category !== "text" &&
+            n.category !== "textbox"
+        )
         .map(n => n.label);
 
     // Ensure popup styling stays consistent after table update
