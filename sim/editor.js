@@ -617,7 +617,7 @@ function buildTemplates() {
         new go.Part()
             .add(
                 new go.TextBlock(
-                    { text: "this one allows embedded newlines",
+                    { text: "Text",
                         background: "transparent",
                         editable: true })
             )
