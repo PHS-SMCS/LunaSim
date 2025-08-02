@@ -616,10 +616,11 @@ function buildTemplates() {
     myDiagram.nodeTemplateMap.add("text",
         new go.Part()
             .add(
-                new go.TextBlock(
+                $(go.TextBlock, textStyle(),
                     { text: "Text",
                         background: "transparent",
-                        editable: true })
+                        editable: true
+                        })
             )
     );
 
