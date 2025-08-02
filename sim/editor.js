@@ -614,39 +614,13 @@ function buildTemplates() {
     );
 
     myDiagram.nodeTemplateMap.add("text",
-        $(go.Node, "Auto",
-            {
-                resizable: true,
-                resizeObjectName: "TEXTBOX_SHAPE",
-                selectionAdornmentTemplate:
-                    $(go.Adornment, "Auto",
-                        $(go.Shape, { stroke: "dodgerblue", strokeWidth: 2, fill: null }),
-                        $(go.Placeholder)
-                    )
-            },
-            $(go.Shape, "Rectangle",
-                {
-                    name: "TEXTBOX_SHAPE",
-                    fill: "#ffffff",
-                    stroke: "#050505",
-                    strokeWidth: 1,
-                    minSize: new go.Size(80, 40)
-                }
-            ),
-            $(go.TextBlock,
-                {
-                    editable: true,
-                    isMultiline: true,
-                    margin: 8,
-                    wrap: go.TextBlock.WrapFit,
-                    overflow: go.TextBlock.OverflowClip,
-                    font: "12pt sans-serif",
-                    stroke: "black",
-                    width: 160
-                },
-                new go.Binding("text", "text").makeTwoWay()
+        new go.Part()
+            .add(
+                new go.TextBlock(
+                    { text: "this one allows embedded newlines",
+                        background: "transparent",
+                        editable: true })
             )
-        )
     );
 
     myDiagram.linkTemplateMap.add("influence", $(go.Link, {
