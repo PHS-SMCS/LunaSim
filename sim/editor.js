@@ -201,6 +201,8 @@ function init() {
         "undoManager.isEnabled": true,
         allowLink: false,
         "animationManager.isEnabled": false,
+        "allowTextEdit": true,
+        "isReadOnly": false,
 
         "linkingTool.portGravity": 0,
         "linkingTool.doActivate": function () {
@@ -247,6 +249,9 @@ function init() {
             return SD.mode === "node" && go.ClickCreatingTool.prototype.canStart.call(this);
         },
         "clickCreatingTool.insertPart": function (loc) {
+            if (!(SD.itemType in SD.nodeCounter)) {
+                SD.nodeCounter[SD.itemType] = 0;
+            }
             SD.nodeCounter[SD.itemType] += 1;
             let newNodeId = SD.itemType + SD.nodeCounter[SD.itemType];
 
@@ -617,45 +622,22 @@ function buildTemplates() {
         )
     );
 
+    myDiagram.nodeTemplateMap.add("text",
+        new go.Part()
+            .add(
+                $(go.TextBlock, textStyle(),
+                    { text: "Text",
+                        background: "transparent",
+                        editable: true
+                        })
+            )
+    );
+
     myDiagram.linkTemplateMap.add("influence", $(go.Link, {
         curve: go.Link.Bezier, toShortLength: 8, reshapable: true
     }, new go.Binding("curviness", "curviness").makeTwoWay(), $(go.Shape, {strokeWidth: 1.5}, new go.Binding("stroke", "isSelected", sel => sel ? "#3489eb" : "orange").ofObject()), $(go.Shape, {
         stroke: null, toArrow: "Standard", scale: 1.5
     }, new go.Binding("fill", "isSelected", sel => sel ? "#3489eb" : "orange").ofObject())));
-
-    myDiagram.nodeTemplateMap.add("textbox",
-        $(go.Node, nodeStyle(),
-            {
-                selectionAdornmentTemplate: $(go.Adornment, "Auto",
-                    $(go.Shape, {
-                        fill: null,
-                        stroke: "dodgerblue",
-                        strokeWidth: 3
-                    }),
-                    $(go.Placeholder)
-                )
-            },
-            $(go.Panel, "Auto",
-                $(go.Shape, {
-                    fill: "white",
-                    stroke: "#ccc",
-                    strokeWidth: 1,
-                    name: "SHAPE"
-                }),
-                $(go.TextBlock, textStyle(),
-                    {
-                        margin: 6,
-                        isMultiline: true,
-                        minSize: new go.Size(100, 40),
-                        wrap: go.TextBlock.WrapFit,
-                        editable: true
-                    },
-                    new go.Binding("text", "label").makeTwoWay()
-                )
-            )
-        )
-    );
-
 }
 
 /**
@@ -1568,9 +1550,6 @@ function loadModel(evt) {
     reader.readAsText(file);
 }
 
-
-
-
 /**
  * Toggles the dark theme stylesheet on or off.
  * Saves the dark mode status in sessionStorage.
@@ -1631,8 +1610,6 @@ document.getElementById("loadButton").addEventListener("click", function () {
         document.getElementById("load-actual-button").click();
     }
 });
-
-
 
 init();
 
@@ -1704,6 +1681,11 @@ document.getElementById("runButton").addEventListener("click", function () {
 });
 document.getElementById("exportButton").addEventListener("click", function () {
     exportData();
+});
+
+document.getElementById("text_button").addEventListener("click", function () {
+    setMode("node", "text");
+    toolSelect(event);
 });
 
 document.getElementById("clearButton").addEventListener("click", function () {
@@ -1846,7 +1828,6 @@ function finalizeRename() {
         $input.val(oldName);
         return;
     }
-
 
     const escapeRegExp = (string) =>
         string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -2210,7 +2191,6 @@ document.getElementById("downloadImageButton").addEventListener("click", functio
                 onConfirm: () => {},
             });
             return;
-
     }
 
     lastExportDate = new Date();
