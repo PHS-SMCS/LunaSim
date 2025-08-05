@@ -1,5 +1,8 @@
-# <img src="img/lunaLogo.svg" alt="drawing" width="25"/> LunaSim: A Lightweight, Web-Based, System Dynamics Modelling Software
+# <img src="img/favicons/lunaLogo.svg" alt="drawing" width="25"/> LunaSim: A Lightweight, Web-Based, System Dynamics Modelling Software
 > :warning: LunaSim uses the [GoJS Library](https://gojs.net/), which is free for non-commercial, non-production use.  For commercial/production use, please obtain a license from them.
+
+
+### **Try a demo here: [lunasim.org](https://lunasim.org)**
 
 [System dynamics modeling](https://systemdynamics.org/what-is-system-dynamics/) is the process of graphically outlining various elements and their interactions in a complex system (which often represents real-world mechanisms) and 
 simulating them to get theoretical results on how that system will play out over a period of time. LunaSim allows the user to model using system dynamics (specifically [stock-
