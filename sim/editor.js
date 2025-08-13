@@ -941,43 +941,17 @@ function isGhost(label) {
 
 function labelValidator(textblock, oldstr, newstr) {
     if (newstr === oldstr) return true;
-    if (newstr === "") return false;
-    if (!isNaN(newstr)) return false;
-
-
+    if (!newstr || !isNaN(newstr)) return false;
 
     if (isGhost(newstr)) {
         const targetLabel = newstr.substring(1);
-        const realNodeCount = myDiagram.model.nodeDataArray.filter(node => node.label === targetLabel && node.label !== oldstr && !isGhost(node.label)).length;
-
+        const realNodeCount = myDiagram.model.nodeDataArray
+            .filter(node => node.label === targetLabel && !isGhost(node.label)).length;
         return realNodeCount >= 1;
     }
 
-    const $tbody = $('#eqTableBody');
-    $tbody.find('tr').each(function () {
-        const $row = $(this);
-        const name = $row.find('input[name="name"]').val();
-        if (name === oldstr) {
-            const equation = $row.find('input[name="equation"]').val();
-            const checkbox = $row.find('input[name="checkbox"]').is(':checked');
-            $row.find('input[name="name"]').val(newstr);
-
-            GOJS_ELEMENT_LABELS_SET.delete(oldstr);
-            GOJS_ELEMENT_LABELS_SET.add(newstr);
-            const index = GOJS_ELEMENT_LABELS.indexOf(oldstr);
-            if (index !== -1) GOJS_ELEMENT_LABELS[index] = newstr;
-
-            $row.data('migrated', {equation, checkbox});
-        }
-    });
-
-    for (let i = 0; i < myDiagram.model.nodeDataArray.length; i++) {
-        if (myDiagram.model.nodeDataArray[i].label === newstr) {
-            return false;
-        }
-    }
-
-    return true;
+    // Ensure uniqueness
+    return !myDiagram.model.nodeDataArray.some(n => n.label === newstr);
 }
 
 /**
@@ -1849,7 +1823,6 @@ function getTopBracketMatches(fragment) {
     const lower = fragment.toLowerCase();
 
     if (fragment === "") {
-        // Show first 5 elements in creation order
         return GOJS_ELEMENT_LABELS.slice(0, 5);
     }
 
@@ -1867,29 +1840,33 @@ function finalizeRename() {
     if (!labelValidator(null, oldName, newName)) {
         showAlertPopup({
             title: "Invalid or Duplicate Name",
-            message: `The name "${newName}" is invalid or already in use.\nIt will be reset to "${oldName}".`,
-            onConfirm: () => {
-
-            },
+            message: `The name "${newName}" is invalid or already in use.\nIt will be reset to "${oldName}".`
         });
         $input.val(oldName);
         return;
     }
 
-
-    const escapeRegExp = (string) =>
-        string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    // Grab only this row's data (no full-table overwrite)
+    const $row = $input.closest('tr');
+    const equation = $row.find('input[name="equation"]').val();
+    const checkbox = $row.find('input[name="checkbox"]').is(':checked');
 
     myDiagram.model.commit(() => {
+        // Find the node being renamed
         const nodeData = myDiagram.model.nodeDataArray.find(n => n.label === oldName);
         if (nodeData) {
+            // Update label/key
             myDiagram.model.setDataProperty(nodeData, 'label', newName);
             if (nodeData.key === oldName) {
                 myDiagram.model.setDataProperty(nodeData, 'key', newName);
             }
+            // Preserve/update equation + checkbox only for this node
+            myDiagram.model.setDataProperty(nodeData, 'equation', equation);
+            myDiagram.model.setDataProperty(nodeData, 'checkbox', checkbox);
         }
 
-        const pattern = new RegExp(`\\[${escapeRegExp(oldName)}\\]`, 'g');
+        // Update references in other nodes' equations
+        const pattern = new RegExp(`\\[${oldName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\]`, 'g');
         myDiagram.model.nodeDataArray.forEach(n => {
             if (typeof n.equation === 'string') {
                 const updated = n.equation.replace(pattern, `[${newName}]`);
@@ -1898,14 +1875,14 @@ function finalizeRename() {
                 }
             }
         });
+    }, 'Rename node');
 
-        updateTable(true);
-    }, 'Rename node and update references');
+    $input.data('oldName', newName);
 
-    $input.data('oldName', newName); // Set for future renames
+    // Refresh table view from model without wiping unsaved edits in other rows
     updateTable(true);
-    myDiagram.requestUpdate();
 }
+
 
 
 
