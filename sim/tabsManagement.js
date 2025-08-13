@@ -319,8 +319,8 @@ function configTabs() {
     const icon = document.createElement("i");
     // Use different icon classes based on tab type
     icon.className = (tabs[j].type === "table")
-      ? "fa-regular fa-table"
-      : "fa-regular fa-chart-sine";
+      ? "fa-light fa-table"
+      : "fa-light fa-chart-sine";
 
     const label = document.createElement("span");
     const chartName = tabs[j].name || ((j === 0) ? "Default" : "Chart " + j);

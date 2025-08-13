@@ -68,6 +68,10 @@ input, button, select {
 
 /* Top Action Bar */
 
+#header {
+  gap: 0.5vw;
+}
+
 /* LunaSim Logo */
 #logoImage {
   position: absolute;
@@ -265,7 +269,7 @@ input, button, select {
 /* Universal Sidebar Styling (Applies to Toolbar and Chart Sidebar) */
 
 li + li {
-  margin-top: 0.5rem;
+  margin-top: 0.2rem;
 }
 
 a {
@@ -308,7 +312,7 @@ a span {
   transform: scale(0);
   opacity: 0;
   transition: 0.15s ease;
-  z-index: 501;
+  z-index: 502;
 }
 
 a span:before {
@@ -616,6 +620,63 @@ a.active {
   padding-top: 1.25rem;
   border-top: 1px solid #374875;
 }
+
+.variant-group {
+  position: relative; /* Makes the popup position relative to this group */
+}
+
+.variant-popup {
+  position: absolute;
+  top: -10px; /* Aligns top of popup with the button */
+  left: 100%; /* Places the popup to the right of the button */
+  margin-left: 12px; /* Small gap if you want */
+  flex-direction: column;
+  background-color: #1d253d;
+  border-radius: 8px;
+  padding: 12px;
+  gap: 0.5rem;
+  z-index: 501;
+
+  transform: scale(0);
+  transform-origin: top left;
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.variant-popup.visible {
+  transform: scale(1);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.variant-popup a {
+  padding: 6px 10px;
+  color: white;
+  text-decoration: none;
+}
+
+.variant-popup a:hover {
+  background-color: #46598e;
+}
+
+.variant-group > a {
+  position: relative;
+}
+
+.variant-group > a::after {
+  content: '';
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  width: 0;
+  height: 0;
+  border-right: 7px solid currentColor;
+  border-top: 7px solid transparent;
+}
+
+
+
 
 .graphTabsActive {
   background-color: #46598e !important;
@@ -1418,4 +1479,26 @@ input.settings-input.invalid:focus {
 
 .hidden {
   display: none !important;
+}
+/* New Stuff */
+
+.tool-dropdown {
+  position: absolute;
+  top: 3.7rem; /* adjust to position below the button */
+  left: 3.75rem;
+  display: flex;
+  flex-direction: column;
+  background-color: #627bc0;
+  border-radius: 8px;
+  padding: 0.75rem;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  z-index: 999;
+}
+
+.tool-dropdown.hidden {
+  display: none;
+}
+
+.dropdown-tool + .dropdown-tool {
+  margin-top: 0.5rem;
 }

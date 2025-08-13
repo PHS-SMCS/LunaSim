@@ -59,7 +59,7 @@ var SD = {
      * @memberof module:editor
      */
 
-    nodeCounter: {stock: 0, cloud: 0, variable: 0, valve: 0}
+    nodeCounter: {stock: 0, cloud: 0, variable: 0, valve: 0, text: 0}
 };
 
 /**
@@ -201,6 +201,8 @@ function init() {
         "undoManager.isEnabled": true,
         allowLink: false,
         "animationManager.isEnabled": false,
+        "allowTextEdit": true,
+        "isReadOnly": false,
 
         "linkingTool.portGravity": 0,
         "linkingTool.doActivate": function () {
@@ -247,6 +249,9 @@ function init() {
             return SD.mode === "node" && go.ClickCreatingTool.prototype.canStart.call(this);
         },
         "clickCreatingTool.insertPart": function (loc) {
+            if (!(SD.itemType in SD.nodeCounter)) {
+                SD.nodeCounter[SD.itemType] = 0;
+            }
             SD.nodeCounter[SD.itemType] += 1;
             let newNodeId = SD.itemType + SD.nodeCounter[SD.itemType];
 
@@ -617,6 +622,17 @@ function buildTemplates() {
         )
     );
 
+    myDiagram.nodeTemplateMap.add("text",
+        new go.Part()
+            .add(
+                $(go.TextBlock, textStyle(),
+                    { text: "Text",
+                        background: "transparent",
+                        editable: true
+                        })
+            )
+    );
+
     myDiagram.linkTemplateMap.add("influence", $(go.Link, {
         curve: go.Link.Bezier, toShortLength: 8, reshapable: true
     }, new go.Binding("curviness", "curviness").makeTwoWay(), $(go.Shape, {strokeWidth: 1.5}, new go.Binding("stroke", "isSelected", sel => sel ? "#3489eb" : "orange").ofObject()), $(go.Shape, {
@@ -777,8 +793,10 @@ function updateTable(load = false) {
             .filter(item =>
                 item.label !== undefined &&
                 !isGhost(item.label) &&
-                (item.category === "stock" || item.category === "variable" || item.category === "valve")
+                (item.category === "stock" || item.category === "variable" || item.category === "valve") &&
+                item.category !== "text" && item.category !== "textbox"
             )
+
             .sort((a, b) => {
                 const order = { stock: 0, valve: 1, variable: 2 };
                 return order[a.category] - order[b.category];
@@ -835,7 +853,13 @@ function updateTable(load = false) {
     });
 
     GOJS_ELEMENT_LABELS = myDiagram.model.nodeDataArray
-        .filter(n => n.label && !n.label.startsWith('$') && n.category !== "cloud")
+        .filter(n =>
+            n.label &&
+            !n.label.startsWith('$') &&
+            n.category !== "cloud" &&
+            n.category !== "text" &&
+            n.category !== "textbox"
+        )
         .map(n => n.label);
 
     // Ensure popup styling stays consistent after table update
@@ -1704,6 +1728,11 @@ document.getElementById("runButton").addEventListener("click", function () {
 });
 document.getElementById("exportButton").addEventListener("click", function () {
     exportData();
+});
+
+document.getElementById("text_button").addEventListener("click", function () {
+    setMode("node", "text");
+    toolSelect(event);
 });
 
 document.getElementById("clearButton").addEventListener("click", function () {
