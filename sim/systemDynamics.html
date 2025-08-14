@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <!---
   Authors: Sienna Simms, Karthik S. Vedula, Aditya Patil, William J. Park, Ryan D. Chung, Akash Saran, Arjun M. Mujumdar, Caleb R. Wen
 -->
@@ -8,6 +8,8 @@
   <title>LunaSim</title>
   <meta id="vp" name="viewport" content="width=device-width">
   <meta name="description" content="Design and run powerful simulations, all in the browser with LunaSim.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, minimum-scale=0.8, user-scalable=no">
+
   <script>
     // set the viewport width to no less than minimum
     window.onload = function () {
@@ -68,11 +70,11 @@
         <!-- ================== Action Bar ================== -->
         <div class="actions">
           <p id="saveStatus">Last Cloud Save: -<br>Last Export: -</p>
-          <button class="actionButton" id="runButton"><i class="fa-regular fa-play"></i> Run</button>
+          <button class="actionButton" id="runButton"><i class="fa-light fa-play"></i> Run</button>
           <input type="file" id="load-actual-button" accept=".luna, .txt" hidden/>
-          <button class="actionButton" id="loadButton"><i class="fa-regular fa-file-import"></i> Load</button>
-          <button class="actionButton" id="expButton" onclick="openSettings(event, 'exportPopup')"><i class="fa-regular fa-file-export"></i> Save</button>
-          <button class="actionButton" id="clearButton"><i class="fa-regular fa-trash"></i> Clear</button>
+          <button class="actionButton" id="loadButton"><i class="fa-light fa-file-import"></i> Load</button>
+          <button class="actionButton" id="expButton" onclick="openSettings(event, 'exportPopup')"><i class="fa-light fa-file-export"></i> Save</button>
+          <button class="actionButton" id="clearButton"><i class="fa-light fa-trash"></i> Clear</button>
         </div>
         
         <input type="text" id="model_name" name="model_name" placeholder="Model Name" value="New Project">
@@ -93,22 +95,89 @@
           <ul>
             <!-- Model Tools (Pointer, Stock, Cloud, Variable, Flow, Influence) -->
             <div class="tool-section">
-              <li><a href="#" id="pointer_button" class="pointer_selected tool"><i class="fa-regular fa-arrow-pointer"></i><span>Pointer [P]</span></a></li>
-              <li><a href="#" id="stock_button" class="node_normal tool"><i class="fa-regular fa-rectangle"></i><span>Stock [S]</span></a></li>
-              <li><a href="#" id="cloud_button" class="node_normal tool"><i class="fa-regular fa-cloud"></i><span>Cloud [C]</span></a></li>
-              <li><a href="#" id="variable_button" class="node_normal tool"><i class="fa-regular fa-circle"></i><span>Variable [V]</span></a></li>
-              <li><a href="#" id="flow_button" class="link_normal tool"><i class="fa-regular fa-arrows-left-right"></i><span>Flow [F]</span></a></li>
-              <li><a href="#" id="influence_button" class="link_normal tool"><i class="fa-regular fa-repeat"></i><span>Influence [I]</span></a></li>
+
+              <!-- Pointer Tool -->
+              <li><a href="#" id="pointer_button" class="pointer_selected tool">
+                <i class="fa-light fa-arrow-pointer"></i><span>Pointer [P]</span>
+              </a></li>
+
+              <!-- Stock Tool with Variants -->
+              <li class="variant-group">
+                <a href="#" id="stock_button" class="node_normal tool">
+                  <i class="fa-light fa-rectangle"></i><span>Stock [S]</span>
+                </a>
+
+                <div class="variant-popup" id="stock_variants">
+                  <a href="#" id="conveyor_button" class="node_normal tool">
+                    <i class="fa-light fa-conveyor-belt-boxes"></i><span>Conveyor</span>
+                  </a>
+                  <a href="#" id="queue_button" class="node_normal tool">
+                    <i class="fa-light fa-users-rectangle"></i><span>Queue</span>
+                  </a>
+                  <a href="#" id="microwave_button" class="node_normal tool">
+                    <i class="fa-light fa-microwave"></i><span>Microwave</span>
+                  </a>
+                </div>
+              </li>
+
+              <!-- Other Tools -->
+              <li><a href="#" id="cloud_button" class="node_normal tool">
+                <i class="fa-light fa-cloud"></i><span>Cloud [C]</span>
+              </a></li>
+
+              <li><a href="#" id="variable_button" class="node_normal tool">
+                <i class="fa-light fa-circle"></i><span>Variable [V]</span>
+              </a></li>
+
+              <li><a href="#" id="flow_button" class="link_normal tool">
+                <i class="fa-light fa-arrows-left-right"></i><span>Flow [F]</span>
+              </a></li>
+
+              <li class="variant-group">
+                <a href="#" id="influence_button" class="link_normal tool">
+                  <i class="fa-light fa-repeat"></i><span>Influence [I]</span>
+                </a>
+
+                <div class="variant-popup" id="text_variants">
+                  <a href="#" id="info_influence_button" class="link_normal tool">
+                    <i class="fa-light fa-circle-info"></i><span>Info Influence</span>
+                  </a>
+                </div>
+              </li>
+
+              <!-- Text Tool with Variants -->
+              <li class="variant-group">
+                <a href="#" id="text_button" class="node_normal tool">
+                  <i class="fa-light fa-text"></i><span>Text [T]</span>
+                </a>
+
+                <div class="variant-popup" id="text_variants">
+                  <a href="#" id="loop_label_button" class="node_normal tool">
+                    <i class="fa-light fa-rotate-left fa-flip-horizontal"></i><span>Loop Label</span>
+                  </a>
+                </div>
+              </li>
+
             </div>
-            
+
             <!-- Settings (Theme, Help, Simulation Parameters) -->
             <div class="settings-section">
-              <li><a href="#" onclick="openSettings(event, 'themePopup')" class="no-active"><i class="fa-regular fa-paint-roller"></i><span>Theme</span></a></li>
-              <li><a href="../UserDocs.html" class="no-active" target="_blank"><i class="fa-regular fa-question"></i><span>Help</span></a></li>
-              <li><a href="#" onclick="openSettings(event, 'settingsPopup')" class="no-active"><i class="fa-regular fa-gear"></i><span>Settings</span></a></li>
+              <li><a href="#" onclick="openSettings(event, 'themePopup')" class="no-active">
+                <i class="fa-light fa-paint-roller"></i><span>Theme</span>
+              </a></li>
+
+              <li><a href="../UserDocs.html" class="no-active" target="_blank">
+                <i class="fa-light fa-question"></i><span>Help</span>
+              </a></li>
+
+              <li><a href="#" onclick="openSettings(event, 'settingsPopup')" class="no-active">
+                <i class="fa-light fa-gear"></i><span>Settings</span>
+              </a></li>
             </div>
           </ul>
         </div>
+
+
 
         <!-- ================== Model Canvas ================== -->
         <div class="modelCanvas" id="modalView">
@@ -120,7 +189,7 @@
           </div>
           <!-- Center Model Button -->
           <button id="centerModelBtn" class="center-btn" title="Center Model">
-            <i class="fa-solid fa-compress"></i>
+            <i class="fa-light fa-home"></i>
           </button>
         </div>
 
@@ -129,7 +198,7 @@
         <div id="eqEditor">
           <div class="equation-editor-header">
             <p class="equation-editor-title">Equation Editor</p>
-            <i class="fa-solid fa-up-right-and-down-left-from-center equation-editor-zoom-icon" onclick="openEquationEditorPopup()"></i>
+            <i class="fa-light fa-expand equation-editor-zoom-icon" onclick="openEquationEditorPopup()"></i>
           </div>
           <div id = "eqTableDiv">
             <table class="equation-editor-table" id="eqTable">
@@ -161,9 +230,9 @@
 
             <!-- Settings Area -->
             <div class="settings-section">
-              <li><a href="#" onclick="openSettings(event, 'themePopup')" class="no-active"><i class="fa-regular fa-paint-roller"></i><span>Theme</span></a></li>
-              <li><a href="../UserDocs.html" class="no-active"><i class="fa-regular fa-question"></i><span>Help</span></a></li>
-              <li><a href="#" onclick="openSettings(event, 'settingsPopup')" class="no-active"><i class="fa-regular fa-gear"></i><span>Settings</span></a></li>
+              <li><a href="#" onclick="openSettings(event, 'themePopup')" class="no-active"><i class="fa-light fa-paint-roller"></i><span>Theme</span></a></li>
+              <li><a href="../UserDocs.html" class="no-active"><i class="fa-light fa-question"></i><span>Help</span></a></li>
+              <li><a href="#" onclick="openSettings(event, 'settingsPopup')" class="no-active"><i class="fa-light fa-gear"></i><span>Settings</span></a></li>
             </div>
           </ul>
         </div>
@@ -214,7 +283,7 @@
       <div id="settingsPopup" class="settings-popup hidden">
         <div class="settings-header">
           <h2>Simulation Settings</h2>
-          <button class="close-btn" onclick="closeSettings('settingsPopup')"><i class="fa-regular fa-xmark"></i></button>
+          <button class="close-btn" onclick="closeSettings('settingsPopup')"><i class="fa-light fa-xmark"></i></button>
         </div>
         <div class="setting-group">
           <label for="startTime">Start Time</label>
@@ -244,7 +313,7 @@
       <div id="themePopup" class="theme-popup hidden">
         <div class="settings-header">
           <h2>Theme Settings</h2>
-          <button class="close-btn" onclick="closeSettings('themePopup')"><i class="fa-regular fa-xmark"></i></button>
+          <button class="close-btn" onclick="closeSettings('themePopup')"><i class="fa-light fa-xmark"></i></button>
         </div>
         <div class="setting-group">
           <label for="themeSelect">Theme</label>
@@ -284,7 +353,7 @@
       <div id="chartsPopup" class="charts-popup hidden">
         <div class="settings-header">
           <h2>Create Visual</h2>
-          <button class="close-btn" onclick="closeSettings('chartsPopup')"><i class="fa-regular fa-xmark"></i></button>
+          <button class="close-btn" onclick="closeSettings('chartsPopup')"><i class="fa-light fa-xmark"></i></button>
         </div>
         <div id="popForm">
         <form id="tabConfig" name = "tabConfig" onsubmit="return false"> <!-- Will not refresh page -->
@@ -321,7 +390,7 @@
       <div id="exportPopup" class="export-popup hidden">
         <div class="settings-header">
           <h2>Export Settings</h2>
-          <button class="close-btn" onclick="closeSettings('exportPopup')"><i class="fa-regular fa-xmark"></i></button>
+          <button class="close-btn" onclick="closeSettings('exportPopup')"><i class="fa-light fa-xmark"></i></button>
         </div>
         <div class="setting-group">
           <label for="fileSelect">File Type</label>
@@ -347,7 +416,7 @@
       <div id="simErrorPopup" class="sims-popup hidden">
         <div class="settings-header">
           <h2 id="simErrorPopupTitle">Simulation Error!</h2>
-          <button class="close-btn" onclick="closeSettings('simErrorPopup')"><i class="fa-regular fa-xmark"></i></button>
+          <button class="close-btn" onclick="closeSettings('simErrorPopup')"><i class="fa-light fa-xmark"></i></button>
         </div>
         <div class="setting-group">
           <p id="simErrorPopupDesc">This is the default popup. This should only appear during the debug process.</p>
@@ -375,7 +444,7 @@
         <div class="equation-editor-popup-content">
           <div class="equation-editor-popup-header">
             <p class="equation-editor-title">Equation Editor</p>
-            <i class="fa-regular fa-xmark close-icon" onclick="closePopup()"></i>
+            <i class="fa-light fa-xmark close-icon" onclick="closePopup()"></i>
           </div>
           <div id="equationEditorPopupContent"></div>
         </div>
@@ -406,6 +475,7 @@
 
   // Function to open the popup with transition
   function openSettings(event, popupWindow) {
+
     const popup = document.getElementById(popupWindow);
     event.preventDefault();
     popup.classList.remove("hidden");
@@ -840,7 +910,8 @@ document.addEventListener("DOMContentLoaded", () => {
         v: "variable_button",
         c: "cloud_button",
         i: "influence_button",
-        f: "flow_button"
+        f: "flow_button",
+        t: "text_button"
       };
 
       const key = event.key.toLowerCase();
@@ -944,12 +1015,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Show/hide X-Axis + rename Y-Axis label
   modelTypeDropdown.addEventListener("change", () => {
-    if (modelTypeDropdown.value === "chart") {
-      xAxisGroup.style.display = "block";
-      yAxisLabel.textContent = "Y-Axis";
-    } else {
+    if (modelTypeDropdown.value === "table") {
       xAxisGroup.style.display = "none";
       yAxisLabel.textContent = "Columns";
+    } else {
+      xAxisGroup.style.display = "block";
+      yAxisLabel.textContent = "Y-Axis";
     }
   });
 
@@ -987,5 +1058,78 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 </script>
+<script>
+let holdTimer;
+let isPopupOpen = false;
+let currentToolbarButton = null;
+let activePopup = null;
+
+document.querySelectorAll('.variant-group').forEach(group => {
+  const toolbarButton = group.querySelector('a:not(.variant-popup a)');
+  const popup = group.querySelector('.variant-popup');
+
+  function attachLongPress(button) {
+    button.addEventListener('mousedown', () => {
+      if (isPopupOpen) return;
+      holdTimer = setTimeout(() => {
+        popup.classList.add('visible');
+        isPopupOpen = true;
+        activePopup = popup;
+        currentToolbarButton = button;
+      }, 200);
+    });
+
+    ['mouseup', 'mouseleave', 'click'].forEach(evt => {
+      button.addEventListener(evt, () => {
+        clearTimeout(holdTimer);
+      });
+    });
+  }
+
+  attachLongPress(toolbarButton);
+
+  popup.addEventListener('click', (event) => {
+    const selectedButton = event.target.closest('a');
+    if (!selectedButton) return;
+    event.preventDefault();
+
+    popup.appendChild(currentToolbarButton);
+
+    const buttonOrder = Array.from(popup.querySelectorAll('a')).map(btn => btn.id);
+    buttonOrder.forEach(id => {
+      const btn = popup.querySelector(`#${id}`);
+      if (btn) popup.appendChild(btn);
+    });
+
+    group.insertBefore(selectedButton, popup);
+    currentToolbarButton = selectedButton;
+
+    attachLongPress(currentToolbarButton);
+
+    closeVarientPopup();
+
+    currentToolbarButton.click();
+  });
+});
+
+function closeVarientPopup() {
+  if (isPopupOpen && activePopup) {
+    activePopup.classList.remove('visible');
+    isPopupOpen = false;
+    clearTimeout(holdTimer);
+    activePopup = null;
+  }
+}
+
+document.addEventListener('click', (event) => {
+  if (!event.target.closest('.variant-group')) {
+    closeVarientPopup();
+  }
+});
+
+
+</script>
+
+
 </body>
 </html>

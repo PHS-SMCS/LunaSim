@@ -59,7 +59,7 @@ var SD = {
      * @memberof module:editor
      */
 
-    nodeCounter: {stock: 0, cloud: 0, variable: 0, valve: 0}
+    nodeCounter: {stock: 0, cloud: 0, variable: 0, valve: 0, text: 0}
 };
 
 /**
@@ -201,6 +201,8 @@ function init() {
         "undoManager.isEnabled": true,
         allowLink: false,
         "animationManager.isEnabled": false,
+        "allowTextEdit": true,
+        "isReadOnly": false,
 
         "linkingTool.portGravity": 0,
         "linkingTool.doActivate": function () {
@@ -247,6 +249,9 @@ function init() {
             return SD.mode === "node" && go.ClickCreatingTool.prototype.canStart.call(this);
         },
         "clickCreatingTool.insertPart": function (loc) {
+            if (!(SD.itemType in SD.nodeCounter)) {
+                SD.nodeCounter[SD.itemType] = 0;
+            }
             SD.nodeCounter[SD.itemType] += 1;
             let newNodeId = SD.itemType + SD.nodeCounter[SD.itemType];
 
@@ -617,6 +622,17 @@ function buildTemplates() {
         )
     );
 
+    myDiagram.nodeTemplateMap.add("text",
+        new go.Part()
+            .add(
+                $(go.TextBlock, textStyle(),
+                    { text: "Text",
+                        background: "transparent",
+                        editable: true
+                        })
+            )
+    );
+
     myDiagram.linkTemplateMap.add("influence", $(go.Link, {
         curve: go.Link.Bezier, toShortLength: 8, reshapable: true
     }, new go.Binding("curviness", "curviness").makeTwoWay(), $(go.Shape, {strokeWidth: 1.5}, new go.Binding("stroke", "isSelected", sel => sel ? "#3489eb" : "orange").ofObject()), $(go.Shape, {
@@ -777,8 +793,10 @@ function updateTable(load = false) {
             .filter(item =>
                 item.label !== undefined &&
                 !isGhost(item.label) &&
-                (item.category === "stock" || item.category === "variable" || item.category === "valve")
+                (item.category === "stock" || item.category === "variable" || item.category === "valve") &&
+                item.category !== "text" && item.category !== "textbox"
             )
+
             .sort((a, b) => {
                 const order = { stock: 0, valve: 1, variable: 2 };
                 return order[a.category] - order[b.category];
@@ -835,7 +853,13 @@ function updateTable(load = false) {
     });
 
     GOJS_ELEMENT_LABELS = myDiagram.model.nodeDataArray
-        .filter(n => n.label && !n.label.startsWith('$') && n.category !== "cloud")
+        .filter(n =>
+            n.label &&
+            !n.label.startsWith('$') &&
+            n.category !== "cloud" &&
+            n.category !== "text" &&
+            n.category !== "textbox"
+        )
         .map(n => n.label);
 
     // Ensure popup styling stays consistent after table update
@@ -917,43 +941,17 @@ function isGhost(label) {
 
 function labelValidator(textblock, oldstr, newstr) {
     if (newstr === oldstr) return true;
-    if (newstr === "") return false;
-    if (!isNaN(newstr)) return false;
-
-
+    if (!newstr || !isNaN(newstr)) return false;
 
     if (isGhost(newstr)) {
         const targetLabel = newstr.substring(1);
-        const realNodeCount = myDiagram.model.nodeDataArray.filter(node => node.label === targetLabel && node.label !== oldstr && !isGhost(node.label)).length;
-
+        const realNodeCount = myDiagram.model.nodeDataArray
+            .filter(node => node.label === targetLabel && !isGhost(node.label)).length;
         return realNodeCount >= 1;
     }
 
-    const $tbody = $('#eqTableBody');
-    $tbody.find('tr').each(function () {
-        const $row = $(this);
-        const name = $row.find('input[name="name"]').val();
-        if (name === oldstr) {
-            const equation = $row.find('input[name="equation"]').val();
-            const checkbox = $row.find('input[name="checkbox"]').is(':checked');
-            $row.find('input[name="name"]').val(newstr);
-
-            GOJS_ELEMENT_LABELS_SET.delete(oldstr);
-            GOJS_ELEMENT_LABELS_SET.add(newstr);
-            const index = GOJS_ELEMENT_LABELS.indexOf(oldstr);
-            if (index !== -1) GOJS_ELEMENT_LABELS[index] = newstr;
-
-            $row.data('migrated', {equation, checkbox});
-        }
-    });
-
-    for (let i = 0; i < myDiagram.model.nodeDataArray.length; i++) {
-        if (myDiagram.model.nodeDataArray[i].label === newstr) {
-            return false;
-        }
-    }
-
-    return true;
+    // Ensure uniqueness
+    return !myDiagram.model.nodeDataArray.some(n => n.label === newstr);
 }
 
 /**
@@ -1706,6 +1704,11 @@ document.getElementById("exportButton").addEventListener("click", function () {
     exportData();
 });
 
+document.getElementById("text_button").addEventListener("click", function () {
+    setMode("node", "text");
+    toolSelect(event);
+});
+
 document.getElementById("clearButton").addEventListener("click", function () {
     showConfirmPopup({
         title: "Clear Model?",
@@ -1820,7 +1823,6 @@ function getTopBracketMatches(fragment) {
     const lower = fragment.toLowerCase();
 
     if (fragment === "") {
-        // Show first 5 elements in creation order
         return GOJS_ELEMENT_LABELS.slice(0, 5);
     }
 
@@ -1838,29 +1840,33 @@ function finalizeRename() {
     if (!labelValidator(null, oldName, newName)) {
         showAlertPopup({
             title: "Invalid or Duplicate Name",
-            message: `The name "${newName}" is invalid or already in use.\nIt will be reset to "${oldName}".`,
-            onConfirm: () => {
-
-            },
+            message: `The name "${newName}" is invalid or already in use.\nIt will be reset to "${oldName}".`
         });
         $input.val(oldName);
         return;
     }
 
-
-    const escapeRegExp = (string) =>
-        string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    // Grab only this row's data (no full-table overwrite)
+    const $row = $input.closest('tr');
+    const equation = $row.find('input[name="equation"]').val();
+    const checkbox = $row.find('input[name="checkbox"]').is(':checked');
 
     myDiagram.model.commit(() => {
+        // Find the node being renamed
         const nodeData = myDiagram.model.nodeDataArray.find(n => n.label === oldName);
         if (nodeData) {
+            // Update label/key
             myDiagram.model.setDataProperty(nodeData, 'label', newName);
             if (nodeData.key === oldName) {
                 myDiagram.model.setDataProperty(nodeData, 'key', newName);
             }
+            // Preserve/update equation + checkbox only for this node
+            myDiagram.model.setDataProperty(nodeData, 'equation', equation);
+            myDiagram.model.setDataProperty(nodeData, 'checkbox', checkbox);
         }
 
-        const pattern = new RegExp(`\\[${escapeRegExp(oldName)}\\]`, 'g');
+        // Update references in other nodes' equations
+        const pattern = new RegExp(`\\[${oldName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\]`, 'g');
         myDiagram.model.nodeDataArray.forEach(n => {
             if (typeof n.equation === 'string') {
                 const updated = n.equation.replace(pattern, `[${newName}]`);
@@ -1869,14 +1875,14 @@ function finalizeRename() {
                 }
             }
         });
+    }, 'Rename node');
 
-        updateTable(true);
-    }, 'Rename node and update references');
+    $input.data('oldName', newName);
 
-    $input.data('oldName', newName); // Set for future renames
+    // Refresh table view from model without wiping unsaved edits in other rows
     updateTable(true);
-    myDiagram.requestUpdate();
 }
+
 
 
 

@@ -399,3 +399,8 @@ a.active {
 .setting-button.secondary:hover {
     background-color: #dee2e6;
 }
+
+
+.graphTabs::after {
+    background-color: #f8f9fa;
+}

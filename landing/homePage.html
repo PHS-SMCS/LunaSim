@@ -28,7 +28,7 @@
 <title>LunaSim Launch</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@300;400;500;600;700;800;900&display=swap');
-  
+
   /* ========== General Resets & Scrollbar Hiding ========== */
   * {
     scrollbar-width: none;
@@ -93,7 +93,7 @@
     color: white;
     font-weight: 700;
   }
-  
+
   /* Style for the SVG logo */
   .luna-logo {
     height: 0.77em; /* Use em to scale with the font size of the parent */
@@ -459,7 +459,7 @@
   border: 2px solid #4f6bb8;
   display: flex;
   align-items: center;
-  gap: 1.5rem; 
+  gap: 1.5rem;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   margin: 0;
   opacity: 0;
@@ -555,7 +555,7 @@
   margin-bottom: 1rem;
   font-family: "Golos Text", sans-serif;
 }
-  
+
   /* ========== Timeline Styles ========== */
   .timeline {
     position: relative;
@@ -563,7 +563,7 @@
     margin: 0 auto;
     padding: 0 2rem;
   }
-  
+
   .timeline::before {
     content: '';
     position: absolute;
@@ -575,7 +575,7 @@
     transform: translateX(-50%);
     border-radius: 2px;
   }
-  
+
   .timeline-item {
     position: relative;
     margin: 4rem 0;
@@ -584,22 +584,22 @@
     transform: translateY(50px);
     transition: all 0.8s ease;
   }
-  
+
   .timeline-item.visible {
     opacity: 1;
     transform: translateY(0);
   }
-  
+
   .timeline-item:nth-child(odd) {
     left: 0;
     padding-right: 4rem;
   }
-  
+
   .timeline-item:nth-child(even) {
     left: 50%;
     padding-left: 4rem;
   }
-  
+
   .timeline-item::before {
     content: '';
     position: absolute;
@@ -612,15 +612,15 @@
     box-shadow: 0 0 0 4px #4f6bb8, 0 4px 15px rgba(79, 107, 184, 0.3);
     z-index: 10;
   }
-  
+
   .timeline-item:nth-child(odd)::before {
     right: -18px;
   }
-  
+
   .timeline-item:nth-child(even)::before {
     left: -18px;
   }
-  
+
   .timeline-content {
     background: white;
     padding: 2.5rem;
@@ -630,7 +630,7 @@
     position: relative;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
-  
+
   .timeline-content::before {
     content: '';
     position: absolute;
@@ -639,17 +639,17 @@
     top: 30px;
     border: 15px solid transparent;
   }
-  
+
   .timeline-item:nth-child(odd) .timeline-content::before {
     right: -32px;
     border-left-color: #4f6bb8;
   }
-  
+
   .timeline-item:nth-child(even) .timeline-content::before {
     left: -32px;
     border-right-color: #4f6bb8;
   }
-  
+
   .timeline-date {
     font-size: clamp(1.8rem, 3vw, 2.2rem);
     font-weight: 700;
@@ -660,7 +660,7 @@
     padding-bottom: 0.5rem;
     display: inline-block;
   }
-  
+
   .timeline-title {
     font-size: clamp(1.3rem, 2.5vw, 1.6rem);
     font-weight: 600;
@@ -668,19 +668,19 @@
     margin-bottom: 1.5rem;
     font-family: "Golos Text", sans-serif;
   }
-  
+
   .timeline-description {
     color: #444;
     line-height: 1.7;
     margin-bottom: 1.5rem;
     font-size: clamp(0.95rem, 2vw, 1.1rem);
   }
-  
+
   .timeline-image-container {
     margin: 1.5rem 0;
     text-align: center;
   }
-  
+
   .timeline-image {
     width: 100%;
     max-width: 400px;
@@ -691,11 +691,11 @@
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
   }
-  
+
   .timeline-image:hover {
     transform: scale(1.02);
   }
-  
+
   .timeline-caption {
     font-size: 0.9rem;
     color: #666;
@@ -812,7 +812,7 @@
     .feedback-btn {
       min-width: auto;
     }
-    
+
     /* Timeline Mobile */
     .timeline::before {
       left: 2rem;
@@ -832,7 +832,7 @@
       border-left-color: transparent !important;
     }
   }
-  
+
   @media (max-width: 768px) {
     .team-grid {
   grid-template-columns: 1fr;
@@ -854,16 +854,16 @@
       width: 95vw;
       padding: 1.5rem;
     }
-    
+
     .timeline-content {
       padding: 1.5rem;
     }
-    
+
     .timeline-image {
       height: 200px;
     }
   }
-  
+
   @media (max-width: 480px) {
     .hero {
       padding: 1rem;
@@ -871,11 +871,11 @@
     .fade-in-text {
       font-size: clamp(2rem, 12vw, 4rem);
     }
-    
+
     .timeline-item {
       padding-left: 4rem !important;
     }
-    
+
     .timeline-content {
       padding: 1rem;
     }
@@ -1044,7 +1044,7 @@
     <h2>Our Team</h2>
     <p>Meet the passionate individuals behind LunaSim who are dedicated to revolutionizing system dynamics education.</p>
   </div>
-  
+
   <div class="team-grid">
     <div class="team-card">
       <img src="karthik.png" alt="Karthik Vedula" class="team-photo">
@@ -1058,7 +1058,7 @@
         <div class="team-years">2023-2025</div>
       </div>
     </div>
-    
+
     <div class="team-card">
       <img src="sienna.png" alt="Sienna Simms" class="team-photo">
       <div class="team-info">
@@ -1071,7 +1071,7 @@
         <div class="team-years">2023-2025</div>
       </div>
     </div>
-    
+
     <div class="team-card">
       <img src="aditya.png" alt="Aditya Patil" class="team-photo">
       <div class="team-info">
@@ -1084,7 +1084,7 @@
         <div class="team-years">2023-2025</div>
       </div>
     </div>
-    
+
     <div class="team-card">
       <img src="william.png" alt="William Park" class="team-photo">
       <div class="team-info">
@@ -1097,7 +1097,7 @@
         <div class="team-years">2024+</div>
       </div>
     </div>
-    
+
     <div class="team-card">
       <img src="ryan.png" alt="Ryan Chung" class="team-photo">
       <div class="team-info">
@@ -1110,7 +1110,7 @@
         <div class="team-years">2025+</div>
       </div>
     </div>
-    
+
     <div class="team-card">
       <img src="akash.png" alt="Akash Saran" class="team-photo">
       <div class="team-info">
@@ -1123,7 +1123,7 @@
         <div class="team-years">2025+</div>
       </div>
     </div>
-    
+
     <div class="team-card">
       <img src="arjun.png" alt="Arjun Mujumdar" class="team-photo">
       <div class="team-info">
@@ -1136,7 +1136,7 @@
         <div class="team-years">2025+</div>
       </div>
     </div>
-    
+
     <div class="team-card">
       <img src="caleb.png" alt="Caleb Wen" class="team-photo">
       <div class="team-info">
@@ -1149,7 +1149,7 @@
         <div class="team-years">2025+</div>
       </div>
     </div>
-    
+
     <div class="team-card">
       <img src="ben.png" alt="Ben Ross" class="team-photo">
       <div class="team-info">
@@ -1162,7 +1162,7 @@
         <div class="team-years">2023+</div>
       </div>
     </div>
-    
+
     <div class="team-card">
       <img src="ishan.png" alt="Ishan Kheterpal" class="team-photo">
       <div class="team-info">
@@ -1175,7 +1175,7 @@
         <div class="team-years">2023+</div>
       </div>
     </div>
-    
+
     <div class="team-card">
       <img src="mark.png" alt="Mark Estep" class="team-photo">
       <div class="team-info">
@@ -1188,7 +1188,7 @@
         <div class="team-years">2023+</div>
       </div>
     </div>
-    
+
     <div class="team-card">
       <img src="kevin.png" alt="Kevin Lee" class="team-photo">
       <div class="team-info">
@@ -1209,7 +1209,7 @@
   <div class="timeline-header fade-in-on-scroll">
     <h2>History of LunaSim</h2>
   </div>
-  
+
   <div class="timeline">
     <div class="timeline-item">
       <div class="timeline-content">
@@ -1224,7 +1224,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="timeline-item">
       <div class="timeline-content">
         <div class="timeline-date">October 2023</div>
@@ -1238,7 +1238,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="timeline-item">
       <div class="timeline-content">
         <div class="timeline-date">April 2024</div>
@@ -1254,7 +1254,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="timeline-item">
       <div class="timeline-content">
         <div class="timeline-date">August 2024</div>
@@ -1268,15 +1268,15 @@
         </div>
       </div>
     </div>
-    
+
     <div class="timeline-item">
       <div class="timeline-content">
         <div class="timeline-date">March 2025</div>
         <div class="timeline-title">LunaSim Copilot</div>
-        
+
         <div class="timeline-description">
           LunaSim Copilot was developed by Karthik Vedula and William Park (a developer who previously rewrote LunaSim’s interface in early 2024). It is an AI-powered assistant, aiding with system dynamics models. This tool uses large language models (LLMs) to interpret user instructions and automatically generate various models, enhancing productivity. The study also evaluated four LLMs, including reasoning models like OpenAI's o3-mini and DeepSeek's R1, demonstrating their capability to create complex models from user instructions with impressive accuracy rates.
-          
+
           <div style="margin-top: 1.5rem; text-align: center;">
             <a href="lunasimCopilot.pdf" download class="pdf-download-link">
               <i class="fa-solid fa-file-pdf"></i> Download LunaSim Copilot Research Paper
@@ -1285,7 +1285,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="timeline-item">
       <div class="timeline-content">
         <div class="timeline-date">April 2025</div>
@@ -1299,7 +1299,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="timeline-item">
       <div class="timeline-content">
         <div class="timeline-date">June 2025</div>
@@ -1323,7 +1323,7 @@
       <h4>Congressional App Video</h4>
       <p><a href="https://www.youtube.com/watch?v=luRWuwhCkec&t=14s&ab_channel=LunaSim" target="_blank">Watch our presentation video on YouTube</a></p>
     </div>
-    
+
     <div class="reference-card">
       <div class="reference-icon">
         <i class="fa-solid fa-trophy"></i>
@@ -1331,7 +1331,7 @@
       <h4>Congressional App Winner</h4>
       <p><a href="https://www.congressionalappchallenge.us/23-md06/" target="_blank">MD-06 District Winner of Congressional App Challenge</a></p>
     </div>
-    
+
     <div class="reference-card">
       <div class="reference-icon">
         <i class="fa-regular fa-newspaper"></i>
@@ -1339,7 +1339,7 @@
       <h4>Poolesville Pulse</h4>
       <p><a href="https://poolesvillepulse.org/5585/technology/smcs-juniors-developed-working-software-for-9th-grade-class/" target="_blank">SMCS Juniors Develop Software for 9th Grade Class</a></p>
     </div>
-    
+
     <div class="reference-card">
       <div class="reference-icon">
         <i class="fa-regular fa-user"></i>
@@ -1347,7 +1347,7 @@
       <h4>Karthik's Blog</h4>
       <p><a href="https://karthikvedula.com/2024/04/14/congressional-app-challenge-house-of-code/" target="_blank">Congressional App Challenge – House of Code</a></p>
     </div>
-    
+
     <div class="reference-card">
       <div class="reference-icon">
         <i class="fa-solid fa-file-pdf"></i>
@@ -1355,7 +1355,7 @@
       <h4>Research Paper</h4>
       <p><a href="https://proceedings.systemdynamics.org/2024/papers/P1049.pdf" target="_blank">LunaSim: A Lightweight, Web-Based, Open-Source System Dynamics Modeling Software</a></p>
     </div>
-    
+
     <div class="reference-card">
       <div class="reference-icon">
         <i class="fa-brands fa-github"></i>
@@ -1402,7 +1402,7 @@ let showingCredits = true;
 function toggleCredits() {
   const creditsBox = document.getElementById('creditsBox');
   let newContent;
-  
+
   if (showingCredits) {
     // Switch to showing emails
     newContent = `
@@ -1420,14 +1420,14 @@ function toggleCredits() {
 </p>
 `;
   }
-  
+
   // Toggle the state
   showingCredits = !showingCredits;
-  
+
   // Add fade-out
   creditsBox.classList.remove('fade-toggle');
   creditsBox.style.opacity = '0';
-  
+
   setTimeout(() => {
     creditsBox.innerHTML = newContent;
     creditsBox.classList.add('fade-toggle');
@@ -1464,7 +1464,7 @@ const timelineObserver = new IntersectionObserver((entries) => {
 document.addEventListener('DOMContentLoaded', () => {
   const fadeElements = document.querySelectorAll('.fade-in-on-scroll');
   fadeElements.forEach(el => observer.observe(el));
-  
+
   const timelineItems = document.querySelectorAll('.timeline-item');
   timelineItems.forEach(item => timelineObserver.observe(item));
 });
