@@ -1846,7 +1846,15 @@ function finalizeRename() {
         return;
     }
 
-    // Grab only this row's data (no full-table overwrite)
+    const tableState = {};
+    $('#eqTableBody').find('tr').each(function () {
+        const rowName = $(this).find('input[name="name"]').val();
+        tableState[rowName] = {
+            equation: $(this).find('input[name="equation"]').val(),
+            checkbox: $(this).find('input[name="checkbox"]').is(':checked')
+        };
+    });
+
     const $row = $input.closest('tr');
     const equation = $row.find('input[name="equation"]').val();
     const checkbox = $row.find('input[name="checkbox"]').is(':checked');
@@ -1855,17 +1863,14 @@ function finalizeRename() {
         // Find the node being renamed
         const nodeData = myDiagram.model.nodeDataArray.find(n => n.label === oldName);
         if (nodeData) {
-            // Update label/key
             myDiagram.model.setDataProperty(nodeData, 'label', newName);
             if (nodeData.key === oldName) {
                 myDiagram.model.setDataProperty(nodeData, 'key', newName);
             }
-            // Preserve/update equation + checkbox only for this node
             myDiagram.model.setDataProperty(nodeData, 'equation', equation);
             myDiagram.model.setDataProperty(nodeData, 'checkbox', checkbox);
         }
 
-        // Update references in other nodes' equations
         const pattern = new RegExp(`\\[${oldName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\]`, 'g');
         myDiagram.model.nodeDataArray.forEach(n => {
             if (typeof n.equation === 'string') {
@@ -1877,12 +1882,21 @@ function finalizeRename() {
         });
     }, 'Rename node');
 
+    myDiagram.model.commit(() => {
+        Object.keys(tableState).forEach(origName => {
+            const targetLabel = (origName === oldName) ? newName : origName;
+            const node = myDiagram.model.nodeDataArray.find(n => n.label === targetLabel);
+            if (node) {
+                myDiagram.model.setDataProperty(node, 'equation', tableState[origName].equation);
+                myDiagram.model.setDataProperty(node, 'checkbox', tableState[origName].checkbox);
+            }
+        });
+    }, 'Reapply table edits after rename');
+
     $input.data('oldName', newName);
 
-    // Refresh table view from model without wiping unsaved edits in other rows
     updateTable(true);
 }
-
 
 
 
