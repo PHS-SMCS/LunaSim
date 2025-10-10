@@ -603,8 +603,6 @@ a.active {
 }
 
 .tool-section {
-  overflow-y: auto;
-  overflow-x: hidden;
   position: relative;
   flex: 1;
   display: flex;
