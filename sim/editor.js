@@ -1271,6 +1271,7 @@ function run() {
     var endTime = document.getElementById("endTime").value;
     var dt = document.getElementById("dt").value;
     var integrationMethod = document.getElementById("integrationMethod").value == "euler" ? "euler" : "rk4";
+    var trigMode = document.getElementById("trigMode").value == "radian" ? "radian" : "degree";
 
     document.getElementById("startTime").classList = "settings-input simParamsInput";
     document.getElementById("endTime").classList = "settings-input simParamsInput";
@@ -1343,6 +1344,7 @@ function run() {
     engineJson.end_time = parseFloat(endTime);
     engineJson.dt = parseFloat(dt);
     engineJson.integration_method = integrationMethod;
+    engineJson.trigMode = trigMode;
 
 
     try {
@@ -1444,7 +1446,8 @@ function exportData() {
         "startTime": parseFloat(document.getElementById("startTime").value),
         "endTime": parseFloat(document.getElementById("endTime").value),
         "dt": parseFloat(document.getElementById("dt").value),
-        "integrationMethod": document.getElementById("integrationMethod").value == "euler" ? "euler" : "rk4"
+        "integrationMethod": document.getElementById("integrationMethod").value == "euler" ? "euler" : "rk4",
+        "trigMode": document.getElementById("trigMode").value == "radian" ? "radian" : "degree"
     };
 
     download(`${filename}.luna`, JSON.stringify(json));
@@ -1514,11 +1517,13 @@ function loadModel(evt) {
                 document.getElementById("endTime").value = parsedJson.simulationParameters.endTime;
                 document.getElementById("dt").value = parsedJson.simulationParameters.dt;
                 document.getElementById("integrationMethod").value = parsedJson.simulationParameters.integrationMethod;
+                document.getElementById("trigMode").value = parsedJson.simulationParameters.trigMode;
             } else {
                 document.getElementById("startTime").value = 0;
                 document.getElementById("endTime").value = 10;
                 document.getElementById("dt").value = 0.1;
                 document.getElementById("integrationMethod").value = "rk4";
+                document.getElementById("trigMode").value = "radian";
             }
 
             // Reset model & table
@@ -1729,6 +1734,7 @@ document.getElementById("clearButton").addEventListener("click", function () {
                         document.getElementById("endTime").value = 10;
                         document.getElementById("dt").value = 0.1;
                         document.getElementById("integrationMethod").value = "rk4";
+                        document.getElementById("trigMode").value = "radian";
 
                         myDiagram.model = go.Model.fromJson(`{
               "class": "GraphLinksModel",
@@ -1756,7 +1762,13 @@ window.addEventListener('beforeunload', function (e) {
 });
 
 export {data};
-const JAVA_MATH_FUNCTIONS = ['sin()', 'cos()', 'tan()', 'asin()', 'acos()', 'atan()', 'atan2()', 'sinh()', 'cosh()', 'tanh()', 'exp()', 'log()', 'log10()', 'sqrt()', 'cbrt()', 'abs()', 'ceil()', 'floor()', 'round()', 'pow()', 'max()', 'min()', 'sign()', 'random()', 'hypot()', 'expm1()', 'log1p()'];
+const JAVA_MATH_FUNCTIONS = [
+  'sin()', 'cos()', 'tan()', 'asin()', 'acos()', 'atan()', 'atan2()',
+  'sinh()', 'cosh()', 'tanh()', 'exp()', 'log()', 'log10()', 'sqrt()', 'cbrt()',
+  'abs()', 'ceil()', 'floor()', 'round()', 'pow()', 'max()', 'min()', 'sign()',
+  'random()', 'hypot()', 'expm1()', 'log1p()', 'sec()', 'csc()', 'cot()'
+];
+
 
 /*
 // Auto-enhance inputs in the 3rd column (Equation)

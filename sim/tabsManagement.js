@@ -663,6 +663,9 @@ function updateChartStats(index) {
   const integrationMethod = document.getElementById("integrationMethod")?.value || "—";
   const methodDisplay = (integrationMethod === "rk4") ? "Runge-Kutta 4" :
                         (integrationMethod === "euler") ? "Euler" : integrationMethod;
+  const trigMode = document.getElementById("trigMode")?.value || "—";
+  const trigDisplay = (trigMode === "radian") ? "Radians" :
+                        (trigMode === "degree") ? "Degrees" : trigMode;
 
   statsEl.innerHTML = `
     <p><strong>Name:</strong> ${tab.name || name}</p>
@@ -675,5 +678,6 @@ function updateChartStats(index) {
     <p><strong>dt (Interval):</strong> ${dt}</p>
     <p><strong>Step Count:</strong> ${Math.round(stepCount)}</p>
     <p><strong>Integration Method:</strong> ${methodDisplay}</p>
+    <p><strong>Trigonometry Mode:</strong> ${trigDisplay}</p>
   `;
 }

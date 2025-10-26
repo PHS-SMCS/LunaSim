@@ -429,7 +429,7 @@
 
   .content-box h2 {
     color: var(--text-primary);
-    font-size: clamp(1.5rem, 4vw, 2.2rem);
+    font-size: clamp(1.2rem, 3vw, 1.6rem);
     font-weight: 700;
     margin-bottom: 20px;
   }
@@ -971,6 +971,12 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="#changelog" class="nav-link">
+                        <i class="fas fa-book"></i>
+                        Changelog
+                    </a>
+                </li>
+                <li class="nav-item">
                     <!-- Made launch button more defined -->
                     <button class="nav-link nav-launch-btn" onclick="launchLunaSim()">
                         <i class="fas fa-rocket"></i>
@@ -1019,7 +1025,7 @@
 
     <!-- Content Wrapper -->
     <div class="content-wrapper">
-        <!-- Moved "Why was LunaSim Created" section to the top -->
+
         <div class="content-box" data-scroll="100" id="why-created">
             <h2>Why Was LunaSim Created?</h2>
             <p>
@@ -1419,7 +1425,16 @@
                 <p>AI-Powered System Dynamics Assistant</p>
             </a>
         </div>
+        
     </section>
+
+    <div class="content-box" data-scroll="80" id="changelog">
+        <h2>Recent Changelog:</h2>
+        <p>
+          v1.01: Added ability for user to select between degrees and radians mode in simulation settings 
+        </p>
+    </div>
+
 </div>
 
 <script>

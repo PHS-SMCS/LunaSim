@@ -68,6 +68,10 @@ export class Simulation {
             .replaceAll(/(?<!Math\.)\bsin\b/gi, 'Math.sin')
             .replaceAll(/(?<!Math\.)\bcos\b/gi, 'Math.cos')
             .replaceAll(/(?<!Math\.)\btan\b/gi, 'Math.tan')
+            // Additional trig functions
+            .replaceAll(/(?<!Math\.)\bsec\b/gi, 'Math.sec')
+            .replaceAll(/(?<!Math\.)\bcsc\b/gi, 'Math.csc')
+            .replaceAll(/(?<!Math\.)\bcot\b/gi, 'Math.cot')
             // Roots
             .replaceAll(/(?<!Math\.)\bsqrt\b/gi, 'Math.sqrt')
             .replaceAll(/(?<!Math\.)\bcbrt\b/gi, 'Math.cbrt')
@@ -94,8 +98,24 @@ export class Simulation {
             .replaceAll(/(?<!Math\.)\bhypot\b/gi, 'Math.hypot')
             .replaceAll(/(?<!Math\.)\bexpm1\b/gi, 'Math.expm1')
             .replaceAll(/(?<!Math\.)\blog1p\b/gi, 'Math.log1p')
-            .replaceAll(/(?<!Math\.)\bsign\b/gi, 'Math.sign')
+            .replaceAll(/(?<!Math\.)\bsign\b/gi, 'Math.sign');
 
+        Math.sec = x => 1 / Math.cos(x);
+        Math.csc = x => 1 / Math.sin(x);
+        Math.cot = x => 1 / Math.tan(x);
+
+        const trigModeElement = document.getElementById("trigMode");
+        const trigMode = trigModeElement ? trigModeElement.value : "radian";
+
+        if (trigMode === "degree") {
+            expression = expression
+                .replaceAll(/Math\.sin\s*\(([^)]+)\)/g, 'Math.sin(($1)*Math.PI/180)')
+                .replaceAll(/Math\.cos\s*\(([^)]+)\)/g, 'Math.cos(($1)*Math.PI/180)')
+                .replaceAll(/Math\.tan\s*\(([^)]+)\)/g, 'Math.tan(($1)*Math.PI/180)')
+                .replaceAll(/Math\.sec\s*\(([^)]+)\)/g, 'Math.sec(($1)*Math.PI/180)')
+                .replaceAll(/Math\.csc\s*\(([^)]+)\)/g, 'Math.csc(($1)*Math.PI/180)')
+                .replaceAll(/Math\.cot\s*\(([^)]+)\)/g, 'Math.cot(($1)*Math.PI/180)');
+        }
 
         try {
             return eval?.(expression);
@@ -104,6 +124,7 @@ export class Simulation {
             return NaN;
         }
     }
+
 
     /**
      * Recursively replaces all references to variables, stocks, inflows, and outflows
