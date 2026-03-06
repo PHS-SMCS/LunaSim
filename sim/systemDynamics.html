@@ -362,7 +362,15 @@
             <option value="Comic Sans MS" style="font-family: 'Comic Sans MS';">Comic Sans</option>
             <option value="Wingdings" style="font-family: 'Wingdings';">Wingdings/option>
           </select>
+          <label for="labelFontSizeInput">Label Font Size</label>
+          <input type="number" id="labelFontSizeInput" class="settings-input" value="11" min="6" max="36" step="1" style="width: 80%;" autocomplete="off">
+          <label>Polarity Label Offset</label>
+          <div style="display:flex; gap:6px; width:80%;">
+            <input type="number" id="polarityOffsetX" class="settings-input" value="0" step="1" style="width:50%;" autocomplete="off" title="X offset from arrowhead (pixels, negative = left)">
+            <input type="number" id="polarityOffsetY" class="settings-input" value="0" step="1" style="width:50%;" autocomplete="off" title="Y offset from arrowhead (pixels, negative = up)">
+          </div>
         </div>
+        <button id="clearEmphasisButton" class="setting-button">Clear All Emphasis</button>
         <button class="setting-button" onclick="closeSettings('themePopup')">Apply Settings</button>
       </div>
 
@@ -423,6 +431,15 @@
           <div class="setting-group">
             <label for="imageMargin" class="dotted-underline">Image Margin</label>
             <input type="text" id="imageMargin" class="px-visual-input settings-input" placeholder="Enter margin..." value="15" style="width: 65%;" autocomplete="off">
+          </div>
+          <div class="setting-group">
+            <label for="imageScale">Resolution</label>
+            <select id="imageScale" class="settings-dropdown" style="width: 72%;">
+              <option value="1">1× — screen (72 dpi)</option>
+              <option value="2" selected>2× — standard print</option>
+              <option value="3">3× — high-res print</option>
+              <option value="4">4× — ultra high-res</option>
+            </select>
           </div>
           <button id="downloadImageButton" class="setting-button" onclick="closeSettings('exportPopup')">Download Image</button>
         </div>

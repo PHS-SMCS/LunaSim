@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<!--
+  LunaSim Highlight Viewer — highlight_viewer.html
+  Based on LunaSim (https://github.com/PHS-SMCS/LunaSim)
+  
+  Shows full_model.luna with Theme 2 (Reputational Damage from Profiteering)
+  feedback loop highlighted in orange-red.
+-->
+<html lang="en">
+<head>
+  <title>LunaSim — T2 Path Highlighter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- LunaSim base styles -->
+  <link rel="stylesheet" href="simulation.css" id="base-style">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- GoJS and dependencies (same versions as LunaSim) -->
+  <script src="https://unpkg.com/gojs@2.3.3/release/go.js"></script>
+  <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script src="https://unpkg.com/gojs@2.3.3/extensions/Figures.js"></script>
+  <script src="https://unpkg.com/gojs@2.3.3/extensions/NodeLabelDraggingTool.js"></script>
+  <script src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+  <!-- Load the highlight-capable editor (module) -->
+  <script id="code"  type="module" src="editor_highlight.js"></script>
+  <script id="code2" type="module" src="translator.js"></script>
+  <script id="code3" type="module" src="engine.js"></script>
+  <script id="code4" type="module" src="tabsManagement.js"></script>
+
+  <style>
+    /* ── Highlight panel overlay ── */
+    #highlightPanel {
+      position: fixed;
+      top: calc(5vh + 1vw + 8px);
+      right: 1vw;
+      width: 300px;
+      background: rgba(28, 37, 65, 0.97);
+      border: 1px solid #627bc0;
+      border-radius: 12px;
+      padding: 1.1rem 1.2rem;
+      color: #e8eaf5;
+      font-family: 'Golos Text', sans-serif;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      z-index: 600;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.45);
+    }
+
+    #highlightPanel h2 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: 0.02em;
+    }
+
+    #highlightPanel .theme-badge {
+      display: inline-block;
+      background: rgba(232, 80, 10, 0.2);
+      border: 1px solid #E8500A;
+      color: #ff8c5a;
+      border-radius: 6px;
+      padding: 1px 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+    }
+
+    #highlightPanel .loop-steps {
+      margin: 0.6rem 0;
+      padding: 0.6rem 0.8rem;
+      background: rgba(255,255,255,0.04);
+      border-left: 3px solid #E8500A;
+      border-radius: 0 6px 6px 0;
+      font-size: 0.8rem;
+      color: #cdd0e3;
+    }
+
+    #highlightPanel .loop-steps code {
+      font-family: monospace;
+      color: #ff8c5a;
+      font-size: 0.78rem;
+    }
+
+    #highlightPanel .legend {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0.7rem 0 0.3rem;
+      font-size: 0.78rem;
+      color: #aab0cc;
+    }
+    #highlightPanel .legend-swatch {
+      width: 28px;
+      height: 6px;
+      background: #E8500A;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+    #highlightPanel .legend-node {
+      width: 16px;
+      height: 16px;
+      border: 3px solid #E8500A;
+      border-radius: 3px;
+      flex-shrink: 0;
+      background: transparent;
+    }
+
+    #highlightPanel .note {
+      margin-top: 0.6rem;
+      font-size: 0.72rem;
+      color: #888baa;
+      font-style: italic;
+    }
+
+    #toggleBtn {
+      width: 100%;
+      margin-top: 0.9rem;
+      padding: 0.5rem;
+      background: #E8500A;
+      border: none;
+      border-radius: 7px;
+      color: white;
+      font-family: 'Golos Text', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    #toggleBtn:hover { background: #c44008; }
+    #toggleBtn.off {
+      background: rgba(98, 123, 192, 0.5);
+    }
+    #toggleBtn.off:hover { background: rgba(98, 123, 192, 0.8); }
+
+    /* Status bar at top */
+    #statusBar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: calc(5vh + 1vw);
+      background: rgba(38, 50, 83, 0.98);
+      display: flex;
+      align-items: center;
+      padding: 0 1.2rem;
+      gap: 1rem;
+      z-index: 700;
+      border-bottom: 1px solid rgba(98, 123, 192, 0.3);
+    }
+    #statusBar h1 {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #ffffff;
+      font-family: 'Golos Text', sans-serif;
+    }
+    #statusBar .subtitle {
+      font-size: 0.8rem;
+      color: #8fa0cc;
+      font-family: 'Golos Text', sans-serif;
+    }
+    #loadingMsg {
+      font-size: 0.8rem;
+      color: #ff8c5a;
+      font-family: 'Golos Text', sans-serif;
+      margin-left: auto;
+    }
+
+    /* Hidden elements we don't need */
+    .tabBar, #eqEditor, .toolbar, .chartViewer, .actions, #logoImage,
+    #model_name, #saveStatus {
+      display: none !important;
+    }
+
+    /* Shift the model viewer down below our status bar */
+    .modelViewer {
+      top: calc(5vh + 1vw) !important;
+    }
+
+    /* Make the canvas fill the full width (no sidebar/eq-editor) */
+    .modelCanvas {
+      width: calc(100vw - 2vw) !important;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Our custom status bar -->
+<div id="statusBar">
+  <h1>LunaSim — Model View</h1>
+  <span class="subtitle">full_model.luna · read-only viewer</span>
+  <span id="loadingMsg">Loading model…</span>
+</div>
+
+<!-- LunaSim's standard DOM (editor.js expects these IDs to exist) -->
+<div id="sample">
+  <div id="header">
+    <div class="actions">
+      <p id="saveStatus"></p>
+      <button class="actionButton" id="runButton">Run</button>
+      <input type="file" id="load-actual-button" accept=".luna,.txt" hidden/>
+      <button class="actionButton" id="loadButton">Load</button>
+      <button class="actionButton" id="expButton">Save</button>
+      <button class="actionButton" id="clearButton">Clear</button>
+    </div>
+    <input type="text" id="model_name" value="full_model">
+    <img id="logoImage" src="../img/favicons/lunaLogo.svg" alt="LunaSim Logo"/>
+  </div>
+
+  <div class="tabBar">
+    <button class="tabButton active" id="modelBtn">Model View</button>
+    <button class="tabButton" id="chartBtn">Charts/Tables</button>
+  </div>
+
+  <div class="modelViewer">
+    <div class="toolbar"><ul></ul></div>
+
+    <div class="modelCanvas" id="modalView">
+      <div id="myDiagram">
+        <canvas width="100%" height="100%">
+          This text is displayed if your browser does not support the Canvas HTML element.
+        </canvas>
+      </div>
+      <button id="centerModelBtn" class="center-btn" title="Center Model">
+        <i class="fa fa-home"></i>
+      </button>
+    </div>
+
+    <!-- Equation editor (hidden) -->
+    <div id="eqEditor">
+      <div class="equation-editor-header">
+        <h3 class="equation-editor-title">Equations</h3>
+      </div>
+      <div id="eqTableDiv">
+        <table class="equation-editor-table">
+          <thead><tr>
+            <th class="eq-col-type">Type</th>
+            <th class="eq-col-name">Name</th>
+            <th class="eq-col-equation">Equation</th>
+            <th class="eq-col-toggle">NN</th>
+          </tr></thead>
+          <tbody id="eqTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts/Tables (hidden) -->
+  <div class="chartViewer hidden">
+    <div class="chartSidebar"><ul></ul></div>
+    <div class="chartCanvas"><div id="display"></div></div>
+    <div class="chartEditor"></div>
+  </div>
+</div>
+
+<!-- Overlays expected by editor.js -->
+<div id="overlay"></div>
+<div class="settings-popup hidden" id="settingsPopup"></div>
+<div class="theme-popup hidden" id="themePopup"></div>
+<div class="export-popup hidden" id="exportPopup"></div>
+<div id="simErrorPopup" class="hidden"></div>
+<div id="customConfirmPopup" class="hidden"></div>
+<!-- Simulation parameter inputs expected by loadModel -->
+<input id="startTime" type="hidden" value="0">
+<input id="endTime"   type="hidden" value="36">
+<input id="dt"        type="hidden" value="0.1">
+<input id="integrationMethod" type="hidden" value="rk4">
+<input id="trigMode"  type="hidden" value="radian">
+
+<!-- ── T2 Path Highlight Panel ── -->
+<div id="highlightPanel">
+  <h2>Feedback Loop Highlighter</h2>
+  <span class="theme-badge">Theme 2 · Reputational Damage</span>
+
+  <div class="loop-steps">
+    <b>Loop:</b><br>
+    <code>Balance</code> → <code>Profiteering</code> → <code>Trust Loss</code>
+    → <code>Audience Trust ↓</code> → <code>Audience Loss</code>
+    → <code>Traffic ↓</code> → <code>Ad Click Revenue ↓</code>
+    → <code>Balance ↓</code> → …
+  </div>
+
+  <div class="legend">
+    <div class="legend-node"></div>
+    <span>Highlighted nodes (stocks &amp; valves in loop)</span>
+  </div>
+  <div class="legend">
+    <div class="legend-swatch"></div>
+    <span>Highlighted edges (influences &amp; flows in loop)</span>
+  </div>
+
+  <p class="note">
+    ⚠ The causal link <em>Balance → Profiteering</em> is implicit in this
+    model (no explicit influence arrow drawn) and therefore not highlighted.
+  </p>
+
+  <button id="toggleBtn" onclick="toggleHighlight()">Hide Highlight</button>
+</div>
+
+
+<!-- ── Auto-load and highlight script ── -->
+<script>
+// Embedded model JSON (full_model.luna)
+const MODEL_JSON = `{"class":"GraphLinksModel","linkLabelKeysProperty":"labelKeys","nodeDataArray":[{"key":"Traffic","category":"stock","label":"Traffic","color":"#f0f0f0","loc":"170.72372333485544 -314.7733024588498","equation":"200000000","checkbox":false},{"key":"stock4","category":"stock","label":"Balance","color":"#f0f0f0","loc":"158.78854213221598 -146.88680828753377","equation":"300000","checkbox":false},{"key":"variable1","category":"variable","label":"Ad CPC","color":"#f0f0f0","loc":"11.971706578028886 -216.4787602229993","equation":"0.1","label_offset":"0.5 0.5 0 27.999999999999993","checkbox":false},{"key":"variable2","category":"variable","label":"Ad CTR","color":"#f0f0f0","loc":"62.71523592578359 -223.6349046985328","equation":"0.01","label_offset":"0.5 0.5 -1.3536787240573176 27.969481913914024","checkbox":false},{"key":"cloud2","category":"cloud","label":"cloud2","color":"#f0f0f0","loc":"-39.44738970583853 -313.8765506189566"},{"category":"valve","key":-12,"label":"Audience Acquisition","equation":"([Editorial Capacity]-60)*100000","checkbox":true,"loc":"60.17204212965916 -314.3016038410438"},{"key":"stock10","category":"stock","label":"Editorial Capacity","color":"#f0f0f0","loc":"147.43346155440673 64.92410373168548","equation":"60","checkbox":false},{"key":"cloud3","category":"cloud","label":"cloud3","color":"#f0f0f0","loc":"-41.884728857863706 70.97878712463324"},{"category":"valve","key":-17,"label":"Hire","equation":"max(0,[Balance]/[Avr. Wage])","checkbox":true,"loc":"47.38685697462976 68.12374616409448"},{"key":"cloud4","category":"cloud","label":"cloud4","color":"#f0f0f0","loc":"355.9543866901516 67.31554253634425"},{"category":"valve","key":-19,"label":"Fire","equation":"min([Editorial Capacity],abs(min(0,[Balance]/[Avr. Wage])))","checkbox":true,"loc":"256.9469083865413 66.18006740159444"},{"key":"variable5","category":"variable","label":"Avr. Wage","color":"#f0f0f0","loc":"153.72664605023135 -42.52091705854315","equation":"5000","checkbox":false},{"key":"cloud5","category":"cloud","label":"cloud5","color":"#f0f0f0","loc":"347.6791114579441 -145.4507280311545"},{"category":"valve","key":-18,"label":"Wage Bill","equation":"[Editorial Capacity]*[Avr. Wage]","checkbox":true,"loc":"258.48023449000243 -146.1288812420963"},{"key":"cloud6","category":"cloud","label":"cloud6","color":"#f0f0f0","loc":"345.2650394158218 -317.42607961944765"},{"category":"valve","key":-20,"label":"Audience Loss","equation":"0","checkbox":true,"loc":"263.2018323793405 -316.1788368104682"},{"key":"cloud8","category":"cloud","label":"cloud8","color":"#f0f0f0","loc":"-36.39372524366047 -146.1695798195542"},{"category":"valve","key":-21,"label":"Ad Click Revenue","equation":"[Traffic]*[Ad CTR]*[Ad CPC]","checkbox":true,"loc":"55.729621110908305 -146.50810179421595"},{"key":"stock1","category":"stock","label":"Audience Trust","color":"#f0f0f0","loc":"-312.28480916758974 -352.7246384232062","equation":"","checkbox":false},{"key":"stock3","category":"stock","label":"Site PageRank","color":"#f0f0f0","loc":"161.05644083241043 -552.4807634232061","equation":"","checkbox":false},{"key":"cloud1","category":"cloud","label":"cloud1","color":"#f0f0f0","loc":"-534.2198091675898 -352.3277634232061"},{"category":"valve","key":-22,"label":"Trust Building","equation":"","checkbox":true,"loc":"-428.7253888967758 -352.5164136948847"},{"key":"cloud7","category":"cloud","label":"cloud7","color":"#f0f0f0","loc":"-89.83630916758989 -349.4195134232058"},{"category":"valve","key":-24,"label":"Trust Loss","equation":"","checkbox":true,"loc":"-195.8018156799572 -350.9939418626501"},{"key":"variable3","category":"variable","label":"SERP CTR","color":"#f0f0f0","loc":"-10.94355916758957 -396.4807634232061","equation":"","checkbox":false},{"key":"variable4","category":"variable","label":"Article Ranking","color":"#f0f0f0","loc":"-6.943559167589569 -476.4807634232061","equation":"","checkbox":false},{"key":"cloud9","category":"cloud","label":"cloud9","color":"#f0f0f0","loc":"-36.94355916758957 -552.4807634232061"},{"category":"valve","key":-28,"label":"Link Building","equation":"","checkbox":true,"loc":"56.57835063750704 -552.4807634232061"},{"key":"variable6","category":"variable","label":"Link Spam","color":"#f0f0f0","loc":"165.05644083241043 -622.4807634232061","equation":"","checkbox":false},{"key":"cloud10","category":"cloud","label":"cloud10","color":"#f0f0f0","loc":"339.05644083241043 -550.4807634232061"},{"category":"valve","key":-31,"label":"Link Loss","equation":"","checkbox":true,"loc":"255.3090295895348 -551.4217455720025"},{"key":"variable9","category":"variable","label":"SEO Budget","color":"#f0f0f0","loc":"162.0194760177327 -452.7755416740847","equation":"","checkbox":false},{"key":"stock6","category":"stock","label":"\$Editorial Capacity","color":"#f0f0f0","loc":"-933.0147686279502 -356.97080344567837"},{"key":"variable11","category":"variable","label":"Event Selection Pluralism","color":"#f0f0f0","loc":"-624.8640378555392 -663.6606083225533","equation":"","checkbox":false},{"key":"variable12","category":"variable","label":"Source Selection Credibility","color":"#f0f0f0","loc":"-729.8879772305398 -141.47751894755277","equation":"","label_offset":"0.5 0.5 -1.1024999999999636 30","checkbox":false},{"key":"stock9","category":"stock","label":"Credibility","color":"#f0f0f0","loc":"-803.05752973054 -235.69753301005335","equation":"","checkbox":false},{"key":"stock11","category":"stock","label":"Political Bias","color":"#f0f0f0","loc":"-795.3998403555399 -479.4673114475536","equation":"","checkbox":false},{"key":"cloud11","category":"cloud","label":"cloud11","color":"#f0f0f0","loc":"-1032.78821098054 -478.19102988505347"},{"category":"valve","key":-41,"label":"Polarisation","equation":"","checkbox":true,"loc":"-919.5570327801108 -478.79979966032465"},{"key":"cloud12","category":"cloud","label":"cloud12","color":"#f0f0f0","loc":"-601.4050428555399 -482.0198745725536"},{"category":"valve","key":-43,"label":"Depolarisation","equation":"","checkbox":true,"loc":"-693.1914922899495 -480.81215813262713"},{"key":"cloud13","category":"cloud","label":"cloud13","color":"#f0f0f0","loc":"-1034.0644925430402 -235.69753301005358"},{"category":"valve","key":-45,"label":"Editorial Standards","equation":"","checkbox":true,"loc":"-924.0391013316935 -235.69753301005346"},{"key":"cloud14","category":"cloud","label":"cloud14","color":"#f0f0f0","loc":"-584.75260723054 -233.38228301005347"},{"category":"valve","key":-47,"label":"Reputational Damage","equation":"","checkbox":true,"loc":"-688.6535516354243 -234.48421263572828"},{"key":"variable17","category":"variable","label":"Owner Bias","color":"#f0f0f0","loc":"-914.43690316804 -708.3170951975538","equation":"","checkbox":false},{"key":"variable18","category":"variable","label":"Social Bias","color":"#f0f0f0","loc":"-781.1118819180402 -707.0792276975534","equation":"","checkbox":false},{"key":"variable19","category":"variable","label":"Homophily","color":"#f0f0f0","loc":"-403.94147736330126 -489.44586043995804","equation":"","checkbox":false},{"key":"stock13","category":"stock","label":"\$Traffic","color":"#f0f0f0","loc":"-299.7661023633011 -468.359360439958"},{"key":"variable21","category":"variable","label":"Event Selection Credibility","color":"#f0f0f0","loc":"-616.9221629650492 -73.12351589519756","equation":"","checkbox":false},{"key":"variable23","category":"variable","label":"Source Selection Pluralism","color":"#f0f0f0","loc":"-713.0050379650492 -596.8110158951982","equation":"","checkbox":false},{"key":"variable25","category":"variable","label":"Salience","color":"#f0f0f0","loc":"-263.8435379650491 -566.4713908951975","equation":"","checkbox":false},{"key":"variable26","category":"variable","label":"Skepticism","color":"#f0f0f0","loc":"-241.16341296504913 -209.54664089519832","equation":"","checkbox":false},{"key":"variable29","category":"variable","label":"Backlink Likelihood","color":"#f0f0f0","loc":"31.899087034951435 -707.6122658951982","equation":"","checkbox":false},{"key":"variable30","category":"variable","label":"\$Source Selection Credibility","color":"#f0f0f0","loc":"-164.43358772340014 -639.0446844854404"},{"key":"stock14","category":"stock","label":"\$Credibility","color":"#f0f0f0","loc":"-22.245602363300804 -800.7004854399578"},{"key":"variable31","category":"variable","label":"Profiteering","color":"#f0f0f0","loc":"-157.68772736330152 59.41488956004207","equation":"","checkbox":false},{"key":"stock15","category":"stock","label":"\$Traffic","color":"#f0f0f0","loc":"-354.4839773633015 -262.40486043995804","label_offset":"0.5 0.5 -1.157624999999939 50.837249999999926"},{"key":"variable40","category":"variable","label":"Reciprocal Links","color":"#f0f0f0","loc":"-122.95897736330164 -734.7158604399579","equation":"","checkbox":false},{"key":"variable41","category":"variable","label":"\$Source Selection Pluralism","color":"#f0f0f0","loc":"-305.86372736330145 -783.3361104399578"}],"linkDataArray":[{"category":"flow","text":"flow","from":"cloud2","to":"Traffic","labelKeys":[-12]},{"category":"flow","text":"flow","from":"cloud3","to":"stock10","labelKeys":[-17]},{"category":"flow","text":"flow","from":"stock10","to":"cloud4","labelKeys":[-19]},{"category":"influence","text":"influence","from":"variable5","to":-19,"labelKeys":[]},{"category":"influence","text":"influence","from":"stock4","to":-19,"labelKeys":[]},{"category":"flow","text":"flow","from":"stock4","to":"cloud5","labelKeys":[-18]},{"category":"influence","text":"influence","from":"variable5","to":-18,"labelKeys":[]},{"category":"influence","text":"influence","from":"stock10","to":-18,"labelKeys":[]},{"category":"flow","text":"flow","from":"Traffic","to":"cloud6","labelKeys":[-20]},{"category":"flow","text":"flow","from":"cloud8","to":"stock4","labelKeys":[-21]},{"category":"influence","text":"influence","from":"variable2","to":-21,"labelKeys":[]},{"category":"influence","text":"influence","from":"variable1","to":-21,"labelKeys":[]},{"category":"influence","text":"influence","from":"Traffic","to":-21,"labelKeys":[]},{"category":"influence","text":"influence","from":"stock4","to":-17,"labelKeys":[]},{"category":"influence","text":"influence","from":"variable5","to":-17,"labelKeys":[]},{"category":"influence","text":"influence","from":"stock10","to":-19,"labelKeys":[]},{"category":"flow","text":"flow","from":"cloud1","to":"stock1","labelKeys":[-22]},{"category":"flow","text":"flow","from":"stock1","to":"cloud7","labelKeys":[-24]},{"category":"influence","text":"influence","from":"stock3","to":"variable4","labelKeys":[],"curviness":-25.87265996423826},{"category":"influence","text":"influence","from":"variable4","to":"variable3","labelKeys":[],"curviness":-12.386112827552783},{"category":"influence","text":"influence","from":"variable3","to":-12,"labelKeys":[],"curviness":-14.961682160191597},{"category":"flow","text":"flow","from":"cloud9","to":"stock3","labelKeys":[-28]},{"category":"influence","text":"influence","from":"variable6","to":-28,"labelKeys":[],"curviness":-16.57169007583984},{"category":"flow","text":"flow","from":"stock3","to":"cloud10","labelKeys":[-31]},{"category":"influence","text":"influence","from":"variable6","to":-31,"labelKeys":[]},{"category":"influence","text":"influence","from":"stock4","to":"variable9","labelKeys":[],"curviness":-65.64398553180273},{"category":"influence","text":"influence","from":"variable9","to":-28,"labelKeys":[],"curviness":-8.983522877397306},{"category":"flow","text":"flow","from":"cloud11","to":"stock11","labelKeys":[-41]},{"category":"flow","text":"flow","from":"stock11","to":"cloud12","labelKeys":[-43]},{"category":"flow","text":"flow","from":"cloud13","to":"stock9","labelKeys":[-45]},{"category":"flow","text":"flow","from":"stock9","to":"cloud14","labelKeys":[-47]},{"category":"influence","text":"influence","from":"stock6","to":-45,"labelKeys":[],"curviness":-23.047346471426817},{"category":"influence","text":"influence","from":"stock9","to":"variable12","labelKeys":[],"curviness":19.071152457035968},{"category":"influence","text":"influence","from":"stock11","to":"variable11","labelKeys":[],"curviness":-26.414568321357216},{"category":"influence","text":"influence","from":"variable17","to":-41,"labelKeys":[],"curviness":-13.563574812035908},{"category":"influence","text":"influence","from":"variable18","to":-41,"labelKeys":[],"curviness":-50.795076259200755},{"category":"influence","text":"influence","from":"stock9","to":-43,"labelKeys":[],"curviness":-41.54948512729829},{"category":"influence","text":"influence","from":"stock11","to":-47,"labelKeys":[],"curviness":-28.198558603937244},{"category":"influence","text":"influence","from":"stock13","to":-22,"labelKeys":[],"curviness":11.274589907760625},{"category":"influence","text":"influence","from":"stock13","to":"variable19","labelKeys":[],"curviness":-6.828803554437522},{"category":"influence","text":"influence","from":"variable19","to":-22,"labelKeys":[],"curviness":-21.326180857900262},{"category":"influence","text":"influence","from":"stock1","to":-20,"labelKeys":[],"curviness":102.27661526812228},{"category":"influence","text":"influence","from":"stock9","to":"variable21","labelKeys":[],"curviness":20.663313187492403},{"category":"influence","text":"influence","from":"stock11","to":"variable23","labelKeys":[],"curviness":-18.090355990917352},{"category":"influence","text":"influence","from":"variable18","to":"variable19","labelKeys":[],"curviness":101.13081905717678},{"category":"influence","text":"influence","from":"stock11","to":"variable19","labelKeys":[],"curviness":54.73831771003851},{"category":"influence","text":"influence","from":"variable11","to":"variable25","labelKeys":[]},{"category":"influence","text":"influence","from":"variable21","to":-45,"labelKeys":[],"curviness":32.172068611139416},{"category":"influence","text":"influence","from":"variable12","to":-45,"labelKeys":[],"curviness":30.319214963160714},{"category":"influence","text":"influence","from":"variable23","to":-41,"labelKeys":[],"curviness":-20.471881730645247},{"category":"influence","text":"influence","from":"variable25","to":"variable4","labelKeys":[]},{"category":"influence","text":"influence","from":"variable18","to":"variable25","labelKeys":[],"curviness":83.22982572554902},{"category":"influence","text":"influence","from":"variable21","to":"variable26","labelKeys":[],"curviness":-15.807109882426628},{"category":"influence","text":"influence","from":"variable11","to":-41,"labelKeys":[],"curviness":-31.051023543474944},{"category":"influence","text":"influence","from":"variable29","to":-28,"labelKeys":[],"curviness":19.06882240163691},{"category":"influence","text":"influence","from":"variable30","to":"variable4","labelKeys":[]},{"category":"influence","text":"influence","from":"stock14","to":"variable29","labelKeys":[]},{"category":"influence","text":"influence","from":"variable31","to":-24,"labelKeys":[],"curviness":-58.218499450027295},{"category":"influence","text":"influence","from":"variable31","to":"variable5","labelKeys":[]},{"category":"influence","text":"influence","from":"variable31","to":-19,"labelKeys":[],"curviness":-121.29894608284847},{"category":"influence","text":"influence","from":"variable26","to":-24,"labelKeys":[],"curviness":-23.622783115069666},{"category":"influence","text":"influence","from":"stock15","to":"variable26","labelKeys":[],"curviness":-16.33971363081392},{"category":"influence","text":"influence","from":"stock15","to":-24,"labelKeys":[],"curviness":14.144455356616342},{"category":"influence","text":"influence","from":"variable41","to":"variable40","labelKeys":[]},{"category":"influence","text":"influence","from":"variable40","to":"variable29","labelKeys":[]}],"simulationParameters":{"startTime":0,"endTime":36,"dt":0.1,"integrationMethod":"rk4","trigMode":"radian"}}`;
+
+// T2 path specification
+const T2_NODE_KEYS = ["variable31", "stock4", -24, "stock1", -20, "Traffic", -21];
+const T2_LINK_SPECS = [{"from": "variable31", "to": -24}, {"from": "stock1", "to": "cloud7"}, {"from": "stock1", "to": -20}, {"from": "Traffic", "to": "cloud6"}, {"from": "Traffic", "to": -21}, {"from": "cloud8", "to": "stock4"}];
+
+let highlightOn = true;
+
+function toggleHighlight() {
+  const btn = document.getElementById('toggleBtn');
+  if (highlightOn) {
+    if (window.clearHighlights) window.clearHighlights();
+    btn.textContent = 'Show Highlight';
+    btn.classList.add('off');
+    highlightOn = false;
+  } else {
+    if (window.highlightPath) window.highlightPath(T2_NODE_KEYS, T2_LINK_SPECS);
+    btn.textContent = 'Hide Highlight';
+    btn.classList.remove('off');
+    highlightOn = true;
+  }
+}
+
+// Poll until myDiagram is ready, then load and highlight the model
+function initViewer() {
+  if (!window.myDiagram) {
+    setTimeout(initViewer, 100);
+    return;
+  }
+
+  try {
+    // Parse the embedded model
+    const parsedJson = JSON.parse(MODEL_JSON);
+
+    // Apply simulation parameters
+    if (parsedJson.simulationParameters) {
+      document.getElementById("startTime").value = parsedJson.simulationParameters.startTime;
+      document.getElementById("endTime").value   = parsedJson.simulationParameters.endTime;
+      document.getElementById("dt").value        = parsedJson.simulationParameters.dt;
+    }
+
+    // Clear existing model
+    window.myDiagram.model = go.Model.fromJson(JSON.stringify({
+      "class": "GraphLinksModel",
+      "linkLabelKeysProperty": "labelKeys",
+      "nodeDataArray": [],
+      "linkDataArray": []
+    }));
+
+    // Load embedded model
+    window.myDiagram.model = go.Model.fromJson(parsedJson);
+
+    // Make diagram read-only
+    window.myDiagram.isReadOnly = true;
+    window.myDiagram.allowSelect = true; // still allow hovering/selection for info
+
+    // Apply T2 highlights after a brief layout delay
+    setTimeout(function() {
+      if (window.highlightPath) {
+        window.highlightPath(T2_NODE_KEYS, T2_LINK_SPECS);
+      }
+      // Center the diagram
+      window.myDiagram.zoomToFit();
+      document.getElementById('loadingMsg').textContent = 'Model loaded ✓';
+      document.getElementById('loadingMsg').style.color = '#5ec46d';
+    }, 400);
+
+  } catch(err) {
+    document.getElementById('loadingMsg').textContent = 'Error loading model: ' + err.message;
+    document.getElementById('loadingMsg').style.color = '#ff5555';
+    console.error('LunaSim highlight viewer error:', err);
+  }
+}
+
+// Start polling once DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(initViewer, 200);
+});
+</script>
+
+</body>
+</html>
