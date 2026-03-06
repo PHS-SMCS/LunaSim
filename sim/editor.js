@@ -2334,9 +2334,9 @@ function showAutocomplete($input) {
  * @param {number} [margin=15] - Margin in pixels around the diagram in the exported image.
  */
 
-function saveDiagramAsPng(diagram, filename = "diagram.png", margin = 15, scale = 2) {
+function saveDiagramAsPng(diagram, filename = "diagram.png", margin = 15) {
     diagram.makeImageData({
-        background: "white", scale: scale, padding: margin,
+        background: "white", scale: 1, padding: margin,
         returnType: "blob", callback: function (blob) {
             const url = URL.createObjectURL(blob);
             const a = document.createElement("a");
@@ -2360,9 +2360,9 @@ function saveDiagramAsPng(diagram, filename = "diagram.png", margin = 15, scale 
  * @param {string} [filename="diagram.jpg"] - The filename to save as.
  * @param {number} [margin=15] - Margin in pixels around the diagram in the exported image.
  */
-function saveDiagramAsJpg(diagram, filename = "diagram.jpg", margin = 15, scale = 2) {
+function saveDiagramAsJpg(diagram, filename = "diagram.jpg", margin = 15) {
     diagram.makeImageData({
-        background: "white", scale: scale, padding: margin,
+        background: "white", scale: 1, padding: margin,
         returnType: "blob", callback: function (blob) {
             const url = URL.createObjectURL(blob);
             const a = document.createElement("a");
@@ -2386,9 +2386,9 @@ function saveDiagramAsJpg(diagram, filename = "diagram.jpg", margin = 15, scale 
  * @param {string} [filename="diagram.tiff"] - The filename to save as.
  * @param {number} [margin=15] - Margin in pixels around the diagram in the exported image.
  */
-function saveDiagramAsTiff(diagram, filename = "diagram.tiff", margin = 15, scale = 2) {
+function saveDiagramAsTiff(diagram, filename = "diagram.tiff", margin = 15) {
     diagram.makeImageData({
-        background: "white", scale: scale, padding: margin,
+        background: "white", scale: 1, padding: margin,
         returnType: "blob", callback: function (blob) {
             const url = URL.createObjectURL(blob);
             const a = document.createElement("a");
@@ -2416,8 +2416,6 @@ document.getElementById("downloadImageButton").addEventListener("click", functio
     const type = document.getElementById("fileSelect").value;
     const marginInput = parseInt(document.getElementById("imageMargin").value);
     const margin = isNaN(marginInput) ? 15 : marginInput;
-    const scaleInput = parseFloat(document.getElementById("imageScale").value);
-    const scale = isNaN(scaleInput) ? 2 : scaleInput;
     const filename = (document.getElementById("model_name").value || "diagram").trim();
 
     if (!myDiagram) {
@@ -2431,13 +2429,13 @@ document.getElementById("downloadImageButton").addEventListener("click", functio
 
     switch (type) {
         case ".png":
-            saveDiagramAsPng(myDiagram, filename + ".png", margin, scale);
+            saveDiagramAsPng(myDiagram, filename + ".png", margin);
             break;
         case ".jpg":
-            saveDiagramAsJpg(myDiagram, filename + ".jpg", margin, scale);
+            saveDiagramAsJpg(myDiagram, filename + ".jpg", margin);
             break;
         case ".tiff":
-            saveDiagramAsTiff(myDiagram, filename + ".tiff", margin, scale);
+            saveDiagramAsTiff(myDiagram, filename + ".tiff", margin);
             break;
         default:
             showAlertPopup({
