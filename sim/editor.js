@@ -16,6 +16,25 @@ var PERFORMANCE_MODE = false;
 export {PERFORMANCE_MODE};
 
 /**
+ * Font size (in points) used for all node and link labels in the diagram.
+ * Controlled by the "Label Font Size" input in Theme Settings.
+ * @type {number}
+ * @default 11
+ * @memberof module:editor
+ */
+let labelFontSize = 11;
+
+/**
+ * Pixel offset applied to polarity (+/−) labels on influence links.
+ * Measured from the arrowhead tip in diagram coordinates.
+ * Configurable via Theme Settings.
+ * @type {number}
+ * @memberof module:editor
+ */
+let polarityOffsetX = 0;
+let polarityOffsetY = 0;
+
+/**
  * Simulation engine handling model execution and time-stepping logic.
  * @memberof module:editor
  */
@@ -304,7 +323,7 @@ function init() {
         if (!e.isTransactionFinished) return;
 
         myDiagram.model.nodeDataArray.forEach(node => {
-            if (node.category === "cloud" || node.label[0] !== "$") return;
+            if (node.category === "cloud" || !node.label || node.label[0] !== "$") return;
 
             const nonGhostExists = myDiagram.model.nodeDataArray.some(n => n.label === node.label.substring(1) && n.category === node.category);
 
@@ -381,6 +400,50 @@ function init() {
 
     buildTemplates();
 
+    // ── Diagram keyboard shortcuts: B = emphasis, P = polarity +, M = polarity - ──
+    myDiagram.commandHandler.doKeyDown = (function(original) {
+        return function() {
+            const e = myDiagram.lastInput;
+            const tag = document.activeElement ? document.activeElement.tagName.toLowerCase() : "";
+            if (tag !== "input" && tag !== "textarea" && !e.control && !e.meta && !e.alt) {
+                if (e.key === "b" || e.key === "B") {
+                    myDiagram.model.startTransaction("toggle emphasis");
+                    myDiagram.selection.each(function(part) {
+                        if (part instanceof go.Node || part instanceof go.Link) {
+                            myDiagram.model.setDataProperty(part.data, "emphasized", !part.data.emphasized);
+                        }
+                    });
+                    myDiagram.model.commitTransaction("toggle emphasis");
+                    return;
+                }
+                if (e.key === "p" || e.key === "P") {
+                    myDiagram.model.startTransaction("set polarity +");
+                    myDiagram.selection.each(function(part) {
+                        if (part instanceof go.Link && part.data.category === "influence") {
+                            const cur = getPolarityLabelData(part);
+                            setPolarityLabel(part, cur && cur.polarity === "+" ? null : "+");
+                        }
+                    });
+                    myDiagram.model.commitTransaction("set polarity +");
+                    return;
+                }
+                if (e.key === "m" || e.key === "M") {
+                    myDiagram.model.startTransaction("set polarity -");
+                    myDiagram.selection.each(function(part) {
+                        if (part instanceof go.Link && part.data.category === "influence") {
+                            const cur = getPolarityLabelData(part);
+                            setPolarityLabel(part, cur && cur.polarity === "-" ? null : "-");
+                        }
+                    });
+                    myDiagram.model.commitTransaction("set polarity -");
+                    return;
+                }
+            }
+            original.call(this);
+        };
+    })(myDiagram.commandHandler.doKeyDown.bind(myDiagram.commandHandler));
+
+
     myDiagram.model = go.Model.fromJson(JSON.stringify({
         class: "GraphLinksModel", linkLabelKeysProperty: "labelKeys", nodeDataArray: [], linkDataArray: []
     }));
@@ -444,7 +507,7 @@ function buildTemplates() {
     function nodeStyle() {
         return [{
             type: go.Panel.Spot,
-            layerName: "Background",
+            layerName: "",
             locationObjectName: "SHAPE",
             selectionObjectName: "SHAPE",
             locationSpot: go.Spot.Center
@@ -484,7 +547,7 @@ function buildTemplates() {
 
     function textStyle() {
         return [{
-            stroke: textColor, font: "bold 11pt helvetica, bold arial, sans-serif", margin: 2, editable: true
+            stroke: textColor, font: `bold ${labelFontSize}pt helvetica, bold arial, sans-serif`, margin: 2, editable: true
         }, new go.Binding("text", "label").makeTwoWay()];
     }
 
@@ -500,7 +563,9 @@ function buildTemplates() {
     }, $(go.Shape, shapeStyle(), new go.Binding("fill", "", function (data) {
         if (data.label && data.label.startsWith('$')) return "white";
         return "#cfcfcf";
-    }).makeTwoWay(), {
+    }).makeTwoWay(),
+    new go.Binding("stroke", "emphasized", function(e) { return e ? "#E8000D" : "black"; }),
+    new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 4 : 1; }), {
         desiredSize: new go.Size(50, 30)
     }), $(go.TextBlock, textStyle(), {
         _isNodeLabel: true, alignment: new go.Spot(0.5, 0.5, 0, 30), isMultiline: false, textValidation: labelValidator
@@ -516,7 +581,9 @@ function buildTemplates() {
             scale: 0.9,
             desiredSize: new go.Size(30, 30)
         }), $(go.Placeholder))
-    }, $(go.Shape, shapeStyle(), new go.Binding("fill", "color").makeTwoWay(), {
+    }, $(go.Shape, shapeStyle(), new go.Binding("fill", "color").makeTwoWay(),
+    new go.Binding("stroke", "emphasized", function(e) { return e ? "#E8000D" : "black"; }),
+    new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 4 : 1; }), {
         figure: "Cloud", desiredSize: new go.Size(30, 30), fill: "#f0f0f0"
     })));
 
@@ -542,6 +609,8 @@ function buildTemplates() {
             },
             $(go.Shape, shapeStyle(),
                 new go.Binding("fill", "color").makeTwoWay(),
+                new go.Binding("stroke", "emphasized", function(e) { return e ? "#E8000D" : null; }),
+                new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 3.5 : 1; }),
                 {
                     figure: "Circle",
                     desiredSize: new go.Size(18, 18),
@@ -567,7 +636,9 @@ function buildTemplates() {
     }, $(go.Shape, shapeStyle(), new go.Binding("fill", "", function (data) {
         if (data.label && data.label.startsWith('$')) return "white";
         return "#cfcfcf";
-    }).makeTwoWay(), {
+    }).makeTwoWay(),
+    new go.Binding("stroke", "emphasized", function(e) { return e ? "#E8000D" : "black"; }),
+    new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 4 : 1; }), {
         figure: "Ellipse", desiredSize: new go.Size(25, 25)
     }), $(go.TextBlock, textStyle(), {
         _isNodeLabel: true, alignment: new go.Spot(0.5, 0.5, 0, 30), isMultiline: false, textValidation: labelValidator
@@ -577,7 +648,7 @@ function buildTemplates() {
         $(go.Link,
             {
                 toShortLength: 10,
-                layerName: "Foreground",
+                layerName: "Background",
                 selectionAdornmentTemplate:
                     $(go.Adornment,
                         $(go.Shape,
@@ -594,12 +665,16 @@ function buildTemplates() {
                 return isBiflow(data) ? 8 : 0;
             }),
 
-            $(go.Shape, {
+            $(go.Shape,
+                new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 11 : 5; }),
+                new go.Binding("stroke", "emphasized", function(e) { return e ? "#E8000D" : "#3489eb"; }), {
                 stroke: "#3489eb",
                 strokeWidth: 5
             }),
 
-            $(go.Shape, {
+            $(go.Shape,
+                new go.Binding("fill", "emphasized", function(e) { return e ? "#E8000D" : "#3489eb"; }),
+                new go.Binding("stroke", "emphasized", function(e) { return e ? "#E8000D" : "#3489eb"; }), {
                 fill: "#3489eb",
                 stroke: "#3489eb",
                 toArrow: "Standard",
@@ -634,10 +709,43 @@ function buildTemplates() {
     );
 
     myDiagram.linkTemplateMap.add("influence", $(go.Link, {
-        curve: go.Link.Bezier, toShortLength: 8, reshapable: true
-    }, new go.Binding("curviness", "curviness").makeTwoWay(), $(go.Shape, {strokeWidth: 1.5}, new go.Binding("stroke", "isSelected", sel => sel ? "#3489eb" : "orange").ofObject()), $(go.Shape, {
-        stroke: null, toArrow: "Standard", scale: 1.5
-    }, new go.Binding("fill", "isSelected", sel => sel ? "#3489eb" : "orange").ofObject())));
+        curve: go.Link.Bezier, toShortLength: 8, reshapable: true, layerName: "Background"
+    }, new go.Binding("curviness", "curviness").makeTwoWay(),
+    $(go.Shape,
+        new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 8 : 1.5; }),
+        {strokeWidth: 1.5},
+        new go.Binding("stroke", "isSelected", sel => sel ? "#3489eb" : "orange").ofObject()),
+    $(go.Shape,
+        new go.Binding("scale", "emphasized", function(e) { return e ? 2.5 : 1.5; }),
+        { stroke: null, toArrow: "Standard", scale: 1.5 },
+        new go.Binding("fill", "isSelected", sel => sel ? "#3489eb" : "orange").ofObject())
+    ));
+
+    // Polarity label nodes (isLinkLabel:true) — GoJS's native mechanism for
+    // labels that reliably track a specific point along a link route.
+    myDiagram.nodeTemplateMap.add("polarityLabel",
+        $(go.Node, {
+            isLinkLabel: true,
+            selectable: false,
+            avoidable: false,
+            cursor: "default",
+            // segmentIndex omitted → defaults to NaN.
+            // With NaN, GoJS measures segmentFraction along the full VISUAL
+            // path length of the bezier, not along internal control-point
+            // segments.  segmentFraction:1 therefore lands at the arrowhead end.
+            segmentFraction: 1,
+            segmentOffset: new go.Point(polarityOffsetX, polarityOffsetY)
+        },
+        $(go.TextBlock, {
+            stroke: "black",
+            font: `bold ${labelFontSize}pt helvetica, bold arial, sans-serif`,
+            textAlign: "center"
+        },
+        new go.Binding("text", "polarity"),
+        new go.Binding("font", "polarity", function() {
+            return `bold ${labelFontSize}pt helvetica, bold arial, sans-serif`;
+        })))
+    );
 
     myDiagram.nodeTemplateMap.add("textbox",
         $(go.Node, nodeStyle(),
@@ -1605,6 +1713,100 @@ document.getElementById("switchThemeButton").addEventListener("click", function 
 });
 document.getElementById("popupNotifClose").addEventListener("click", function () {
     popupNotif.style.visibility = "hidden";
+});
+
+document.getElementById("labelFontSizeInput").addEventListener("change", function () {
+    const val = parseFloat(this.value);
+    if (!isNaN(val) && val > 0) {
+        labelFontSize = val;
+        const newFont = `bold ${val}pt helvetica, bold arial, sans-serif`;
+
+        // Rebuild templates so any newly-added nodes use the updated size.
+        buildTemplates();
+
+        // GoJS reuses existing Part objects when the model data is unchanged,
+        // so swapping the model won't repaint existing TextBlocks.
+        // Instead, walk the visual tree and update every TextBlock directly.
+        function applyFontToObj(obj) {
+            if (obj instanceof go.TextBlock) {
+                obj.font = newFont;
+            }
+            if (obj instanceof go.Panel) {
+                obj.elements.each(function(child) { applyFontToObj(child); });
+            }
+        }
+
+        myDiagram.commit(function(diag) {
+            diag.nodes.each(function(node) { applyFontToObj(node); });
+            diag.links.each(function(link) { applyFontToObj(link); });
+        }, "update font size");
+    }
+});
+
+/** Returns the polarityLabel node data attached to an influence link, or null. */
+function getPolarityLabelData(link) {
+    const keys = link.data.labelKeys || [];
+    for (let i = 0; i < keys.length; i++) {
+        const nd = myDiagram.model.findNodeDataForKey(keys[i]);
+        if (nd && nd.category === "polarityLabel") return nd;
+    }
+    return null;
+}
+
+/**
+ * Creates, updates, or removes the polarityLabel node for an influence link.
+ * @param {go.Link} link
+ * @param {string|null} polarity "+" | "-" | null (null removes the label)
+ */
+function setPolarityLabel(link, polarity) {
+    const existing = getPolarityLabelData(link);
+    if (!polarity) {
+        if (existing) {
+            const newKeys = (link.data.labelKeys || []).filter(function(k) { return k !== existing.key; });
+            myDiagram.model.setDataProperty(link.data, "labelKeys", newKeys);
+            myDiagram.model.removeNodeData(existing);
+        }
+    } else if (existing) {
+        myDiagram.model.setDataProperty(existing, "polarity", polarity);
+    } else {
+        // Generate the key before addNodeData so labelKeys never gets undefined.
+        const newKey = "pl_" + Date.now() + "_" + Math.floor(Math.random() * 1e6);
+        const labelData = { key: newKey, category: "polarityLabel", polarity: polarity };
+        myDiagram.model.addNodeData(labelData);
+        const newKeys = (link.data.labelKeys || []).concat([newKey]);
+        myDiagram.model.setDataProperty(link.data, "labelKeys", newKeys);
+    }
+}
+
+function applyPolarityOffset() {
+    buildTemplates(); // so newly-added label nodes use the updated offset
+    myDiagram.commit(function(diag) {
+        diag.nodes.each(function(node) {
+            if (node.data && node.data.category === "polarityLabel") {
+                node.segmentOffset = new go.Point(polarityOffsetX, polarityOffsetY);
+            }
+        });
+    }, "update polarity offset");
+}
+
+document.getElementById("polarityOffsetX").addEventListener("change", function () {
+    const val = parseFloat(this.value);
+    if (!isNaN(val)) { polarityOffsetX = val; applyPolarityOffset(); }
+});
+document.getElementById("polarityOffsetY").addEventListener("change", function () {
+    const val = parseFloat(this.value);
+    if (!isNaN(val)) { polarityOffsetY = val; applyPolarityOffset(); }
+});
+
+document.getElementById("clearEmphasisButton").addEventListener("click", function () {
+    myDiagram.model.startTransaction("clear emphasis");
+    myDiagram.nodes.each(function(node) {
+        myDiagram.model.setDataProperty(node.data, "emphasized", false);
+    });
+    myDiagram.links.each(function(link) {
+        myDiagram.model.setDataProperty(link.data, "emphasized", false);
+    });
+    myDiagram.model.commitTransaction("clear emphasis");
 });
 
 window.onload = function () {
