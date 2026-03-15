@@ -41,8 +41,12 @@
 
   <!-- svg favicon -->
   <link rel="icon" type="image/svg+xml" href="../img/favicons/lunaLogo.svg">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.7.2/css/all.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Two+Tone" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 <body>
 
@@ -70,13 +74,29 @@
         <!-- ================== Action Bar ================== -->
         <div class="actions">
           <p id="saveStatus">Last Cloud Save: -<br>Last Export: -</p>
-          <button class="actionButton" id="runButton"><i class="fa-light fa-play"></i> Run</button>
+          
+          <!-- Run button -->
+          <button class="actionButton" id="runButton">
+            <span class="material-symbols-outlined" style="font-size: 20px;">play_arrow</span> Run
+          </button>
+          
+          <!-- Load button -->
           <input type="file" id="load-actual-button" accept=".luna, .txt" hidden/>
-          <button class="actionButton" id="loadButton"><i class="fa-light fa-file-import"></i> Load</button>
-          <button class="actionButton" id="expButton" onclick="openSettings(event, 'exportPopup')"><i class="fa-light fa-file-export"></i> Save</button>
-          <button class="actionButton" id="clearButton"><i class="fa-light fa-trash"></i> Clear</button>
+          <button class="actionButton" id="loadButton">
+            <span class="material-symbols-outlined" style="font-size: 20px;">file_upload</span> Load
+          </button>
+          
+          <!-- Save button -->
+          <button class="actionButton" id="expButton" onclick="openSettings(event, 'exportPopup')">
+            <span class="material-symbols-outlined" style="font-size: 20px;">save</span> Save
+          </button>
+          
+          <!-- Clear button -->
+          <button class="actionButton" id="clearButton">
+            <span class="material-symbols-outlined" style="font-size: 20px;">delete</span> Clear
+          </button>
         </div>
-        
+                
         <input type="text" id="model_name" name="model_name" placeholder="Model Name" value="New Project">
         <img id="logoImage" src="../img/favicons/lunaLogo.svg" alt="LunaSim Logo" />
       </div>
@@ -98,74 +118,74 @@
 
               <!-- Pointer Tool -->
               <li><a href="#" id="pointer_button" class="pointer_selected tool">
-                <i class="fa-light fa-arrow-pointer"></i><span>Pointer [P]</span>
+                <i class="material-symbols-outlined">arrow_selector_tool</i><span>Pointer [P]</span>
               </a></li>
 
               <li><a href="#" id="stock_button" class="node_normal tool">
-                  <i class="fa-light fa-rectangle"></i><span>Stock [S]</span>
+                <i class="material-symbols-outlined">rectangle</i><span>Stock [S]</span>
               </a></li>
 
               <!-- Stock Tool with Variants -->
               <!--<li class="variant-group">
                 <a href="#" id="stock_button" class="node_normal tool">
-                  <i class="fa-light fa-rectangle"></i><span>Stock [S]</span>
+                  <i class="material-symbols-outlined">crop_square</i><span>Stock [S]</span>
                 </a>
 
                 <div class="variant-popup" id="stock_variants">
                   <a href="#" id="conveyor_button" class="node_normal tool">
-                    <i class="fa-light fa-conveyor-belt-boxes"></i><span>Conveyor</span>
+                    <i class="material-symbols-outlined">view_stream</i><span>Conveyor</span>
                   </a>
                   <a href="#" id="queue_button" class="node_normal tool">
-                    <i class="fa-light fa-users-rectangle"></i><span>Queue</span>
+                    <i class="material-symbols-outlined">groups</i><span>Queue</span>
                   </a>
                   <a href="#" id="microwave_button" class="node_normal tool">
-                    <i class="fa-light fa-microwave"></i><span>Microwave</span>
+                    <i class="material-symbols-outlined">microwave</i><span>Microwave</span>
                   </a>
                 </div>
               </li>-->
 
               <!-- Other Tools -->
               <li><a href="#" id="cloud_button" class="node_normal tool">
-                <i class="fa-light fa-cloud"></i><span>Cloud [C]</span>
+                <i class="material-symbols-outlined">cloud</i><span>Cloud [C]</span>
               </a></li>
 
               <li><a href="#" id="variable_button" class="node_normal tool">
-                <i class="fa-light fa-circle"></i><span>Variable [V]</span>
+                <i class="material-symbols-outlined">circle</i><span>Variable [V]</span>
               </a></li>
 
               <li><a href="#" id="flow_button" class="link_normal tool">
-                <i class="fa-light fa-arrows-left-right"></i><span>Flow [F]</span>
+                <i class="material-symbols-outlined">sync_alt</i><span>Flow [F]</span>
               </a></li>
 
               <li><a href="#" id="influence_button" class="link_normal tool">
-                  <i class="fa-light fa-repeat"></i><span>Influence [I]</span>
+                <i class="material-symbols-outlined">replay</i><span>Influence [I]</span>
               </a></li>
 
               <!--<li class="variant-group">
                 <a href="#" id="influence_button" class="link_normal tool">
-                  <i class="fa-light fa-repeat"></i><span>Influence [I]</span>
+                  <i class="material-symbols-outlined">repeat</i><span>Influence [I]</span>
                 </a>
 
                 <div class="variant-popup" id="text_variants">
                   <a href="#" id="info_influence_button" class="link_normal tool">
-                    <i class="fa-light fa-circle-info"></i><span>Info Influence</span>
+                    <i class="material-symbols-outlined">info</i><span>Info Influence</span>
                   </a>
                 </div>
               </li>-->
 
               <li><a href="#" id="text_button" class="node_normal tool">
-                  <i class="fa-light fa-text"></i><span>Text [T]</span>
+                <i class="material-symbols-outlined">text_fields</i><span>Text [T]</span>
               </a></li>
 
               <!-- Text Tool with Variants -->
               <!--<li class="variant-group">
                 <a href="#" id="text_button" class="node_normal tool">
-                  <i class="fa-light fa-text"></i><span>Text [T]</span>
+                  <i class="material-symbols-outlined">text_fields</i><span>Text [T]</span>
                 </a>
 
                 <div class="variant-popup" id="text_variants">
                   <a href="#" id="loop_label_button" class="node_normal tool">
-                    <i class="fa-light fa-rotate-left fa-flip-horizontal"></i><span>Loop Label</span>
+                    <i class="material-symbols-outlined">autorenew</i><span>Loop Label</span>
                   </a>
                 </div>
               </li>-->
@@ -175,15 +195,15 @@
             <!-- Settings (Theme, Help, Simulation Parameters) -->
             <div class="settings-section">
               <li><a href="#" onclick="openSettings(event, 'themePopup')" class="no-active">
-                <i class="fa-light fa-paint-roller"></i><span>Theme</span>
+                <i class="material-symbols-outlined">palette</i><span>Theme</span>
               </a></li>
 
               <li><a href="../UserDocs.html" class="no-active" target="_blank">
-                <i class="fa-light fa-question"></i><span>Help</span>
+                <i class="material-symbols-outlined">help</i><span>Help</span>
               </a></li>
 
               <li><a href="#" onclick="openSettings(event, 'settingsPopup')" class="no-active">
-                <i class="fa-light fa-gear"></i><span>Settings</span>
+                <i class="material-symbols-outlined">settings</i><span>Settings</span>
               </a></li>
             </div>
           </ul>
@@ -201,7 +221,7 @@
           </div>
           <!-- Center Model Button -->
           <button id="centerModelBtn" class="center-btn" title="Center Model">
-            <i class="fa-light fa-home"></i>
+            <i class="material-symbols-outlined" style="font-size: 20px;">home</i>
           </button>
         </div>
 
@@ -210,7 +230,7 @@
         <div id="eqEditor">
           <div class="equation-editor-header">
             <p class="equation-editor-title">Equation Editor</p>
-            <i class="fa-light fa-expand equation-editor-zoom-icon" onclick="openEquationEditorPopup()"></i>
+            <i class="material-symbols-outlined equation-editor-zoom-icon" onclick="openEquationEditorPopup()">open_in_full</i>
           </div>
           <div id = "eqTableDiv">
             <table class="equation-editor-table" id="eqTable">
@@ -242,9 +262,9 @@
 
             <!-- Settings Area -->
             <div class="settings-section">
-              <li><a href="#" onclick="openSettings(event, 'themePopup')" class="no-active"><i class="fa-light fa-paint-roller"></i><span>Theme</span></a></li>
-              <li><a href="../UserDocs.html" class="no-active"><i class="fa-light fa-question"></i><span>Help</span></a></li>
-              <li><a href="#" onclick="openSettings(event, 'settingsPopup')" class="no-active"><i class="fa-light fa-gear"></i><span>Settings</span></a></li>
+              <li><a href="#" onclick="openSettings(event, 'themePopup')" class="no-active"><i class="material-symbols-outlined">palette</i><span>Theme</span></a></li>
+              <li><a href="../UserDocs.html" class="no-active"><i class="material-symbols-outlined">help</i><span>Help</span></a></li>
+              <li><a href="#" onclick="openSettings(event, 'settingsPopup')" class="no-active"><i class="material-symbols-outlined">settings</i><span>Settings</span></a></li>
             </div>
           </ul>
         </div>
@@ -295,7 +315,7 @@
       <div id="settingsPopup" class="settings-popup hidden">
         <div class="settings-header">
           <h2>Simulation Settings</h2>
-          <button class="close-btn" onclick="closeSettings('settingsPopup')"><i class="fa-light fa-xmark"></i></button>
+          <button class="close-btn" onclick="closeSettings('settingsPopup')"><i class="material-symbols-outlined close-icon">close</i></button>
         </div>
         <div class="setting-group">
           <label for="startTime">Start Time</label>
@@ -330,7 +350,7 @@
       <div id="themePopup" class="theme-popup hidden">
         <div class="settings-header">
           <h2>Theme Settings</h2>
-          <button class="close-btn" onclick="closeSettings('themePopup')"><i class="fa-light fa-xmark"></i></button>
+          <button class="close-btn" onclick="closeSettings('themePopup')"><i class="material-symbols-outlined close-icon">close</i></button>
         </div>
         <div class="setting-group">
           <label for="themeSelect">Theme</label>
@@ -363,9 +383,9 @@
             <option value="Wingdings" style="font-family: 'Wingdings';">Wingdings/option>
           </select>
           <label for="labelFontSizeInput">Label Font Size</label>
-          <input type="number" id="labelFontSizeInput" class="settings-input" value="11" min="6" max="36" step="1" style="width: 80%;" autocomplete="off">
+          <input type="number" id="labelFontSizeInput" class="settings-input" value="11" min="6" max="36" step="1" style="width: 60%;" autocomplete="off">
           <label>Polarity Label Offset</label>
-          <div style="display:flex; gap:6px; width:80%;">
+          <div style="display:flex; gap:6px; width:45%;">
             <input type="number" id="polarityOffsetX" class="settings-input" value="0" step="1" style="width:50%;" autocomplete="off" title="X offset from arrowhead (pixels, negative = left)">
             <input type="number" id="polarityOffsetY" class="settings-input" value="0" step="1" style="width:50%;" autocomplete="off" title="Y offset from arrowhead (pixels, negative = up)">
           </div>
@@ -378,7 +398,7 @@
       <div id="chartsPopup" class="charts-popup hidden">
         <div class="settings-header">
           <h2>Create Visual</h2>
-          <button class="close-btn" onclick="closeSettings('chartsPopup')"><i class="fa-light fa-xmark"></i></button>
+          <button class="close-btn" onclick="closeSettings('chartsPopup')"><i class="material-symbols-outlined close-icon">close</i></button>
         </div>
         <div id="popForm">
         <form id="tabConfig" name = "tabConfig" onsubmit="return false"> <!-- Will not refresh page -->
@@ -415,7 +435,7 @@
       <div id="exportPopup" class="export-popup hidden">
         <div class="settings-header">
           <h2>Export Settings</h2>
-          <button class="close-btn" onclick="closeSettings('exportPopup')"><i class="fa-light fa-xmark"></i></button>
+          <button class="close-btn" onclick="closeSettings('exportPopup')"><i class="material-symbols-outlined close-icon">close</i></button>
         </div>
         <div class="setting-group">
           <label for="fileSelect">File Type</label>
@@ -441,7 +461,7 @@
       <div id="simErrorPopup" class="sims-popup hidden">
         <div class="settings-header">
           <h2 id="simErrorPopupTitle">Simulation Error!</h2>
-          <button class="close-btn" onclick="closeSettings('simErrorPopup')"><i class="fa-light fa-xmark"></i></button>
+          <button class="close-btn" onclick="closeSettings('simErrorPopup')"><i class="material-symbols-outlined close-icon">close</i></button>
         </div>
         <div class="setting-group">
           <p id="simErrorPopupDesc">This is the default popup. This should only appear during the debug process.</p>
@@ -469,7 +489,7 @@
         <div class="equation-editor-popup-content">
           <div class="equation-editor-popup-header">
             <p class="equation-editor-title">Equation Editor</p>
-            <i class="fa-light fa-xmark close-icon" onclick="closePopup()"></i>
+            <i class="material-symbols-outlined close-icon" onclick="closePopup()">close</i>
           </div>
           <div id="equationEditorPopupContent"></div>
         </div>

@@ -38,6 +38,14 @@ input, button, select {
   display: none;
 }
 
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 300,
+  'GRAD' 0,
+  'opsz' 24
+}
+
 /* Animations */
 @keyframes scale {
   0% {
@@ -110,16 +118,27 @@ input, button, select {
 
 /* Action Buttons Overall */
 .actionButton {
+  display: inline-flex;   
+  align-items: center;        
+  justify-content: center;     
+  gap: 0.3em;                
+
   height: 5vh;
   padding: 0.5svh 1svw;
   font-size: 0.9rem;
   width: 6.7vw;
   border-radius: 8px;
+
   background-color: rgba(60, 84, 148, 0.5);
   border: none;
   color: white;
   cursor: pointer;
   transition: background-color 0.2s ease;
+}
+
+.actionButton .material-icons {
+  font-size: 1em;               /* scale icon to match text */
+  line-height: 1;               /* prevent extra spacing */
 }
 
 .actionButton:hover {
@@ -1559,3 +1578,8 @@ input.settings-input.invalid:focus {
   margin-top: 0.5rem;
 }
 
+.material-icons {
+  font-size: 10px; /* adjust as needed */
+  vertical-align: middle;
+  margin-right: 4px;
+}

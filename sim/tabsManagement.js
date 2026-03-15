@@ -317,10 +317,10 @@ function configTabs() {
     tabLink.href = "#";
 
     const icon = document.createElement("i");
-    // Use different icon classes based on tab type
-    icon.className = (tabs[j].type === "table")
-      ? "fa-light fa-table"
-      : "fa-light fa-chart-sine";
+    icon.className = "material-symbols-outlined"; // Google Material Symbols
+
+    // Set the appropriate icon text for each type
+    icon.textContent = (tabs[j].type === "table") ? "table" : "bar_chart_4_bars";
 
     const label = document.createElement("span");
     const chartName = tabs[j].name || ((j === 0) ? "Default" : "Chart " + j);
