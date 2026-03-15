@@ -23,8 +23,9 @@
 <!-- svg favicon -->
 <link rel="icon" type="image/svg+xml" href="../img/favicons/lunaLogo.svg">
 
-<link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.7.2/css/all.css">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 <title>LunaSim Launch</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@300;400;500;600;700;800;900&display=swap');
@@ -81,6 +82,14 @@
     to {
       transform: rotate(360deg);
     }
+  }
+
+  .material-symbols-outlined {
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 300,
+    'GRAD' 0,
+    'opsz' 24
   }
 
   .container {
@@ -331,41 +340,46 @@
 
   /* Fixed launch and feedback button styling to match original design */
   /* Made buttons larger and removed underline effect from launch button */
+ .launch-btn,.feedback-btn {
+      display: flex;              /* make button a flex container */
+      align-items: center;        /* vertically center text + icon */
+      justify-content: center;    /* horizontally center content */
+      gap: 0.5em;                 /* space between text and icon */
+      padding: 16px 40px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
+  }
+
+  /* Launch Button Colors */
   .launch-btn {
-    background-color: var(--secondary-color);
-    color: white;
-    border: 2px solid white;
-    padding: 16px 40px;
-    border-radius: 8px;
-    font-weight: 600;
-    text-decoration: none;
-    display: inline-block;
-    transition: all 0.3s ease;
-    font-size: 1.1rem;
+      background-color: var(--secondary-color);
+      color: white;
+      border: 2px solid white;
   }
 
   .launch-btn:hover {
-    background-color: var(--primary-color);
-    border-color: white;
-    color: white;
-    /*border: 2px solid var(--primary-color);*/
+      background-color: var(--primary-color);
+      border-color: white;
+      color: white;
   }
 
+  /* Feedback Button Colors */
   .feedback-btn {
-    background-color: white;
-    color: var(--secondary-color);
-    border: 2px solid var(--secondary-color);
-    padding: 16px 40px;
-    border-radius: 8px;
-    font-weight: 600;
-    text-decoration: none;
-    display: inline-block;
-    transition: all 0.3s ease;
-    font-size: 1.1rem;
+      background-color: white;
+      color: var(--secondary-color);
+      border: 2px solid var(--secondary-color);
   }
 
   .feedback-btn:hover {
-    background-color: rgb(166, 167, 175);
+      background-color: rgb(166, 167, 175);
+  }
+
+  .launch-btn .material-symbols-outlined,
+  .feedback-btn .material-symbols-outlined {
+      font-size: 1.2em;
   }
 
   /* Scroll Indicator */
@@ -946,44 +960,44 @@
             </a>
             <!-- Updated navigation links - removed Contact, added History and References -->
             <ul class="nav-menu" id="navMenu">
-                <li class="nav-item">
-                    <a href="#about" class="nav-link">
-                        <i class="fas fa-info-circle"></i>
-                        About
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#team" class="nav-link">
-                        <i class="fas fa-users"></i>
-                        Team
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#timeline" class="nav-link">
-                        <i class="fas fa-history"></i>
-                        History
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#references" class="nav-link">
-                        <i class="fas fa-link"></i>
-                        References
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#changelog" class="nav-link">
-                        <i class="fas fa-book"></i>
-                        Changelog
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <!-- Made launch button more defined -->
-                    <button class="nav-link nav-launch-btn" onclick="launchLunaSim()">
-                        <i class="fas fa-rocket"></i>
-                        Launch
-                    </button>
-                </li>
-            </ul>
+              <li class="nav-item">
+                  <a href="#about" class="nav-link">
+                      <span class="material-symbols-outlined">info</span>
+                      About
+                  </a>
+              </li>
+              <li class="nav-item">
+                  <a href="#team" class="nav-link">
+                      <span class="material-symbols-outlined">groups</span>
+                      Team
+                  </a>
+              </li>
+              <li class="nav-item">
+                  <a href="#timeline" class="nav-link">
+                      <span class="material-symbols-outlined">history_edu</span>
+                      History
+                  </a>
+              </li>
+              <li class="nav-item">
+                  <a href="#references" class="nav-link">
+                      <span class="material-symbols-outlined">link</span>
+                      References
+                  </a>
+              </li>
+              <li class="nav-item">
+                  <a href="#changelog" class="nav-link">
+                      <span class="material-symbols-outlined">menu_book</span>
+                      Changelog
+                  </a>
+              </li>
+              <li class="nav-item">
+                  <!-- Launch button -->
+                  <button class="nav-link nav-launch-btn" onclick="launchLunaSim()">
+                      <span class="material-symbols-outlined">rocket_launch</span>
+                      Launch
+                  </button>
+              </li>
+          </ul>
         </div>
     </nav>
 
@@ -1003,25 +1017,25 @@
     
     <!-- Hero Section -->
     <div class="hero-section">
-        <div class="hero-content">
-            <h1>
-                <img src="../img/favicons/lunaLogo.svg" alt="LunaSim Logo" class="luna-logo"> 
-                LunaSim
-            </h1>
-            <p>Design and Run All-Powerful Simulations</p>
-            <div class="button-container">
-                <button class="launch-btn" onclick="launchLunaSim()">
-                    Click Here to Launch <i class="fa-regular fa-arrow-up-right-from-square"></i>
-                </button>
-                <a href="mailto:lunasim.reply@gmail.com" class="feedback-btn">
-                    Provide Feedback <i class="fa-regular fa-comment"></i>
-                </a>
-            </div>
-        </div>
-        <div class="scroll-indicator" onclick="scrollToContent()">
-            <i class="fas fa-chevron-down"></i>
-        </div>
-    </div>
+      <div class="hero-content">
+          <h1>
+              <img src="../img/favicons/lunaLogo.svg" alt="LunaSim Logo" class="luna-logo"> 
+              LunaSim
+          </h1>
+          <p>Design and Run All-Powerful Simulations</p>
+          <div class="button-container">
+              <button class="launch-btn" onclick="launchLunaSim()">
+                  Click Here to Launch <span class="material-symbols-outlined">open_in_new</span>
+              </button>
+              <a href="mailto:lunasim.reply@gmail.com" class="feedback-btn">
+                  Provide Feedback <span class="material-symbols-outlined">chat</span>
+              </a>
+          </div>
+      </div>
+      <div class="scroll-indicator" onclick="scrollToContent()">
+          <span class="material-symbols-outlined">keyboard_double_arrow_down</span>
+      </div>
+  </div>
 
     <!-- Content Wrapper -->
     <div class="content-wrapper">
@@ -1049,65 +1063,66 @@
                 </div>
                 <div class="features-columns">
                     <ul class="features-list">
-                        <li>
-                            <div class="icon-circle"><i class="fa-regular fa-circle-nodes"></i></div>
-                            <div class="feature-text">
-                                <strong>Nodes</strong>
-                                <p>Stocks, Variables, Clouds</p>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="icon-circle"><i class="fa-regular fa-arrows-left-right"></i></div>
-                            <div class="feature-text">
-                                <strong>Links</strong>
-                                <p>Flows, Influences</p>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="icon-circle"><i class="fa-regular fa-lambda"></i></div>
-                            <div class="feature-text">
-                                <strong>Equations</strong>
-                                <p>Arithmetic, Trigonometry, Node/Link References</p>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="icon-circle"><i class="fa-regular fa-integral"></i></div>
-                            <div class="feature-text">
-                                <strong>Integration Methods</strong>
-                                <p>Euler's Method, Runge-Kutta 4</p>
-                            </div>
-                        </li>
-                    </ul>
-                    <ul class="features-list">
-                        <li>
-                            <div class="icon-circle"><i class="fa-regular fa-chart-line"></i></div>
-                            <div class="feature-text">
-                                <strong>Visuals</strong>
-                                <p>Charts, Tables</p>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="icon-circle"><i class="fa-regular fa-floppy-disk"></i></div>
-                            <div class="feature-text">
-                                <strong>Import/Export</strong>
-                                <p>Save and Reuse Models, Download Models</p>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="icon-circle"><i class="fa-regular fa-palette"></i></div>
-                            <div class="feature-text">
-                                <strong>Customization</strong>
-                                <p>Custom Themes, Custom Fonts</p>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="icon-circle"><i class="fa-regular fa-ghost"></i></div>
-                            <div class="feature-text">
-                                <strong>And Much More!</strong>
-                                <p>Ghosting, Logic, Docs, etc.</p>
-                            </div>
-                        </li>
-                    </ul>
+                      <li>
+                          <div class="icon-circle"><span class="material-symbols-outlined">account_tree</span></div>
+                          <div class="feature-text">
+                              <strong>Nodes</strong>
+                              <p>Stocks, Variables, Clouds</p>
+                          </div>
+                      </li>
+                      <li>
+                          <div class="icon-circle"><span class="material-symbols-outlined">swap_horiz</span></div>
+                          <div class="feature-text">
+                              <strong>Links</strong>
+                              <p>Flows, Influences</p>
+                          </div>
+                      </li>
+                      <li>
+                          <div class="icon-circle"><span class="material-symbols-outlined">functions</span></div>
+                          <div class="feature-text">
+                              <strong>Equations</strong>
+                              <p>Arithmetic, Trigonometry, Node/Link References</p>
+                          </div>
+                      </li>
+                      <li>
+                          <div class="icon-circle"><span class="material-symbols-outlined">integration_instructions</span></div>
+                          <div class="feature-text">
+                              <strong>Integration Methods</strong>
+                              <p>Euler's Method, Runge-Kutta 4</p>
+                          </div>
+                      </li>
+                  </ul>
+
+                  <ul class="features-list">
+                      <li>
+                          <div class="icon-circle"><span class="material-symbols-outlined">query_stats</span></div>
+                          <div class="feature-text">
+                              <strong>Visuals</strong>
+                              <p>Charts, Tables</p>
+                          </div>
+                      </li>
+                      <li>
+                          <div class="icon-circle"><span class="material-symbols-outlined">save</span></div>
+                          <div class="feature-text">
+                              <strong>Import/Export</strong>
+                              <p>Save and Reuse Models, Download Models</p>
+                          </div>
+                      </li>
+                      <li>
+                          <div class="icon-circle"><span class="material-symbols-outlined">palette</span></div>
+                          <div class="feature-text">
+                              <strong>Customization</strong>
+                              <p>Custom Themes, Custom Fonts</p>
+                          </div>
+                      </li>
+                      <li>
+                          <div class="icon-circle"><span class="material-symbols-outlined">auto_awesome</span></div>
+                          <div class="feature-text">
+                              <strong>And Much More!</strong>
+                              <p>Ghosting, Logic, Docs, etc.</p>
+                          </div>
+                      </li>
+                  </ul>
                 </div>
             </div>
         </div>
@@ -1124,7 +1139,7 @@
                         <h3>Karthik Vedula</h3>
                         <h4>Lead Programmer</h4>
                         <div class="team-school">
-                            <i class="fas fa-graduation-cap"></i>
+                            <span class="material-symbols-outlined">school</span>
                             <span>Stanford University</span>
                         </div>
                         <div class="team-years">2021-2025</div>
@@ -1137,7 +1152,7 @@
                         <h3>Aditya Patil</h3>
                         <h4>Systems Analyst / Lead Tester</h4>
                         <div class="team-school">
-                            <i class="fas fa-graduation-cap"></i>
+                            <span class="material-symbols-outlined">school</span>
                             <span>University of Maryland</span>
                         </div>
                         <div class="team-years">2023-2025</div>
@@ -1150,7 +1165,7 @@
                         <h3>Sienna Simms</h3>
                         <h4>Project Manager / Lead Tester</h4>
                         <div class="team-school">
-                            <i class="fas fa-graduation-cap"></i>
+                            <span class="material-symbols-outlined">school</span>
                             <span>University of Maryland</span>
                         </div>
                         <div class="team-years">2023-2025</div>
@@ -1163,7 +1178,7 @@
                         <h3>William Park</h3>
                         <h4>Functional Developer</h4>
                         <div class="team-school">
-                            <i class="fas fa-graduation-cap"></i>
+                            <span class="material-symbols-outlined">school</span>
                             <span>Poolesville High School</span>
                         </div>
                         <div class="team-years">2024+</div>
@@ -1176,7 +1191,7 @@
                         <h3>Ryan Chung</h3>
                         <h4>Project Manager</h4>
                         <div class="team-school">
-                            <i class="fas fa-graduation-cap"></i>
+                            <span class="material-symbols-outlined">school</span>
                             <span>Poolesville High School</span>
                         </div>
                         <div class="team-years">2025+</div>
@@ -1189,7 +1204,7 @@
                         <h3>Akash Saran</h3>
                         <h4>Lead Programmer</h4>
                         <div class="team-school">
-                            <i class="fas fa-graduation-cap"></i>
+                            <span class="material-symbols-outlined">school</span>
                             <span>Poolesville High School</span>
                         </div>
                         <div class="team-years">2025+</div>
@@ -1202,7 +1217,7 @@
                         <h3>Arjun Mujumdar</h3>
                         <h4>Lead Tester</h4>
                         <div class="team-school">
-                            <i class="fas fa-graduation-cap"></i>
+                            <span class="material-symbols-outlined">school</span>
                             <span>Poolesville High School</span>
                         </div>
                         <div class="team-years">2025+</div>
@@ -1215,7 +1230,7 @@
                         <h3>Caleb Wen</h3>
                         <h4>Systems Analyst</h4>
                         <div class="team-school">
-                            <i class="fas fa-graduation-cap"></i>
+                            <span class="material-symbols-outlined">school</span>
                             <span>Poolesville High School</span>
                         </div>
                         <div class="team-years">2025+</div>
@@ -1228,7 +1243,7 @@
                     <h3>Ben Ross</h3>
                     <h4>Technical Advisor</h4>
                     <div class="team-school">
-                      <i class="fa-solid fa-graduation-cap"></i>
+                      <span class="material-symbols-outlined">school</span>
                       <span>Poolesville High School</span>
                     </div>
                     <div class="team-years">2023+</div>
@@ -1241,7 +1256,7 @@
                     <h3>Ishan Kheterpal</h3>
                     <h4>Computer Science Teacher</h4>
                     <div class="team-school">
-                      <i class="fa-solid fa-graduation-cap"></i>
+                      <span class="material-symbols-outlined">school</span>
                       <span>Poolesville High School</span>
                     </div>
                     <div class="team-years">2023+</div>
@@ -1254,7 +1269,7 @@
                     <h3>Mark Estep</h3>
                     <h4>Computer Science Teacher</h4>
                     <div class="team-school">
-                      <i class="fa-solid fa-graduation-cap"></i>
+                      <span class="material-symbols-outlined">school</span>
                       <span>Poolesville High School</span>
                     </div>
                     <div class="team-years">2023+</div>
@@ -1267,7 +1282,7 @@
                     <h3>Kevin Lee</h3>
                     <h4>Program Head</h4>
                     <div class="team-school">
-                      <i class="fa-solid fa-graduation-cap"></i>
+                      <span class="material-symbols-outlined">school</span>
                       <span>Poolesville High School</span>
                     </div>
                     <div class="team-years">2023+</div>
@@ -1371,7 +1386,7 @@
         <div class="references-grid">
             <a href="https://www.youtube.com/watch?v=luRWuwhCkec&t=14s&ab_channel=LunaSim" target="_blank" class="reference-card">
                 <div class="reference-icon">
-                    <i class="fa-brands fa-youtube"></i>
+                    <span class="material-symbols-outlined" style="font-size: 50px;">youtube_searched_for</span>
                 </div>
                 <h4>Congressional App Video</h4>
                 <p>Watch our presentation video on YouTube</p>
@@ -1379,7 +1394,7 @@
 
             <a href="https://www.congressionalappchallenge.us/23-md06/" target="_blank" class="reference-card">
                 <div class="reference-icon">
-                    <i class="fa-solid fa-trophy"></i>
+                    <span class="material-symbols-outlined" style="font-size: 50px;">emoji_events</span>
                 </div>
                 <h4>Congressional App Winner</h4>
                 <p>MD-06 District Winner of Congressional App Challenge</p>
@@ -1387,7 +1402,7 @@
 
             <a href="https://poolesvillepulse.org/5585/technology/smcs-juniors-developed-working-software-for-9th-grade-class/" target="_blank" class="reference-card">
                 <div class="reference-icon">
-                    <i class="fa-regular fa-newspaper"></i>
+                    <span class="material-symbols-outlined" style="font-size: 50px;">newspaper</span>
                 </div>
                 <h4>Poolesville Pulse</h4>
                 <p>SMCS Juniors Develop Software for 9th Grade Class</p>
@@ -1395,7 +1410,7 @@
 
             <a href="https://karthikvedula.com/2024/04/14/congressional-app-challenge-house-of-code/" target="_blank" class="reference-card">
                 <div class="reference-icon">
-                    <i class="fa-regular fa-user"></i>
+                    <span class="material-symbols-outlined" style="font-size: 50px;">person</span>
                 </div>
                 <h4>Karthik's Blog</h4>
                 <p>Congressional App Challenge – House of Code</p>
@@ -1403,7 +1418,7 @@
 
             <a href="https://proceedings.systemdynamics.org/2024/papers/P1049.pdf" target="_blank" class="reference-card">
                 <div class="reference-icon">
-                    <i class="fa-solid fa-file-pdf"></i>
+                    <span class="material-symbols-outlined" style="font-size: 50px;">picture_as_pdf</span>
                 </div>
                 <h4>Research Paper</h4>
                 <p>LunaSim: A Lightweight, Web-Based, Open-Source System Dynamics Modeling Software</p>
@@ -1411,7 +1426,7 @@
 
             <a href="https://github.com/PHS-SMCS/LunaSim" target="_blank" class="reference-card">
                 <div class="reference-icon">
-                    <i class="fa-brands fa-github"></i>
+                    <span class="material-symbols-outlined" style="font-size: 50px;">code</span>
                 </div>
                 <h4>Source Code</h4>
                 <p>LunaSim GitHub Repository</p>
@@ -1419,13 +1434,12 @@
 
             <a href="lunasimCopilot.pdf" download target="_blank" class="reference-card">
                 <div class="reference-icon">
-                    <i class="fa-solid fa-robot"></i>
+                    <span class="material-symbols-outlined" style="font-size: 50px;">smart_toy</span>
                 </div>
                 <h4>LunaSim Copilot</h4>
                 <p>AI-Powered System Dynamics Assistant</p>
             </a>
         </div>
-        
     </section>
 
     <div class="content-box" data-scroll="80" id="changelog">
