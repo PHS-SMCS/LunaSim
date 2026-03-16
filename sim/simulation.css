@@ -256,7 +256,7 @@ input, button, select {
   width: 100%;
   left: 0vw; 
   display: flex;
-  gap: 1vw; 
+  gap: 0;
   background: rgba(60, 84, 148, 1);
   padding: 1vw;
 }
@@ -268,7 +268,11 @@ input, button, select {
 /* Model Viewer - Toolbar */
 .toolbar {
   position: relative;
+  /* Width is controlled by JS resizer. CSS min/max act as hard stops. */
   width: 72px;
+  min-width: 72px;
+  max-width: 128px;
+  flex-shrink: 0;
 }
 
 .toolbar ul {
@@ -276,19 +280,27 @@ input, button, select {
   margin: 0;
   padding: 0.75rem 0;
   height: calc(95vh - 3vw);
-  width: 72px;
+  width: 100%;         /* fills whatever width .toolbar has */
   background-color: rgba(38, 50, 83, 0.95);
   display: flex;
   flex-direction: column;
   border-radius: 10px;
   box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
-  overflow: visible; /* Prevent overall overflow */
+  overflow: visible;
 }
 
 /* Universal Sidebar Styling (Applies to Toolbar and Chart Sidebar) */
 
 li + li {
   margin-top: 0.2rem;
+}
+
+/* In row-wrapping sections the gap property handles spacing;
+   li+li margin-top causes misalignment in the second column. */
+.tool-section li + li,
+.settings-section li + li,
+.chart-section li + li {
+  margin-top: 0;
 }
 
 a {
@@ -310,42 +322,16 @@ a:focus {
   outline: 0;
 }
 
-a:hover span,
-a:focus span{
-  transform: scale(1);
-  opacity: 1;
-}
-
 a i {
   font-size: 1.375rem;
 }
 
 a span {
-  position: absolute;
-  background-color: #46598e;
-  white-space: nowrap;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  left: calc(100% + 1.25rem);
-  transform-origin: center left;
-  transform: scale(0);
-  opacity: 0;
-  transition: 0.15s ease;
-  z-index: 502;
+  display: none;
 }
 
 a span:before {
-  content: "";
-  display: block;
-  width: 12px;
-  height: 12px;
-  position: absolute;
-  background-color: #46598e;
-  left: -5px;
-  top: 50%;
-  transform: translateY(-50%) rotate(45deg);
-  border-radius: 3px;
-  z-index: 501;
+  display: none;
 }
 
 a.active {
@@ -385,6 +371,7 @@ a.active {
   border: none;
   background-color: white;
   position: absolute;
+  top: 0;
   z-index:500;
   overflow: auto; 
   scrollbar-width: none; 
@@ -470,9 +457,10 @@ a.active {
   border-collapse: collapse;
 }
 
-.eq-col-type { width: 18%; }
-.eq-col-name { width: 22%; }
-.eq-col-equation { width: 65%; }
+.eq-col-type { width: 14%; }
+.eq-col-name { width: 18%; }
+.eq-col-equation { width: 50%; }
+.eq-col-units { width: 13%; }
 .eq-col-toggle { width: 5%; }
 
 .equation-editor-table td {
@@ -505,12 +493,24 @@ a.active {
   border: 1px solid #847640;
 }
 
+.eqConveyorBox input {
+  border: 1px solid #c8a800;
+}
+
+.eqMicrowaveBox input {
+  border: 1px solid #e75480;
+}
+
 .eqVariableBox input {
   border: 1px solid #3b773d;
 }
 
 .eqFlowBox input {
   border: 1px solid #627bc0;
+}
+
+.eqQueueBox input {
+  border: 1px solid #b8860b;
 }
 
 #eqTableDiv {
@@ -525,7 +525,69 @@ a.active {
   z-index: 2;
 }
 
-/* Checkboxes */
+/* Resizable Panel Divider */
+.panel-resizer {
+  width: 1vw;
+  min-width: 1vw;
+  cursor: col-resize;
+  background: transparent;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+  flex-shrink: 0;
+  position: relative;
+  align-self: stretch;
+}
+
+.panel-resizer::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 3px;
+  height: 48px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.0);
+  transition: background 0.2s ease, height 0.2s ease;
+}
+
+.panel-resizer:hover,
+.panel-resizer.dragging {
+  background: rgba(98, 123, 192, 0.35);
+}
+
+.panel-resizer:hover::after,
+.panel-resizer.dragging::after {
+  background: rgba(255, 255, 255, 0.45);
+  height: 64px;
+}
+
+/* Units Autocomplete */
+.units-autocomplete-list {
+  position: absolute;
+  background-color: #1d253d;
+  border: 1px solid #627bc0;
+  border-radius: 0.5rem;
+  z-index: 9999;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+}
+
+.units-autocomplete-item {
+  padding: 0.4rem 0.75rem;
+  color: #ffffff;
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.units-autocomplete-item:hover,
+.units-autocomplete-item.selected {
+  background-color: #46598e;
+}
+
+
 .nncheckbox, .yAxisCheckbox {
   width: 1.2rem;
   height: 1.2rem;
@@ -577,7 +639,7 @@ a.active {
   left: 0vw; 
   width: 100%;
   display: flex;
-  gap: 1vw; 
+  gap: 0;
   background: rgba(60, 84, 148, 1);
   padding: 1vw;
 }
@@ -589,7 +651,11 @@ a.active {
 /* Chart Viewer - Sidebar */
 .chartSidebar {
   position: relative;
+  /* Width controlled by JS resizer; CSS min/max act as hard stops */
   width: 72px;
+  min-width: 72px;
+  max-width: 128px;
+  flex-shrink: 0;
   overflow: visible;  /* Ensure tooltips can escape */
   z-index: 502;        /* On top of other elements */
 }
@@ -599,7 +665,7 @@ a.active {
   margin: 0;
   padding: 0.75rem 0;
   height: calc(95vh - 3vw);
-  width: 72px;
+  width: 100%;         /* fills whatever width .chartSidebar has */
   background-color: rgba(38, 50, 83, 0.95);
   display: flex;
   flex-direction: column;
@@ -612,30 +678,48 @@ a.active {
   overflow-y: auto;
   overflow-x: hidden;
   position: relative;
-  z-index: 1;      
+  z-index: 1;
   isolation: isolate;
   flex: 1;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;   /* buttons flow left-to-right */
+  flex-wrap: wrap;       /* wrap to a new row when needed */
+  align-content: flex-start;
+  align-items: flex-start;
   gap: 0.5rem;
-  padding: 0 0.75rem;
+  padding: 0.5rem 0.75rem;  /* equal left/right */
 }
 
+/* Tool section scrollable without visible scrollbar */
 .tool-section {
   position: relative;
   flex: 1;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;   /* buttons flow left-to-right */
+  flex-wrap: wrap;       /* wrap to a new row when needed */
+  align-content: flex-start;
+  align-items: flex-start; /* keep rows flush to the top, no stretch */
   gap: 0.5rem;
-  padding: 0 0.75rem 0.75rem 0.75rem;
+  padding: 0.5rem 0.75rem;  /* equal top/bottom and left/right */
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  /* Hide scrollbar for all browsers */
+  scrollbar-width: none; /* Firefox */
+}
+.tool-section::-webkit-scrollbar {
+  display: none; /* Chrome, Edge, Safari */
 }
 
 .settings-section {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;   /* buttons flow left-to-right */
+  flex-wrap: wrap;       /* wrap to a new row when needed */
+  align-items: flex-start;
   gap: 0.5rem;
-  padding: 0 0.75rem 0.75rem 0.75rem;
-  margin-top: 1rem;
+  padding: 0.5rem 0.75rem;  /* equal left/right */
+  margin-top: auto;          /* push to bottom of the sidebar */
   padding-top: 1.25rem;
   border-top: 1px solid #374875;
 }
@@ -1030,8 +1114,10 @@ input.settings-input.invalid:focus {
   color: #ffffff;
   border-radius: 1rem;
   padding: 1.5rem;
-  width: 90vw;
-  max-width: 400px;
+  width: 92vw;
+  max-width: 450px;
+  max-height: 88vh;
+  overflow-y: auto;
   z-index: 1001;
   box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
   display: flex;
@@ -1051,6 +1137,80 @@ input.settings-input.invalid:focus {
 #overlay.hidden {
   display: none;
 }
+
+/* Theme popup tabs */
+.theme-tab-bar {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 0.75rem;
+}
+.theme-tab-btn {
+  background: transparent;
+  border: 1px solid #4a5a8a;
+  border-radius: 0.4rem;
+  color: #aab4d0;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0.35rem 1rem;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.theme-tab-btn:hover {
+  background: #374875;
+  color: #fff;
+  border-color: #627bc0;
+}
+.theme-tab-btn.active {
+  background: #627bc0;
+  color: #fff;
+  border-color: #627bc0;
+}
+.theme-tab-content {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Model color grid */
+.model-color-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem 1.2rem;
+}
+.color-row {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid #3d5080;
+  border-radius: 0.45rem;
+  padding: 0.45rem 0.7rem;
+}
+.color-row label {
+  flex: 1;
+  font-size: 0.88rem;
+  color: #cdd6f0;
+}
+.color-swatch {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.25);
+  flex-shrink: 0;
+}
+.color-picker {
+  width: 32px;
+  height: 26px;
+  border: none;
+  border-radius: 3px;
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+  flex-shrink: 0;
+}
+.color-picker::-webkit-color-swatch-wrapper { padding: 0; }
+.color-picker::-webkit-color-swatch { border-radius: 3px; border: 1px solid #627bc0; }
 
 /* Chart Creator Popup */
 .charts-popup {
@@ -1096,11 +1256,16 @@ input.settings-input.invalid:focus {
   border-radius: 1rem;
   padding: 1.5rem;
   width: 90vw;
-  max-width: 400px;
+  max-width: 430px;
+  max-height: 88vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #627bc0 transparent;
   z-index: 1001;
   box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
   display: flex;
   flex-direction: column;
+  gap: 0.75rem;
   opacity: 0;
   transition: opacity 0.3s ease, transform 0.3s ease;
   pointer-events: none;
@@ -1114,6 +1279,53 @@ input.settings-input.invalid:focus {
 
 .export-popup.hidden {
   display: none;
+}
+
+/* PDF export settings */
+.pdf-desc-group {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4rem;
+}
+
+.pdf-textarea {
+  width: 100%;
+  resize: vertical;
+  font-family: inherit;
+  min-height: 4rem;
+}
+
+.pdf-inner-divider {
+  margin: 0.25rem 0 !important;
+}
+
+.pdf-sections-label {
+  font-size: 0.8rem;
+  color: #a0aac8;
+  margin: 0 0 0.3rem 0;
+}
+
+.pdf-checkboxes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.pdf-check-row {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  color: #d8dff5;
+}
+
+.pdf-check-row input[type="checkbox"] {
+  accent-color: #627bc0;
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+  flex-shrink: 0;
 }
 
 /* Simulation Error Popup */
@@ -1440,7 +1652,7 @@ input.settings-input.invalid:focus {
   background-color: #46598e;
   color: #fff;
   padding: 4px 8px;
-  font-size: 0.75rem;
+  font-size: 0.63rem;
   border-radius: 8px;
   white-space: nowrap;
   pointer-events: none;
@@ -1582,4 +1794,216 @@ input.settings-input.invalid:focus {
   font-size: 10px; /* adjust as needed */
   vertical-align: middle;
   margin-right: 4px;
+}
+/* ── Element Control Panel ─────────────────────────────────────────────────── */
+.elem-control-panel {
+  position: absolute;
+  bottom: 10px;
+  left: 12px;
+  right: 12px;
+  z-index: 600;
+  background: rgba(22, 30, 54, 0.93);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(98, 123, 192, 0.28);
+  border-radius: 12px;
+  padding: 7px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: nowrap;
+  min-height: 36px;
+  height: auto;
+  box-sizing: border-box;
+  font-size: 0.82rem;
+  color: #cdd6f0;
+  pointer-events: auto;
+  /* Hidden by default — shown only when element is selected */
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+}
+
+.elem-control-panel.ecp-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.ecp-detail {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.ecp-detail.visible {
+  display: flex;
+}
+
+/* Name label */
+.ecp-name {
+  font-weight: 600;
+  font-size: 0.84rem;
+  color: #e8ecf8;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Thin vertical divider between groups */
+.ecp-divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(98,123,192,0.3);
+  flex-shrink: 0;
+}
+
+.ecp-label {
+  font-size: 0.76rem;
+  color: #8899cc;
+  white-space: nowrap;
+}
+
+/* Single native color input — large enough to be its own swatch+picker */
+.ecp-color-input-single {
+  width: 32px;
+  height: 26px;
+  border: none;
+  border-radius: 5px;
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+  flex-shrink: 0;
+}
+.ecp-color-input-single::-webkit-color-swatch-wrapper { padding: 2px; }
+.ecp-color-input-single::-webkit-color-swatch { border-radius: 4px; border: 1.5px solid rgba(98,123,192,0.5); }
+
+.ecp-reset-color {
+  background: transparent;
+  border: 1px solid #3d5080;
+  border-radius: 4px;
+  color: #8899cc;
+  cursor: pointer;
+  font-size: 0.82rem;
+  padding: 1px 5px;
+  line-height: 1;
+  transition: background 0.15s, color 0.15s;
+}
+.ecp-reset-color:hover {
+  background: #374875;
+  color: #fff;
+}
+
+.ecp-small-input {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid #3d5080;
+  border-radius: 4px;
+  color: #e8ecf8;
+  font-size: 0.82rem;
+  padding: 2px 7px;
+  width: 68px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.ecp-small-input:focus { border-color: #627bc0; }
+
+.ecp-checkbox {
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+  accent-color: #627bc0;
+}
+
+/* Theme settings: single color input (no separate swatch) */
+.mc-color-single {
+  width: 36px;
+  height: 28px;
+  border: none;
+  border-radius: 5px;
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+}
+.mc-color-single::-webkit-color-swatch-wrapper { padding: 2px; }
+.mc-color-single::-webkit-color-swatch { border-radius: 4px; border: 1.5px solid rgba(98,123,192,0.4); }
+
+.color-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.color-row label {
+  flex: 1;
+  font-size: 0.84rem;
+}
+
+/* ── Settings popup — wider to fit keybinds tab ──────────────────────────── */
+.settings-popup {
+  max-width: 480px !important;
+}
+
+/* ── Visual tab: spacing between toggle rows ─────────────────────────────── */
+.stab-visual-switches {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  padding: 0.25rem 0 0.5rem 0;
+}
+
+/* ── Key binds tab ───────────────────────────────────────────────────────── */
+.stab-keybinds-hint {
+  font-size: 0.78rem;
+  color: #8899cc;
+  margin: 0 0 0.8rem 0;
+}
+
+.keybind-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem 1.2rem;
+}
+
+.keybind-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.keybind-row span {
+  font-size: 0.84rem;
+  color: #cdd6f0;
+  white-space: nowrap;
+}
+
+.keybind-input {
+  width: 2.4rem;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 0.84rem;
+  font-weight: 700;
+  background: #1d253d;
+  border: 1px solid #4a5a8a;
+  border-radius: 0.35rem;
+  color: #e8ecf8;
+  padding: 0.25rem 0.3rem;
+  cursor: pointer;
+  caret-color: transparent;
+  outline: none;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.keybind-input:focus {
+  border-color: #627bc0;
+  background: #263060;
+}
+
+.keybind-input.conflict {
+  border-color: #e8000d;
+  color: #ff6b6b;
 }

@@ -57,6 +57,8 @@
     <!-- Override CSS w/ Dark Mode Theme -->
     <link rel="stylesheet" href="simulation_dark.css" disabled="disabled" id="darkThemeCSS">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
     <script id="code" type="module" src="editor.js"></script>
     <script id="code2" type="module" src="translator.js"></script>
     <script id="code3" type="module" src="engine.js"></script>
@@ -113,12 +115,12 @@
             <div class="tool-section">
 
               <!-- Pointer Tool -->
-              <li><a href="#" id="pointer_button" class="pointer_selected tool">
-                <i class="material-symbols-outlined">arrow_selector_tool</i><span>Pointer [P]</span>
+              <li class="graphTabs" data-tooltip="Pointer"><a href="#" id="pointer_button" class="pointer_selected tool">
+                <i class="material-symbols-outlined">arrow_selector_tool</i>
               </a></li>
 
-              <li><a href="#" id="stock_button" class="node_normal tool">
-                <i class="material-symbols-outlined">rectangle</i><span>Stock [S]</span>
+              <li class="graphTabs" data-tooltip="Stock"><a href="#" id="stock_button" class="node_normal tool">
+                <i class="material-symbols-outlined">rectangle</i>
               </a></li>
 
               <!-- Stock Tool with Variants -->
@@ -141,71 +143,70 @@
               </li>-->
 
               <!-- Other Tools -->
-              <li><a href="#" id="cloud_button" class="node_normal tool">
-                <i class="material-symbols-outlined">cloud</i><span>Cloud [C]</span>
+              <li class="graphTabs" data-tooltip="Cloud"><a href="#" id="cloud_button" class="node_normal tool">
+                <i class="material-symbols-outlined">cloud</i>
               </a></li>
 
-              <li><a href="#" id="variable_button" class="node_normal tool">
-                <i class="material-symbols-outlined">circle</i><span>Variable [V]</span>
+              <li class="graphTabs" data-tooltip="Variable"><a href="#" id="variable_button" class="node_normal tool">
+                <i class="material-symbols-outlined">circle</i>
               </a></li>
 
-              <li><a href="#" id="flow_button" class="link_normal tool">
-                <i class="material-symbols-outlined">sync_alt</i><span>Flow [F]</span>
+              <li class="graphTabs" data-tooltip="Flow"><a href="#" id="flow_button" class="link_normal tool">
+                <i class="material-symbols-outlined">arrow_range</i>
               </a></li>
 
-              <li><a href="#" id="influence_button" class="link_normal tool">
-                <i class="material-symbols-outlined">replay</i><span>Influence [I]</span>
+              <li class="graphTabs" data-tooltip="Influence"><a href="#" id="influence_button" class="link_normal tool">
+                <i class="material-symbols-outlined">replay</i>
               </a></li>
 
-              <!--<li class="variant-group">
-                <a href="#" id="influence_button" class="link_normal tool">
-                  <i class="material-symbols-outlined">repeat</i><span>Influence [I]</span>
-                </a>
-
-                <div class="variant-popup" id="text_variants">
-                  <a href="#" id="info_influence_button" class="link_normal tool">
-                    <i class="material-symbols-outlined">info</i><span>Info Influence</span>
-                  </a>
-                </div>
-              </li>-->
-
-              <li><a href="#" id="text_button" class="node_normal tool">
-                <i class="material-symbols-outlined">text_fields</i><span>Text [T]</span>
+              <li class="graphTabs" data-tooltip="Text"><a href="#" id="text_button" class="node_normal tool">
+                <i class="material-symbols-outlined">text_fields</i>
               </a></li>
 
-              <!-- Text Tool with Variants -->
-              <!--<li class="variant-group">
-                <a href="#" id="text_button" class="node_normal tool">
-                  <i class="material-symbols-outlined">text_fields</i><span>Text [T]</span>
-                </a>
+              <li class="graphTabs" data-tooltip="Image"><a href="#" id="image_button" class="node_normal tool">
+                <i class="material-symbols-outlined">image</i>
+              </a></li>
 
-                <div class="variant-popup" id="text_variants">
-                  <a href="#" id="loop_label_button" class="node_normal tool">
-                    <i class="material-symbols-outlined">autorenew</i><span>Loop Label</span>
-                  </a>
-                </div>
-              </li>-->
+              <li class="graphTabs" data-tooltip="Conveyor"><a href="#" id="conveyor_button" class="node_normal tool">
+                <i class="material-symbols-outlined">conveyor_belt</i>
+              </a></li>
+
+              <li class="graphTabs" data-tooltip="Microwave"><a href="#" id="microwave_button" class="node_normal tool">
+                <i class="material-symbols-outlined">microwave_gen</i>
+              </a></li>
+
+              <li class="graphTabs" data-tooltip="Queue"><a href="#" id="queue_button" class="node_normal tool">
+                <i class="material-symbols-outlined">featured_play_list</i>
+              </a></li>
+
+              <li class="graphTabs" data-tooltip="Overflow"><a href="#" id="overflow_button" class="node_normal tool">
+                <i class="material-symbols-outlined">share_windows</i>
+              </a></li>
+
 
             </div>
 
             <!-- Settings (Theme, Help, Simulation Parameters) -->
             <div class="settings-section">
-              <li><a href="#" onclick="openSettings(event, 'themePopup')" class="no-active">
-                <i class="material-symbols-outlined">palette</i><span>Theme</span>
+              <li class="graphTabs" data-tooltip="Theme"><a href="#" onclick="openSettings(event, 'themePopup')" class="no-active">
+                <i class="material-symbols-outlined">palette</i>
               </a></li>
 
-              <li><a href="../UserDocs.html" class="no-active" target="_blank">
-                <i class="material-symbols-outlined">help</i><span>Help</span>
+              <li class="graphTabs" data-tooltip="Help"><a href="../UserDocs.html" class="no-active" target="_blank">
+                <i class="material-symbols-outlined">help</i>
               </a></li>
 
               <li><a href="#" onclick="openSettings(event, 'settingsPopup')" class="no-active">
-                <i class="material-symbols-outlined">settings</i><span>Settings</span>
+                <i class="material-symbols-outlined">settings</i>
               </a></li>
             </div>
           </ul>
         </div>
 
 
+
+        <!-- ================== Resizer (Toolbar | Canvas) ================== -->
+        <div class="panel-resizer" id="toolbarResizer"></div>
 
         <!-- ================== Model Canvas ================== -->
         <div class="modelCanvas" id="modalView">
@@ -219,8 +220,60 @@
           <button id="centerModelBtn" class="center-btn" title="Center Model">
             <i class="material-symbols-outlined" style="font-size: 20px;">home</i>
           </button>
+          <!-- ================== Element Control Panel ================== -->
+          <div id="elemControlPanel" class="elem-control-panel">
+            <!-- Element name -->
+            <span class="ecp-name ecp-detail" id="ecpName">—</span>
+
+            <!-- Body/fill color (stock, conveyor, variable, cloud) -->
+            <div class="ecp-row ecp-detail" id="ecpColorRow">
+              <label class="ecp-label">Color</label>
+              <input type="color" id="ecpColorPicker" class="ecp-color-input-single">
+              <button class="ecp-reset-color" id="ecpResetColor" title="Reset to palette default">↺</button>
+            </div>
+
+            <!-- Flow body color -->
+            <div class="ecp-row ecp-detail" id="ecpFlowColorRow">
+              <label class="ecp-label">Arrow Color</label>
+              <input type="color" id="ecpFlowBodyColor" class="ecp-color-input-single">
+              <button class="ecp-reset-color" id="ecpFlowResetColor" title="Reset arrow color">↺</button>
+            </div>
+
+            <!-- Transit time (conveyors only) -->
+            <div class="ecp-row ecp-detail" id="ecpTransitRow">
+              <label class="ecp-label">Transit&nbsp;Time</label>
+              <input type="number" id="ecpTransitTime" class="ecp-small-input" min="0.001" step="any" placeholder="1">
+            </div>
+
+            <!-- Cook time (microwaves only) -->
+            <div class="ecp-row ecp-detail" id="ecpCookTimeRow">
+              <label class="ecp-label">Cook&nbsp;Time</label>
+              <input type="number" id="ecpCookTime" class="ecp-small-input" min="0.001" step="any" placeholder="1">
+            </div>
+
+            <!-- Capacity (queues only) -->
+            <div class="ecp-row ecp-detail" id="ecpCapacityRow">
+              <label class="ecp-label">Capacity</label>
+              <input type="number" id="ecpCapacity" class="ecp-small-input" min="0.001" step="any" placeholder="100">
+            </div>
+
+            <!-- Label color (stock, conveyor, variable, flow, textbox, microwave, queue) -->
+            <div class="ecp-row ecp-detail" id="ecpLabelColorRow">
+              <label class="ecp-label">Label Color</label>
+              <input type="color" id="ecpLabelColor" class="ecp-color-input-single">
+            </div>
+
+            <!-- Label size (stock, conveyor, variable, flow, textbox, microwave) -->
+            <div class="ecp-row ecp-detail" id="ecpLabelSizeRow">
+              <label class="ecp-label">Label Size</label>
+              <input type="number" id="ecpLabelSize" class="ecp-small-input" min="4" max="72" step="0.5" placeholder="11">
+              <span class="ecp-label">pt</span>
+            </div>
+          </div>
         </div>
 
+        <!-- ================== Resizer (Canvas | Equation Editor) ================== -->
+        <div class="panel-resizer" id="modelPanelResizer"></div>
 
         <!-- ================== Equation Editor ================== -->
         <div id="eqEditor">
@@ -235,6 +288,7 @@
                   <th class="eq-col-type">Type</th>
                   <th class="eq-col-name">Name</th>
                   <th class="eq-col-equation">Equation</th>
+                  <th class="eq-col-units">Units</th>
                   <th class="eq-col-checkbox">NN/Uni</th>
                 </tr>
               </thead>
@@ -265,6 +319,9 @@
           </ul>
         </div>
 
+        <!-- ================== Resizer (Chart Sidebar | Chart Canvas) ================== -->
+        <div class="panel-resizer" id="chartSidebarResizer"></div>
+
         <!-- ================== Chart Canvas ================== -->
         <div class="chartCanvas">
           <div id="display">
@@ -273,6 +330,9 @@
             </div>
           </div>
         </div>
+
+        <!-- ================== Resizer (Chart Canvas | Chart Editor) ================== -->
+        <div class="panel-resizer" id="chartPanelResizer"></div>
 
         <!-- ================== Chart Editor ================== -->
         <div class="chartEditor">
@@ -313,33 +373,83 @@
           <h2>Simulation Settings</h2>
           <button class="close-btn" onclick="closeSettings('settingsPopup')"><i class="material-symbols-outlined close-icon">close</i></button>
         </div>
-        <div class="setting-group">
-          <label for="startTime">Start Time</label>
-          <input type="text" id="startTime" class="settings-input" placeholder="Enter start time..." value="0" style="width: 70%;" autocomplete="off">
-          <label for="endTime">End Time</label>
-          <input type="text" id="endTime" class="settings-input" placeholder="Enter end time..." value="10" style="width: 70%;" autocomplete="off">
-          <label for="dt">dt (Time Increment)</label>
-          <input type="text" id="dt" class="settings-input" placeholder="Enter dt..." value="0.1" style="width: 50%;" autocomplete="off">
-          <label for="integrationMethod">Integration Method</label>
-          <select id="integrationMethod" class="settings-dropdown" style="width: 50%;">
-            <option value="rk4">Runge-Kutta 4</option>
-            <option value="euler">Euler</option>
-          </select>
-          <label for="trigMode">Trigonometry Mode</label>
-          <select id="trigMode" class="settings-dropdown" style="width: 50%;">
-            <option value="radian">Radians</option>
-            <option value="degree">Degrees</option>
-          </select>
-          <label class="switch-label">
-          <span>Enable High Step Count Simulations</span>
-            <label class="toggle-switch">
-              <input type="checkbox" id="simParamHighStepCount">
-              <span class="slider"></span>
-            </label>
-          </label>
+        <!-- Tab bar -->
+        <div class="theme-tab-bar">
+          <button class="theme-tab-btn active" data-tab="stab-standard">Standard</button>
+          <button class="theme-tab-btn" data-tab="stab-visual">Visual</button>
+          <button class="theme-tab-btn" data-tab="stab-keybinds">Key Binds</button>
         </div>
-        <button class="setting-button" onclick="closeSettings('settingsPopup')">Apply Settings</button>
-        <p id="validationMessage" class="validation-message hidden">* Please don't leave boxes empty</p>
+
+        <!-- ── Standard Tab ── -->
+        <div id="stab-standard" class="theme-tab-content">
+          <div class="setting-group">
+            <label for="startTime">Start Time</label>
+            <input type="text" id="startTime" class="settings-input" placeholder="Enter start time..." value="0" style="width: 70%;" autocomplete="off">
+            <label for="endTime">End Time</label>
+            <input type="text" id="endTime" class="settings-input" placeholder="Enter end time..." value="10" style="width: 70%;" autocomplete="off">
+            <label for="dt">dt (Time Increment)</label>
+            <input type="text" id="dt" class="settings-input" placeholder="Enter dt..." value="0.1" style="width: 50%;" autocomplete="off">
+            <label for="integrationMethod">Integration Method</label>
+            <select id="integrationMethod" class="settings-dropdown" style="width: 50%;">
+              <option value="rk4">Runge-Kutta 4</option>
+              <option value="euler">Euler</option>
+            </select>
+            <label for="trigMode">Trigonometry Mode</label>
+            <select id="trigMode" class="settings-dropdown" style="width: 50%;">
+              <option value="radian">Radians</option>
+              <option value="degree">Degrees</option>
+            </select>
+            <label class="switch-label">
+              <span>Enable High Step Count Simulations</span>
+              <label class="toggle-switch">
+                <input type="checkbox" id="simParamHighStepCount">
+                <span class="slider"></span>
+              </label>
+            </label>
+          </div>
+          <button class="setting-button" onclick="closeSettings('settingsPopup')">Apply Settings</button>
+          <p id="validationMessage" class="validation-message hidden">* Please don't leave boxes empty</p>
+        </div>
+
+        <!-- ── Visual Tab ── -->
+        <div id="stab-visual" class="theme-tab-content" style="display:none;">
+          <div class="stab-visual-switches">
+            <label class="switch-label">
+              <span>Show Element Control Panel</span>
+              <label class="toggle-switch">
+                <input type="checkbox" id="settingShowECP" checked>
+                <span class="slider"></span>
+              </label>
+            </label>
+            <label class="switch-label">
+              <span>Show Center Button</span>
+              <label class="toggle-switch">
+                <input type="checkbox" id="settingShowCenterBtn" checked>
+                <span class="slider"></span>
+              </label>
+            </label>
+          </div>
+        </div>
+
+        <!-- ── Key Binds Tab ── -->
+        <div id="stab-keybinds" class="theme-tab-content" style="display:none;">
+          <p class="stab-keybinds-hint">Click a field and press a key to rebind.</p>
+          <div class="keybind-grid">
+            <div class="keybind-row"><span>Pointer</span>        <input class="keybind-input" id="kb-pointer"    data-action="pointer"    value="p" readonly></div>
+            <div class="keybind-row"><span>Stock</span>          <input class="keybind-input" id="kb-stock"      data-action="stock"      value="s" readonly></div>
+            <div class="keybind-row"><span>Cloud</span>          <input class="keybind-input" id="kb-cloud"      data-action="cloud"      value="c" readonly></div>
+            <div class="keybind-row"><span>Variable</span>       <input class="keybind-input" id="kb-variable"   data-action="variable"   value="v" readonly></div>
+            <div class="keybind-row"><span>Flow</span>           <input class="keybind-input" id="kb-flow"       data-action="flow"       value="f" readonly></div>
+            <div class="keybind-row"><span>Influence</span>      <input class="keybind-input" id="kb-influence"  data-action="influence"  value="i" readonly></div>
+            <div class="keybind-row"><span>Text</span>           <input class="keybind-input" id="kb-text"       data-action="text"       value="t" readonly></div>
+            <div class="keybind-row"><span>Conveyor</span>       <input class="keybind-input" id="kb-conveyor"   data-action="conveyor"   value="n" readonly></div>
+            <div class="keybind-row"><span>Microwave</span>      <input class="keybind-input" id="kb-microwave"  data-action="microwave"  value="w" readonly></div>
+            <div class="keybind-row"><span>Queue</span>          <input class="keybind-input" id="kb-queue"      data-action="queue"      value="q" readonly></div>
+            <div class="keybind-row"><span>Polarity +</span>     <input class="keybind-input" id="kb-polarity-pos" data-action="polarity-pos" value="p" readonly></div>
+            <div class="keybind-row"><span>Polarity −</span>     <input class="keybind-input" id="kb-polarity-neg" data-action="polarity-neg" value="m" readonly></div>
+            <div class="keybind-row"><span>Toggle Emphasis</span><input class="keybind-input" id="kb-emphasis"   data-action="emphasis"   value="b" readonly></div>
+          </div>
+        </div>
       </div>
 
       <!-- ================== Theme Popup ================== -->
@@ -348,46 +458,74 @@
           <h2>Theme Settings</h2>
           <button class="close-btn" onclick="closeSettings('themePopup')"><i class="material-symbols-outlined close-icon">close</i></button>
         </div>
-        <div class="setting-group">
-          <label for="themeSelect">Theme</label>
-          <select id="themeSelect" class="settings-dropdown" style="width: 80%;">
-            <option selected value="normal">Normal</option>
-            <option value="classic">Classic</option>
-            <option value="monochrome">Monochrome</option>
-            <option value="nvoid">Nebula Void</option>
-            <option value="cred">Cherry Red</option>
-            <option value="cblossom">Cherry Blossom</option>
-            <option value="sorange">Channel Orange</option>
-            <option value="fgreen">Forest Green</option>
-            <option value="oblue">Ocean Blue</option>
-            <option value="cpurple">Cosmic Purple</option>
-            <option value="bpink">Bubblegum Pink</option>
-            <option value="sred">Sith Red</option>
-            <option value="mlight">Minimal Light</option>
-            <option value="rduck">Rubber Duck</option>
-            <option value="udark">Ultra Dark</option>
-          </select>
-          <label for="simulationFont">Font</label>
-          <select id="simulationFont" class="settings-dropdown" style="width: 80%;">
-            <option value="Golos Text" style="font-family: 'Golos Text';" selected>Golos Text</option>
-            <option value="Arial" style="font-family: Arial;">Arial</option>
-            <option value="Trebuchet MS" style="font-family: 'Trebuchet MS';">Trebuchet MS</option>
-            <option value="Times New Roman" style="font-family: 'Times New Roman';">Times New Roman</option>
-            <option value="Inter" style="font-family: 'Inter';">Inter</option>
-            <option value="Lexend" style="font-family: 'Lexend';">Lexend</option>
-            <option value="Comic Sans MS" style="font-family: 'Comic Sans MS';">Comic Sans</option>
-            <option value="Wingdings" style="font-family: 'Wingdings';">Wingdings/option>
-          </select>
-          <label for="labelFontSizeInput">Label Font Size</label>
-          <input type="number" id="labelFontSizeInput" class="settings-input" value="11" min="6" max="36" step="1" style="width: 60%;" autocomplete="off">
-          <label>Polarity Label Offset</label>
-          <div style="display:flex; gap:6px; width:45%;">
-            <input type="number" id="polarityOffsetX" class="settings-input" value="0" step="1" style="width:50%;" autocomplete="off" title="X offset from arrowhead (pixels, negative = left)">
-            <input type="number" id="polarityOffsetY" class="settings-input" value="0" step="1" style="width:50%;" autocomplete="off" title="Y offset from arrowhead (pixels, negative = up)">
+        <!-- Tab bar -->
+        <div class="theme-tab-bar">
+          <button class="theme-tab-btn active" data-tab="tab-appearance">Appearance</button>
+          <button class="theme-tab-btn" data-tab="tab-model-colors">Model Colors</button>
+        </div>
+        <!-- Tab: Appearance -->
+        <div id="tab-appearance" class="theme-tab-content">
+          <div class="setting-group">
+            <label for="themeSelect">Theme</label>
+            <select id="themeSelect" class="settings-dropdown" style="width: 80%;">
+              <option selected value="normal">Normal</option>
+              <option value="classic">Classic</option>
+              <option value="monochrome">Monochrome</option>
+              <option value="nvoid">Nebula Void</option>
+              <option value="cred">Cherry Red</option>
+              <option value="cblossom">Cherry Blossom</option>
+              <option value="sorange">Channel Orange</option>
+              <option value="fgreen">Forest Green</option>
+              <option value="oblue">Ocean Blue</option>
+              <option value="cpurple">Cosmic Purple</option>
+              <option value="bpink">Bubblegum Pink</option>
+              <option value="sred">Sith Red</option>
+              <option value="mlight">Minimal Light</option>
+              <option value="rduck">Rubber Duck</option>
+              <option value="udark">Ultra Dark</option>
+            </select>
+            <label for="simulationFont">Font</label>
+            <select id="simulationFont" class="settings-dropdown" style="width: 80%;">
+              <option value="Golos Text" style="font-family: 'Golos Text';" selected>Golos Text</option>
+              <option value="Arial" style="font-family: Arial;">Arial</option>
+              <option value="Trebuchet MS" style="font-family: 'Trebuchet MS';">Trebuchet MS</option>
+              <option value="Times New Roman" style="font-family: 'Times New Roman';">Times New Roman</option>
+              <option value="Inter" style="font-family: 'Inter';">Inter</option>
+              <option value="Lexend" style="font-family: 'Lexend';">Lexend</option>
+              <option value="Comic Sans MS" style="font-family: 'Comic Sans MS';">Comic Sans</option>
+              <option value="Wingdings" style="font-family: 'Wingdings';">Wingdings</option>
+            </select>
+            <label for="labelFontSizeInput">Label Font Size</label>
+            <input type="number" id="labelFontSizeInput" class="settings-input" value="11" min="6" max="36" step="1" style="width: 60%;" autocomplete="off">
+            <label>Polarity Label Offset</label>
+            <div style="display:flex; gap:6px; width:45%;">
+              <input type="number" id="polarityOffsetX" class="settings-input" value="0" step="1" style="width:50%;" autocomplete="off" title="X offset from arrowhead (pixels, negative = left)">
+              <input type="number" id="polarityOffsetY" class="settings-input" value="0" step="1" style="width:50%;" autocomplete="off" title="Y offset from arrowhead (pixels, negative = up)">
+            </div>
+          </div>
+          <button id="clearEmphasisButton" class="setting-button">Clear All Emphasis</button>
+          <button class="setting-button" onclick="closeSettings('themePopup')">Apply Settings</button>
+        </div>
+        <!-- Tab: Model Colors -->
+        <div id="tab-model-colors" class="theme-tab-content" style="display:none;">
+          <p style="font-size:0.82rem;color:#aab4d0;margin:0 0 0.9rem 0;">Set default colors for new elements. Use "Apply to All" to repaint existing nodes.</p>
+          <div class="model-color-grid">
+            <div class="color-row"><label>Stock</label><input type="color" id="mc-stock" class="mc-color-single"></div>
+            <div class="color-row"><label>Conveyor</label><input type="color" id="mc-conveyor" class="mc-color-single"></div>
+            <div class="color-row"><label>Variable</label><input type="color" id="mc-variable" class="mc-color-single"></div>
+            <div class="color-row"><label>Cloud</label><input type="color" id="mc-cloud" class="mc-color-single"></div>
+            <div class="color-row"><label>Flow</label><input type="color" id="mc-flow" class="mc-color-single"></div>
+            <div class="color-row"><label>Influence</label><input type="color" id="mc-influence" class="mc-color-single"></div>
+            <div class="color-row"><label>Microwave</label><input type="color" id="mc-microwave" class="mc-color-single"></div>
+            <div class="color-row"><label>Queue</label><input type="color" id="mc-queue" class="mc-color-single"></div>
+            <div class="color-row"><label>Label</label><input type="color" id="mc-labelcolor" class="mc-color-single" value="#000000"></div>
+            <div class="color-row"><label>Canvas</label><input type="color" id="mc-canvasbg" class="mc-color-single" value="#ffffff"></div>
+          </div>
+          <div style="display:flex;gap:0.5rem;margin-top:1rem;">
+            <button id="mc-apply-all" class="setting-button" style="margin-top:0;">Apply to All</button>
+            <button id="mc-reset" class="setting-button" style="margin-top:0;">Reset</button>
           </div>
         </div>
-        <button id="clearEmphasisButton" class="setting-button">Clear All Emphasis</button>
-        <button class="setting-button" onclick="closeSettings('themePopup')">Apply Settings</button>
       </div>
 
       <!-- ================== Charts Popup ================== -->
@@ -440,6 +578,7 @@
             <option>.png</option>
             <option>.jpg</option>
             <option>.tiff</option>
+            <option>.pdf</option>
           </select>
         </div>
         <div id="imageSettingsSection" style="display: none;">
@@ -449,6 +588,32 @@
             <input type="text" id="imageMargin" class="px-visual-input settings-input" placeholder="Enter margin..." value="15" style="width: 65%;" autocomplete="off">
           </div>
           <button id="downloadImageButton" class="setting-button" onclick="closeSettings('exportPopup')">Download Image</button>
+        </div>
+        <!-- ── PDF Settings Section ── -->
+        <div id="pdfSettingsSection" style="display: none;">
+          <hr class="settings-divider">
+          <div class="setting-group">
+            <label for="pdfFont">Font</label>
+            <select id="pdfFont" class="settings-dropdown" style="width: 63%;">
+              <option value="helvetica">Helvetica</option>
+              <option value="times">Times New Roman</option>
+              <option value="courier">Courier</option>
+            </select>
+          </div>
+          <div class="setting-group pdf-desc-group">
+            <label for="pdfDescription">Description</label>
+            <textarea id="pdfDescription" class="settings-input pdf-textarea" rows="3" placeholder="Optional description of your model..."></textarea>
+          </div>
+          <p class="pdf-sections-label">Include sections:</p>
+          <div class="pdf-checkboxes">
+            <label class="pdf-check-row"><input type="checkbox" id="pdfIncludeDiagram" checked> Model Diagram</label>
+            <label class="pdf-check-row"><input type="checkbox" id="pdfIncludeStocks" checked> Stocks, Conveyors &amp; Microwaves</label>
+            <label class="pdf-check-row"><input type="checkbox" id="pdfIncludeFlows" checked> Flows</label>
+            <label class="pdf-check-row"><input type="checkbox" id="pdfIncludeVariables" checked> Variables</label>
+            <label class="pdf-check-row"><input type="checkbox" id="pdfIncludeQueues" checked> Queues</label>
+            <label class="pdf-check-row"><input type="checkbox" id="pdfIncludeSimSettings" checked> Simulation Settings</label>
+          </div>
+          <button id="downloadPdfButton" class="setting-button">Download PDF</button>
         </div>
         <button id="exportButton" class="setting-button" onclick="closeSettings('exportPopup')">Download File</button>
       </div>
@@ -760,6 +925,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const fileSelect = document.getElementById("fileSelect");
   const imageSettingsSection = document.getElementById("imageSettingsSection");
+  const pdfSettingsSection = document.getElementById("pdfSettingsSection");
   const downloadFileButton = document.getElementById("downloadFileButton");
   const downloadImageButton = document.getElementById("downloadImageButton");
 
@@ -767,10 +933,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const selected = fileSelect.value;
     if (selected === ".png" || selected === ".jpg" || selected === ".tiff") {
       imageSettingsSection.style.display = "block";
+      pdfSettingsSection.style.display = "none";
       downloadImageButton.style.display = "inline-block";
+      exportButton.style.display = "none";
+    } else if (selected === ".pdf") {
+      imageSettingsSection.style.display = "none";
+      pdfSettingsSection.style.display = "block";
+      downloadImageButton.style.display = "none";
       exportButton.style.display = "none";
     } else {
       imageSettingsSection.style.display = "none";
+      pdfSettingsSection.style.display = "none";
       downloadImageButton.style.display = "none";
       exportButton.style.display = "inline-block";
     }
@@ -940,28 +1113,32 @@ document.addEventListener("DOMContentLoaded", () => {
       button.click(); // Trigger the button’s click handler (if any custom behavior is attached)
     }
 
-    // Keyboard shortcut handling
+    // Keyboard shortcut handling — uses rebindable window._keyBinds
     document.addEventListener("keydown", (event) => {
       const tag = document.activeElement.tagName.toLowerCase();
       if (tag === "input" || tag === "textarea") return;
 
-      const keyMap = {
-        p: "pointer_button",
-        s: "stock_button",
-        v: "variable_button",
-        c: "cloud_button",
-        i: "influence_button",
-        f: "flow_button",
-        t: "text_button"
+      const kb = window._keyBinds || {};
+      const toolButtonMap = {
+        pointer:   "pointer_button",
+        stock:     "stock_button",
+        variable:  "variable_button",
+        cloud:     "cloud_button",
+        influence: "influence_button",
+        flow:      "flow_button",
+        text:      "text_button",
+        conveyor:  "conveyor_button",
+        microwave: "microwave_button",
+        queue:     "queue_button"
       };
 
       const key = event.key.toLowerCase();
-      const buttonId = keyMap[key];
-      if (!buttonId) return;
-
-      const button = document.getElementById(buttonId);
-      if (button) {
-        activateButton(button);
+      for (const action in toolButtonMap) {
+        if ((kb[action] || '') === key) {
+          const button = document.getElementById(toolButtonMap[action]);
+          if (button) activateButton(button);
+          return;
+        }
       }
     });
   });

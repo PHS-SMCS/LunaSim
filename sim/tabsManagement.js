@@ -7,6 +7,7 @@
 
 import {data} from './editor.js';
 import { PERFORMANCE_MODE } from "./editor.js";
+import { getUnitForName } from "./editor.js";
 
 
 var TESTING_MODE = false;
@@ -389,7 +390,12 @@ function configTabs() {
             labels: {
               formatter: val => parseFloat(val).toFixed(1)
             },
-            title: { text: tabInfo.xAxis }
+            title: {
+              text: (() => {
+                const xUnit = getUnitForName(tabInfo.xAxis);
+                return xUnit ? `${tabInfo.xAxis} (${xUnit})` : tabInfo.xAxis;
+              })()
+            }
           },
           yaxis: {
             forceNiceScale: false,
@@ -424,8 +430,11 @@ function configTabs() {
             if (val < minyValue) minyValue = val;
           });
 
+          const yUnit = getUnitForName(yName);
+          const yDisplayName = yUnit ? `${yName} (${yUnit})` : yName;
+
           options.series.push({
-            name: yName,
+            name: yDisplayName,
             data: yValues.map((y, idx) => [xValues[idx], y])
           });
         }
@@ -475,7 +484,9 @@ function configTabs() {
             tableData[i][yName] = val;
           });
 
-          tableColumns.push({ title: yName, field: yName });
+          const yUnit = getUnitForName(yName);
+          const yColTitle = yUnit ? `${yName} (${yUnit})` : yName;
+          tableColumns.push({ title: yColTitle, field: yName });
         }
 
         window.tableInstance = new Tabulator("#datatable", {

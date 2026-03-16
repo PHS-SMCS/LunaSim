@@ -78,7 +78,7 @@ var SD = {
      * @memberof module:editor
      */
 
-    nodeCounter: {stock: 0, cloud: 0, variable: 0, valve: 0, text: 0}
+    nodeCounter: {stock: 0, cloud: 0, variable: 0, valve: 0, text: 0, conveyor: 0, queue: 0}
 };
 
 /**
@@ -93,6 +93,20 @@ let GOJS_ELEMENT_LABELS = [];
  * @memberof module:editor
  */
 let GOJS_ELEMENT_LABELS_SET = new Set();
+// ── Model colour palette (persisted in localStorage) ──────────────────────
+// Defined here so buildTemplates() can reference it at init time.
+var _MC_DEFAULTS = {
+    stock: '#cfcfcf', conveyor: '#cfcfcf', variable: '#cfcfcf',
+    cloud: '#cfcfcf', flow: '#3489eb', influence: '#e3680e',
+    microwave: '#cfcfcf', queue: '#cfcfcf', labelcolor: '#000000'
+};
+var _modelColors = (function() {
+    try {
+        var s = localStorage.getItem('lunaModelColors');
+        return s ? Object.assign({}, _MC_DEFAULTS, JSON.parse(s)) : Object.assign({}, _MC_DEFAULTS);
+    } catch(e) { return Object.assign({}, _MC_DEFAULTS); }
+}());
+
 /**
  * Tracks whether the simulation has successfully run using the "Run" button.
  * @type {boolean}
@@ -225,9 +239,10 @@ function init() {
 
         "linkingTool.portGravity": 0,
         "linkingTool.doActivate": function () {
-            this.temporaryLink.curve = (SD.itemType === "flow") ? go.Link.None : go.Link.Bezier;
-            this.temporaryLink.path.stroke = (SD.itemType === "flow") ? "blue" : "orange";
-            this.temporaryLink.path.strokeWidth = (SD.itemType === "flow") ? 5 : 1;
+            const isFlowLike = SD.itemType === "flow" || SD.itemType === "overflow";
+            this.temporaryLink.curve = isFlowLike ? go.Link.None : go.Link.Bezier;
+            this.temporaryLink.path.stroke = isFlowLike ? (SD.itemType === "overflow" ? "#555555" : "blue") : "orange";
+            this.temporaryLink.path.strokeWidth = isFlowLike ? 5 : 1;
             go.LinkingTool.prototype.doActivate.call(this);
         },
 
@@ -245,14 +260,31 @@ function init() {
             if (SD.itemType === "flow") {
                 const from = fromnode.category;
                 const to = tonode.category;
-                const valid = (from === "stock" || from === "cloud") &&
-                    (to === "stock" || to === "cloud");
+                const flowable = ["stock", "cloud", "conveyor", "microwave", "queue"];
+                const valid = flowable.includes(from) && flowable.includes(to);
 
                 const bothClouds = from === "cloud" && to === "cloud";
 
                 if (!valid || bothClouds) {
                     return null;
                 }
+            }
+
+            // Overflow links: only allowed FROM a queue.
+            // If user tries to draw an overflow from a non-queue, silently cancel.
+            // The valve node gets _isOverflow:true and an empty label (no equation row).
+            if (SD.itemType === "overflow") {
+                const from = fromnode.category;
+                const to = tonode.category;
+                const overflowTargets = ["stock", "cloud", "conveyor", "microwave", "queue"];
+                if (from !== "queue" || !overflowTargets.includes(to)) {
+                    return null;
+                }
+                // Use a dedicated "overflow" link category so it gets its own template
+                myDiagram.model.setCategoryForLinkData(this.archetypeLinkData, "overflow");
+                // Valve node flagged so updateTable / engine can identify it
+                this.archetypeLabelNodeData = { category: "overflow-valve", _isOverflow: true, label: "" };
+                this.archetypeLinkData.text = "overflow";
             }
 
             if (SD.itemType === "influence" && (tonode.category === "stock" || tonode.category === "cloud")) {
@@ -280,7 +312,10 @@ function init() {
             }
 
             this.archetypeNodeData = {
-                key: newNodeId, category: SD.itemType, label: newNodeId, color: getDefaultColor(SD.itemType)
+                key: newNodeId, category: SD.itemType, label: newNodeId, color: getDefaultColor(SD.itemType),
+                ...(SD.itemType === "conveyor"  ? { transitTime: "1" } : {}),
+                ...(SD.itemType === "microwave" ? { cookTime: "1" }    : {}),
+                ...(SD.itemType === "queue"     ? { capacity: "100" }  : {})
             };
 
             return go.ClickCreatingTool.prototype.insertPart.call(this, loc);
@@ -328,9 +363,9 @@ function init() {
             const nonGhostExists = myDiagram.model.nodeDataArray.some(n => n.label === node.label.substring(1) && n.category === node.category);
 
             if (!nonGhostExists) {
-                if (node.category === "valve") {
+                if (node.category === "valve" || node.category === "overflow-valve") {
                     myDiagram.model.linkDataArray.forEach(link => {
-                        if (link.category === "flow" && link.labelKeys?.[0] === node.key) {
+                        if ((link.category === "flow" || link.category === "overflow") && link.labelKeys?.[0] === node.key) {
                             myDiagram.model.removeLinkData(link);
                         }
                     });
@@ -376,6 +411,18 @@ function init() {
             updateTable();
             loadTableToDiagram();
         }
+        // Overflow links: ensure the valve label stays empty and don't add to table
+        if (link.category === "overflow") {
+            myDiagram.startTransaction("updateOverflowNode");
+            const labelNode = link.labelNodes.first();
+            if (labelNode) {
+                myDiagram.model.setDataProperty(labelNode.data, "label", "");
+                myDiagram.model.setDataProperty(labelNode.data, "_isOverflow", true);
+            }
+            myDiagram.commitTransaction("updateOverflowNode");
+            updateTable();
+            loadTableToDiagram();
+        }
     });
 
     /**
@@ -384,12 +431,15 @@ function init() {
     myDiagram.addDiagramListener("SelectionDeleted", e => {
         const deletedParts = e.subject.toArray();
         const deletedValveKeys = deletedParts
-            .filter(p => p instanceof go.Node && p.data.category === "valve")
+            .filter(p => p instanceof go.Node && (p.data.category === "valve" || p.data.category === "overflow-valve"))
             .map(p => p.data.key);
 
         if (deletedValveKeys.length === 0) return;
 
-        const linksToDelete = myDiagram.model.linkDataArray.filter(link => link.category === "flow" && link.labelKeys?.some(labelKey => deletedValveKeys.includes(labelKey)));
+        const linksToDelete = myDiagram.model.linkDataArray.filter(link =>
+            (link.category === "flow" || link.category === "overflow") &&
+            link.labelKeys?.some(labelKey => deletedValveKeys.includes(labelKey))
+        );
 
         if (linksToDelete.length > 0) {
             myDiagram.model.startTransaction("delete flow links for removed valves");
@@ -406,7 +456,9 @@ function init() {
             const e = myDiagram.lastInput;
             const tag = document.activeElement ? document.activeElement.tagName.toLowerCase() : "";
             if (tag !== "input" && tag !== "textarea" && !e.control && !e.meta && !e.alt) {
-                if (e.key === "b" || e.key === "B") {
+                var kb = window._keyBinds || {};
+                var kdown = e.key.toLowerCase();
+                if (kdown === (kb.emphasis || 'b')) {
                     myDiagram.model.startTransaction("toggle emphasis");
                     myDiagram.selection.each(function(part) {
                         if (part instanceof go.Node || part instanceof go.Link) {
@@ -416,7 +468,7 @@ function init() {
                     myDiagram.model.commitTransaction("toggle emphasis");
                     return;
                 }
-                if (e.key === "p" || e.key === "P") {
+                if (kdown === (kb['polarity-pos'] || 'p')) {
                     myDiagram.model.startTransaction("set polarity +");
                     myDiagram.selection.each(function(part) {
                         if (part instanceof go.Link && part.data.category === "influence") {
@@ -427,7 +479,7 @@ function init() {
                     myDiagram.model.commitTransaction("set polarity +");
                     return;
                 }
-                if (e.key === "m" || e.key === "M") {
+                if (kdown === (kb['polarity-neg'] || 'm')) {
                     myDiagram.model.startTransaction("set polarity -");
                     myDiagram.selection.each(function(part) {
                         if (part instanceof go.Link && part.data.category === "influence") {
@@ -562,15 +614,110 @@ function buildTemplates() {
         }), $(go.Placeholder))
     }, $(go.Shape, shapeStyle(), new go.Binding("fill", "", function (data) {
         if (data.label && data.label.startsWith('$')) return "white";
-        return "#cfcfcf";
+        return data.color || _modelColors.stock || '#cfcfcf';
     }).makeTwoWay(),
     new go.Binding("stroke", "emphasized", function(e) { return e ? "#E8000D" : "black"; }),
     new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 4 : 1; }), {
         desiredSize: new go.Size(50, 30)
     }), $(go.TextBlock, textStyle(), {
         _isNodeLabel: true, alignment: new go.Spot(0.5, 0.5, 0, 30), isMultiline: false, textValidation: labelValidator
-    }, new go.Binding("alignment", "label_offset", go.Spot.parse).makeTwoWay(go.Spot.stringify))));
+    }, new go.Binding("alignment", "label_offset", go.Spot.parse).makeTwoWay(go.Spot.stringify),
+    new go.Binding("stroke", "labelColor").makeTwoWay(),
+    new go.Binding("font", "labelSize", function(sz) {
+        var pt = parseFloat(sz) || labelFontSize;
+        return "bold " + pt + "pt helvetica, bold arial, sans-serif";
+    }).makeTwoWay(function(font) {
+        var m = font.match(/bold\s+[\d.]+pt/);
+        return m ? parseFloat(m[1].replace('bold ','').replace('pt','')) : labelFontSize;
+    })
+    )));
 
+
+    myDiagram.nodeTemplateMap.add("conveyor",
+        $(go.Node, nodeStyle(), {
+            selectionAdornmentTemplate: $(go.Adornment, "Auto",
+                $(go.Shape, {
+                    figure: "rectangle",
+                    fill: null,
+                    stroke: "dodgerblue",
+                    strokeWidth: 5,
+                    scale: 0.9,
+                    desiredSize: new go.Size(50, 30)
+                }),
+                $(go.Placeholder)
+            )
+        },
+        // ── Main body panel (rectangle + divider lines overlaid) ──────────────
+        $(go.Panel, "Spot",
+            // Green rectangle — this is the port/link anchor (portId: "")
+            $(go.Shape, "Rectangle", {
+                name: "SHAPE",
+                portId: "",
+                fromLinkable: true,
+                toLinkable: true,
+                stroke: "black",
+                desiredSize: new go.Size(50, 30)
+            },
+            new go.Binding("fill", "", function(data) {
+                if (data.label && data.label.startsWith("$")) return "white";
+                return data.color || _modelColors.conveyor || '#cfcfcf';
+            }).makeTwoWay(),
+            new go.Binding("stroke", "emphasized", function(e) { return e ? "#E8000D" : "black"; }),
+            new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 4 : 1; })
+            ),
+            // Divider lines drawn as a Position panel laid over the rectangle.
+            // The rectangle is 50 wide; 4 lines divide it into 5 equal columns (spacing = 10px).
+            $(go.Panel, "Position",
+                { desiredSize: new go.Size(50, 30), pickable: false },
+                $(go.Shape, "LineV", {
+                    position: new go.Point(10, 3),
+                    desiredSize: new go.Size(0, 24),
+                    stroke: "rgba(0,0,0,0.45)",
+                    strokeWidth: 1.2,
+                    pickable: false
+                }),
+                $(go.Shape, "LineV", {
+                    position: new go.Point(20, 3),
+                    desiredSize: new go.Size(0, 24),
+                    stroke: "rgba(0,0,0,0.45)",
+                    strokeWidth: 1.2,
+                    pickable: false
+                }),
+                $(go.Shape, "LineV", {
+                    position: new go.Point(30, 3),
+                    desiredSize: new go.Size(0, 24),
+                    stroke: "rgba(0,0,0,0.45)",
+                    strokeWidth: 1.2,
+                    pickable: false
+                }),
+                $(go.Shape, "LineV", {
+                    position: new go.Point(40, 3),
+                    desiredSize: new go.Size(0, 24),
+                    stroke: "rgba(0,0,0,0.45)",
+                    strokeWidth: 1.2,
+                    pickable: false
+                })
+            )
+        ),
+        // ── Node name label (above the rectangle, same pattern as stock) ──────
+        $(go.TextBlock, textStyle(), {
+            _isNodeLabel: true,
+            alignment: new go.Spot(0.5, 0.5, 0, 30),
+            isMultiline: false,
+            textValidation: labelValidator
+        },
+        new go.Binding("alignment", "label_offset", go.Spot.parse).makeTwoWay(go.Spot.stringify),
+    new go.Binding("stroke", "labelColor").makeTwoWay(),
+    new go.Binding("font", "labelSize", function(sz) {
+        var pt = parseFloat(sz) || labelFontSize;
+        return "bold " + pt + "pt helvetica, bold arial, sans-serif";
+    }).makeTwoWay(function(font) {
+        var m = font.match(/bold\s+([\d.]+)pt/);
+        return m ? parseFloat(m[1]) : labelFontSize;
+    })
+        )
+        // Transit time is now edited via the Element Control Panel (bottom of canvas)
+    ));
 
     myDiagram.nodeTemplateMap.add("cloud", $(go.Node, nodeStyle(), {
         selectionAdornmentTemplate: $(go.Adornment, "Auto", $(go.Shape, {
@@ -581,10 +728,12 @@ function buildTemplates() {
             scale: 0.9,
             desiredSize: new go.Size(30, 30)
         }), $(go.Placeholder))
-    }, $(go.Shape, shapeStyle(), new go.Binding("fill", "color").makeTwoWay(),
+    }, $(go.Shape, shapeStyle(), new go.Binding("fill", "", function(data) {
+        return data.color || _modelColors.cloud || '#d4e4f7';
+    }).makeTwoWay(),
     new go.Binding("stroke", "emphasized", function(e) { return e ? "#E8000D" : "black"; }),
     new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 4 : 1; }), {
-        figure: "Cloud", desiredSize: new go.Size(30, 30), fill: "#f0f0f0"
+        figure: "Cloud", desiredSize: new go.Size(30, 30)
     })));
 
     myDiagram.nodeTemplateMap.add("valve",
@@ -624,7 +773,15 @@ function buildTemplates() {
                     isMultiline: false,
                     textValidation: labelValidator
                 },
-                new go.Binding("alignment", "label_offset", go.Spot.parse).makeTwoWay(go.Spot.stringify)
+                new go.Binding("alignment", "label_offset", go.Spot.parse).makeTwoWay(go.Spot.stringify),
+    new go.Binding("stroke", "labelColor").makeTwoWay(),
+    new go.Binding("font", "labelSize", function(sz) {
+        var pt = parseFloat(sz) || labelFontSize;
+        return "bold " + pt + "pt helvetica, bold arial, sans-serif";
+    }).makeTwoWay(function(font) {
+        var m = font.match(/bold\s+([\d.]+)pt/);
+        return m ? parseFloat(m[1]) : labelFontSize;
+    })
             )
         )
     );
@@ -635,14 +792,23 @@ function buildTemplates() {
         }), $(go.Placeholder))
     }, $(go.Shape, shapeStyle(), new go.Binding("fill", "", function (data) {
         if (data.label && data.label.startsWith('$')) return "white";
-        return "#cfcfcf";
+        return data.color || _modelColors.variable || '#cfcfcf';
     }).makeTwoWay(),
     new go.Binding("stroke", "emphasized", function(e) { return e ? "#E8000D" : "black"; }),
     new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 4 : 1; }), {
         figure: "Ellipse", desiredSize: new go.Size(25, 25)
     }), $(go.TextBlock, textStyle(), {
         _isNodeLabel: true, alignment: new go.Spot(0.5, 0.5, 0, 30), isMultiline: false, textValidation: labelValidator
-    }, new go.Binding("alignment", "label_offset", go.Spot.parse).makeTwoWay(go.Spot.stringify))));
+    }, new go.Binding("alignment", "label_offset", go.Spot.parse).makeTwoWay(go.Spot.stringify),
+    new go.Binding("stroke", "labelColor").makeTwoWay(),
+    new go.Binding("font", "labelSize", function(sz) {
+        var pt = parseFloat(sz) || labelFontSize;
+        return "bold " + pt + "pt helvetica, bold arial, sans-serif";
+    }).makeTwoWay(function(font) {
+        var m = font.match(/bold\s+[\d.]+pt/);
+        return m ? parseFloat(m[1].replace('bold ','').replace('pt','')) : labelFontSize;
+    })
+    )));
 
     myDiagram.linkTemplateMap.add("flow",
         $(go.Link,
@@ -667,16 +833,28 @@ function buildTemplates() {
 
             $(go.Shape,
                 new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 11 : 5; }),
-                new go.Binding("stroke", "emphasized", function(e) { return e ? "#E8000D" : "#3489eb"; }), {
-                stroke: "#3489eb",
+                new go.Binding("stroke", "emphasized", function(e, shape) {
+                    if (e) return "#E8000D";
+                    var d = shape.part ? shape.part.data : null;
+                    return (d && d.flowColor) || _modelColors.flow || "#3489eb";
+                }), {
+                stroke: _modelColors.flow || "#3489eb",
                 strokeWidth: 5
             }),
 
             $(go.Shape,
-                new go.Binding("fill", "emphasized", function(e) { return e ? "#E8000D" : "#3489eb"; }),
-                new go.Binding("stroke", "emphasized", function(e) { return e ? "#E8000D" : "#3489eb"; }), {
-                fill: "#3489eb",
-                stroke: "#3489eb",
+                new go.Binding("fill", "emphasized", function(e, shape) {
+                    if (e) return "#E8000D";
+                    var d = shape.part ? shape.part.data : null;
+                    return (d && d.flowHeadColor) || _modelColors.flowhead || _modelColors.flow || "#3489eb";
+                }),
+                new go.Binding("stroke", "emphasized", function(e, shape) {
+                    if (e) return "#E8000D";
+                    var d = shape.part ? shape.part.data : null;
+                    return (d && d.flowHeadColor) || _modelColors.flowhead || _modelColors.flow || "#3489eb";
+                }), {
+                fill: _modelColors.flow || "#3489eb",
+                stroke: _modelColors.flow || "#3489eb",
                 toArrow: "Standard",
                 scale: 2.0
             }),
@@ -684,16 +862,93 @@ function buildTemplates() {
             $(go.Shape,
                 new go.Binding("visible", "", isBiflow),
                 new go.Binding("stroke", "", function(_, shape) {
-                    return shape.part.isSelected ? "#3489eb" : "#808080";
+                    return shape.part && shape.part.isSelected ? (_modelColors.flow || "#3489eb") : "#808080";
                 }).ofObject(),
                 new go.Binding("fill", "", function(_, shape) {
-                    return shape.part.isSelected ? "#3489eb" : "#808080";
+                    return shape.part && shape.part.isSelected ? (_modelColors.flow || "#3489eb") : "#808080";
                 }).ofObject(),
                 {
                     fromArrow: "Backward",
                     scale: 2.0
                 }
             )
+        )
+    );
+
+    // ── Overflow link template ───────────────────────────────────────────────
+    // Visually like a flow but with dark gray body and light-red arrowhead.
+    // The valve node uses the "overflow-valve" category so it renders differently.
+    myDiagram.linkTemplateMap.add("overflow",
+        $(go.Link,
+            {
+                toShortLength: 10,
+                layerName: "Background",
+                selectionAdornmentTemplate:
+                    $(go.Adornment,
+                        $(go.Shape,
+                            {
+                                isPanelMain: true,
+                                stroke: "#555555",
+                                strokeWidth: 7
+                            })
+                    )
+            },
+            new go.Binding("curviness", "curviness").makeTwoWay(),
+            // Body: dark gray
+            $(go.Shape, {
+                stroke: "#555555",
+                strokeWidth: 5
+            },
+            new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 11 : 5; }),
+            new go.Binding("stroke", "emphasized", function(e) {
+                return e ? "#E8000D" : "#555555";
+            })),
+            // Arrowhead: light red
+            $(go.Shape, {
+                fill: "#e07070",
+                stroke: "#e07070",
+                toArrow: "Standard",
+                scale: 2.0
+            },
+            new go.Binding("fill", "emphasized", function(e) { return e ? "#E8000D" : "#e07070"; }),
+            new go.Binding("stroke", "emphasized", function(e) { return e ? "#E8000D" : "#e07070"; }))
+        )
+    );
+
+    // ── Overflow valve node template ─────────────────────────────────────────
+    // A small light-red circle (no label) that rides on the overflow link.
+    // Not deletable directly — deleting the link removes it.
+    myDiagram.nodeTemplateMap.add("overflow-valve",
+        $(go.Node, nodeStyle(), {
+                movable: false,
+                deletable: false,
+                layerName: "Foreground",
+                selectable: true,
+                pickable: true,
+                alignmentFocus: go.Spot.None,
+                selectionAdornmentTemplate:
+                    $(go.Adornment, "Auto",
+                        $(go.Shape, "Circle", {
+                            fill: null,
+                            stroke: "dodgerblue",
+                            strokeWidth: 3,
+                            desiredSize: new go.Size(28, 28)
+                        })
+                    )
+            },
+            $(go.Shape, {
+                figure: "Circle",
+                desiredSize: new go.Size(18, 18),
+                fill: "#e07070",
+                stroke: "#c04040",
+                strokeWidth: 1.5,
+                portId: "",
+                fromLinkable: false,
+                toLinkable: false
+            },
+            new go.Binding("stroke", "emphasized", function(e) { return e ? "#E8000D" : "#c04040"; }),
+            new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 3.5 : 1.5; }))
+            // No TextBlock — overflow valves have no label
         )
     );
 
@@ -714,11 +969,11 @@ function buildTemplates() {
     $(go.Shape,
         new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 8 : 1.5; }),
         {strokeWidth: 1.5},
-        new go.Binding("stroke", "isSelected", sel => sel ? "#3489eb" : "orange").ofObject()),
+        new go.Binding("stroke", "isSelected", function(sel) { return sel ? "#3489eb" : (_modelColors.influence || "#e3680e"); }).ofObject()),
     $(go.Shape,
         new go.Binding("scale", "emphasized", function(e) { return e ? 2.5 : 1.5; }),
         { stroke: null, toArrow: "Standard", scale: 1.5 },
-        new go.Binding("fill", "isSelected", sel => sel ? "#3489eb" : "orange").ofObject())
+        new go.Binding("fill", "isSelected", function(sel) { return sel ? "#3489eb" : (_modelColors.influence || "#e3680e"); }).ofObject())
     ));
 
     // Polarity label nodes (isLinkLabel:true) — GoJS's native mechanism for
@@ -747,6 +1002,182 @@ function buildTemplates() {
         })))
     );
 
+    // ── Microwave node template ──────────────────────────────────────────────
+    // Visually: outer rectangle (50x30) with inner inscribed rectangle (36x18).
+    // Supports: color, labelColor, labelSize, cookTime, emphasized.
+    myDiagram.nodeTemplateMap.add("microwave",
+        $(go.Node, nodeStyle(), {
+            selectionAdornmentTemplate: $(go.Adornment, "Auto",
+                $(go.Shape, {
+                    figure: "rectangle",
+                    fill: null,
+                    stroke: "dodgerblue",
+                    strokeWidth: 5,
+                    scale: 0.9,
+                    desiredSize: new go.Size(50, 30)
+                }),
+                $(go.Placeholder)
+            )
+        },
+        $(go.Panel, "Spot",
+            // Outer rectangle (port anchor)
+            $(go.Shape, "Rectangle", {
+                name: "SHAPE",
+                portId: "",
+                fromLinkable: true,
+                toLinkable: true,
+                desiredSize: new go.Size(50, 30),
+                stroke: "black",
+                strokeWidth: 1
+            },
+            new go.Binding("fill", "", function(data) {
+                if (data.label && data.label.startsWith("$")) return "white";
+                return data.color || _modelColors.microwave || '#ffb3c6';
+            }).makeTwoWay(),
+            new go.Binding("stroke", "emphasized", function(e) { return e ? "#E8000D" : "black"; }),
+            new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 4 : 1; })
+            ),
+            // Inner inscribed rectangle (decorative, not interactive)
+            $(go.Shape, "Rectangle", {
+                desiredSize: new go.Size(36, 18),
+                fill: "transparent",
+                stroke: "rgba(0,0,0,0.4)",
+                strokeWidth: 1.5,
+                pickable: false
+            })
+        ),
+        // Label below the node (same alignment as stock/conveyor)
+        $(go.TextBlock, textStyle(), {
+            _isNodeLabel: true,
+            alignment: new go.Spot(0.5, 0.5, 0, 30),
+            isMultiline: false,
+            textValidation: labelValidator
+        },
+        new go.Binding("alignment", "label_offset", go.Spot.parse).makeTwoWay(go.Spot.stringify),
+        new go.Binding("stroke", "labelColor").makeTwoWay(),
+        new go.Binding("font", "labelSize", function(sz) {
+            var pt = parseFloat(sz) || labelFontSize;
+            return "bold " + pt + "pt helvetica, bold arial, sans-serif";
+        }).makeTwoWay(function(font) {
+            var m = font.match(/bold\s+([\d.]+)pt/);
+            return m ? parseFloat(m[1]) : labelFontSize;
+        })
+        )
+    ));
+
+    // ── Queue node template ──────────────────────────────────────────────────
+    // Visually: yellow rectangle (50x30) with 2 evenly spaced horizontal lines
+    // at y=10 and y=20, dividing it into 3 equal bands.
+    // Supports: color, labelColor, labelSize, capacity, emphasized.
+    myDiagram.nodeTemplateMap.add("queue",
+        $(go.Node, nodeStyle(), {
+            selectionAdornmentTemplate: $(go.Adornment, "Auto",
+                $(go.Shape, {
+                    figure: "rectangle",
+                    fill: null,
+                    stroke: "dodgerblue",
+                    strokeWidth: 5,
+                    scale: 0.9,
+                    desiredSize: new go.Size(50, 30)
+                }),
+                $(go.Placeholder)
+            )
+        },
+        $(go.Panel, "Spot",
+            // Outer rectangle (port anchor)
+            $(go.Shape, "Rectangle", {
+                name: "SHAPE",
+                portId: "",
+                fromLinkable: true,
+                toLinkable: true,
+                desiredSize: new go.Size(50, 30),
+                stroke: "black",
+                strokeWidth: 1
+            },
+            new go.Binding("fill", "", function(data) {
+                if (data.label && data.label.startsWith("$")) return "white";
+                return data.color || _modelColors.queue || '#ffe066';
+            }).makeTwoWay(),
+            new go.Binding("stroke", "emphasized", function(e) { return e ? "#E8000D" : "black"; }),
+            new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 4 : 1; })
+            ),
+            // Two horizontal divider lines at 1/3 and 2/3 height
+            $(go.Panel, "Position",
+                { desiredSize: new go.Size(50, 30), pickable: false },
+                $(go.Shape, "LineH", {
+                    position: new go.Point(3, 10),
+                    desiredSize: new go.Size(44, 0),
+                    stroke: "rgba(0,0,0,0.45)",
+                    strokeWidth: 1.2,
+                    pickable: false
+                }),
+                $(go.Shape, "LineH", {
+                    position: new go.Point(3, 20),
+                    desiredSize: new go.Size(44, 0),
+                    stroke: "rgba(0,0,0,0.45)",
+                    strokeWidth: 1.2,
+                    pickable: false
+                })
+            )
+        ),
+        // Label below the node (same alignment as stock/conveyor/microwave)
+        $(go.TextBlock, textStyle(), {
+            _isNodeLabel: true,
+            alignment: new go.Spot(0.5, 0.5, 0, 30),
+            isMultiline: false,
+            textValidation: labelValidator
+        },
+        new go.Binding("alignment", "label_offset", go.Spot.parse).makeTwoWay(go.Spot.stringify),
+        new go.Binding("stroke", "labelColor").makeTwoWay(),
+        new go.Binding("font", "labelSize", function(sz) {
+            var pt = parseFloat(sz) || labelFontSize;
+            return "bold " + pt + "pt helvetica, bold arial, sans-serif";
+        }).makeTwoWay(function(font) {
+            var m = font.match(/bold\s+([\d.]+)pt/);
+            return m ? parseFloat(m[1]) : labelFontSize;
+        })
+        )
+    ));
+
+    // ── Image node template ──────────────────────────────────────────────────
+    // A freely-resizable, draggable image node. The user picks a PNG/JPG from
+    // disk; it is stored as a base64 data URL in node.imageData.
+    // Resize handles are enabled via resizable:true on the node.
+    // The node is selectable and movable but not linkable (no portId).
+    myDiagram.nodeTemplateMap.add("image",
+        $(go.Node,
+            {
+                resizable:         true,
+                resizeObjectName:  "PIC",
+                selectable:        true,
+                movable:           true,
+                fromLinkable:      false,
+                toLinkable:        false,
+                locationSpot:      go.Spot.Center,
+                selectionAdornmentTemplate: $(go.Adornment, "Auto",
+                    $(go.Shape, {
+                        fill: null,
+                        stroke: "dodgerblue",
+                        strokeWidth: 2,
+                        strokeDashArray: [4, 3]
+                    }),
+                    $(go.Placeholder)
+                )
+            },
+            new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
+            $(go.Picture,
+                {
+                    name: "PIC",
+                    desiredSize: new go.Size(50, 50),
+                    imageStretch: go.GraphObject.Uniform,
+                    errorFunction: function(pic, e) { pic.source = ""; }
+                },
+                new go.Binding("source", "imageData"),
+                new go.Binding("desiredSize", "imgSize", go.Size.parse).makeTwoWay(go.Size.stringify)
+            )
+        )
+    );
+
     myDiagram.nodeTemplateMap.add("textbox",
         $(go.Node, nodeStyle(),
             {
@@ -765,7 +1196,10 @@ function buildTemplates() {
                     stroke: "#ccc",
                     strokeWidth: 1,
                     name: "SHAPE"
-                }),
+                },
+                new go.Binding("fill", "tbBg").makeTwoWay(),
+                new go.Binding("stroke", "tbBorder").makeTwoWay()
+                ),
                 $(go.TextBlock, textStyle(),
                     {
                         margin: 6,
@@ -774,7 +1208,15 @@ function buildTemplates() {
                         wrap: go.TextBlock.WrapFit,
                         editable: true
                     },
-                    new go.Binding("text", "label").makeTwoWay()
+                    new go.Binding("text", "label").makeTwoWay(),
+                    new go.Binding("stroke", "tbLabelColor").makeTwoWay(),
+                    new go.Binding("font", "tbLabelSize", function(sz) {
+                        var pt = parseFloat(sz) || labelFontSize;
+                        return "bold " + pt + "pt helvetica, bold arial, sans-serif";
+                    }).makeTwoWay(function(font) {
+                        var m = font.match(/bold\s+([\d.]+)pt/);
+                        return m ? parseFloat(m[1]) : labelFontSize;
+                    })
                 )
             )
         )
@@ -832,6 +1274,7 @@ function loadTableToDiagram() {
         let migrated = $(this).data('migrated');
         let equation = migrated ? migrated.equation : $(this).find('input[name="equation"]').val();
         let checkbox = migrated ? migrated.checkbox : $(this).find('input[name="checkbox"]').is(':checked');
+        let units = migrated ? (migrated.units || '') : ($(this).find('input[name="units"]').val() || '');
 
         $(this).removeData('migrated');
 
@@ -840,6 +1283,7 @@ function loadTableToDiagram() {
             if (item.label === name) {
                 item.equation = equation;
                 item.checkbox = checkbox;
+                item.units = units;
             }
         });
     });
@@ -883,11 +1327,13 @@ function updateTable(load = false) {
                 const name = $(this).find('input[name="name"]').val();
                 const equation = $(this).find('input[name="equation"]').val();
                 const checkbox = $(this).find('input[name="checkbox"]').prop('checked');
+                const units = $(this).find('input[name="units"]').val() || '';
 
                 const node = myDiagram.model.nodeDataArray.find(n => n.label === name);
                 if (node) {
                     myDiagram.model.setDataProperty(node, 'equation', equation);
                     myDiagram.model.setDataProperty(node, 'checkbox', checkbox);
+                    myDiagram.model.setDataProperty(node, 'units', units);
                 }
             });
         }
@@ -901,12 +1347,14 @@ function updateTable(load = false) {
             .filter(item =>
                 item.label !== undefined &&
                 !isGhost(item.label) &&
-                (item.category === "stock" || item.category === "variable" || item.category === "valve") &&
-                item.category !== "text" && item.category !== "textbox"
+                (item.category === "stock" || item.category === "variable" || item.category === "valve" || item.category === "conveyor" || item.category === "microwave" || item.category === "queue") &&
+                item.category !== "text" && item.category !== "textbox" &&
+                !(item.category === "valve" && item._isOverflow) &&
+                item.category !== "overflow-valve"
             )
 
             .sort((a, b) => {
-                const order = { stock: 0, valve: 1, variable: 2 };
+                const order = { stock: 0, conveyor: 0, microwave: 0, queue: 0, valve: 1, variable: 2 };
                 return order[a.category] - order[b.category];
             });
 
@@ -940,7 +1388,17 @@ function updateTable(load = false) {
 
             $tr.append($('<td>').append($eqInput));
 
-            if (category === "stock" || category === "flow") {
+            // ── Units cell ──────────────────────────────────────────────────
+            const unitVal = (item.units && item.units.trim() !== '') ? item.units : '';
+            const $unitWrapper = $('<td class="eq-col-units">').css('position', 'relative');
+            const $unitInput = $('<input class="eqTableInputBox units-input">')
+                .attr({ type: 'text', name: 'units', autocomplete: 'off' })
+                .css('width', '99%')
+                .val(load ? unitVal : unitVal);
+            $unitWrapper.append($unitInput);
+            $tr.append($unitWrapper);
+
+            if (category === "stock" || category === "conveyor" || category === "flow" || category === "microwave" || category === "queue") {
                 const $checkbox = $('<input>')
                     .attr({ type: 'checkbox', name: 'checkbox', class: 'nncheckbox' })
                     .prop('checked', !!item.checkbox)
@@ -951,8 +1409,11 @@ function updateTable(load = false) {
             }
 
             const colorClass = category === "stock" ? "eqStockBox"
+                : category === "conveyor" ? "eqConveyorBox"
+                : category === "microwave" ? "eqMicrowaveBox"
+                : category === "queue" ? "eqQueueBox"
                 : category === "flow" ? "eqFlowBox"
-                    : "eqVariableBox";
+                : "eqVariableBox";
 
             $tr.find('td').slice(0, 3).addClass(colorClass);
 
@@ -963,10 +1424,13 @@ function updateTable(load = false) {
     GOJS_ELEMENT_LABELS = myDiagram.model.nodeDataArray
         .filter(n =>
             n.label &&
+            n.label !== '' &&
             !n.label.startsWith('$') &&
             n.category !== "cloud" &&
             n.category !== "text" &&
-            n.category !== "textbox"
+            n.category !== "textbox" &&
+            n.category !== "polarityLabel" &&
+            n.category !== "overflow-valve"
         )
         .map(n => n.label);
 
@@ -979,6 +1443,9 @@ function updateTable(load = false) {
         popupContent.innerHTML = ""; // Clear old
         popupContent.appendChild(clonedTable); // Re-append
     }
+
+    // Re-sync ECP so panel reflects latest model state
+    if (typeof window._ecpSync === 'function') window._ecpSync();
 
 }
 
@@ -1001,11 +1468,15 @@ function isBiflow(data, _) {
     var biflow = false;
 
     var labelKey = data.labelKeys[0];
+    var flowName;
     for (var node of myDiagram.model["nodeDataArray"]) {
         if (node.key === labelKey) {
-            var flowName = node.label;
+            flowName = node.label;
         }
     }
+
+    // Overflow valves have no label — they are never biflow
+    if (!flowName || flowName === '') return false;
 
     if (flowName[0] === '$') {
         flowName = flowName.substring(1);
@@ -1916,6 +2387,76 @@ document.getElementById("text_button").addEventListener("click", function () {
     toolSelect(event);
 });
 
+document.getElementById("conveyor_button").addEventListener("click", function () {
+    setMode("node", "conveyor");
+    toolSelect(event);
+});
+
+document.getElementById("microwave_button").addEventListener("click", function () {
+    setMode("node", "microwave");
+    toolSelect(event);
+});
+
+document.getElementById("queue_button").addEventListener("click", function () {
+    setMode("node", "queue");
+    toolSelect(event);
+});
+
+document.getElementById("overflow_button").addEventListener("click", function () {
+    setMode("link", "overflow");
+    toolSelect(event);
+});
+
+// ── Image button: open file picker, read as base64, place node on canvas ──────
+(function () {
+    var fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.accept = "image/png, image/jpeg, image/jpg";
+    fileInput.style.display = "none";
+    document.body.appendChild(fileInput);
+
+    document.getElementById("image_button").addEventListener("click", function (e) {
+        e.preventDefault();
+        // Return to pointer mode immediately — image placement is one-shot
+        setMode("pointer", "pointer");
+        fileInput.value = "";      // allow re-selecting the same file
+        fileInput.click();
+    });
+
+    fileInput.addEventListener("change", function () {
+        var file = fileInput.files[0];
+        if (!file) return;
+
+        // Warn on large files (> 2 MB)
+        if (file.size > 2 * 1024 * 1024) {
+            if (!confirm("This image is larger than 2 MB and may slow down saving/loading. Continue?")) {
+                return;
+            }
+        }
+
+        var reader = new FileReader();
+        reader.onload = function (evt) {
+            var dataUrl = evt.target.result;
+
+            // Place the image in the centre of the current viewport
+            var vb = myDiagram.viewportBounds;
+            var cx = vb.centerX;
+            var cy = vb.centerY;
+
+            myDiagram.model.commit(function (m) {
+                var nodeData = {
+                    category: "image",
+                    imageData: dataUrl,
+                    imgSize:   "50 50",          // default: stock-sized (50x50)
+                    loc: cx + " " + cy
+                };
+                m.addNodeData(nodeData);
+            }, "insert image");
+        };
+        reader.readAsDataURL(file);
+    });
+}());
+
 document.getElementById("clearButton").addEventListener("click", function () {
     showConfirmPopup({
         title: "Clear Model?",
@@ -1964,11 +2505,72 @@ window.addEventListener('beforeunload', function (e) {
 });
 
 export {data};
+
+/**
+ * Returns the unit string for a given node label, or null if N/A / not set.
+ * Used by tabsManagement to annotate chart series and table columns.
+ * @param {string} name - The node label to look up.
+ * @returns {string|null} The unit string, or null if none.
+ * @memberof module:editor
+ */
+function getUnitForName(name) {
+    if (!myDiagram) return null;
+    const nodeData = myDiagram.model.nodeDataArray.find(n => n.label === name);
+    if (!nodeData) return null;
+    const u = nodeData.units;
+    return (u && u.trim() !== '' && u.trim() !== 'N/A') ? u.trim() : null;
+}
+export { getUnitForName };
 const JAVA_MATH_FUNCTIONS = [
   'sin()', 'cos()', 'tan()', 'asin()', 'acos()', 'atan()', 'atan2()',
   'sinh()', 'cosh()', 'tanh()', 'exp()', 'log()', 'log10()', 'sqrt()', 'cbrt()',
   'abs()', 'ceil()', 'floor()', 'round()', 'pow()', 'max()', 'min()', 'sign()',
   'random()', 'hypot()', 'expm1()', 'log1p()', 'sec()', 'csc()', 'cot()'
+];
+
+/**
+ * Default units available in the units autocomplete dropdown.
+ * Users may also type custom units freely.
+ * @memberof module:editor
+ * @type {string[]}
+ */
+const UNITS_LIST = [
+  // SI base units
+  'second', 'meter', 'kilogram', 'kelvin', 'ampere', 'mole', 'candela',
+  // SI time
+  'seconds', 'minute', 'minutes', 'hour', 'hours',
+  'day', 'days', 'week', 'weeks', 'month', 'months', 'year', 'years',
+  // SI mass
+  'kg', 'g', 'mg', 'tonne', 'ton', 'lb', 'oz',
+  // SI length
+  'meters', 'm', 'km', 'cm', 'mm', 'mile', 'miles', 'ft', 'inch',
+  // SI derived - energy
+  'Joule', 'joules', 'J', 'kJ', 'MJ', 'kWh', 'cal', 'kcal', 'BTU',
+  // SI derived - power
+  'Watt', 'watts', 'W', 'kW', 'MW', 'GW',
+  // SI derived - force/pressure
+  'Newton', 'N', 'Pascal', 'Pa', 'atm', 'bar', 'psi', 'kPa',
+  // SI derived - electricity
+  'Coulomb', 'C', 'Volt', 'V', 'Ampere', 'A', 'Ohm', 'Hertz', 'Hz',
+  // population / social
+  'people', 'person', 'individuals', 'population', 'household', 'households',
+  'births', 'deaths', 'workers', 'employees',
+  // economics
+  'dollar', 'dollars', 'USD', 'EUR', 'GBP', 'JPY',
+  // volume
+  'liter', 'liters', 'L', 'mL', 'gallon', 'gallons',
+  // generic
+  'unit', 'units', 'item', 'items',
+  // rates
+  'people/year', 'people/day', 'people/hour',
+  'kg/s', 'kg/year', 'kg/day',
+  'USD/year', 'USD/day', 'items/day', 'items/year',
+  'births/year', 'deaths/year',
+  'm/s', 'km/hr', 'mph', 'fps',
+  // dimensionless
+  '%', 'percent', 'fraction', 'ratio', 'dimensionless',
+  // temperature
+  '°C', '°F', 'K',
 ];
 
 
@@ -2065,7 +2667,8 @@ function finalizeRename() {
         const rowName = $(this).find('input[name="name"]').val();
         tableState[rowName] = {
             equation: $(this).find('input[name="equation"]').val(),
-            checkbox: $(this).find('input[name="checkbox"]').is(':checked')
+            checkbox: $(this).find('input[name="checkbox"]').is(':checked'),
+            units: $(this).find('input[name="units"]').val() || ''
         };
     });
 
@@ -2103,6 +2706,7 @@ function finalizeRename() {
             if (node) {
                 myDiagram.model.setDataProperty(node, 'equation', tableState[origName].equation);
                 myDiagram.model.setDataProperty(node, 'checkbox', tableState[origName].checkbox);
+                myDiagram.model.setDataProperty(node, 'units', tableState[origName].units || '');
             }
         });
     }, 'Reapply table edits after rename');
@@ -2201,6 +2805,51 @@ function setupAutocompleteForInputs() {
             }
         });
 
+        // === Autocomplete for units fields ===
+        $container.on('input focus', 'input[name="units"]', function () {
+            showUnitsAutocomplete($(this));
+        });
+
+        $container.on('keydown', 'input[name="units"]', function (e) {
+            const $input = $(this);
+            const dropdown = $('.units-autocomplete-list');
+            const items = dropdown.find('.units-autocomplete-item');
+            let selected = items.filter('.selected');
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (selected.length === 0) items.first().addClass('selected');
+                else { const next = selected.removeClass('selected').next(); (next.length ? next : items.first()).addClass('selected'); }
+                return;
+            }
+            if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (selected.length === 0) items.last().addClass('selected');
+                else { const prev = selected.removeClass('selected').prev(); (prev.length ? prev : items.last()).addClass('selected'); }
+                return;
+            }
+            if ((e.key === 'Tab' || e.key === 'Enter') && selected.length > 0) {
+                e.preventDefault();
+                e.stopPropagation();
+                $input.val(selected.text());
+                $('.units-autocomplete-list').remove();
+                loadTableToDiagram();
+            }
+            if (e.key === 'Escape') {
+                $('.units-autocomplete-list').remove();
+            }
+        });
+
+        $container.on('blur', 'input[name="units"]', function () {
+            setTimeout(() => {
+                if (!$(':hover').hasClass('units-autocomplete-item')) {
+                    $('.units-autocomplete-list').remove();
+                }
+                // Save when user leaves the units field
+                loadTableToDiagram();
+            }, 150);
+        });
+
         // === Track original name when editing starts ===
         $container.on('focusin', 'input[name="name"]', function () {
             $(this).data('oldName', $(this).val());
@@ -2233,6 +2882,9 @@ function setupAutocompleteForInputs() {
     $(document).on('mousedown', function (e) {
         if (!$(e.target).closest('.autocomplete-list, input[name="equation"]').length) {
             $('.autocomplete-list').remove();
+        }
+        if (!$(e.target).closest('.units-autocomplete-list, input[name="units"]').length) {
+            $('.units-autocomplete-list').remove();
         }
     });
 }
@@ -2325,6 +2977,57 @@ function showAutocomplete($input) {
 
 
 /**
+ * Shows an autocomplete dropdown for the units input field.
+ * Filters UNITS_LIST by what the user has typed so far.
+ * @memberof module:editor
+ * @function
+ * @param {JQuery} $input - jQuery-wrapped units input element.
+ */
+function showUnitsAutocomplete($input) {
+    $('.units-autocomplete-list').remove();
+
+    const fragment = ($input.val() || '').toLowerCase();
+
+    let matches;
+    if (fragment === '') {
+        matches = UNITS_LIST.slice(0, 8);
+    } else {
+        matches = UNITS_LIST.filter(u => u.toLowerCase().startsWith(fragment));
+        // Also include contains-matches after startsWith
+        const contains = UNITS_LIST.filter(u =>
+            !u.toLowerCase().startsWith(fragment) && u.toLowerCase().includes(fragment)
+        );
+        matches = [...matches, ...contains].slice(0, 8);
+    }
+
+    if (matches.length === 0) return;
+
+    const dropdown = $('<div class="units-autocomplete-list"></div>');
+    matches.forEach((unit, idx) => {
+        const item = $('<div class="units-autocomplete-item"></div>').text(unit);
+        if (idx === 0) item.addClass('selected');
+        item.on('mousedown', function (e) {
+            e.preventDefault();
+            $input.val(unit);
+            $('.units-autocomplete-list').remove();
+            loadTableToDiagram();
+        });
+        dropdown.append(item);
+    });
+
+    const offset = $input.offset();
+    dropdown.css({
+        position: 'absolute',
+        top: offset.top + $input.outerHeight(),
+        left: offset.left,
+        width: Math.max($input.outerWidth(), 140)
+    });
+
+    $('body').append(dropdown);
+}
+
+
+/**
  * Saves the given GoJS diagram as a PNG image file with optional margin.
  * Uses the diagram's makeImageData API to get image Blob and triggers a download.
  * @memberof module:editor
@@ -2405,6 +3108,300 @@ function saveDiagramAsTiff(diagram, filename = "diagram.tiff", margin = 15) {
 
 
 /**
+ * Generates and downloads a PDF report of the current LunaSim model.
+ * Uses jsPDF + jspdf-autotable. Called by the Download PDF button.
+ */
+function generatePDF() {
+    const { jsPDF } = window.jspdf;
+
+    const modelName    = (document.getElementById("model_name").value || "LunaSim Model").trim();
+    const fontChoice   = document.getElementById("pdfFont").value || "helvetica";
+    const description  = document.getElementById("pdfDescription").value.trim();
+    const inclDiagram  = document.getElementById("pdfIncludeDiagram").checked;
+    const inclStocks   = document.getElementById("pdfIncludeStocks").checked;
+    const inclFlows    = document.getElementById("pdfIncludeFlows").checked;
+    const inclVars     = document.getElementById("pdfIncludeVariables").checked;
+    const inclQueues   = document.getElementById("pdfIncludeQueues").checked;
+    const inclSim      = document.getElementById("pdfIncludeSimSettings").checked;
+
+    // Colour palette
+    const C_HEADER_BG  = [40, 52, 88];    // dark navy
+    const C_HEADER_FG  = [255, 255, 255];
+    const C_ROW_ALT    = [240, 244, 255];  // light blue-grey
+    const C_ROW_NORM   = [255, 255, 255];
+    const C_ACCENT     = [98, 123, 192];   // LunaSim blue
+    const C_TEXT       = [30,  40,  70];
+
+    const PAGE_W = 210;  // A4 mm
+    const MARGIN = 15;
+    const CONTENT_W = PAGE_W - MARGIN * 2;
+
+    // Extract model data from GoJS model
+    loadTableToDiagram();
+    const modelJson = JSON.parse(myDiagram.model.toJson());
+    const nodes = modelJson.nodeDataArray || [];
+
+    const stocks    = nodes.filter(n => n.category === "stock");
+    const queues    = nodes.filter(n => n.category === "queue");
+    const conveyors = nodes.filter(n => n.category === "conveyor");
+    const microwaves= nodes.filter(n => n.category === "microwave");
+    const flows     = nodes.filter(n => n.category === "valve" && !String(n.label).startsWith("$"));
+    const variables = nodes.filter(n => n.category === "variable" && !String(n.label).startsWith("$"));
+
+    const simParams = {
+        startTime:  document.getElementById("startTime").value,
+        endTime:    document.getElementById("endTime").value,
+        dt:         document.getElementById("dt").value,
+        method:     document.getElementById("integrationMethod").value === "euler" ? "Euler" : "RK4",
+        trig:       document.getElementById("trigMode").value === "radian" ? "Radians" : "Degrees"
+    };
+
+    // ── Helper: captures the GoJS diagram as a data URL, then calls back ────
+    function withDiagramImage(cb) {
+        myDiagram.makeImageData({
+            background: "white",
+            scale: 2,
+            padding: 20,
+            returnType: "blob",
+            callback: function(blob) {
+                const reader = new FileReader();
+                reader.onload = function(e) { cb(e.target.result); };
+                reader.readAsDataURL(blob);
+            }
+        });
+    }
+
+    function buildPDF(diagramDataUrl) {
+        const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+        doc.setFont(fontChoice);
+
+        let y = MARGIN;
+
+        // ── Title bar ────────────────────────────────────────────────────────
+        doc.setFillColor(...C_HEADER_BG);
+        doc.roundedRect(MARGIN, y, CONTENT_W, 14, 3, 3, "F");
+        doc.setTextColor(...C_HEADER_FG);
+        doc.setFontSize(16);
+        doc.setFont(fontChoice, "bold");
+        doc.text(modelName, MARGIN + CONTENT_W / 2, y + 9.5, { align: "center" });
+        y += 18;
+
+        // ── Description ──────────────────────────────────────────────────────
+        if (description) {
+            doc.setFont(fontChoice, "italic");
+            doc.setFontSize(10);
+            doc.setTextColor(...C_TEXT);
+            const lines = doc.splitTextToSize(description, CONTENT_W);
+            doc.text(lines, MARGIN, y);
+            y += lines.length * 5 + 4;
+        }
+
+        // ── Section heading helper ────────────────────────────────────────────
+        function sectionHeading(title) {
+            if (y > 260) { doc.addPage(); y = MARGIN; }
+            doc.setFillColor(...C_ACCENT);
+            doc.rect(MARGIN, y, CONTENT_W, 0.5, "F");
+            y += 3;
+            doc.setFont(fontChoice, "bold");
+            doc.setFontSize(12);
+            doc.setTextColor(...C_HEADER_BG);
+            doc.text(title, MARGIN, y + 4);
+            y += 9;
+        }
+
+        // ── autoTable wrapper ────────────────────────────────────────────────
+        function addTable(head, body) {
+            if (body.length === 0) body = [Array(head[0].length).fill("—")];
+            doc.autoTable({
+                startY: y,
+                margin: { left: MARGIN, right: MARGIN },
+                head: head,
+                body: body,
+                styles: {
+                    font: fontChoice,
+                    fontSize: 9,
+                    textColor: C_TEXT,
+                    cellPadding: 2.5,
+                    overflow: "linebreak",
+                    lineColor: [200, 210, 230],
+                    lineWidth: 0.2
+                },
+                headStyles: {
+                    fillColor: C_HEADER_BG,
+                    textColor: C_HEADER_FG,
+                    fontStyle: "bold",
+                    fontSize: 9
+                },
+                alternateRowStyles: { fillColor: C_ROW_ALT },
+                rowStyles:          { fillColor: C_ROW_NORM },
+                tableWidth: CONTENT_W,
+                didDrawPage: (data) => { y = data.cursor.y + 6; }
+            });
+            y = doc.lastAutoTable.finalY + 6;
+        }
+
+        // ── Diagram image ────────────────────────────────────────────────────
+        if (inclDiagram && diagramDataUrl) {
+            sectionHeading("Model Diagram");
+            // Fit image to page width, preserve aspect ratio
+            const imgProps = doc.getImageProperties(diagramDataUrl);
+            const imgW  = CONTENT_W;
+            const imgH  = (imgProps.height / imgProps.width) * imgW;
+            const maxH  = 120;
+            const finalH = Math.min(imgH, maxH);
+            const finalW = finalH === maxH ? (imgProps.width / imgProps.height) * maxH : imgW;
+            const xOff  = MARGIN + (CONTENT_W - finalW) / 2;
+            if (y + finalH > 280) { doc.addPage(); y = MARGIN; }
+            doc.addImage(diagramDataUrl, "PNG", xOff, y, finalW, finalH);
+            y += finalH + 8;
+        }
+
+        // ── Queues table ──────────────────────────────────────────────────────
+        if (inclQueues && queues.length > 0) {
+            sectionHeading("Queues");
+            addTable(
+                [["Name", "Initial Value", "Capacity", "Units", "Non-Negative"]],
+                queues.map(n => [
+                    n.label    || "",
+                    n.equation || "0",
+                    n.capacity !== undefined ? String(n.capacity) : "100",
+                    n.units    || "",
+                    n.checkbox ? "Yes" : "No"
+                ])
+            );
+        }
+
+        // ── Stocks table ─────────────────────────────────────────────────────
+        if (inclStocks) {
+            if (stocks.length > 0) {
+                sectionHeading("Stocks");
+                addTable(
+                    [["Name", "Initial Value", "Units", "Non-Negative"]],
+                    stocks.map(n => [
+                        n.label || "",
+                        n.equation || "0",
+                        n.units    || "",
+                        n.checkbox ? "Yes" : "No"
+                    ])
+                );
+            }
+
+            if (conveyors.length > 0) {
+                sectionHeading("Conveyors");
+                addTable(
+                    [["Name", "Initial Value", "Transit Time", "Units", "Non-Negative"]],
+                    conveyors.map(n => [
+                        n.label       || "",
+                        n.equation    || "0",
+                        n.transitTime !== undefined ? String(n.transitTime) : "1",
+                        n.units       || "",
+                        n.checkbox    ? "Yes" : "No"
+                    ])
+                );
+            }
+
+            if (microwaves.length > 0) {
+                sectionHeading("Microwaves");
+                addTable(
+                    [["Name", "Initial Value", "Cook Time", "Units", "Non-Negative"]],
+                    microwaves.map(n => [
+                        n.label    || "",
+                        n.equation || "0",
+                        n.cookTime !== undefined ? String(n.cookTime) : "1",
+                        n.units    || "",
+                        n.checkbox ? "Yes" : "No"
+                    ])
+                );
+            }
+
+            if (stocks.length === 0 && conveyors.length === 0 && microwaves.length === 0) {
+                sectionHeading("Stocks, Conveyors & Microwaves");
+                doc.setFont(fontChoice, "italic");
+                doc.setFontSize(9);
+                doc.setTextColor(160, 160, 160);
+                doc.text("No elements in this category.", MARGIN, y);
+                y += 8;
+            }
+        }
+
+        // ── Flows table ───────────────────────────────────────────────────────
+        if (inclFlows) {
+            sectionHeading("Flows");
+            addTable(
+                [["Name", "Equation", "Units", "Uniflow"]],
+                flows.length > 0 ? flows.map(n => [
+                    n.label    || "",
+                    n.equation || "0",
+                    n.units    || "",
+                    n.checkbox ? "Yes" : "No"
+                ]) : [["—", "—", "—", "—"]]
+            );
+        }
+
+        // ── Variables table ───────────────────────────────────────────────────
+        if (inclVars) {
+            sectionHeading("Variables");
+            addTable(
+                [["Name", "Equation", "Units"]],
+                variables.length > 0 ? variables.map(n => [
+                    n.label    || "",
+                    n.equation || "0",
+                    n.units    || ""
+                ]) : [["—", "—", "—"]]
+            );
+        }
+
+        // ── Simulation settings table ─────────────────────────────────────────
+        if (inclSim) {
+            sectionHeading("Simulation Settings");
+            addTable(
+                [["Parameter", "Value"]],
+                [
+                    ["Start Time",          simParams.startTime],
+                    ["End Time",            simParams.endTime],
+                    ["Time Step (dt)",      simParams.dt],
+                    ["Integration Method",  simParams.method],
+                    ["Trigonometry Mode",   simParams.trig]
+                ]
+            );
+        }
+
+        // ── Footer on every page ──────────────────────────────────────────────
+        const pageCount = doc.getNumberOfPages();
+        for (let i = 1; i <= pageCount; i++) {
+            doc.setPage(i);
+            doc.setFont(fontChoice, "normal");
+            doc.setFontSize(8);
+            doc.setTextColor(160, 170, 200);
+            doc.text(
+                `Generated by LunaSim  •  Page ${i} of ${pageCount}`,
+                PAGE_W / 2, 295, { align: "center" }
+            );
+        }
+
+        doc.save(`${modelName}.pdf`);
+
+        lastExportDate = new Date();
+        hasExportedYet = true;
+        unsavedEdits   = false;
+        updateSaveStatus();
+        closeSettings("exportPopup");
+    }
+
+    // Capture diagram then build — or build immediately if diagram not included
+    if (inclDiagram) {
+        withDiagramImage(buildPDF);
+    } else {
+        buildPDF(null);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("downloadPdfButton").addEventListener("click", generatePDF);
+});
+
+
+/**
  * Event listener for the "Download Image" button.
  * Reads user-selected export format and margin, and triggers the appropriate
  * diagram image export function.
@@ -2473,18 +3470,15 @@ $(document).ready(() => {
  */
 function getDefaultColor(type) {
     switch (type) {
-        case "stock":
-            return "#f0f0f0";
-        case "variable":
-            return "#f0f0f0";
-        case "valve":
-            return "#3489eb";
-        case "flow":
-            return "#3489eb";
-        case "influence":
-            return "#e3680e";
-        default:
-            return "#f0f0f0";
+        case "stock":     return _modelColors.stock     || '#cfcfcf';
+        case "conveyor":  return _modelColors.conveyor  || '#cfcfcf';
+        case "variable":  return _modelColors.variable  || '#cfcfcf';
+        case "valve":     return _modelColors.flow      || '#3489eb';
+        case "flow":      return _modelColors.flow      || '#3489eb';
+        case "microwave": return _modelColors.microwave  || '#cfcfcf';
+        case "queue":     return _modelColors.queue      || '#cfcfcf';
+        case "influence": return _modelColors.influence || '#e3680e';
+        default:          return '#f0f0f0';
     }
 }
 
@@ -2525,3 +3519,815 @@ if (savedName) {
 modelNameInput.addEventListener('input', () => {
     localStorage.setItem('model_name', modelNameInput.value);
 });
+
+// ── Resizable panels ────────────────────────────────────────────────────────
+// Makes the gap between two adjacent flex panels draggable so the user can
+// resize them.  The resizer div itself keeps its fixed 1vw width; only the
+// neighbouring panels grow or shrink.
+(function () {
+    /**
+     * Wires up a col-resize drag handle between two adjacent flex children.
+     * @param {string} resizerId - id of the .panel-resizer div
+     * @param {string} leftSel   - CSS selector for the left panel
+     * @param {string} rightSel  - CSS selector for the right panel
+     * @param {object} [opts]    - optional limits: { leftMin, leftMax, rightMin, rightMax }
+     */
+    function makeResizer(resizerId, leftSel, rightSel, opts) {
+        const resizer = document.getElementById(resizerId);
+        if (!resizer) return;
+
+        opts = opts || {};
+
+        let startX, startLeftW, startRightW, defaultRightW;
+
+        resizer.addEventListener('mousedown', function (e) {
+            e.preventDefault();
+
+            const leftEl  = document.querySelector(leftSel);
+            const rightEl = document.querySelector(rightSel);
+            if (!leftEl || !rightEl) return;
+
+            startX      = e.clientX;
+            startLeftW  = leftEl.getBoundingClientRect().width;
+            startRightW = rightEl.getBoundingClientRect().width;
+
+            // Capture the natural right-panel width the first time, as a fallback min.
+            if (!defaultRightW) {
+                defaultRightW = startRightW;
+            }
+
+            const vw = window.innerWidth;
+            const leftMin  = opts.leftMin  !== undefined ? opts.leftMin  : 160;
+            const leftMax  = opts.leftMax  !== undefined ? opts.leftMax  : Infinity;
+            const rightMin = opts.rightMin !== undefined ? opts.rightMin : defaultRightW;
+            const rightMax = opts.rightMax !== undefined ? opts.rightMax : vw * 0.60;
+
+            resizer.classList.add('dragging');
+            document.body.style.cursor     = 'col-resize';
+            document.body.style.userSelect = 'none';
+
+            function onMove(e) {
+                const dx = e.clientX - startX;
+
+                let newLeft  = startLeftW  + dx;
+                let newRight = startRightW - dx;
+
+                // Clamp left panel
+                if (newLeft < leftMin) {
+                    newLeft  = leftMin;
+                    newRight = startLeftW + startRightW - leftMin;
+                }
+                if (newLeft > leftMax) {
+                    newLeft  = leftMax;
+                    newRight = startLeftW + startRightW - leftMax;
+                }
+                // Clamp right panel
+                if (newRight < rightMin) {
+                    newRight = rightMin;
+                    newLeft  = startLeftW + startRightW - rightMin;
+                }
+                if (newRight > rightMax) {
+                    newRight = rightMax;
+                    newLeft  = startLeftW + startRightW - rightMax;
+                }
+
+                leftEl.style.flex  = 'none';
+                leftEl.style.width = newLeft + 'px';
+
+                rightEl.style.flex  = 'none';
+                rightEl.style.width = newRight + 'px';
+
+                if (window.myDiagram) window.myDiagram.requestUpdate();
+            }
+
+            function onUp() {
+                resizer.classList.remove('dragging');
+                document.body.style.cursor     = '';
+                document.body.style.userSelect = '';
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseup',   onUp);
+                if (window.myDiagram) window.myDiagram.requestUpdate();
+            }
+
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('mouseup',   onUp);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Toolbar ↔ Canvas: toolbar expands from 72px (collapsed) to 128px (2-col).
+        // Canvas shrinks to compensate but never below 160px.
+        makeResizer('toolbarResizer',    '.toolbar',      '.modelCanvas', {
+            leftMin:  72,
+            leftMax:  128,
+            rightMin: 160
+        });
+        // Chart Sidebar ↔ Chart Canvas: same treatment as toolbar resizer.
+        makeResizer('chartSidebarResizer', '.chartSidebar', '.chartCanvas', {
+            leftMin:  72,
+            leftMax:  128,
+            rightMin: 160
+        });
+        makeResizer('modelPanelResizer', '.modelCanvas', '#eqEditor');
+        makeResizer('chartPanelResizer', '.chartCanvas', '.chartEditor');
+    });
+}());
+// ── Model color customization & theme tab switching ──────────────────────────
+
+var MC_DEFAULTS = {
+    stock:      '#cfcfcf',
+    conveyor:   '#cfcfcf',
+    variable:   '#cfcfcf',
+    cloud:      '#d4e4f7',
+    flow:       '#3489eb',
+    influence:  '#e3680e',
+    microwave:  '#cfcfcf',
+    queue:      '#cfcfcf',
+    labelcolor: '#000000',
+    canvasbg:   '#ffffff'
+};
+
+function mcLoad() {
+    try {
+        var s = localStorage.getItem('lunaModelColors');
+        return s ? Object.assign({}, MC_DEFAULTS, JSON.parse(s)) : Object.assign({}, MC_DEFAULTS);
+    } catch(e) { return Object.assign({}, MC_DEFAULTS); }
+}
+
+function mcSave(c) {
+    localStorage.setItem('lunaModelColors', JSON.stringify(c));
+}
+
+function mcSyncUI(c) {
+    Object.keys(MC_DEFAULTS).forEach(function(k) {
+        var picker = document.getElementById('mc-' + k);
+        if (picker) picker.value = c[k] || MC_DEFAULTS[k];
+    });
+}
+
+function mcApplyAll(c) {
+    if (!window.myDiagram) return;
+    // Update the live global so buildTemplates() reads the new colours
+    Object.assign(_modelColors, c);
+    myDiagram.model.commit(function() {
+        myDiagram.model.nodeDataArray.forEach(function(node) {
+            if (node.label && node.label.startsWith('$')) return;
+            var cat = node.category;
+            if (cat === 'stock')     myDiagram.model.setDataProperty(node, 'color', c.stock);
+            if (cat === 'conveyor')  myDiagram.model.setDataProperty(node, 'color', c.conveyor);
+            if (cat === 'variable')  myDiagram.model.setDataProperty(node, 'color', c.variable);
+            if (cat === 'cloud')     myDiagram.model.setDataProperty(node, 'color', c.cloud);
+            if (cat === 'valve')     myDiagram.model.setDataProperty(node, 'color', c.flow);
+            if (cat === 'microwave') myDiagram.model.setDataProperty(node, 'color', c.microwave);
+            if (cat === 'queue')     myDiagram.model.setDataProperty(node, 'color', c.queue);
+            // Apply default label color to any node without a per-node override
+            if (['stock','conveyor','variable','valve','microwave','queue'].indexOf(cat) >= 0) {
+                if (!node.labelColor) myDiagram.model.setDataProperty(node, 'labelColor', c.labelcolor || '#000000');
+            }
+        });
+        // Clear per-link flow color overrides so all flows use the new palette color
+        myDiagram.model.linkDataArray.forEach(function(link) {
+            if (link.category === 'flow') {
+                myDiagram.model.setDataProperty(link, 'flowColor', null);
+                myDiagram.model.setDataProperty(link, 'flowHeadColor', null);
+            }
+        });
+    }, 'apply model colors');
+    // Rebuild templates so new nodes + links also pick up updated colours
+    buildTemplates();
+    myDiagram.requestUpdate();
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Sync the global _modelColors from localStorage on page load
+    Object.assign(_modelColors, mcLoad());
+    var modelColors = _modelColors;
+
+    // --- tab switching (scoped per popup container) ---
+    function initTabBar(container) {
+        if (!container) return;
+        container.querySelectorAll('.theme-tab-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                container.querySelectorAll('.theme-tab-btn').forEach(function(b) { b.classList.remove('active'); });
+                container.querySelectorAll('.theme-tab-content').forEach(function(c) { c.style.display = 'none'; });
+                btn.classList.add('active');
+                var target = document.getElementById(btn.getAttribute('data-tab'));
+                if (target) target.style.display = 'flex';
+            });
+        });
+    }
+    initTabBar(document.getElementById('themePopup'));
+    initTabBar(document.getElementById('settingsPopup'));
+
+    // --- sync pickers to stored colours ---
+    mcSyncUI(modelColors);
+
+    // --- live preview on change (picker is its own swatch) ---
+    Object.keys(MC_DEFAULTS).forEach(function(k) {
+        var picker = document.getElementById('mc-' + k);
+        if (!picker) return;
+        picker.addEventListener('input', function() {
+            modelColors[k] = picker.value;
+        });
+    });
+
+    // --- Apply to All button ---
+    var applyBtn = document.getElementById('mc-apply-all');
+    if (applyBtn) {
+        applyBtn.addEventListener('click', function() {
+            mcSave(modelColors);
+            mcApplyAll(modelColors);
+        });
+    }
+
+    // --- Reset button ---
+    var resetBtn = document.getElementById('mc-reset');
+    if (resetBtn) {
+        resetBtn.addEventListener('click', function() {
+            modelColors = Object.assign({}, MC_DEFAULTS);
+            mcSave(modelColors);
+            mcSyncUI(modelColors);
+            mcApplyAll(modelColors);
+        });
+    }
+
+    // Re-sync whenever theme popup is opened so saved colours always show
+    var paletteBtn = document.querySelector('a[onclick*="themePopup"]');
+    if (paletteBtn) {
+        paletteBtn.addEventListener('click', function() {
+            modelColors = mcLoad();
+            mcSyncUI(modelColors);
+        });
+    }
+});
+
+// ── Element Control Panel ─────────────────────────────────────────────────────
+(function () {
+
+    function ecpEl(id) { return document.getElementById(id); }
+
+    function setVisible(el, vis) {
+        if (!el) return;
+        if (vis) el.classList.add('visible');
+        else     el.classList.remove('visible');
+    }
+
+    function resolveCategory(part) {
+        if (!part) return null;
+        if (part instanceof go.Link) return part.data.category || 'flow';
+        var cat = part.data.category;
+        if (cat === 'valve') return 'flow';
+        if (cat === 'overflow-valve') return 'overflow';
+        return cat;
+    }
+
+    function valveNodeForLink(link) {
+        if (!link.labelNodes) return null;
+        return link.labelNodes.first();
+    }
+
+    function linkForValve(valveNode) {
+        var key = valveNode.data.key;
+        var ld = myDiagram.model.linkDataArray.find(function(l) {
+            return (l.category === 'flow' || l.category === 'overflow') &&
+                   l.labelKeys && l.labelKeys.indexOf(key) >= 0;
+        });
+        return ld ? myDiagram.findLinkForData(ld) : null;
+    }
+
+    function ecpSetPanelVisible(vis) {
+        var panel = ecpEl('elemControlPanel');
+        if (!panel) return;
+        if (vis) panel.classList.add('ecp-visible');
+        else     panel.classList.remove('ecp-visible');
+    }
+
+    function ecpEnabled() {
+        var cb = ecpEl('settingShowECP');
+        return !cb || cb.checked;
+    }
+
+    // Walk a GoJS node's visual tree to find label TextBlocks and update a property.
+    // This forces an immediate visual repaint on top of the data binding update.
+    function walkNodeLabels(node, fn) {
+        if (!node || !node.elements) return;
+        node.elements.each(function(el) {
+            if (el instanceof go.TextBlock && el._isNodeLabel) fn(el);
+            if (el instanceof go.Panel) {
+                el.elements.each(function(child) {
+                    if (child instanceof go.TextBlock && child._isNodeLabel) fn(child);
+                    // textbox puts its TextBlock one level deeper in an Auto panel
+                    if (child instanceof go.Panel) {
+                        child.elements.each(function(gc) {
+                            if (gc instanceof go.TextBlock) fn(gc);
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    // ── Sync UI from selected part ─────────────────────────────────────────────
+    window._ecpSync = function() {
+        if (!ecpEnabled()) { ecpSetPanelVisible(false); return; }
+
+        var sel = myDiagram.selection.first();
+
+        var ALL_ROWS = ['ecpName','ecpColorRow','ecpFlowColorRow','ecpTransitRow',
+                        'ecpCookTimeRow','ecpCapacityRow','ecpLabelColorRow','ecpLabelSizeRow'];
+        ALL_ROWS.forEach(function(id) { setVisible(ecpEl(id), false); });
+
+        if (!sel) { ecpSetPanelVisible(false); return; }
+
+        var cat = resolveCategory(sel);
+        var ignoreCats = ['polarityLabel', 'influence', 'overflow', 'overflow-valve'];
+        if (ignoreCats.indexOf(cat) >= 0) { ecpSetPanelVisible(false); return; }
+
+        ecpSetPanelVisible(true);
+
+        // Resolve data refs
+        var nodeData = null, linkData = null;
+        if (sel instanceof go.Link) {
+            linkData = sel.data;
+            var vn = valveNodeForLink(sel);
+            if (vn) nodeData = vn.data;
+        } else {
+            nodeData = sel.data;
+            if (cat === 'flow') {
+                var fl = linkForValve(sel);
+                if (fl) linkData = fl.data;
+            }
+        }
+
+        // Name
+        var nameEl = ecpEl('ecpName');
+        if (nameEl) {
+            nameEl.textContent = nodeData ? (nodeData.label || '—') : '—';
+            setVisible(nameEl, true);
+        }
+
+        // Body fill (stock, conveyor, variable, cloud, microwave)
+        var fillCats = ['stock','conveyor','variable','cloud','microwave','queue'];
+        if (fillCats.indexOf(cat) >= 0 && nodeData) {
+            setVisible(ecpEl('ecpColorRow'), true);
+            var cp = ecpEl('ecpColorPicker');
+            if (cp) cp.value = nodeData.color || _modelColors[cat] || '#cfcfcf';
+        }
+
+        // Flow body color
+        if (cat === 'flow') {
+            if (!linkData && sel.data && sel.data.category === 'valve') {
+                var fl2 = linkForValve(sel);
+                if (fl2) linkData = fl2.data;
+            }
+            if (linkData) {
+                setVisible(ecpEl('ecpFlowColorRow'), true);
+                var bp = ecpEl('ecpFlowBodyColor');
+                if (bp) bp.value = linkData.flowColor || _modelColors.flow || '#3489eb';
+            }
+        }
+
+        // Transit time (conveyor)
+        if (cat === 'conveyor' && nodeData) {
+            setVisible(ecpEl('ecpTransitRow'), true);
+            var tt = ecpEl('ecpTransitTime');
+            if (tt) tt.value = nodeData.transitTime !== undefined ? nodeData.transitTime : '1';
+        }
+
+        // Cook time (microwave)
+        if (cat === 'microwave' && nodeData) {
+            setVisible(ecpEl('ecpCookTimeRow'), true);
+            var ct = ecpEl('ecpCookTime');
+            if (ct) ct.value = nodeData.cookTime !== undefined ? nodeData.cookTime : '1';
+        }
+
+        // Capacity (queue)
+        if (cat === 'queue' && nodeData) {
+            setVisible(ecpEl('ecpCapacityRow'), true);
+            var cap = ecpEl('ecpCapacity');
+            if (cap) cap.value = nodeData.capacity !== undefined ? nodeData.capacity : '100';
+        }
+
+        // Label color + size
+        var labelCats = ['stock','conveyor','variable','flow','textbox','microwave','queue'];
+        if (labelCats.indexOf(cat) >= 0 && nodeData) {
+            setVisible(ecpEl('ecpLabelColorRow'), true);
+            setVisible(ecpEl('ecpLabelSizeRow'), true);
+            var lc = ecpEl('ecpLabelColor');
+            var ls = ecpEl('ecpLabelSize');
+            var mc = typeof mcLoad === 'function' ? mcLoad() : {};
+            var defaultLabelColor = (mc.labelcolor) || (_modelColors && _modelColors.labelcolor) || '#000000';
+            if (lc) lc.value = nodeData.labelColor || defaultLabelColor;
+            if (ls) ls.value = nodeData.labelSize  || labelFontSize;
+        }
+    };
+
+    // ── Wire after DOM ready ───────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', function () {
+
+        var attempts = 0;
+        var iv = setInterval(function () {
+            attempts++;
+            if (window.myDiagram && myDiagram.addDiagramListener) {
+                clearInterval(iv);
+                myDiagram.addDiagramListener('ChangedSelection', function() { window._ecpSync(); });
+                myDiagram.addModelChangedListener(function(e) {
+                    if (!e.isTransactionFinished) return;
+                    if (myDiagram.selection.count > 0) window._ecpSync();
+                });
+            }
+            if (attempts > 100) clearInterval(iv);
+        }, 50);
+
+        var settingCb = ecpEl('settingShowECP');
+        if (settingCb) {
+            settingCb.addEventListener('change', function() {
+                if (!settingCb.checked) ecpSetPanelVisible(false);
+                else window._ecpSync();
+            });
+        }
+
+        // ── Body fill color ────────────────────────────────────────────────────
+        var cp = ecpEl('ecpColorPicker');
+        if (cp) {
+            cp.addEventListener('change', function () {
+                var sel = myDiagram.selection.first();
+                if (!sel || sel instanceof go.Link) return;
+                myDiagram.model.commit(function () {
+                    myDiagram.model.setDataProperty(sel.data, 'color', cp.value);
+                }, 'set node color');
+            });
+        }
+        var resetBtn = ecpEl('ecpResetColor');
+        if (resetBtn) {
+            resetBtn.addEventListener('click', function () {
+                var sel = myDiagram.selection.first();
+                if (!sel || sel instanceof go.Link) return;
+                var cat = resolveCategory(sel);
+                var def = _modelColors[cat] || '#cfcfcf';
+                myDiagram.model.commit(function () {
+                    myDiagram.model.setDataProperty(sel.data, 'color', def);
+                }, 'reset node color');
+                if (cp) cp.value = def;
+            });
+        }
+
+        // ── Flow body color ────────────────────────────────────────────────────
+        var bp = ecpEl('ecpFlowBodyColor');
+        function getActiveLinkData() {
+            var sel = myDiagram.selection.first();
+            if (!sel) return null;
+            if (sel instanceof go.Link) return sel.data;
+            if (sel.data && sel.data.category === 'valve') {
+                var fl = linkForValve(sel);
+                return fl ? fl.data : null;
+            }
+            return null;
+        }
+        if (bp) {
+            bp.addEventListener('change', function () {
+                var ld = getActiveLinkData();
+                if (!ld) return;
+                myDiagram.model.commit(function () {
+                    myDiagram.model.setDataProperty(ld, 'flowColor', bp.value);
+                }, 'set flow body color');
+            });
+        }
+        var flowResetBtn = ecpEl('ecpFlowResetColor');
+        if (flowResetBtn) {
+            flowResetBtn.addEventListener('click', function () {
+                var ld = getActiveLinkData();
+                if (!ld) return;
+                var def = _modelColors.flow || '#3489eb';
+                myDiagram.model.commit(function () {
+                    myDiagram.model.setDataProperty(ld, 'flowColor', null);
+                }, 'reset flow color');
+                if (bp) bp.value = def;
+            });
+        }
+
+        // ── Capacity (queue) ──────────────────────────────────────────────────
+        var capInp = ecpEl('ecpCapacity');
+        if (capInp) {
+            function applyCapacity() {
+                var sel = myDiagram.selection.first();
+                if (!sel || sel instanceof go.Link) return;
+                if (resolveCategory(sel) !== 'queue') return;
+                var val = parseFloat(capInp.value);
+                if (isNaN(val) || val <= 0) return;
+                myDiagram.model.commit(function () {
+                    myDiagram.model.setDataProperty(sel.data, 'capacity', val);
+                }, 'set capacity');
+            }
+            capInp.addEventListener('change', applyCapacity);
+            capInp.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') { e.preventDefault(); applyCapacity(); capInp.blur(); }
+            });
+        }
+
+        // ── Transit time (conveyor) ────────────────────────────────────────────
+        var ttInp = ecpEl('ecpTransitTime');
+        if (ttInp) {
+            function applyTT() {
+                var sel = myDiagram.selection.first();
+                if (!sel || sel instanceof go.Link) return;
+                var val = parseFloat(ttInp.value);
+                if (isNaN(val) || val <= 0) return;
+                myDiagram.model.commit(function () {
+                    myDiagram.model.setDataProperty(sel.data, 'transitTime', val);
+                }, 'set transit time');
+            }
+            ttInp.addEventListener('change', applyTT);
+            ttInp.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') { e.preventDefault(); applyTT(); ttInp.blur(); }
+            });
+        }
+
+        // ── Cook time (microwave) ──────────────────────────────────────────────
+        var ctInp = ecpEl('ecpCookTime');
+        if (ctInp) {
+            function applyCookTime() {
+                var sel = myDiagram.selection.first();
+                if (!sel || sel instanceof go.Link) return;
+                if (resolveCategory(sel) !== 'microwave') return;
+                var val = parseFloat(ctInp.value);
+                if (isNaN(val) || val <= 0) return;
+                myDiagram.model.commit(function () {
+                    myDiagram.model.setDataProperty(sel.data, 'cookTime', val);
+                }, 'set cook time');
+            }
+            ctInp.addEventListener('change', applyCookTime);
+            ctInp.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') { e.preventDefault(); applyCookTime(); ctInp.blur(); }
+            });
+        }
+
+        // ── Label color ────────────────────────────────────────────────────────
+        // FIX: write to model data AND force a live repaint via walkNodeLabels.
+        // GoJS makeTwoWay() should handle the repaint, but since textStyle() sets
+        // an initial stroke at build time, the binding can be stale until the next
+        // full template rebuild. walkNodeLabels forces the TextBlock.stroke update
+        // immediately so the user sees the change without needing a refresh.
+        var lcPicker = ecpEl('ecpLabelColor');
+        if (lcPicker) {
+            lcPicker.addEventListener('change', function () {
+                var sel = myDiagram.selection.first();
+                if (!sel) return;
+                // Resolve node data — for a flow link resolve to the valve node
+                var nd = (sel instanceof go.Link) ? (function(){
+                    var vn = valveNodeForLink(sel); return vn ? vn.data : null;
+                }()) : sel.data;
+                if (!nd) return;
+                var color = lcPicker.value;
+                // Commit to model data (binding will persist this across saves)
+                myDiagram.model.commit(function () {
+                    myDiagram.model.setDataProperty(nd, 'labelColor', color);
+                }, 'set label color');
+                // Force immediate visual repaint
+                var visualNode = (sel instanceof go.Link) ? valveNodeForLink(sel) : sel;
+                if (visualNode) {
+                    myDiagram.commit(function() {
+                        walkNodeLabels(visualNode, function(tb) { tb.stroke = color; });
+                    }, null);
+                }
+            });
+        }
+
+        // ── Label size ─────────────────────────────────────────────────────────
+        var lsPicker = ecpEl('ecpLabelSize');
+        if (lsPicker) {
+            function applyLabelSize() {
+                var sel = myDiagram.selection.first();
+                if (!sel) return;
+                var nd = (sel instanceof go.Link) ? (function(){
+                    var vn = valveNodeForLink(sel); return vn ? vn.data : null;
+                }()) : sel.data;
+                if (!nd) return;
+                var pt = parseFloat(lsPicker.value);
+                if (isNaN(pt) || pt <= 0) return;
+                var font = 'bold ' + pt + 'pt helvetica, bold arial, sans-serif';
+                myDiagram.model.commit(function () {
+                    myDiagram.model.setDataProperty(nd, 'labelSize', pt);
+                }, 'set label size');
+                var visualNode = (sel instanceof go.Link) ? valveNodeForLink(sel) : sel;
+                if (visualNode) {
+                    myDiagram.commit(function() {
+                        walkNodeLabels(visualNode, function(tb) { tb.font = font; });
+                    }, null);
+                }
+            }
+            lsPicker.addEventListener('change', applyLabelSize);
+            lsPicker.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') { e.preventDefault(); applyLabelSize(); lsPicker.blur(); }
+            });
+        }
+
+    }); // end DOMContentLoaded
+
+}()); // end ECP IIFE
+
+
+
+// ── Settings popup — Visual tab, Key Binds tab, Canvas/Textbox colors ────────
+(function () {
+
+    // ── Default key binds ─────────────────────────────────────────────────────
+    var KB_DEFAULTS = {
+        pointer:      'p',
+        stock:        's',
+        cloud:        'c',
+        variable:     'v',
+        flow:         'f',
+        influence:    'i',
+        text:         't',
+        conveyor:     'n',
+        microwave:    'w',
+        queue:        'q',
+        'polarity-pos': 'p',
+        'polarity-neg': 'm',
+        emphasis:     'b'
+    };
+
+    function kbLoad() {
+        try {
+            var s = localStorage.getItem('lunaKeyBinds');
+            return s ? Object.assign({}, KB_DEFAULTS, JSON.parse(s)) : Object.assign({}, KB_DEFAULTS);
+        } catch(e) { return Object.assign({}, KB_DEFAULTS); }
+    }
+    function kbSave(kb) {
+        localStorage.setItem('lunaKeyBinds', JSON.stringify(kb));
+    }
+
+    // Expose globally so keydown handlers in HTML and editor can read it
+    window._keyBinds = kbLoad();
+
+    // ── Canvas background persistence ─────────────────────────────────────────
+    function applyCanvasBg(color) {
+        var el = document.getElementById('myDiagram');
+        if (el) el.style.backgroundColor = color;
+        if (window.myDiagram) {
+            myDiagram.div.style.backgroundColor = color;
+            // Also set the canvas background so GoJS renders on it correctly
+            myDiagram.documentBounds; // force layout
+        }
+    }
+
+    function loadCanvasBg() {
+        var mc = mcLoad();
+        if (mc.canvasbg) applyCanvasBg(mc.canvasbg);
+    }
+
+    // ── Textbox defaults: apply to all textbox nodes that have no override ────
+    function applyTextboxDefaults(mc) {
+        if (!window.myDiagram) return;
+        myDiagram.model.commit(function() {
+            myDiagram.model.nodeDataArray.forEach(function(node) {
+                if (node.category !== 'textbox') return;
+                if (!node.tbBg)     myDiagram.model.setDataProperty(node, 'tbBg',     mc.textboxbg);
+                if (!node.tbBorder) myDiagram.model.setDataProperty(node, 'tbBorder', mc.textboxborder);
+                if (!node.tbLabelColor) myDiagram.model.setDataProperty(node, 'tbLabelColor', mc.textboxtext);
+            });
+        }, 'apply textbox defaults');
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // ── Init keybinds UI ──────────────────────────────────────────────────
+        var kb = window._keyBinds;
+
+        document.querySelectorAll('.keybind-input').forEach(function(inp) {
+            var action = inp.getAttribute('data-action');
+            if (action && kb[action]) inp.value = kb[action].toUpperCase();
+
+            inp.addEventListener('focus', function() {
+                inp.value = '';
+                inp.classList.remove('conflict');
+            });
+
+            inp.addEventListener('keydown', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                // Ignore modifier-only keys
+                if (['Control','Alt','Shift','Meta','Tab','Escape'].indexOf(e.key) >= 0) {
+                    inp.value = (kb[action] || '').toUpperCase();
+                    inp.blur();
+                    return;
+                }
+
+                var newKey = e.key.toLowerCase();
+
+                // Check for conflicts among tool binds
+                var toolActions = ['pointer','stock','cloud','variable','flow','influence','text','conveyor','microwave','queue'];
+                var actionIsTool = toolActions.indexOf(action) >= 0;
+                var conflict = false;
+                if (actionIsTool) {
+                    toolActions.forEach(function(a) {
+                        if (a !== action && (kb[a] || '') === newKey) conflict = true;
+                    });
+                }
+
+                if (conflict) {
+                    inp.classList.add('conflict');
+                    setTimeout(function() {
+                        inp.value = (kb[action] || '').toUpperCase();
+                        inp.classList.remove('conflict');
+                        inp.blur();
+                    }, 700);
+                    return;
+                }
+
+                kb[action] = newKey;
+                window._keyBinds = kb;
+                kbSave(kb);
+                inp.value = newKey.toUpperCase();
+                inp.blur();
+            });
+        });
+
+        // ── Visual tab: center button toggle ──────────────────────────────────
+        var centerCb = document.getElementById('settingShowCenterBtn');
+        var centerBtn = document.getElementById('centerModelBtn');
+        if (centerCb && centerBtn) {
+            // Restore saved preference
+            var saved = localStorage.getItem('lunaCenterBtnVisible');
+            if (saved === 'false') {
+                centerCb.checked = false;
+                centerBtn.style.display = 'none';
+            }
+            centerCb.addEventListener('change', function() {
+                localStorage.setItem('lunaCenterBtnVisible', centerCb.checked);
+                centerBtn.style.display = centerCb.checked ? '' : 'none';
+            });
+        }
+
+        // ── Canvas background picker (in Model Colors tab) ────────────────────
+        var canvasPicker = document.getElementById('mc-canvasbg');
+        if (canvasPicker) {
+            // Init value from stored colors
+            var mc0 = mcLoad();
+            canvasPicker.value = mc0.canvasbg || '#ffffff';
+            applyCanvasBg(canvasPicker.value);
+
+            canvasPicker.addEventListener('input', function() {
+                applyCanvasBg(canvasPicker.value);
+            });
+            canvasPicker.addEventListener('change', function() {
+                var mc = mcLoad();
+                mc.canvasbg = canvasPicker.value;
+                mcSave(mc);
+                applyCanvasBg(canvasPicker.value);
+            });
+        }
+
+        // ── Textbox default color pickers ─────────────────────────────────────
+        ['textboxbg','textboxborder','textboxtext'].forEach(function(key) {
+            var picker = document.getElementById('mc-' + key);
+            if (!picker) return;
+            var mc0 = mcLoad();
+            picker.value = mc0[key] || MC_DEFAULTS[key];
+            picker.addEventListener('change', function() {
+                var mc = mcLoad();
+                mc[key] = picker.value;
+                mcSave(mc);
+            });
+        });
+
+        // When "Apply to All" is clicked, also repaint textboxes and canvas bg
+        var origApply = document.getElementById('mc-apply-all');
+        if (origApply) {
+            origApply.addEventListener('click', function() {
+                var mc = mcLoad();
+                applyCanvasBg(mc.canvasbg || '#ffffff');
+                applyTextboxDefaults(mc);
+            });
+        }
+
+        // Apply canvas bg on load (after diagram initialises)
+        var attempts = 0;
+        var iv = setInterval(function() {
+            attempts++;
+            if (window.myDiagram) {
+                clearInterval(iv);
+                loadCanvasBg();
+            }
+            if (attempts > 100) clearInterval(iv);
+        }, 50);
+
+        // Re-sync canvasbg picker when theme popup opens
+        var paletteBtn = document.querySelector('a[onclick*="themePopup"]');
+        if (paletteBtn) {
+            paletteBtn.addEventListener('click', function() {
+                var mc = mcLoad();
+                var cp = document.getElementById('mc-canvasbg');
+                if (cp) cp.value = mc.canvasbg || '#ffffff';
+                ['textboxbg','textboxborder','textboxtext'].forEach(function(key) {
+                    var p = document.getElementById('mc-' + key);
+                    if (p) p.value = mc[key] || MC_DEFAULTS[key];
+                });
+            });
+        }
+
+    }); // end DOMContentLoaded
+
+}()); // end settings/keybinds IIFE
