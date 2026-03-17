@@ -1106,14 +1106,14 @@ function buildTemplates() {
                 { desiredSize: new go.Size(50, 30), pickable: false },
                 $(go.Shape, "LineH", {
                     position: new go.Point(3, 10),
-                    desiredSize: new go.Size(44, 0),
+                    desiredSize: new go.Size(43, 0),
                     stroke: "rgba(0,0,0,0.45)",
                     strokeWidth: 1.2,
                     pickable: false
                 }),
                 $(go.Shape, "LineH", {
                     position: new go.Point(3, 20),
-                    desiredSize: new go.Size(44, 0),
+                    desiredSize: new go.Size(43, 0),
                     stroke: "rgba(0,0,0,0.45)",
                     strokeWidth: 1.2,
                     pickable: false
