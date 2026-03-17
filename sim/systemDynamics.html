@@ -81,7 +81,13 @@
           <button class="actionButton" id="loadButton">
             <span class="material-symbols-outlined" style="font-size: 20px;">file_upload</span> Load
           </button>
-          
+
+          <!-- XML button -->
+          <input type="file" id="xmile-load-button" accept=".xmile,.stmx,.xml" hidden/>
+          <button class="actionButton" id="xmileLoadButton">
+            <span class="material-symbols-outlined" style="font-size: 20px;">swap_horiz</span> XMILE
+          </button>
+
           <!-- Save button -->
           <button class="actionButton" id="expButton" onclick="openSettings(event, 'exportPopup')">
             <span class="material-symbols-outlined" style="font-size: 20px;">save</span> Save
@@ -437,6 +443,7 @@
           <label for="fileSelect">File Type</label>
           <select id="fileSelect" class="settings-dropdown" style="width: 72%;">
             <option selected>.luna</option>
+            <option>.xmile</option>
             <option>.png</option>
             <option>.jpg</option>
             <option>.tiff</option>

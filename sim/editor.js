@@ -3,7 +3,7 @@
  * @fileoverview System Dynamics Editor using GoJS. This file uses the GoJS library to create a system dynamics editor.  Additionally, there is an equation editing table,
  *   which allows the user to edit the equations and characteristics of the objects in the model.
  * @module editor
- * @author Authors: Karthik S. Vedula, Sienna Simms, Ryan Chung, Arjun Mujudar, Akash Saran
+ * @author Authors: Karthik S. Vedula, Sienna Simms, Ryan Chung, Arjun Mujumdar, Akash Saran
  */
 
 /**
@@ -14,6 +14,7 @@
  */
 var PERFORMANCE_MODE = false;
 export {PERFORMANCE_MODE};
+import { lunaToXmile, xmileToLuna } from "./xmile.js";
 
 /**
  * Font size (in points) used for all node and link labels in the diagram.
@@ -50,7 +51,6 @@ import {translate} from "./translator.js";
  * @memberof module:editor
  */
 import {CurvedLinkReshapingTool} from "./CurvedLinkReshapingTool.js";
-
 
 /**
  * Global state object for the System Dynamics editor.
@@ -1679,7 +1679,38 @@ function loadModel(evt) {
     reader.readAsText(file);
 }
 
+function loadXmileModel(evt) {
+    const file = evt.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const { lunaModel, simParams } = xmileToLuna(e.target.result);
 
+            // Apply sim params to UI
+            document.getElementById("startTime").value = simParams.startTime;
+            document.getElementById("endTime").value = simParams.endTime;
+            document.getElementById("dt").value = simParams.dt;
+            document.getElementById("integrationMethod").value = simParams.integrationMethod;
+
+            // Load model
+            myDiagram.model = go.Model.fromJson(JSON.stringify(lunaModel));
+            updateTable(true);
+            loadTableToDiagram();
+
+            if (file.name) {
+                document.getElementById("model_name").value = file.name.replace(/\.[^/.]+$/, "");
+            }
+            lastEditDate = new Date();
+            unsavedEdits = false;
+            updateSaveStatus();
+
+        } catch(err) {
+            showAlertPopup({ title: "XMILE Import Error", message: err.message });
+        }
+    };
+    reader.readAsText(file);
+}
 
 
 /**
@@ -1908,7 +1939,13 @@ document.getElementById("runButton").addEventListener("click", function () {
     run();
 });
 document.getElementById("exportButton").addEventListener("click", function () {
-    exportData();
+    const fileType = document.getElementById("fileSelect").value;
+    if (fileType === ".xmile") {
+        exportXmile();
+    } else {
+        exportData();
+    }
+    closeSettings("exportPopup");
 });
 
 document.getElementById("text_button").addEventListener("click", function () {
@@ -2403,6 +2440,27 @@ function saveDiagramAsTiff(diagram, filename = "diagram.tiff", margin = 15) {
     });
 }
 
+function exportXmile() {
+    loadTableToDiagram();
+    const lunaJson = JSON.parse(myDiagram.model.toJson());
+    const simParams = {
+        startTime: parseFloat(document.getElementById("startTime").value),
+        endTime: parseFloat(document.getElementById("endTime").value),
+        dt: parseFloat(document.getElementById("dt").value),
+        integrationMethod: document.getElementById("integrationMethod").value
+    };
+    const xmlString = lunaToXmile(lunaJson, simParams);
+    const filename = document.getElementById("model_name").value || "model";
+    download(`${filename}.xmile`, xmlString);
+}
+
+// XMILE import — triggered by file input change
+document.getElementById("xmile-load-button").addEventListener("change", loadXmileModel);
+
+// XMILE load button — triggers the hidden file input
+document.getElementById("xmileLoadButton").addEventListener("click", function () {
+    document.getElementById("xmile-load-button").click();
+});
 
 /**
  * Event listener for the "Download Image" button.
