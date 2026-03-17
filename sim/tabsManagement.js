@@ -36,6 +36,8 @@ class Graphic {
 
 // Where the tab data is stored
 var tabs = [new Graphic("chart", "time", [])]; // default tab info
+// In-memory store for MC percentile results (too large for sessionStorage)
+window._mcResultsStore = window._mcResultsStore || {};
 if(sessionStorage.tabsData)
   tabs = JSON.parse(sessionStorage.tabsData);
 
@@ -140,6 +142,136 @@ function addOptions(){
     row.appendChild(d2);
     y.appendChild(row);
   }
+}
+
+function showMCVariableSelector(mcData, currentVar, allVars) {
+  const existing = document.getElementById("mcVariableSelector");
+  if (existing) existing.remove();
+
+  if (!allVars || allVars.length <= 1) return;
+
+  const container = document.createElement("div");
+  container.id = "mcVariableSelector";
+  container.style.cssText = "position: absolute; top: 10px; left: 10px; z-index: 900; background: rgba(38, 50, 83, 0.95); border-radius: 8px; padding: 0.5rem; display: flex; gap: 0.4rem; flex-wrap: wrap;";
+
+  const label = document.createElement("span");
+  label.textContent = "Variable:";
+  label.style.cssText = "color: white; font-size: 0.85rem; align-self: center; margin-right: 0.3rem;";
+  container.appendChild(label);
+
+  allVars.forEach(key => {
+    if (!mcData.percentiles[key]) return;
+    const btn = document.createElement("button");
+    btn.textContent = key;
+    btn.style.cssText = "background: #1d253d; border: 1px solid #627bc0; color: white; border-radius: 6px; padding: 0.3rem 0.6rem; font-size: 0.8rem; cursor: pointer;";
+    if (key === currentVar) btn.style.background = "#627bc0";
+
+    btn.addEventListener("click", () => {
+      container.querySelectorAll("button").forEach(b => b.style.background = "#1d253d");
+      btn.style.background = "#627bc0";
+      renderMonteCarloChart(mcData, key);
+    });
+    container.appendChild(btn);
+  });
+
+  const chartCanvas = document.querySelector(".chartCanvas");
+  if (chartCanvas) {
+    chartCanvas.style.position = "relative";
+    chartCanvas.appendChild(container);
+  }
+}
+
+export function renderMonteCarloChart(mcResults, variableName) {
+  const { percentiles, timesteps } = mcResults;
+  const bands = percentiles[variableName];
+
+  if (!bands || !timesteps || !timesteps.length) {
+    console.warn("No MC data for:", variableName);
+    return;
+  }
+
+  const chartEl = document.getElementById('chart');
+
+  // Destroy before clearing DOM — prevents ApexCharts from tearing
+  // down SVG nodes that now belong to the new instance
+  if (window._mcChartInstance) {
+    try { window._mcChartInstance.destroy(); } catch(e) {}
+    window._mcChartInstance = null;
+  }
+
+  chartEl.innerHTML = "";
+
+  const options = {
+    series: [
+      {
+        name: "90% band (p5–p95)",
+        type: "rangeArea",
+        data: timesteps.map((t, i) => ({
+          x: t,
+          y: [
+            parseFloat((bands.p5[i] ?? 0).toFixed(6)),
+            parseFloat((bands.p95[i] ?? 0).toFixed(6))
+          ]
+        }))
+      },
+      {
+        name: "50% band (p25–p75)",
+        type: "rangeArea",
+        data: timesteps.map((t, i) => ({
+          x: t,
+          y: [
+            parseFloat((bands.p25[i] ?? 0).toFixed(6)),
+            parseFloat((bands.p75[i] ?? 0).toFixed(6))
+          ]
+        }))
+      },
+      {
+        name: `Median — ${variableName}`,
+        type: "line",
+        data: timesteps.map((t, i) => ({
+          x: t,
+          y: parseFloat((bands.p50[i] ?? 0).toFixed(6))
+        }))
+      }
+    ],
+    chart: {
+      type: "rangeArea",
+      height: "100%",
+      width: "100%",
+      animations: { enabled: false },
+      toolbar: { show: true },
+      zoom: { enabled: true }
+    },
+    colors: ["#3489eb", "#3489eb", "#1a4f8a"],
+    fill: { opacity: [0.12, 0.25, 1] },
+    stroke: { curve: "smooth", width: [0, 0, 2] },
+    dataLabels: { enabled: false },
+    legend: { showForSingleSeries: true },
+    xaxis: {
+      type: "numeric",
+      tickAmount: 10,
+      title: { text: "Time" },
+      labels: { formatter: val => parseFloat(val).toFixed(1) }
+    },
+    yaxis: {
+      title: { text: variableName },
+      labels: { formatter: val => parseFloat(val).toFixed(2) }
+    },
+    tooltip: {
+      shared: true,
+      x: { formatter: val => `t = ${parseFloat(val).toFixed(4)}` },
+      y: { formatter: val => parseFloat(val).toFixed(4) }
+    },
+    title: {
+      text: `Monte Carlo: ${variableName} (${mcResults.runs?.length ?? "?"} runs)`,
+      align: "center",
+      style: { color: "#333", fontSize: "14px" }
+    }
+  };
+
+  const newChart = new ApexCharts(chartEl, options);
+  newChart.render();
+  window._mcChartInstance = newChart;
 }
 
 /**
@@ -295,45 +427,44 @@ function listenChangesinArray(arr,callback){
  */
 
 function configTabs() {
-  sessionStorage.tabsData = JSON.stringify(tabs); // updates session storage
+  sessionStorage.tabsData = JSON.stringify(tabs);
   if (TESTING_MODE) console.log(tabs);
 
-  // Clear current tab list
   while (list.firstChild) {
     list.removeChild(list.lastChild);
   }
 
-  // Rebuild tab list
   for (let j = 0; j < tabs.length; j++) {
     const tab = document.createElement("li");
     tab.className = "graphTabs";
-    if (j === 0) {
-      tab.classList.add("graphTabsActive"); // default selection
-    }
+    if (j === 0) tab.classList.add("graphTabsActive");
 
-    tab.dataset.index = j; // safer indexing
+    tab.dataset.index = j;
 
     const tabLink = document.createElement("a");
     tabLink.href = "#";
 
     const icon = document.createElement("i");
-    icon.className = "material-symbols-outlined"; // Google Material Symbols
+    icon.className = "material-symbols-outlined";
 
-    // Set the appropriate icon text for each type
-    icon.textContent = (tabs[j].type === "table") ? "table" : "bar_chart_4_bars";
+    if (tabs[j].type === "table") {
+      icon.textContent = "table";
+    } else if (tabs[j].type === "montecarlo") {
+      icon.textContent = "scatter_plot";
+    } else {
+      icon.textContent = "bar_chart_4_bars";
+    }
 
     const label = document.createElement("span");
     const chartName = tabs[j].name || ((j === 0) ? "Default" : "Chart " + j);
     label.textContent = chartName;
     tab.setAttribute("data-tooltip", chartName);
 
-
     tabLink.appendChild(icon);
     tabLink.appendChild(label);
     tab.appendChild(tabLink);
     list.appendChild(tab);
 
-    // Tab click handler
     tab.addEventListener("click", function render() {
       if (!data) {
         showPopup("Run the simulation first.");
@@ -348,31 +479,76 @@ function configTabs() {
         return;
       }
 
-      // Remove active class from all
       tabsList.querySelectorAll("li").forEach(t => t.classList.remove("graphTabsActive"));
-
-      // Add active to clicked one
       tab.classList.add("graphTabsActive");
-
-
-      updateChartStats(i);
-      // Visual active state
       list.querySelectorAll("li").forEach(t => t.classList.remove("graphTabsActive"));
       this.classList.add("graphTabsActive");
 
+      updateChartStats(i);
+
+      // Add this block BEFORE the existing "if (tabInfo.type === 'chart')" check
+      if (tabInfo.type === "montecarlo") {
+        const chartEl = document.getElementById('chart');
+        const tableEl = document.getElementById('datatable');
+        chartEl.hidden = false;
+        tableEl.hidden = true;
+
+        const mcData = window._mcResultsStore?.[tabInfo.mcId];
+        if (!mcData) {
+          showPopup("Monte Carlo data was lost (page may have refreshed). Please re-run.");
+          return;
+        }
+
+        // Clean up any previous MC chart instance
+        if (window._mcChartInstance) {
+          try { window._mcChartInstance.destroy(); } catch(e) {}
+          window._mcChartInstance = null;
+        }
+
+        // Remove old variable selector if present
+        const existingSel = document.getElementById("mcVariableSelector");
+        if (existingSel) existingSel.remove();
+
+        chartEl.innerHTML = "";
+
+        // Render default variable
+        renderMonteCarloChart(mcData, tabInfo.defaultVariable);
+
+        // Show variable selector if multiple variables exist
+        const allVars = Object.keys(mcData.percentiles);
+        if (allVars.length > 1) {
+          showMCVariableSelector(mcData, tabInfo.defaultVariable, allVars);
+        }
+
+        return;
+      }
+      // ── Normal chart tab ─────────────────────────────────────────
       if (tabInfo.type === "chart") {
         if (PERFORMANCE_MODE) console.time('Chart Render Time');
 
         const chartEl = document.getElementById('chart');
         const tableEl = document.getElementById('datatable');
-
-        if (!chartEl || !tableEl) {
-          showPopup("Chart or table container not found in DOM.");
-          return;
-        }
-
         chartEl.hidden = false;
         tableEl.hidden = true;
+
+        if (window._mcChartInstance) {
+          try { window._mcChartInstance.destroy(); } catch(e) {}
+          window._mcChartInstance = null;
+        }
+        const existingSel = document.getElementById("mcVariableSelector");
+        if (existingSel) existingSel.remove();
+
+        // Destroy MC chart if present
+        if (window._mcChartInstance) {
+          try { window._mcChartInstance.destroy(); } catch(e) {}
+          window._mcChartInstance = null;
+        }
+
+        const xValues = getAllValues(tabInfo.xAxis, data);
+        if (!xValues) {
+          showPopup("There is missing data in this tab. Please delete or update it.");
+          return;
+        }
 
         const options = {
           series: [],
@@ -380,22 +556,19 @@ function configTabs() {
             type: 'scatter',
             zoom: { enabled: true, type: 'xy' },
             height: "100%",
-            width: "100%"
+            width: "100%",
+            animations: { enabled: false }
           },
           dataLabels: { enabled: false },
           legend: { showForSingleSeries: true },
           xaxis: {
             tickAmount: 10,
-            labels: {
-              formatter: val => parseFloat(val).toFixed(1)
-            },
+            labels: { formatter: val => parseFloat(val).toFixed(1) },
             title: { text: tabInfo.xAxis }
           },
           yaxis: {
             forceNiceScale: false,
-            labels: {
-              formatter: val => parseFloat(val).toFixed(1)
-            }
+            labels: { formatter: val => parseFloat(val).toFixed(1) }
           },
           tooltip: {
             x: { formatter: val => parseFloat(val).toFixed(10) },
@@ -406,24 +579,16 @@ function configTabs() {
         let maxyValue = Number.MIN_VALUE;
         let minyValue = Number.MAX_VALUE;
 
-        const xValues = getAllValues(tabInfo.xAxis, data);
-        if (!xValues) {
-          showPopup("There is missing data in this tab. Please delete or update it.");
-          return;
-        }
-
         for (let yName of tabInfo.yAxis) {
           const yValues = getAllValues(yName, data);
           if (!yValues) {
             showPopup("There is missing data in this tab. Please delete or update it.");
             return;
           }
-
           yValues.forEach(val => {
             if (val > maxyValue) maxyValue = val;
             if (val < minyValue) minyValue = val;
           });
-
           options.series.push({
             name: yName,
             data: yValues.map((y, idx) => [xValues[idx], y])
@@ -433,18 +598,30 @@ function configTabs() {
         options.yaxis.min = minyValue;
         options.yaxis.max = maxyValue;
 
-        chart.updateOptions(options, true);
+        chartEl.innerHTML = "";
+        chart = new ApexCharts(chartEl, options);
+        chart.render();
 
         if (PERFORMANCE_MODE) console.timeEnd('Chart Render Time');
+        return;
+      }
 
-      } else {
-        // Table rendering
+      // ── Table tab ────────────────────────────────────────────────
+      if (tabInfo.type === "table") {
         if (PERFORMANCE_MODE) console.time('Table Render Time');
 
         const chartEl = document.getElementById('chart');
         const tableEl = document.getElementById('datatable');
         chartEl.hidden = true;
         tableEl.hidden = false;
+
+        const existingSel = document.getElementById("mcVariableSelector");
+        if (existingSel) existingSel.remove();
+
+        if (window._mcChartInstance) {
+          try { window._mcChartInstance.destroy(); } catch(e) {}
+          window._mcChartInstance = null;
+        }
 
         const xValues = getAllValues(tabInfo.xAxis, data);
         if (!xValues) {
@@ -453,10 +630,7 @@ function configTabs() {
         }
 
         const tableData = [];
-        const tableColumns = [{
-          title: "time",
-          field: "time"
-        }];
+        const tableColumns = [{ title: "time", field: "time" }];
 
         xValues.forEach((val, i) => {
           const row = { id: i };
@@ -470,11 +644,7 @@ function configTabs() {
             showPopup("There is missing data in this tab. Please delete or update it.");
             return;
           }
-
-          yValues.forEach((val, i) => {
-            tableData[i][yName] = val;
-          });
-
+          yValues.forEach((val, i) => { tableData[i][yName] = val; });
           tableColumns.push({ title: yName, field: yName });
         }
 
@@ -483,7 +653,6 @@ function configTabs() {
           layout: "fitColumns",
           columns: tableColumns,
         });
-
 
         if (PERFORMANCE_MODE) console.timeEnd('Table Render Time');
       }
@@ -584,21 +753,26 @@ document.getElementById("downloadGraph").addEventListener("click", function () {
 
   const chartEl = document.getElementById("chart");
   const tableEl = document.getElementById("datatable");
-
   const chartVisible = chartEl && !chartEl.hidden;
   const tableVisible = tableEl && !tableEl.hidden;
 
+  const activeTab = document.querySelector(".graphTabsActive");
+  const i = activeTab ? Number(activeTab.dataset.index) : 0;
+  const tabName = (tabs[i]?.name || "chart").replace(/[^a-z0-9]/gi, "_");
+
   if (chartVisible) {
-    chart.dataURI().then(({ imgURI }) => {
+    const activeChart = window._mcChartInstance || chart;
+    activeChart.dataURI().then(({ imgURI }) => {
       const link = document.createElement("a");
       link.href = imgURI;
-      link.download = "chart.png";
+      link.download = `${tabName}.png`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-    });
+    }).catch(err => showPopup("Download failed: " + err.message));
+
   } else if (tableVisible && window.tableInstance) {
-    window.tableInstance.download("csv", "table.csv");
+    window.tableInstance.download("csv", `${tabName}.csv`);
   } else {
     showPopup("No visible chart or table to download.");
   }
@@ -649,35 +823,48 @@ function updateChartStats(index) {
   if (!statsEl || !tabs[index]) return;
 
   const tab = tabs[index];
-  const name = (index === 0) ? "Default" : `Chart ${index}`;
-  const type = tab.type === "table" ? "Table" : "Chart";
-  const xAxis = tab.xAxis || "—";
-  const yAxis = Array.isArray(tab.yAxis) ? tab.yAxis.join(", ") : "—";
-
-  // Get simulation settings from input fields
   const startTime = parseFloat(document.getElementById("startTime")?.value) || 0;
   const endTime = parseFloat(document.getElementById("endTime")?.value) || 0;
   const dt = parseFloat(document.getElementById("dt")?.value) || 0;
   const stepCount = (endTime - startTime) / dt || 0;
-
   const integrationMethod = document.getElementById("integrationMethod")?.value || "—";
-  const methodDisplay = (integrationMethod === "rk4") ? "Runge-Kutta 4" :
-                        (integrationMethod === "euler") ? "Euler" : integrationMethod;
+  const methodDisplay = integrationMethod === "rk4" ? "Runge-Kutta 4" :
+      integrationMethod === "euler" ? "Euler" : integrationMethod;
   const trigMode = document.getElementById("trigMode")?.value || "—";
-  const trigDisplay = (trigMode === "radian") ? "Radians" :
-                        (trigMode === "degree") ? "Degrees" : trigMode;
+  const trigDisplay = trigMode === "radian" ? "Radians" : trigMode === "degree" ? "Degrees" : trigMode;
+
+  if (tab.type === "montecarlo") {
+    const mcData = window._mcResultsStore[tab.mcId];
+    const varList = mcData ? Object.keys(mcData.percentiles).join(", ") : "—";
+    statsEl.innerHTML = `
+            <p><strong>Name:</strong> ${tab.name}</p>
+            <p><strong>Type:</strong> Monte Carlo Simulation</p>
+            <p><strong>Runs:</strong> ${tab.runs}</p>
+            <p><strong>Variables:</strong> ${varList}</p>
+            <hr>
+            <p><strong>Start Time:</strong> ${startTime}</p>
+            <p><strong>End Time:</strong> ${endTime}</p>
+            <p><strong>dt:</strong> ${dt}</p>
+            <p><strong>Step Count:</strong> ${Math.round(stepCount)}</p>
+            <p><strong>Integration Method:</strong> ${methodDisplay}</p>
+            <p><strong>Trigonometry Mode:</strong> ${trigDisplay}</p>
+        `;
+    return;
+  }
 
   statsEl.innerHTML = `
-    <p><strong>Name:</strong> ${tab.name || name}</p>
-    <p><strong>Type:</strong> ${tab.type.charAt(0).toUpperCase() + tab.type.slice(1)}</p>
-    <p><strong>X-Axis:</strong> ${tab.xAxis}</p>
-    <p><strong>Y-Axis:</strong> ${tab.yAxis.join(", ")}</p>
-    <hr>
-    <p><strong>Start Time:</strong> ${startTime}</p>
-    <p><strong>End Time:</strong> ${endTime}</p>
-    <p><strong>dt (Interval):</strong> ${dt}</p>
-    <p><strong>Step Count:</strong> ${Math.round(stepCount)}</p>
-    <p><strong>Integration Method:</strong> ${methodDisplay}</p>
-    <p><strong>Trigonometry Mode:</strong> ${trigDisplay}</p>
-  `;
+        <p><strong>Name:</strong> ${tab.name}</p>
+        <p><strong>Type:</strong> ${tab.type.charAt(0).toUpperCase() + tab.type.slice(1)}</p>
+        <p><strong>X-Axis:</strong> ${tab.xAxis}</p>
+        <p><strong>Y-Axis:</strong> ${tab.yAxis?.join(", ")}</p>
+        <hr>
+        <p><strong>Start Time:</strong> ${startTime}</p>
+        <p><strong>End Time:</strong> ${endTime}</p>
+        <p><strong>dt:</strong> ${dt}</p>
+        <p><strong>Step Count:</strong> ${Math.round(stepCount)}</p>
+        <p><strong>Integration Method:</strong> ${methodDisplay}</p>
+        <p><strong>Trigonometry Mode:</strong> ${trigDisplay}</p>
+    `;
 }
+
+export { tabs, list };

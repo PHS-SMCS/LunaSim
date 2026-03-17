@@ -51,6 +51,11 @@ import {translate} from "./translator.js";
  */
 import {CurvedLinkReshapingTool} from "./CurvedLinkReshapingTool.js";
 
+import { renderMonteCarloChart, tabs, list } from "./tabsManagement.js";
+import { runMonteCarlo } from "./monteCarlo.js";
+
+// Store MC results globally
+let monteCarloResults = null;
 
 /**
  * Global state object for the System Dynamics editor.
@@ -470,6 +475,195 @@ function refreshGoJsModel() {
     myDiagram.model = newModel;
     myDiagram.commitTransaction("refresh model");
 }
+
+function openMonteCarloPopup() {
+    if (!myDiagram.model.nodeDataArray.length) {
+        showAlertPopup({ title: "No Model", message: "Build a model first." });
+        return;
+    }
+
+    // Populate the variable list
+    const list = document.getElementById("mcVariableList");
+    list.innerHTML = "";
+
+    const nodes = myDiagram.model.nodeDataArray.filter(n =>
+        (n.category === "stock" || n.category === "variable")
+        && !n.label.startsWith("$")
+    );
+
+    nodes.forEach(node => {
+        const row = document.createElement("div");
+        row.style.cssText = "margin-bottom:0.75rem; padding:0.5rem; background:#1d253d; border-radius:8px;";
+        row.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+                <span style="color:white; font-weight:600">${node.label}</span>
+                <select class="mc-dist-type settings-dropdown" data-label="${node.label}" 
+                        style="width:50%; font-size:0.85rem;">
+                    <option value="fixed">Fixed</option>
+                    <option value="uniform">Uniform</option>
+                    <option value="normal">Normal</option>
+                    <option value="triangular">Triangular</option>
+                </select>
+            </div>
+            <div class="mc-dist-params" data-label="${node.label}" 
+                 style="display:none; gap:0.4rem; flex-wrap:wrap;">
+            </div>
+        `;
+        list.appendChild(row);
+
+        // Show/hide distribution params based on selection
+        const select = row.querySelector(".mc-dist-type");
+        const params = row.querySelector(".mc-dist-params");
+
+        select.addEventListener("change", () => {
+            updateDistParams(params, select.value, node.equation);
+        });
+    });
+}
+
+function updateDistParams(container, distType, currentEqn) {
+    container.innerHTML = "";
+    container.style.display = distType === "fixed" ? "none" : "flex";
+
+    const defaultVal = parseFloat(currentEqn) || 0;
+
+    const fields = {
+        uniform: [
+            { name: "min", label: "Min", default: defaultVal * 0.8 },
+            { name: "max", label: "Max", default: defaultVal * 1.2 }
+        ],
+        normal: [
+            { name: "mean", label: "Mean", default: defaultVal },
+            { name: "stddev", label: "Std Dev", default: Math.abs(defaultVal * 0.1) || 1 }
+        ],
+        triangular: [
+            { name: "min", label: "Min", default: defaultVal * 0.7 },
+            { name: "mode", label: "Mode", default: defaultVal },
+            { name: "max", label: "Max", default: defaultVal * 1.3 }
+        ]
+    };
+
+    (fields[distType] || []).forEach(field => {
+        const div = document.createElement("div");
+        div.style.cssText = "display:flex; align-items:center; gap:0.3rem;";
+        div.innerHTML = `
+            <label style="color:#ccc; font-size:0.8rem; width:50px">${field.label}</label>
+            <input type="number" class="settings-input mc-param" 
+                   data-param="${field.name}" value="${field.default.toFixed(2)}"
+                   style="width:80px; font-size:0.85rem;">
+        `;
+        container.appendChild(div);
+    });
+}
+
+async function runMC() {
+    loadTableToDiagram();
+
+    const N = parseInt(document.getElementById("mcRuns").value) || 500;
+
+    // Build uncertainty map from UI
+    const uncertaintyMap = {};
+    document.querySelectorAll(".mc-dist-type").forEach(select => {
+        const label = select.dataset.label;
+        const distType = select.value;
+        if (distType === "fixed") return;
+
+        const params = { type: distType };
+        const container = document.querySelector(`.mc-dist-params[data-label="${label}"]`);
+        container.querySelectorAll(".mc-param").forEach(input => {
+            params[input.dataset.param] = parseFloat(input.value);
+        });
+        uncertaintyMap[label] = params;
+    });
+
+    if (Object.keys(uncertaintyMap).length === 0) {
+        showAlertPopup({ title: "No Uncertainty Defined",
+            message: "Set at least one variable to a non-fixed distribution." });
+        return;
+    }
+
+    // Show progress bar
+    const progressContainer = document.getElementById("mcProgressContainer");
+    const progressBar = document.getElementById("mcProgressBar");
+    const progressText = document.getElementById("mcProgressText");
+    progressContainer.style.display = "block";
+
+    // Get engine JSON
+    const lunaJson = JSON.parse(myDiagram.model.toJson());
+    const engineJson = translate(lunaJson);
+    engineJson.start_time = parseFloat(document.getElementById("startTime").value);
+    engineJson.end_time = parseFloat(document.getElementById("endTime").value);
+    engineJson.dt = parseFloat(document.getElementById("dt").value);
+    engineJson.integration_method = document.getElementById("integrationMethod").value;
+
+    try {
+        monteCarloResults = await runMonteCarlo(engineJson, uncertaintyMap, N,
+            (done, total) => {
+                const pct = (done / total) * 100;
+                progressBar.style.width = pct + "%";
+                progressText.textContent = `${done} / ${total}`;
+            }
+        );
+
+        closeSettings("monteCarloPopup");
+
+        // Switch to chart view and render MC results
+        document.getElementById("secondaryOpen").click();
+        renderMonteCarloChart(monteCarloResults);
+
+    } catch(err) {
+        showAlertPopup({ title: "Monte Carlo Error", message: err.message });
+    }
+    try {
+        monteCarloResults = await runMonteCarlo(engineJson, uncertaintyMap, N,
+            (done, total) => {
+                const pct = (done / total) * 100;
+                progressBar.style.width = pct + "%";
+                progressText.textContent = `${done} / ${total}`;
+            }
+        );
+
+        // Store results
+        const mcId = "mc_" + Date.now();
+        window._mcResultsStore = window._mcResultsStore || {};
+        window._mcResultsStore[mcId] = monteCarloResults;
+
+        // Build tab name from distributions used
+        const distSummary = Object.entries(uncertaintyMap)
+            .map(([label, dist]) => `${label}(${dist.type})`)
+            .join(", ");
+
+        const firstStock = Object.keys(monteCarloResults.percentiles)[0] || "unknown";
+        const tabName = `MC: ${firstStock} — ${N} runs`;
+
+        // Push tab exactly like a regular visual
+        tabs.push({
+            type: "montecarlo",
+            name: tabName,
+            mcId: mcId,
+            runs: N,
+            defaultVariable: firstStock,
+            distributions: distSummary,
+            // These keep the existing delete/stats code from breaking
+            xAxis: "time",
+            yAxis: Object.keys(monteCarloResults.percentiles)
+        });
+
+        closeSettings("monteCarloPopup");
+
+        // Auto-navigate to the new tab
+        setTimeout(() => {
+            const lastTab = list.lastChild;
+            if (lastTab) lastTab.click();
+        }, 100);
+
+    } catch(err) {
+        showAlertPopup({ title: "Monte Carlo Error", message: err.message });
+    }
+}
+
+
+
 
 /**
  * Builds and defines all GoJS node and link templates used in the diagram.
@@ -2514,6 +2708,13 @@ function setupLocalStoragePersistence(diagram) {
         localStorage.setItem("model", json);
     });
 }
+
+document.getElementById("runMonteCarloBtn").addEventListener("click", runMC);
+
+document.getElementById("mcButton").addEventListener("click", function(event) {
+    openMonteCarloPopup();
+    openSettings(event, 'monteCarloPopup');
+});
 
 const modelNameInput = document.getElementById('model_name');
 
