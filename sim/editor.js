@@ -96,9 +96,9 @@ let GOJS_ELEMENT_LABELS_SET = new Set();
 // ── Model colour palette (persisted in localStorage) ──────────────────────
 // Defined here so buildTemplates() can reference it at init time.
 var _MC_DEFAULTS = {
-    stock: '#cfcfcf', conveyor: '#90ee90', variable: '#cfcfcf',
+    stock: '#cfcfcf', conveyor: '#cfcfcf', variable: '#cfcfcf',
     cloud: '#d4e4f7', flow: '#3489eb', influence: '#e3680e',
-    microwave: '#ffb3c6', queue: '#ffe066', labelcolor: '#000000'
+    microwave: '#cfcfcf', queue: '#cfcfcf', labelcolor: '#000000'
 };
 var _modelColors = (function() {
     try {
@@ -660,7 +660,7 @@ function buildTemplates() {
             },
             new go.Binding("fill", "", function(data) {
                 if (data.label && data.label.startsWith("$")) return "white";
-                return data.color || _modelColors.conveyor || '#90ee90';
+                return data.color || _modelColors.conveyor || '#cfcfcf';
             }).makeTwoWay(),
             new go.Binding("stroke", "emphasized", function(e) { return e ? "#E8000D" : "black"; }),
             new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 4 : 1; })
@@ -1032,7 +1032,7 @@ function buildTemplates() {
             },
             new go.Binding("fill", "", function(data) {
                 if (data.label && data.label.startsWith("$")) return "white";
-                return data.color || _modelColors.microwave || '#ffb3c6';
+                return data.color || _modelColors.microwave || '#cfcfcf';
             }).makeTwoWay(),
             new go.Binding("stroke", "emphasized", function(e) { return e ? "#E8000D" : "black"; }),
             new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 4 : 1; })
@@ -1096,7 +1096,7 @@ function buildTemplates() {
             },
             new go.Binding("fill", "", function(data) {
                 if (data.label && data.label.startsWith("$")) return "white";
-                return data.color || _modelColors.queue || '#ffe066';
+                return data.color || _modelColors.queue || '#cfcfcf';
             }).makeTwoWay(),
             new go.Binding("stroke", "emphasized", function(e) { return e ? "#E8000D" : "black"; }),
             new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 4 : 1; })
@@ -1106,14 +1106,14 @@ function buildTemplates() {
                 { desiredSize: new go.Size(50, 30), pickable: false },
                 $(go.Shape, "LineH", {
                     position: new go.Point(3, 10),
-                    desiredSize: new go.Size(44, 0),
+                    desiredSize: new go.Size(43, 0),
                     stroke: "rgba(0,0,0,0.45)",
                     strokeWidth: 1.2,
                     pickable: false
                 }),
                 $(go.Shape, "LineH", {
                     position: new go.Point(3, 20),
-                    desiredSize: new go.Size(44, 0),
+                    desiredSize: new go.Size(43, 0),
                     stroke: "rgba(0,0,0,0.45)",
                     strokeWidth: 1.2,
                     pickable: false
@@ -3481,12 +3481,12 @@ $(document).ready(() => {
 function getDefaultColor(type) {
     switch (type) {
         case "stock":     return _modelColors.stock     || '#cfcfcf';
-        case "conveyor":  return _modelColors.conveyor  || '#90ee90';
+        case "conveyor":  return _modelColors.conveyor  || '#cfcfcf';
         case "variable":  return _modelColors.variable  || '#cfcfcf';
         case "valve":     return _modelColors.flow      || '#3489eb';
         case "flow":      return _modelColors.flow      || '#3489eb';
-        case "microwave": return _modelColors.microwave  || '#ffb3c6';
-        case "queue":     return _modelColors.queue      || '#ffe066';
+        case "microwave": return _modelColors.microwave  || '#cfcfcf';
+        case "queue":     return _modelColors.queue      || '#cfcfcf';
         case "influence": return _modelColors.influence || '#e3680e';
         default:          return '#f0f0f0';
     }
@@ -3646,13 +3646,13 @@ modelNameInput.addEventListener('input', () => {
 
 var MC_DEFAULTS = {
     stock:      '#cfcfcf',
-    conveyor:   '#90ee90',
+    conveyor:   '#cfcfcf',
     variable:   '#cfcfcf',
     cloud:      '#d4e4f7',
     flow:       '#3489eb',
     influence:  '#e3680e',
-    microwave:  '#ffb3c6',
-    queue:      '#ffe066',
+    microwave:  '#cfcfcf',
+    queue:      '#cfcfcf',
     labelcolor: '#000000',
     canvasbg:   '#ffffff'
 };
