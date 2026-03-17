@@ -250,6 +250,11 @@ export class Simulation {
     parseObject(equation, history = []) {
         let objects = {}; // stores all stocks (including conveyors/microwaves), converters, and flows
 
+        // ── [TIME] substitution ──────────────────────────────────────────────
+        // Replace [TIME] with the current simulation time before any other
+        // reference resolution so it can appear in any equation context.
+        equation = equation.replace(/\[TIME\]/gi, String(this.currentTime ?? 0));
+
         for (var stock in this.data.stocks) {
             objects[stock] = this.data.stocks[stock]["safeval"];
 
@@ -359,6 +364,9 @@ export class Simulation {
      */
 
     initObjects() {
+        // ── Set current simulation time to startTime so [TIME] resolves correctly ─
+        this.currentTime = this.startTime;
+
         // ── Step 1: evaluate initial values for all stocks (including conveyors) ─
         for (var stockName in this.data.stocks) {
             let stock = this.data.stocks[stockName];
@@ -489,6 +497,7 @@ export class Simulation {
      */
 
     reset() {
+        this.currentTime = 0;
         for (var stockName in this.data.stocks) {
             let stock = this.data.stocks[stockName];
 
@@ -880,6 +889,7 @@ export class Simulation {
     euler() {
         for (var t = this.startTime + this.dt; parseFloat(t.toFixed(5)) <= parseFloat(this.endTime.toFixed(5)); t += this.dt) {
             this.data.timesteps.push(parseFloat(t.toFixed(5)));
+            this.currentTime = parseFloat(t.toFixed(5));
 
             // ── Step 1: delay nodes in dependency order ───────────────────────────
             // Step upstream delay nodes before downstream ones so that a chained
@@ -941,6 +951,7 @@ export class Simulation {
     rk4() {
         for (var t = this.startTime + this.dt; parseFloat(t.toFixed(5)) <= parseFloat(this.endTime.toFixed(5)); t += this.dt) {
             this.data.timesteps.push(parseFloat(t.toFixed(5)));
+            this.currentTime = parseFloat(t.toFixed(5));
 
             let y0_dict = {};
             let k1_dict = {};

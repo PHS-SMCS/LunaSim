@@ -96,9 +96,9 @@ let GOJS_ELEMENT_LABELS_SET = new Set();
 // ── Model colour palette (persisted in localStorage) ──────────────────────
 // Defined here so buildTemplates() can reference it at init time.
 var _MC_DEFAULTS = {
-    stock: '#cfcfcf', conveyor: '#cfcfcf', variable: '#cfcfcf',
-    cloud: '#cfcfcf', flow: '#3489eb', influence: '#e3680e',
-    microwave: '#cfcfcf', queue: '#cfcfcf', labelcolor: '#000000'
+    stock: '#cfcfcf', conveyor: '#90ee90', variable: '#cfcfcf',
+    cloud: '#d4e4f7', flow: '#3489eb', influence: '#e3680e',
+    microwave: '#ffb3c6', queue: '#ffe066', labelcolor: '#000000'
 };
 var _modelColors = (function() {
     try {
@@ -660,7 +660,7 @@ function buildTemplates() {
             },
             new go.Binding("fill", "", function(data) {
                 if (data.label && data.label.startsWith("$")) return "white";
-                return data.color || _modelColors.conveyor || '#cfcfcf';
+                return data.color || _modelColors.conveyor || '#90ee90';
             }).makeTwoWay(),
             new go.Binding("stroke", "emphasized", function(e) { return e ? "#E8000D" : "black"; }),
             new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 4 : 1; })
@@ -1106,14 +1106,14 @@ function buildTemplates() {
                 { desiredSize: new go.Size(50, 30), pickable: false },
                 $(go.Shape, "LineH", {
                     position: new go.Point(3, 10),
-                    desiredSize: new go.Size(43, 0),
+                    desiredSize: new go.Size(44, 0),
                     stroke: "rgba(0,0,0,0.45)",
                     strokeWidth: 1.2,
                     pickable: false
                 }),
                 $(go.Shape, "LineH", {
                     position: new go.Point(3, 20),
-                    desiredSize: new go.Size(43, 0),
+                    desiredSize: new go.Size(44, 0),
                     stroke: "rgba(0,0,0,0.45)",
                     strokeWidth: 1.2,
                     pickable: false
@@ -1522,6 +1522,9 @@ function labelValidator(textblock, oldstr, newstr) {
     if (newstr === oldstr) return true;
     if (!newstr || !isNaN(newstr)) return false;
 
+    // Reserve [TIME] — cannot name any element exactly "TIME" (case-insensitive for all-caps)
+    if (newstr === "TIME") return false;
+
     if (isGhost(newstr)) {
         const targetLabel = newstr.substring(1);
         const realNodeCount = myDiagram.model.nodeDataArray
@@ -1722,6 +1725,8 @@ function run() {
     for (var i = 0; i < engineJson.variables.length; i++) {
         var variable = engineJson.variables[i];
         var references = containsReference(variable.equation);
+        // [TIME] is a built-in — exclude it from influence validation
+        references = references.filter(r => r !== 'TIME');
         var newReferences = [];
 
         for (var t = 0; t < references.length; t++) {
@@ -1784,6 +1789,8 @@ function run() {
     for (var i = 0; i < engineJson.valves.length; i++) {
         var valve = engineJson.valves[i];
         var references = containsReference(valve.equation);
+        // [TIME] is a built-in — exclude it from influence validation
+        references = references.filter(r => r !== 'TIME');
         console.log(references);
         console.log(engineJson.labelsandkeys);
         var newReferences = [];
@@ -2638,13 +2645,16 @@ function isCursorInsideBrackets(text, cursorPos) {
 function getTopBracketMatches(fragment) {
     const lower = fragment.toLowerCase();
 
+    // [TIME] is always a valid reference — prepend it to the candidate list
+    const candidates = ["TIME", ...GOJS_ELEMENT_LABELS];
+
     if (fragment === "") {
-        return GOJS_ELEMENT_LABELS.slice(0, 5);
+        return candidates.slice(0, 5);
     }
 
-    return GOJS_ELEMENT_LABELS
+    return candidates
         .filter(label => label.toLowerCase().startsWith(lower))
-        .slice(0, 5); // best 5 matches
+        .slice(0, 5);
 }
 function finalizeRename() {
     const $input = $(this);
@@ -3471,12 +3481,12 @@ $(document).ready(() => {
 function getDefaultColor(type) {
     switch (type) {
         case "stock":     return _modelColors.stock     || '#cfcfcf';
-        case "conveyor":  return _modelColors.conveyor  || '#cfcfcf';
+        case "conveyor":  return _modelColors.conveyor  || '#90ee90';
         case "variable":  return _modelColors.variable  || '#cfcfcf';
         case "valve":     return _modelColors.flow      || '#3489eb';
         case "flow":      return _modelColors.flow      || '#3489eb';
-        case "microwave": return _modelColors.microwave  || '#cfcfcf';
-        case "queue":     return _modelColors.queue      || '#cfcfcf';
+        case "microwave": return _modelColors.microwave  || '#ffb3c6';
+        case "queue":     return _modelColors.queue      || '#ffe066';
         case "influence": return _modelColors.influence || '#e3680e';
         default:          return '#f0f0f0';
     }
@@ -3636,13 +3646,13 @@ modelNameInput.addEventListener('input', () => {
 
 var MC_DEFAULTS = {
     stock:      '#cfcfcf',
-    conveyor:   '#cfcfcf',
+    conveyor:   '#90ee90',
     variable:   '#cfcfcf',
     cloud:      '#d4e4f7',
     flow:       '#3489eb',
     influence:  '#e3680e',
-    microwave:  '#cfcfcf',
-    queue:      '#cfcfcf',
+    microwave:  '#ffb3c6',
+    queue:      '#ffe066',
     labelcolor: '#000000',
     canvasbg:   '#ffffff'
 };
