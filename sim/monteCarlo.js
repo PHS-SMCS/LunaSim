@@ -55,7 +55,8 @@ export function applySample(engineJson, uncertaintyMap) {
 }
 
 /**
- * Runs N Monte Carlo iterations using a pool of Web Workers.
+ * Runs N Monte Carlo iterations using a pool of Web Workers with batching.
+ * Each worker receives BATCH_SIZE runs at once to minimize message-passing overhead.
  * Returns time series data for computing percentile bands.
  *
  * @param {Object} engineJson - Base engine JSON from translator
@@ -69,36 +70,57 @@ export function runMonteCarlo(engineJson, uncertaintyMap, N = 500, onProgress = 
         const results = [];
         let completed = 0;
 
-        // Number of workers = min(navigator.hardwareConcurrency, 8)
+        const BATCH_SIZE = 10; // runs per worker message
         const numWorkers = Math.min(navigator.hardwareConcurrency || 4, 8);
         const workers = [];
         let nextRun = 0;
 
+        // ── BENCHMARK: start timer ──
+        const _benchStart = performance.now();
+
         function dispatchTo(worker) {
             if (nextRun >= N) return;
-            const runIndex = nextRun++;
-            const sampledJson = applySample(engineJson, uncertaintyMap);
-            worker.postMessage({ engineJson: sampledJson, runIndex });
+
+            // Build a batch of up to BATCH_SIZE runs
+            const batch = [];
+            while (batch.length < BATCH_SIZE && nextRun < N) {
+                batch.push({
+                    runIndex: nextRun++,
+                    sampledJson: applySample(engineJson, uncertaintyMap)
+                });
+            }
+            worker.postMessage({ batch });
         }
 
         for (let i = 0; i < numWorkers; i++) {
-            const worker = new Worker(new URL('./simulationWorker.js', import.meta.url),
-                { type: 'module' });
+            const worker = new Worker(
+                new URL('./simulationWorker.js', import.meta.url),
+                { type: 'module' }
+            );
 
             worker.onmessage = function(e) {
-                const { runIndex, result, error } = e.data;
+                const { batchResults } = e.data;
 
-                if (error) {
-                    console.warn(`Run ${runIndex} failed: ${error}`);
-                } else {
-                    results[runIndex] = result;
-                }
-
-                completed++;
-                if (onProgress) onProgress(completed, N);
+                batchResults.forEach(({ runIndex, result, error }) => {
+                    if (error) {
+                        console.warn(`Run ${runIndex} failed: ${error}`);
+                    } else {
+                        results[runIndex] = result;
+                    }
+                    completed++;
+                    if (onProgress) onProgress(completed, N);
+                });
 
                 if (completed >= N) {
                     workers.forEach(w => w.terminate());
+
+                    // DEBUG — remove after fixing
+                    console.log("results array length:", results.filter(Boolean).length);
+                    console.log("first result sample:", results.filter(Boolean)[0]);
+
+                    const elapsed = ((performance.now() - _benchStart) / 1000).toFixed(3);
+                    console.log(`MC Benchmark — N=${N}, workers=${numWorkers}, batch=${BATCH_SIZE}: ${elapsed}s`);
+
                     resolve(computePercentiles(results.filter(Boolean), engineJson));
                 } else {
                     dispatchTo(worker);

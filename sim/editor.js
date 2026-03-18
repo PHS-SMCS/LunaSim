@@ -597,6 +597,7 @@ async function runMC() {
     engineJson.integration_method = document.getElementById("integrationMethod").value;
 
     try {
+        const _benchStart = performance.now();
         monteCarloResults = await runMonteCarlo(engineJson, uncertaintyMap, N,
             (done, total) => {
                 const pct = (done / total) * 100;
@@ -604,6 +605,7 @@ async function runMC() {
                 progressText.textContent = `${done} / ${total}`;
             }
         );
+        console.log(`MC Benchmark — N=${N}: ${((performance.now() - _benchStart) / 1000).toFixed(3)}s`);
 
         closeSettings("monteCarloPopup");
 

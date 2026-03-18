@@ -2,18 +2,23 @@
 import { Simulation } from './engineCore.js';
 
 self.onmessage = function(e) {
-    const { engineJson, runIndex } = e.data;
-    try {
-        const sim = new Simulation();
+    const { batch } = e.data;
 
-        // Wire up error reporting without DOM
-        sim._onError = (msg) => { throw new Error(msg); };
+    const batchResults = batch.map(({ runIndex, sampledJson }) => {
+        try {
+            const sim = new Simulation();
 
-        sim.setData(engineJson);
-        const result = sim.run();
-        sim.reset();
-        self.postMessage({ runIndex, result });
-    } catch(err) {
-        self.postMessage({ runIndex, result: null, error: err.message });
-    }
+            // Wire up error reporting without DOM
+            sim._onError = (msg) => { throw new Error(msg); };
+
+            sim.setData(sampledJson);
+            const result = sim.run();
+            sim.reset();
+            return { runIndex, result };
+        } catch(err) {
+            return { runIndex, result: null, error: err.message };
+        }
+    });
+
+    self.postMessage({ batchResults });
 };
