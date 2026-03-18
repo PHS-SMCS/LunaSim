@@ -4,6 +4,10 @@
  * @author Authors: Karthik S. Vedula, Ryan Chung, Arjun Mujumdar, Akash Saran
  */
 
+import { getStockPrice, STOCK_TAG_REGEX } from "./stockMarket.js";
+import { getWeatherValue, WEATHER_TAG_REGEX } from "./weatherData.js";
+import { getMacroValue, MACRO_TAG_REGEX } from "./macroData.js";
+
 
 /**
  * Displays the simulation error popup and dims the background.
@@ -139,6 +143,56 @@ export class Simulation {
      */
 
     parseObject(equation, history = []) {
+        // ── Real-world stock market price substitution ──────────────────────────
+        // Replace every [stock][TICKER] occurrence with its numeric price from
+        // the Finnhub cache populated by prefetchStockTickers() in editor.js.
+        if (equation && STOCK_TAG_REGEX.test(equation)) {
+            // Reset lastIndex because the regex is stateful (global flag).
+            STOCK_TAG_REGEX.lastIndex = 0;
+            equation = equation.replace(STOCK_TAG_REGEX, (_fullMatch, ticker) => {
+                const price = getStockPrice(ticker);
+                if (isNaN(price)) {
+                    // Returning NaN literal will cause safeEval → NaN → error popup
+                    console.warn(`[engine] No cached price for ticker "${ticker}"`);
+                }
+                return String(price);
+            });
+        }
+        // Reset after replace in case the regex is reused
+        STOCK_TAG_REGEX.lastIndex = 0;
+
+        // ── Real-world weather data substitution ────────────────────────────
+        // Replace every [keyword][ZIP] occurrence with its cached numeric value
+        // from the Open-Meteo cache populated by prefetchWeatherTags() in editor.js.
+        // Supported keywords: temp, humidity, wind, precip, aq
+        if (equation && WEATHER_TAG_REGEX.test(equation)) {
+            WEATHER_TAG_REGEX.lastIndex = 0;
+            equation = equation.replace(WEATHER_TAG_REGEX, (_fullMatch, keyword, zip) => {
+                const value = getWeatherValue(keyword, zip);
+                if (isNaN(value)) {
+                    console.warn(`[engine] No cached weather value for "${keyword}:${zip}"`);
+                }
+                return String(value);
+            });
+        }
+        WEATHER_TAG_REGEX.lastIndex = 0;
+
+        // ── Macro-economic indicator substitution ───────────────────────────
+        // Replace every [indicator][COUNTRY] occurrence with its cached value
+        // from the World Bank cache populated by prefetchMacroTags() in editor.js.
+        // Supported: gdp, inflation, unemployment, population, gnipc, tradebal
+        if (equation && MACRO_TAG_REGEX.test(equation)) {
+            MACRO_TAG_REGEX.lastIndex = 0;
+            equation = equation.replace(MACRO_TAG_REGEX, (_fullMatch, keyword, country) => {
+                const value = getMacroValue(keyword, country);
+                if (isNaN(value)) {
+                    console.warn(`[engine] No cached macro value for "${keyword}:${country}"`);
+                }
+                return String(value);
+            });
+        }
+        MACRO_TAG_REGEX.lastIndex = 0;
+
         let objects = {} // stores all stocks, converters, and flows and their respective equation/safeval
 
         for (var stock in this.data.stocks) {
@@ -227,7 +281,7 @@ export class Simulation {
             if (stock["isNN"] == true) {
                 value = Math.max(0, value);
             }
-            
+
             stock["safeval"] = value;
             stock["values"] = [value];
         }
@@ -248,7 +302,7 @@ export class Simulation {
             this.data.converters[converterName]["values"] = [this.parseAndEval(this.data.converters[converterName]["equation"])];
         }
 
-        // check if any values are null 
+        // check if any values are null
         for (var stockName in this.data.stocks) {
             let stock = this.data.stocks[stockName];
 
@@ -355,7 +409,7 @@ export class Simulation {
     euler() {
         for (var t = this.startTime + this.dt; parseFloat(t.toFixed(5)) <= parseFloat(this.endTime.toFixed(5)); t += this.dt) { // (skip start time as that was covered in this.initObjects())
             this.data.timesteps.push(parseFloat(t.toFixed(5)));
-            
+
             // Calculate new values for all stocks
             for (var stockName in this.data.stocks) {
                 let stock = this.data.stocks[stockName];
@@ -368,7 +422,7 @@ export class Simulation {
             }
 
             // Update safeval for next iteration
-            for (var stockName in this.data.stocks) { 
+            for (var stockName in this.data.stocks) {
                 let stock = this.data.stocks[stockName];
                 stock["safeval"] = stock["values"][stock["values"].length - 1];
             }
@@ -471,10 +525,10 @@ export class Simulation {
                     stock["values"].push(y0_dict[stockName] + (k1_dict[stockName] + 2 * k2_dict[stockName] + 2 * k3_dict[stockName] + k4_dict[stockName]) / 6);
                 }
             }
-            
+
 
             // Update safeval for next iteration
-            for (var stockName in this.data.stocks) { 
+            for (var stockName in this.data.stocks) {
                 let stock = this.data.stocks[stockName];
                 stock["safeval"] = stock["values"][stock["values"].length - 1];
             }

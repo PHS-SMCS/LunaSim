@@ -1,4 +1,3 @@
-
 /**
  * @fileoverview System Dynamics Editor using GoJS. This file uses the GoJS library to create a system dynamics editor.  Additionally, there is an equation editing table,
  *   which allows the user to edit the equations and characteristics of the objects in the model.
@@ -44,6 +43,13 @@ import {Simulation} from "./engine.js";
  * @memberof module:editor
  */
 import {translate} from "./translator.js";
+/**
+ * Stock market price integration via Finnhub API.
+ * @memberof module:editor
+ */
+import { extractTickers, prefetchStockTickers, STOCK_TAG_REGEX } from "./stockMarket.js";
+import { extractWeatherTags, prefetchWeatherTags, WEATHER_TAG_REGEX, WEATHER_KEYWORDS } from "./weatherData.js";
+import { extractMacroTags, prefetchMacroTags, MACRO_TAG_REGEX, MACRO_KEYWORDS } from "./macroData.js";
 /**
  * Tool for reshaping curved links in the diagram.
  * @module CurvedLinkReshapingTool
@@ -561,13 +567,13 @@ function buildTemplates() {
             desiredSize: new go.Size(50, 30)
         }), $(go.Placeholder))
     }, $(go.Shape, shapeStyle(), new go.Binding("fill", "", function (data) {
-        if (data.label && data.label.startsWith('$')) return "white";
-        return "#cfcfcf";
-    }).makeTwoWay(),
-    new go.Binding("stroke", "emphasized", function(e) { return e ? "#E8000D" : "black"; }),
-    new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 4 : 1; }), {
-        desiredSize: new go.Size(50, 30)
-    }), $(go.TextBlock, textStyle(), {
+            if (data.label && data.label.startsWith('$')) return "white";
+            return "#cfcfcf";
+        }).makeTwoWay(),
+        new go.Binding("stroke", "emphasized", function(e) { return e ? "#E8000D" : "black"; }),
+        new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 4 : 1; }), {
+            desiredSize: new go.Size(50, 30)
+        }), $(go.TextBlock, textStyle(), {
         _isNodeLabel: true, alignment: new go.Spot(0.5, 0.5, 0, 30), isMultiline: false, textValidation: labelValidator
     }, new go.Binding("alignment", "label_offset", go.Spot.parse).makeTwoWay(go.Spot.stringify))));
 
@@ -582,10 +588,10 @@ function buildTemplates() {
             desiredSize: new go.Size(30, 30)
         }), $(go.Placeholder))
     }, $(go.Shape, shapeStyle(), new go.Binding("fill", "color").makeTwoWay(),
-    new go.Binding("stroke", "emphasized", function(e) { return e ? "#E8000D" : "black"; }),
-    new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 4 : 1; }), {
-        figure: "Cloud", desiredSize: new go.Size(30, 30), fill: "#f0f0f0"
-    })));
+        new go.Binding("stroke", "emphasized", function(e) { return e ? "#E8000D" : "black"; }),
+        new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 4 : 1; }), {
+            figure: "Cloud", desiredSize: new go.Size(30, 30), fill: "#f0f0f0"
+        })));
 
     myDiagram.nodeTemplateMap.add("valve",
         $(go.Node, nodeStyle(), {
@@ -634,13 +640,13 @@ function buildTemplates() {
             fill: null, stroke: "dodgerblue", strokeWidth: 15, scale: 0.25
         }), $(go.Placeholder))
     }, $(go.Shape, shapeStyle(), new go.Binding("fill", "", function (data) {
-        if (data.label && data.label.startsWith('$')) return "white";
-        return "#cfcfcf";
-    }).makeTwoWay(),
-    new go.Binding("stroke", "emphasized", function(e) { return e ? "#E8000D" : "black"; }),
-    new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 4 : 1; }), {
-        figure: "Ellipse", desiredSize: new go.Size(25, 25)
-    }), $(go.TextBlock, textStyle(), {
+            if (data.label && data.label.startsWith('$')) return "white";
+            return "#cfcfcf";
+        }).makeTwoWay(),
+        new go.Binding("stroke", "emphasized", function(e) { return e ? "#E8000D" : "black"; }),
+        new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 4 : 1; }), {
+            figure: "Ellipse", desiredSize: new go.Size(25, 25)
+        }), $(go.TextBlock, textStyle(), {
         _isNodeLabel: true, alignment: new go.Spot(0.5, 0.5, 0, 30), isMultiline: false, textValidation: labelValidator
     }, new go.Binding("alignment", "label_offset", go.Spot.parse).makeTwoWay(go.Spot.stringify))));
 
@@ -668,18 +674,18 @@ function buildTemplates() {
             $(go.Shape,
                 new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 11 : 5; }),
                 new go.Binding("stroke", "emphasized", function(e) { return e ? "#E8000D" : "#3489eb"; }), {
-                stroke: "#3489eb",
-                strokeWidth: 5
-            }),
+                    stroke: "#3489eb",
+                    strokeWidth: 5
+                }),
 
             $(go.Shape,
                 new go.Binding("fill", "emphasized", function(e) { return e ? "#E8000D" : "#3489eb"; }),
                 new go.Binding("stroke", "emphasized", function(e) { return e ? "#E8000D" : "#3489eb"; }), {
-                fill: "#3489eb",
-                stroke: "#3489eb",
-                toArrow: "Standard",
-                scale: 2.0
-            }),
+                    fill: "#3489eb",
+                    stroke: "#3489eb",
+                    toArrow: "Standard",
+                    scale: 2.0
+                }),
 
             $(go.Shape,
                 new go.Binding("visible", "", isBiflow),
@@ -704,47 +710,47 @@ function buildTemplates() {
                     { text: "Text",
                         background: "transparent",
                         editable: true
-                        })
+                    })
             )
     );
 
     myDiagram.linkTemplateMap.add("influence", $(go.Link, {
-        curve: go.Link.Bezier, toShortLength: 8, reshapable: true, layerName: "Background"
-    }, new go.Binding("curviness", "curviness").makeTwoWay(),
-    $(go.Shape,
-        new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 8 : 1.5; }),
-        {strokeWidth: 1.5},
-        new go.Binding("stroke", "isSelected", sel => sel ? "#3489eb" : "orange").ofObject()),
-    $(go.Shape,
-        new go.Binding("scale", "emphasized", function(e) { return e ? 2.5 : 1.5; }),
-        { stroke: null, toArrow: "Standard", scale: 1.5 },
-        new go.Binding("fill", "isSelected", sel => sel ? "#3489eb" : "orange").ofObject())
+            curve: go.Link.Bezier, toShortLength: 8, reshapable: true, layerName: "Background"
+        }, new go.Binding("curviness", "curviness").makeTwoWay(),
+        $(go.Shape,
+            new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 8 : 1.5; }),
+            {strokeWidth: 1.5},
+            new go.Binding("stroke", "isSelected", sel => sel ? "#3489eb" : "orange").ofObject()),
+        $(go.Shape,
+            new go.Binding("scale", "emphasized", function(e) { return e ? 2.5 : 1.5; }),
+            { stroke: null, toArrow: "Standard", scale: 1.5 },
+            new go.Binding("fill", "isSelected", sel => sel ? "#3489eb" : "orange").ofObject())
     ));
 
     // Polarity label nodes (isLinkLabel:true) — GoJS's native mechanism for
     // labels that reliably track a specific point along a link route.
     myDiagram.nodeTemplateMap.add("polarityLabel",
         $(go.Node, {
-            isLinkLabel: true,
-            selectable: false,
-            avoidable: false,
-            cursor: "default",
-            // segmentIndex omitted → defaults to NaN.
-            // With NaN, GoJS measures segmentFraction along the full VISUAL
-            // path length of the bezier, not along internal control-point
-            // segments.  segmentFraction:1 therefore lands at the arrowhead end.
-            segmentFraction: 1,
-            segmentOffset: new go.Point(polarityOffsetX, polarityOffsetY)
-        },
-        $(go.TextBlock, {
-            stroke: "black",
-            font: `bold ${labelFontSize}pt helvetica, bold arial, sans-serif`,
-            textAlign: "center"
-        },
-        new go.Binding("text", "polarity"),
-        new go.Binding("font", "polarity", function() {
-            return `bold ${labelFontSize}pt helvetica, bold arial, sans-serif`;
-        })))
+                isLinkLabel: true,
+                selectable: false,
+                avoidable: false,
+                cursor: "default",
+                // segmentIndex omitted → defaults to NaN.
+                // With NaN, GoJS measures segmentFraction along the full VISUAL
+                // path length of the bezier, not along internal control-point
+                // segments.  segmentFraction:1 therefore lands at the arrowhead end.
+                segmentFraction: 1,
+                segmentOffset: new go.Point(polarityOffsetX, polarityOffsetY)
+            },
+            $(go.TextBlock, {
+                    stroke: "black",
+                    font: `bold ${labelFontSize}pt helvetica, bold arial, sans-serif`,
+                    textAlign: "center"
+                },
+                new go.Binding("text", "polarity"),
+                new go.Binding("font", "polarity", function() {
+                    return `bold ${labelFontSize}pt helvetica, bold arial, sans-serif`;
+                })))
     );
 
     myDiagram.nodeTemplateMap.add("textbox",
@@ -1191,9 +1197,31 @@ function containsReference(equation, data) {
     if(equation == null){
         return matches;
     }
-    const allMatches = equation.matchAll(regex);
+
+    // Strip all [stock][TICKER] patterns before extracting node references so
+    // that the influence validator does not treat "stock" or ticker symbols as
+    // diagram node names.
+    let strippedEquation = equation.replace(STOCK_TAG_REGEX, "0");
+
+    // Strip all [keyword][ZIP] weather patterns for the same reason.
+    WEATHER_TAG_REGEX.lastIndex = 0;
+    strippedEquation = strippedEquation.replace(WEATHER_TAG_REGEX, "0");
+    WEATHER_TAG_REGEX.lastIndex = 0;
+
+    // Strip all [indicator][COUNTRY] macro patterns for the same reason.
+    MACRO_TAG_REGEX.lastIndex = 0;
+    strippedEquation = strippedEquation.replace(MACRO_TAG_REGEX, "0");
+    MACRO_TAG_REGEX.lastIndex = 0;
+
+    const allMatches = strippedEquation.matchAll(regex);
 
     for (const match of allMatches) {
+        // Guard against bare weather/macro keywords or "stock" slipping through
+        if (
+            match[1] === "stock" ||
+            WEATHER_KEYWORDS.includes(match[1].toLowerCase()) ||
+            MACRO_KEYWORDS.includes(match[1].toLowerCase())
+        ) continue;
         matches.push(match[1]);
     }
 
@@ -1216,7 +1244,7 @@ function containsReference(equation, data) {
  * @function
  */
 
-function run() {
+async function run() {
     window.simulationHasRunSuccessfully_tab = false;
     loadTableToDiagram();
     if (!Array.isArray(myDiagram.model.nodeDataArray) || myDiagram.model.nodeDataArray.length === 0) {
@@ -1227,6 +1255,73 @@ function run() {
 
     var json = JSON.parse(myDiagram.model.toJson());
     var engineJson = translate(json);
+
+    // ── Stock market price prefetch ──────────────────────────────────────────
+    // Collect every equation from stocks, variables, and valves, then fetch
+    // all referenced [stock][TICKER] prices from Finnhub before the simulation
+    // starts. This is done once per run so the engine can use cached values
+    // synchronously during evaluation.
+    {
+        const allEquations = [
+            ...Object.values(engineJson.stocks).map(s => s.equation),
+            ...engineJson.variables.map(v => v.equation),
+            ...engineJson.valves.map(v => v.equation),
+        ];
+
+        // ── Stock prices ──────────────────────────────────────────────────────
+        const tickers = extractTickers(allEquations);
+        if (tickers.length > 0) {
+            try {
+                await prefetchStockTickers(tickers);
+            } catch (fetchErr) {
+                console.error("[editor] Stock price prefetch failed:", fetchErr);
+                document.getElementById("simErrorPopupDesc").innerHTML =
+                    "Failed to fetch stock market prices from Finnhub.<br><br>" +
+                    "Please check your API key in <code>stockMarket.js</code> and your internet connection.<br><br>" +
+                    "Error: " + fetchErr.message;
+                showSimErrorPopup();
+                window.simulationHasRunSuccessfully_tab = false;
+                return;
+            }
+        }
+
+        // ── Weather data ──────────────────────────────────────────────────────
+        // Collect all [keyword][ZIP] tags and prefetch them from Open-Meteo.
+        const weatherTags = extractWeatherTags(allEquations);
+        if (weatherTags.length > 0) {
+            try {
+                await prefetchWeatherTags(weatherTags);
+            } catch (fetchErr) {
+                console.error("[editor] Weather prefetch failed:", fetchErr);
+                document.getElementById("simErrorPopupDesc").innerHTML =
+                    "Failed to fetch weather data from Open-Meteo.<br><br>" +
+                    "Please check your internet connection and verify your ZIP codes are valid US ZIP codes.<br><br>" +
+                    "Error: " + fetchErr.message;
+                showSimErrorPopup();
+                window.simulationHasRunSuccessfully_tab = false;
+                return;
+            }
+        }
+
+        // ── Macro-economic data ───────────────────────────────────────────────
+        // Collect all [indicator][COUNTRY] tags and prefetch from World Bank API.
+        const macroTags = extractMacroTags(allEquations);
+        if (macroTags.length > 0) {
+            try {
+                await prefetchMacroTags(macroTags);
+            } catch (fetchErr) {
+                console.error("[editor] Macro data prefetch failed:", fetchErr);
+                document.getElementById("simErrorPopupDesc").innerHTML =
+                    "Failed to fetch macro-economic data from the World Bank API.<br><br>" +
+                    "Please check your internet connection and verify your country codes are valid ISO2 codes (e.g. US, DE, CN).<br><br>" +
+                    "Error: " + fetchErr.message;
+                showSimErrorPopup();
+                window.simulationHasRunSuccessfully_tab = false;
+                return;
+            }
+        }
+    }
+    // ── End real-world data prefetch ──────────────────────────────────────────
 
     console.log(engineJson);
     for(var i =0; i<engineJson.influences.length; i++) {
@@ -1904,8 +1999,8 @@ document.getElementById("defaultOpen").click();
 
 
 document.getElementById("load-actual-button").addEventListener("change", loadModel);
-document.getElementById("runButton").addEventListener("click", function () {
-    run();
+document.getElementById("runButton").addEventListener("click", async function () {
+    await run();
 });
 document.getElementById("exportButton").addEventListener("click", function () {
     exportData();
@@ -1965,10 +2060,10 @@ window.addEventListener('beforeunload', function (e) {
 
 export {data};
 const JAVA_MATH_FUNCTIONS = [
-  'sin()', 'cos()', 'tan()', 'asin()', 'acos()', 'atan()', 'atan2()',
-  'sinh()', 'cosh()', 'tanh()', 'exp()', 'log()', 'log10()', 'sqrt()', 'cbrt()',
-  'abs()', 'ceil()', 'floor()', 'round()', 'pow()', 'max()', 'min()', 'sign()',
-  'random()', 'hypot()', 'expm1()', 'log1p()', 'sec()', 'csc()', 'cot()'
+    'sin()', 'cos()', 'tan()', 'asin()', 'acos()', 'atan()', 'atan2()',
+    'sinh()', 'cosh()', 'tanh()', 'exp()', 'log()', 'log10()', 'sqrt()', 'cbrt()',
+    'abs()', 'ceil()', 'floor()', 'round()', 'pow()', 'max()', 'min()', 'sign()',
+    'random()', 'hypot()', 'expm1()', 'log1p()', 'sec()', 'csc()', 'cot()'
 ];
 
 
