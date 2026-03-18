@@ -634,7 +634,6 @@ async function runMC() {
             .join(", ");
 
         const firstStock = Object.keys(monteCarloResults.percentiles)[0] || "unknown";
-        const tabName = `MC: ${firstStock} — ${N} runs`;
 
         // Push tab exactly like a regular visual
         tabs.push({
@@ -649,12 +648,20 @@ async function runMC() {
             yAxis: Object.keys(monteCarloResults.percentiles)
         });
 
-        closeSettings("monteCarloPopup");
 
-        // Auto-navigate to the new tab
         setTimeout(() => {
             const lastTab = list.lastChild;
-            if (lastTab) lastTab.click();
+            if (lastTab) {
+                lastTab.click();
+                // Only close the popup after the tab has been clicked and render has started
+                setTimeout(() => {
+                    closeSettings("monteCarloPopup");
+                    // Reset progress bar for next run
+                    progressContainer.style.display = "none";
+                    progressBar.style.width = "0%";
+                    progressText.textContent = "0 / 0";
+                }, 150);
+            }
         }, 100);
 
     } catch(err) {

@@ -152,27 +152,40 @@ function showMCVariableSelector(mcData, currentVar, allVars) {
 
   const container = document.createElement("div");
   container.id = "mcVariableSelector";
-  container.style.cssText = "position: absolute; top: 10px; left: 10px; z-index: 900; background: rgba(38, 50, 83, 0.95); border-radius: 8px; padding: 0.5rem; display: flex; gap: 0.4rem; flex-wrap: wrap;";
+  container.style.cssText = "position: absolute; top: 10px; left: 10px; z-index: 900;";
 
-  const label = document.createElement("span");
-  label.textContent = "Variable:";
-  label.style.cssText = "color: white; font-size: 0.85rem; align-self: center; margin-right: 0.3rem;";
-  container.appendChild(label);
+  // Toggle button
+  const toggleBtn = document.createElement("button");
+  toggleBtn.textContent = "Variables ▾";
+  toggleBtn.style.cssText = "background: rgba(38,50,83,0.95); border: 1px solid #627bc0; color: white; border-radius: 6px; padding: 0.3rem 0.7rem; font-size: 0.8rem; cursor: pointer; display: block;";
+
+  // Panel
+  const panel = document.createElement("div");
+  panel.style.cssText = "display: none; margin-top: 4px; background: rgba(38,50,83,0.95); border-radius: 8px; padding: 0.5rem; display: none; flex-direction: column; gap: 0.3rem;";
 
   allVars.forEach(key => {
     if (!mcData.percentiles[key]) return;
     const btn = document.createElement("button");
     btn.textContent = key;
-    btn.style.cssText = "background: #1d253d; border: 1px solid #627bc0; color: white; border-radius: 6px; padding: 0.3rem 0.6rem; font-size: 0.8rem; cursor: pointer;";
+    btn.style.cssText = "background: #1d253d; border: 1px solid #627bc0; color: white; border-radius: 6px; padding: 0.3rem 0.6rem; font-size: 0.8rem; cursor: pointer; text-align: left;";
     if (key === currentVar) btn.style.background = "#627bc0";
 
     btn.addEventListener("click", () => {
-      container.querySelectorAll("button").forEach(b => b.style.background = "#1d253d");
+      panel.querySelectorAll("button").forEach(b => b.style.background = "#1d253d");
       btn.style.background = "#627bc0";
       renderMonteCarloChart(mcData, key);
     });
-    container.appendChild(btn);
+    panel.appendChild(btn);
   });
+
+  toggleBtn.addEventListener("click", () => {
+    const isHidden = panel.style.display === "none" || panel.style.display === "";
+    panel.style.display = isHidden ? "flex" : "none";
+    toggleBtn.textContent = isHidden ? "Variables ▴" : "Variables ▾";
+  });
+
+  container.appendChild(toggleBtn);
+  container.appendChild(panel);
 
   const chartCanvas = document.querySelector(".chartCanvas");
   if (chartCanvas) {
@@ -184,21 +197,16 @@ function showMCVariableSelector(mcData, currentVar, allVars) {
 export function renderMonteCarloChart(mcResults, variableName) {
   const { percentiles, timesteps } = mcResults;
   const bands = percentiles[variableName];
+  if (!bands || !timesteps?.length) return;
 
-  if (!bands || !timesteps || !timesteps.length) {
-    console.warn("No MC data for:", variableName);
-    return;
-  }
+  const bandOption = document.getElementById("mcBands")?.value || "both";
 
   const chartEl = document.getElementById('chart');
 
-  // Destroy before clearing DOM — prevents ApexCharts from tearing
-  // down SVG nodes that now belong to the new instance
   if (window._mcChartInstance) {
     try { window._mcChartInstance.destroy(); } catch(e) {}
     window._mcChartInstance = null;
   }
-
   chartEl.innerHTML = "";
 
   const options = {
@@ -256,11 +264,6 @@ export function renderMonteCarloChart(mcResults, variableName) {
     yaxis: {
       title: { text: variableName },
       labels: { formatter: val => parseFloat(val).toFixed(2) }
-    },
-    tooltip: {
-      shared: true,
-      x: { formatter: val => `t = ${parseFloat(val).toFixed(4)}` },
-      y: { formatter: val => parseFloat(val).toFixed(4) }
     },
     title: {
       text: `Monte Carlo: ${variableName} (${mcResults.runs?.length ?? "?"} runs)`,
@@ -495,7 +498,14 @@ function configTabs() {
 
         const mcData = window._mcResultsStore?.[tabInfo.mcId];
         if (!mcData) {
-          showPopup("Monte Carlo data was lost (page may have refreshed). Please re-run.");
+          chartEl.innerHTML = `
+        <div style="display:flex; flex-direction:column; align-items:center; 
+                    justify-content:center; height:100%; color:#888; gap:1rem;">
+            <span class="material-symbols-outlined" style="font-size:3rem;">refresh</span>
+            <p style="font-size:1.1rem; font-weight:600;">Monte Carlo data not available</p>
+            <p style="font-size:0.9rem;">Simulation data is cleared on page refresh.<br>
+               Re-run the Monte Carlo simulation to regenerate this chart.</p>
+        </div>`;
           return;
         }
 
@@ -727,10 +737,9 @@ document.addEventListener("DOMContentLoaded", function() {
 document.getElementById("runButton").addEventListener("click", function () {
   tabs[0] = new Graphic("chart", "time", seriesKeys(true).splice(1));
   configTabs();
-  list.firstChild.click();
-
-  // AUTO SWITCH TO CHART/TABLES VIEW
-
+  setTimeout(() => {
+    if (list.firstChild) list.firstChild.click();
+  }, 50);
   if (TESTING_MODE) console.log(tabs);
 });
 
