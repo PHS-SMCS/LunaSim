@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <!---
   Authors: Sienna Simms, Karthik S. Vedula, Aditya Patil, William J. Park, Ryan D. Chung, Akash Saran, Arjun M. Mujumdar, Caleb R. Wen
 -->
@@ -46,357 +46,363 @@
 </head>
 <body>
 
-  <!-- ================== Scripts ================== -->
-  <script src="https://unpkg.com/gojs@2.3.3/release/go.js"></script>
-  <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
-  <div id="allSampleContent" class="p-4 w-full">
-    <script src="https://unpkg.com/gojs@2.3.3/extensions/Figures.js"></script>
-    <script src="https://unpkg.com/gojs@2.3.3/extensions/NodeLabelDraggingTool.js"></script>
-    <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator.min.css" rel="stylesheet">
-    <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
-    <!-- Override CSS w/ Dark Mode Theme -->
-    <link rel="stylesheet" href="simulation_dark.css" disabled="disabled" id="darkThemeCSS">
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <script id="code" type="module" src="editor.js"></script>
-    <script id="code2" type="module" src="translator.js"></script>
-    <script id="code3" type="module" src="engine.js"></script>
-    <script id="code4" type="module" src="tabsManagement.js"></script>
+<!-- ================== Scripts ================== -->
+<script src="https://unpkg.com/gojs@2.3.3/release/go.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+<div id="allSampleContent" class="p-4 w-full">
+  <script src="https://unpkg.com/gojs@2.3.3/extensions/Figures.js"></script>
+  <script src="https://unpkg.com/gojs@2.3.3/extensions/NodeLabelDraggingTool.js"></script>
+  <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator.min.css" rel="stylesheet">
+  <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
+  <!-- Override CSS w/ Dark Mode Theme -->
+  <link rel="stylesheet" href="simulation_dark.css" disabled="disabled" id="darkThemeCSS">
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <script id="code" type="module" src="editor.js"></script>
+  <script id="code2" type="module" src="translator.js"></script>
+  <script id="code3" type="module" src="engine.js"></script>
+  <script id="code4" type="module" src="tabsManagement.js"></script>
 
-    <div id="sample">
+  <div id="sample">
 
-      <!-- ================== Header (Action Bar + Model Name + Logo) ================== -->
-      <div id ="header">
+    <!-- ================== Header (Action Bar + Model Name + Logo) ================== -->
+    <div id ="header">
 
-        <!-- ================== Action Bar ================== -->
-        <div class="actions">
-          <p id="saveStatus">Last Cloud Save: -<br>Last Export: -</p>
-          
-          <!-- Run button -->
-          <button class="actionButton" id="runButton">
-            <span class="material-symbols-outlined" style="font-size: 20px;">play_arrow</span> Run
-          </button>
-          
-          <!-- Load button -->
-          <input type="file" id="load-actual-button" accept=".luna, .txt" hidden/>
-          <button class="actionButton" id="loadButton">
-            <span class="material-symbols-outlined" style="font-size: 20px;">file_upload</span> Load
-          </button>
-          
-          <!-- Save button -->
-          <button class="actionButton" id="expButton" onclick="openSettings(event, 'exportPopup')">
-            <span class="material-symbols-outlined" style="font-size: 20px;">save</span> Save
-          </button>
-          
-          <!-- Clear button -->
-          <button class="actionButton" id="clearButton">
-            <span class="material-symbols-outlined" style="font-size: 20px;">delete</span> Clear
-          </button>
-        </div>
-                
-        <input type="text" id="model_name" name="model_name" placeholder="Model Name" value="New Project">
-        <img id="logoImage" src="../img/favicons/lunaLogo.svg" alt="LunaSim Logo" />
+      <!-- ================== Action Bar ================== -->
+      <div class="actions">
+        <p id="saveStatus">Last Cloud Save: -<br>Last Export: -</p>
+
+        <!-- Run button -->
+        <button class="actionButton" id="runButton">
+          <span class="material-symbols-outlined" style="font-size: 20px;">play_arrow</span> Run
+        </button>
+
+        <!-- Load button -->
+        <input type="file" id="load-actual-button" accept=".luna, .txt" hidden/>
+        <button class="actionButton" id="loadButton">
+          <span class="material-symbols-outlined" style="font-size: 20px;">file_upload</span> Load
+        </button>
+
+        <!-- Save button -->
+        <button class="actionButton" id="expButton" onclick="openSettings(event, 'exportPopup')">
+          <span class="material-symbols-outlined" style="font-size: 20px;">save</span> Save
+        </button>
+
+        <!-- Clear button -->
+        <button class="actionButton" id="clearButton">
+          <span class="material-symbols-outlined" style="font-size: 20px;">delete</span> Clear
+        </button>
       </div>
 
-      <!-- ================== Tab Bar (Model View + Charts/Tables) ================== -->
-      <div class="tabBar">
-          <button class="tabButton" id="modelBtn">Model View</button>
-          <button class="tabButton" id="chartBtn">Charts/Tables</button>
-      </div>
+      <input type="text" id="model_name" name="model_name" placeholder="Model Name" value="New Project">
+      <img id="logoImage" src="../img/favicons/lunaLogo.svg" alt="LunaSim Logo" />
+    </div>
 
-      <!-- ================== Model Viewer (Toolbar + Model Canvas + Equation Editor) ================== -->
-      <div class="modelViewer">
+    <!-- ================== Tab Bar (Model View + Charts/Tables) ================== -->
+    <div class="tabBar">
+      <button class="tabButton" id="modelBtn">Model View</button>
+      <button class="tabButton" id="chartBtn">Charts/Tables</button>
+    </div>
 
-        <!-- ================== Toolbar ================== -->
-        <div class="toolbar">
-          <ul>
-            <!-- Model Tools (Pointer, Stock, Cloud, Variable, Flow, Influence) -->
-            <div class="tool-section">
+    <!-- ================== Model Viewer (Toolbar + Model Canvas + Equation Editor) ================== -->
+    <div class="modelViewer">
 
-              <!-- Pointer Tool -->
-              <li><a href="#" id="pointer_button" class="pointer_selected tool">
-                <i class="material-symbols-outlined">arrow_selector_tool</i><span>Pointer [P]</span>
-              </a></li>
+      <!-- ================== Toolbar ================== -->
+      <div class="toolbar">
+        <ul>
+          <!-- Model Tools (Pointer, Stock, Cloud, Variable, Flow, Influence) -->
+          <div class="tool-section">
 
-              <li><a href="#" id="stock_button" class="node_normal tool">
-                <i class="material-symbols-outlined">rectangle</i><span>Stock [S]</span>
-              </a></li>
+            <!-- Pointer Tool -->
+            <li><a href="#" id="pointer_button" class="pointer_selected tool">
+              <i class="material-symbols-outlined">arrow_selector_tool</i><span>Pointer [P]</span>
+            </a></li>
 
-              <!-- Stock Tool with Variants -->
-              <!--<li class="variant-group">
-                <a href="#" id="stock_button" class="node_normal tool">
-                  <i class="material-symbols-outlined">crop_square</i><span>Stock [S]</span>
+            <li><a href="#" id="stock_button" class="node_normal tool">
+              <i class="material-symbols-outlined">rectangle</i><span>Stock [S]</span>
+            </a></li>
+
+            <!-- Stock Tool with Variants -->
+            <!--<li class="variant-group">
+              <a href="#" id="stock_button" class="node_normal tool">
+                <i class="material-symbols-outlined">crop_square</i><span>Stock [S]</span>
+              </a>
+
+              <div class="variant-popup" id="stock_variants">
+                <a href="#" id="conveyor_button" class="node_normal tool">
+                  <i class="material-symbols-outlined">view_stream</i><span>Conveyor</span>
                 </a>
-
-                <div class="variant-popup" id="stock_variants">
-                  <a href="#" id="conveyor_button" class="node_normal tool">
-                    <i class="material-symbols-outlined">view_stream</i><span>Conveyor</span>
-                  </a>
-                  <a href="#" id="queue_button" class="node_normal tool">
-                    <i class="material-symbols-outlined">groups</i><span>Queue</span>
-                  </a>
-                  <a href="#" id="microwave_button" class="node_normal tool">
-                    <i class="material-symbols-outlined">microwave</i><span>Microwave</span>
-                  </a>
-                </div>
-              </li>-->
-
-              <!-- Other Tools -->
-              <li><a href="#" id="cloud_button" class="node_normal tool">
-                <i class="material-symbols-outlined">cloud</i><span>Cloud [C]</span>
-              </a></li>
-
-              <li><a href="#" id="variable_button" class="node_normal tool">
-                <i class="material-symbols-outlined">circle</i><span>Variable [V]</span>
-              </a></li>
-
-              <li><a href="#" id="flow_button" class="link_normal tool">
-                <i class="material-symbols-outlined">sync_alt</i><span>Flow [F]</span>
-              </a></li>
-
-              <li><a href="#" id="influence_button" class="link_normal tool">
-                <i class="material-symbols-outlined">replay</i><span>Influence [I]</span>
-              </a></li>
-
-              <!--<li class="variant-group">
-                <a href="#" id="influence_button" class="link_normal tool">
-                  <i class="material-symbols-outlined">repeat</i><span>Influence [I]</span>
+                <a href="#" id="queue_button" class="node_normal tool">
+                  <i class="material-symbols-outlined">groups</i><span>Queue</span>
                 </a>
+                <a href="#" id="microwave_button" class="node_normal tool">
+                  <i class="material-symbols-outlined">microwave</i><span>Microwave</span>
+                </a>
+              </div>
+            </li>-->
 
-                <div class="variant-popup" id="text_variants">
-                  <a href="#" id="info_influence_button" class="link_normal tool">
-                    <i class="material-symbols-outlined">info</i><span>Info Influence</span>
-                  </a>
-                </div>
-              </li>-->
+            <!-- Other Tools -->
+            <li><a href="#" id="cloud_button" class="node_normal tool">
+              <i class="material-symbols-outlined">cloud</i><span>Cloud [C]</span>
+            </a></li>
 
-              <li><a href="#" id="text_button" class="node_normal tool">
+            <li><a href="#" id="variable_button" class="node_normal tool">
+              <i class="material-symbols-outlined">circle</i><span>Variable [V]</span>
+            </a></li>
+
+            <li><a href="#" id="flow_button" class="link_normal tool">
+              <i class="material-symbols-outlined">sync_alt</i><span>Flow [F]</span>
+            </a></li>
+
+            <li><a href="#" id="influence_button" class="link_normal tool">
+              <i class="material-symbols-outlined">replay</i><span>Influence [I]</span>
+            </a></li>
+
+            <!--<li class="variant-group">
+              <a href="#" id="influence_button" class="link_normal tool">
+                <i class="material-symbols-outlined">repeat</i><span>Influence [I]</span>
+              </a>
+
+              <div class="variant-popup" id="text_variants">
+                <a href="#" id="info_influence_button" class="link_normal tool">
+                  <i class="material-symbols-outlined">info</i><span>Info Influence</span>
+                </a>
+              </div>
+            </li>-->
+
+            <li><a href="#" id="text_button" class="node_normal tool">
+              <i class="material-symbols-outlined">text_fields</i><span>Text [T]</span>
+            </a></li>
+
+            <!-- Text Tool with Variants -->
+            <!--<li class="variant-group">
+              <a href="#" id="text_button" class="node_normal tool">
                 <i class="material-symbols-outlined">text_fields</i><span>Text [T]</span>
-              </a></li>
+              </a>
 
-              <!-- Text Tool with Variants -->
-              <!--<li class="variant-group">
-                <a href="#" id="text_button" class="node_normal tool">
-                  <i class="material-symbols-outlined">text_fields</i><span>Text [T]</span>
+              <div class="variant-popup" id="text_variants">
+                <a href="#" id="loop_label_button" class="node_normal tool">
+                  <i class="material-symbols-outlined">autorenew</i><span>Loop Label</span>
                 </a>
+              </div>
+            </li>-->
 
-                <div class="variant-popup" id="text_variants">
-                  <a href="#" id="loop_label_button" class="node_normal tool">
-                    <i class="material-symbols-outlined">autorenew</i><span>Loop Label</span>
-                  </a>
-                </div>
-              </li>-->
-
-            </div>
-
-            <!-- Settings (Theme, Help, Simulation Parameters) -->
-            <div class="settings-section">
-              <li><a href="#" onclick="openSettings(event, 'themePopup')" class="no-active">
-                <i class="material-symbols-outlined">palette</i><span>Theme</span>
-              </a></li>
-
-              <li><a href="../UserDocs.html" class="no-active" target="_blank">
-                <i class="material-symbols-outlined">help</i><span>Help</span>
-              </a></li>
-
-              <li><a href="#" onclick="openSettings(event, 'settingsPopup')" class="no-active">
-                <i class="material-symbols-outlined">settings</i><span>Settings</span>
-              </a></li>
-            </div>
-          </ul>
-        </div>
-
-
-
-        <!-- ================== Model Canvas ================== -->
-        <div class="modelCanvas" id="modalView">
-          <!-- GoJS Diagram -->
-          <div id="myDiagram">
-            <canvas width="100%" height="100%">
-              This text is displayed if your browser does not support the Canvas HTML element.
-            </canvas>
           </div>
-          <!-- Center Model Button -->
-          <button id="centerModelBtn" class="center-btn" title="Center Model">
-            <i class="material-symbols-outlined" style="font-size: 20px;">home</i>
+
+          <!-- Settings (Theme, Help, Simulation Parameters) -->
+          <div class="settings-section">
+            <li><a href="#" onclick="openSettings(event, 'themePopup')" class="no-active">
+              <i class="material-symbols-outlined">palette</i><span>Theme</span>
+            </a></li>
+
+            <li><a href="../UserDocs.html" class="no-active" target="_blank">
+              <i class="material-symbols-outlined">help</i><span>Help</span>
+            </a></li>
+
+            <li><a href="#" onclick="openSettings(event, 'settingsPopup')" class="no-active">
+              <i class="material-symbols-outlined">settings</i><span>Settings</span>
+            </a></li>
+          </div>
+        </ul>
+      </div>
+
+
+
+      <!-- ================== Model Canvas ================== -->
+      <div class="modelCanvas" id="modalView">
+        <!-- GoJS Diagram -->
+        <div id="myDiagram">
+          <canvas width="100%" height="100%">
+            This text is displayed if your browser does not support the Canvas HTML element.
+          </canvas>
+        </div>
+        <!-- Center Model Button -->
+        <button id="centerModelBtn" class="center-btn" title="Center Model">
+          <i class="material-symbols-outlined" style="font-size: 20px;">home</i>
+        </button>
+      </div>
+
+
+      <!-- ================== Equation Editor ================== -->
+      <div id="eqEditor">
+        <div class="equation-editor-header">
+          <p class="equation-editor-title">Equation Editor</p>
+          <i class="material-symbols-outlined equation-editor-zoom-icon" onclick="openEquationEditorPopup()">open_in_full</i>
+        </div>
+        <div id = "eqTableDiv">
+          <table class="equation-editor-table" id="eqTable">
+            <thead>
+            <tr>
+              <th class="eq-col-type">Type</th>
+              <th class="eq-col-name">Name</th>
+              <th class="eq-col-equation">Equation</th>
+              <th class="eq-col-checkbox">NN/Uni</th>
+            </tr>
+            </thead>
+            <tbody id="eqTableBody">
+            <!-- All equations are build here from editor.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================== Chart Viewer (Chart Sidebar, Chart Canvas, Chart Editor) ================== -->
+    <div class="chartViewer">
+
+      <!-- ================== Chart Sidebar ================== -->
+      <div class="chartSidebar">
+        <ul>
+          <!-- Scrollable area whhere you can access all charts/tables -->
+          <div class="chart-section" id="tabsList">
+          </div>
+
+          <!-- Settings Area -->
+          <div class="settings-section">
+            <li><a href="#" onclick="openSettings(event, 'themePopup')" class="no-active"><i class="material-symbols-outlined">palette</i><span>Theme</span></a></li>
+            <li><a href="../UserDocs.html" class="no-active"><i class="material-symbols-outlined">help</i><span>Help</span></a></li>
+            <li><a href="#" onclick="openSettings(event, 'settingsPopup')" class="no-active"><i class="material-symbols-outlined">settings</i><span>Settings</span></a></li>
+          </div>
+        </ul>
+      </div>
+
+      <!-- ================== Chart Canvas ================== -->
+      <div class="chartCanvas">
+        <div id="display">
+          <div id="chart" style="width: 100%;"></div>
+          <div id = "datatable">
+          </div>
+        </div>
+      </div>
+
+      <!-- ================== Chart Editor ================== -->
+      <div class="chartEditor">
+        <p class="chart-title">Chart Editor</p>
+
+        <!-- Create Visual/Monte Carlo-->
+        <div class="chartEditor-top">
+          <button class="chart-btn full-width" id="addTab" onclick="openSettings(event, 'chartsPopup')">
+            Create New Visual
           </button>
+          <button class="chart-btn full-width" id="mcButton" style="margin-top: 0.5rem;">
+            <span class="material-symbols-outlined" style="font-size: 16px; vertical-align: middle;">scatter_plot</span>
+            Run Monte Carlo
+          </button>
+          <hr>
         </div>
 
-
-        <!-- ================== Equation Editor ================== -->
-        <div id="eqEditor">
-          <div class="equation-editor-header">
-            <p class="equation-editor-title">Equation Editor</p>
-            <i class="material-symbols-outlined equation-editor-zoom-icon" onclick="openEquationEditorPopup()">open_in_full</i>
+        <!-- Chart Statistics -->
+        <div class="chartEditor-middle">
+          <p class="chart-title">Chart Statistics</p>
+          <div id="chartStats" class="chart-stats">
+            <p>Name: Default</p>
+            <p>Type: Chart</p>
+            <p>X-Axis: Time</p>
+            <p>Y-Axis: stock1, stock2</p>
           </div>
-          <div id = "eqTableDiv">
-            <table class="equation-editor-table" id="eqTable">
-              <thead>
-                <tr>
-                  <th class="eq-col-type">Type</th>
-                  <th class="eq-col-name">Name</th>
-                  <th class="eq-col-equation">Equation</th>
-                  <th class="eq-col-checkbox">NN/Uni</th>
-                </tr>
-              </thead>
-              <tbody id="eqTableBody">
-                <!-- All equations are build here from editor.js -->
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
 
-      <!-- ================== Chart Viewer (Chart Sidebar, Chart Canvas, Chart Editor) ================== -->
-      <div class="chartViewer">
-
-        <!-- ================== Chart Sidebar ================== -->
-        <div class="chartSidebar">
-          <ul>
-            <!-- Scrollable area whhere you can access all charts/tables -->
-            <div class="chart-section" id="tabsList">
-            </div>
-
-            <!-- Settings Area -->
-            <div class="settings-section">
-              <li><a href="#" onclick="openSettings(event, 'themePopup')" class="no-active"><i class="material-symbols-outlined">palette</i><span>Theme</span></a></li>
-              <li><a href="../UserDocs.html" class="no-active"><i class="material-symbols-outlined">help</i><span>Help</span></a></li>
-              <li><a href="#" onclick="openSettings(event, 'settingsPopup')" class="no-active"><i class="material-symbols-outlined">settings</i><span>Settings</span></a></li>
-            </div>
-          </ul>
         </div>
 
-        <!-- ================== Chart Canvas ================== -->
-        <div class="chartCanvas">
-          <div id="display">
-            <div id="chart" style="width: 100%;"></div>
-            <div id = "datatable">
-            </div>
-          </div>
-        </div>
-
-        <!-- ================== Chart Editor ================== -->
-        <div class="chartEditor">
-          <p class="chart-title">Chart Editor</p>
-          
-          <!-- Create Visual -->
-          <div class="chartEditor-top">
-            <button class="chart-btn full-width"  id="addTab" onclick="openSettings(event, 'chartsPopup')">Create New Visual</button>
-            <hr>
-          </div>
-
-          <!-- Chart Statistics -->
-          <div class="chartEditor-middle">
-            <p class="chart-title">Chart Statistics</p>
-            <div id="chartStats" class="chart-stats">
-              <p>Name: Default</p>
-              <p>Type: Chart</p>
-              <p>X-Axis: Time</p>
-              <p>Y-Axis: stock1, stock2</p>
-            </div>
-
-          </div>
-
-          <!-- Download/Delete Visual -->
-          <div class="chartEditor-bottom">
-            <hr>
-            <button class="chart-btn full-width" id="downloadGraph">Download Visual</button>
-            <button class="chart-btn full-width" id="deleteGraph">Delete Visual</button>
-          </div>
+        <!-- Download/Delete Visual -->
+        <div class="chartEditor-bottom">
+          <hr>
+          <button class="chart-btn full-width" id="downloadGraph">Download Visual</button>
+          <button class="chart-btn full-width" id="deleteGraph">Delete Visual</button>
         </div>
       </div>
+    </div>
 
 
-      <div id="overlay" class="overlay hidden"></div>
-      <!-- ================== Simulation Settings Popup ================== -->
-      <div id="settingsPopup" class="settings-popup hidden">
-        <div class="settings-header">
-          <h2>Simulation Settings</h2>
-          <button class="close-btn" onclick="closeSettings('settingsPopup')"><i class="material-symbols-outlined close-icon">close</i></button>
-        </div>
-        <div class="setting-group">
-          <label for="startTime">Start Time</label>
-          <input type="text" id="startTime" class="settings-input" placeholder="Enter start time..." value="0" style="width: 70%;" autocomplete="off">
-          <label for="endTime">End Time</label>
-          <input type="text" id="endTime" class="settings-input" placeholder="Enter end time..." value="10" style="width: 70%;" autocomplete="off">
-          <label for="dt">dt (Time Increment)</label>
-          <input type="text" id="dt" class="settings-input" placeholder="Enter dt..." value="0.1" style="width: 50%;" autocomplete="off">
-          <label for="integrationMethod">Integration Method</label>
-          <select id="integrationMethod" class="settings-dropdown" style="width: 50%;">
-            <option value="rk4">Runge-Kutta 4</option>
-            <option value="euler">Euler</option>
-          </select>
-          <label for="trigMode">Trigonometry Mode</label>
-          <select id="trigMode" class="settings-dropdown" style="width: 50%;">
-            <option value="radian">Radians</option>
-            <option value="degree">Degrees</option>
-          </select>
-          <label class="switch-label">
+    <div id="overlay" class="overlay hidden"></div>
+    <!-- ================== Simulation Settings Popup ================== -->
+    <div id="settingsPopup" class="settings-popup hidden">
+      <div class="settings-header">
+        <h2>Simulation Settings</h2>
+        <button class="close-btn" onclick="closeSettings('settingsPopup')"><i class="material-symbols-outlined close-icon">close</i></button>
+      </div>
+      <div class="setting-group">
+        <label for="startTime">Start Time</label>
+        <input type="text" id="startTime" class="settings-input" placeholder="Enter start time..." value="0" style="width: 70%;" autocomplete="off">
+        <label for="endTime">End Time</label>
+        <input type="text" id="endTime" class="settings-input" placeholder="Enter end time..." value="10" style="width: 70%;" autocomplete="off">
+        <label for="dt">dt (Time Increment)</label>
+        <input type="text" id="dt" class="settings-input" placeholder="Enter dt..." value="0.1" style="width: 50%;" autocomplete="off">
+        <label for="integrationMethod">Integration Method</label>
+        <select id="integrationMethod" class="settings-dropdown" style="width: 50%;">
+          <option value="rk4">Runge-Kutta 4</option>
+          <option value="euler">Euler</option>
+        </select>
+        <label for="trigMode">Trigonometry Mode</label>
+        <select id="trigMode" class="settings-dropdown" style="width: 50%;">
+          <option value="radian">Radians</option>
+          <option value="degree">Degrees</option>
+        </select>
+        <label class="switch-label">
           <span>Enable High Step Count Simulations</span>
-            <label class="toggle-switch">
-              <input type="checkbox" id="simParamHighStepCount">
-              <span class="slider"></span>
-            </label>
+          <label class="toggle-switch">
+            <input type="checkbox" id="simParamHighStepCount">
+            <span class="slider"></span>
           </label>
-        </div>
-        <button class="setting-button" onclick="closeSettings('settingsPopup')">Apply Settings</button>
-        <p id="validationMessage" class="validation-message hidden">* Please don't leave boxes empty</p>
+        </label>
       </div>
+      <button class="setting-button" onclick="closeSettings('settingsPopup')">Apply Settings</button>
+      <p id="validationMessage" class="validation-message hidden">* Please don't leave boxes empty</p>
+    </div>
 
-      <!-- ================== Theme Popup ================== -->
-      <div id="themePopup" class="theme-popup hidden">
-        <div class="settings-header">
-          <h2>Theme Settings</h2>
-          <button class="close-btn" onclick="closeSettings('themePopup')"><i class="material-symbols-outlined close-icon">close</i></button>
-        </div>
-        <div class="setting-group">
-          <label for="themeSelect">Theme</label>
-          <select id="themeSelect" class="settings-dropdown" style="width: 80%;">
-            <option selected value="normal">Normal</option>
-            <option value="classic">Classic</option>
-            <option value="monochrome">Monochrome</option>
-            <option value="nvoid">Nebula Void</option>
-            <option value="cred">Cherry Red</option>
-            <option value="cblossom">Cherry Blossom</option>
-            <option value="sorange">Channel Orange</option>
-            <option value="fgreen">Forest Green</option>
-            <option value="oblue">Ocean Blue</option>
-            <option value="cpurple">Cosmic Purple</option>
-            <option value="bpink">Bubblegum Pink</option>
-            <option value="sred">Sith Red</option>
-            <option value="mlight">Minimal Light</option>
-            <option value="rduck">Rubber Duck</option>
-            <option value="udark">Ultra Dark</option>
-          </select>
-          <label for="simulationFont">Font</label>
-          <select id="simulationFont" class="settings-dropdown" style="width: 80%;">
-            <option value="Golos Text" style="font-family: 'Golos Text';" selected>Golos Text</option>
-            <option value="Arial" style="font-family: Arial;">Arial</option>
-            <option value="Trebuchet MS" style="font-family: 'Trebuchet MS';">Trebuchet MS</option>
-            <option value="Times New Roman" style="font-family: 'Times New Roman';">Times New Roman</option>
-            <option value="Inter" style="font-family: 'Inter';">Inter</option>
-            <option value="Lexend" style="font-family: 'Lexend';">Lexend</option>
-            <option value="Comic Sans MS" style="font-family: 'Comic Sans MS';">Comic Sans</option>
-            <option value="Wingdings" style="font-family: 'Wingdings';">Wingdings/option>
-          </select>
-          <label for="labelFontSizeInput">Label Font Size</label>
-          <input type="number" id="labelFontSizeInput" class="settings-input" value="11" min="6" max="36" step="1" style="width: 60%;" autocomplete="off">
-          <label>Polarity Label Offset</label>
-          <div style="display:flex; gap:6px; width:45%;">
-            <input type="number" id="polarityOffsetX" class="settings-input" value="0" step="1" style="width:50%;" autocomplete="off" title="X offset from arrowhead (pixels, negative = left)">
-            <input type="number" id="polarityOffsetY" class="settings-input" value="0" step="1" style="width:50%;" autocomplete="off" title="Y offset from arrowhead (pixels, negative = up)">
-          </div>
-        </div>
-        <button id="clearEmphasisButton" class="setting-button">Clear All Emphasis</button>
-        <button class="setting-button" onclick="closeSettings('themePopup')">Apply Settings</button>
+    <!-- ================== Theme Popup ================== -->
+    <div id="themePopup" class="theme-popup hidden">
+      <div class="settings-header">
+        <h2>Theme Settings</h2>
+        <button class="close-btn" onclick="closeSettings('themePopup')"><i class="material-symbols-outlined close-icon">close</i></button>
       </div>
-
-      <!-- ================== Charts Popup ================== -->
-      <div id="chartsPopup" class="charts-popup hidden">
-        <div class="settings-header">
-          <h2>Create Visual</h2>
-          <button class="close-btn" onclick="closeSettings('chartsPopup')"><i class="material-symbols-outlined close-icon">close</i></button>
+      <div class="setting-group">
+        <label for="themeSelect">Theme</label>
+        <select id="themeSelect" class="settings-dropdown" style="width: 80%;">
+          <option selected value="normal">Normal</option>
+          <option value="classic">Classic</option>
+          <option value="monochrome">Monochrome</option>
+          <option value="nvoid">Nebula Void</option>
+          <option value="cred">Cherry Red</option>
+          <option value="cblossom">Cherry Blossom</option>
+          <option value="sorange">Channel Orange</option>
+          <option value="fgreen">Forest Green</option>
+          <option value="oblue">Ocean Blue</option>
+          <option value="cpurple">Cosmic Purple</option>
+          <option value="bpink">Bubblegum Pink</option>
+          <option value="sred">Sith Red</option>
+          <option value="mlight">Minimal Light</option>
+          <option value="rduck">Rubber Duck</option>
+          <option value="udark">Ultra Dark</option>
+        </select>
+        <label for="simulationFont">Font</label>
+        <select id="simulationFont" class="settings-dropdown" style="width: 80%;">
+          <option value="Golos Text" style="font-family: 'Golos Text';" selected>Golos Text</option>
+          <option value="Arial" style="font-family: Arial;">Arial</option>
+          <option value="Trebuchet MS" style="font-family: 'Trebuchet MS';">Trebuchet MS</option>
+          <option value="Times New Roman" style="font-family: 'Times New Roman';">Times New Roman</option>
+          <option value="Inter" style="font-family: 'Inter';">Inter</option>
+          <option value="Lexend" style="font-family: 'Lexend';">Lexend</option>
+          <option value="Comic Sans MS" style="font-family: 'Comic Sans MS';">Comic Sans</option>
+          <option value="Wingdings" style="font-family: 'Wingdings';">Wingdings/option>
+        </select>
+        <label for="labelFontSizeInput">Label Font Size</label>
+        <input type="number" id="labelFontSizeInput" class="settings-input" value="11" min="6" max="36" step="1" style="width: 60%;" autocomplete="off">
+        <label>Polarity Label Offset</label>
+        <div style="display:flex; gap:6px; width:45%;">
+          <input type="number" id="polarityOffsetX" class="settings-input" value="0" step="1" style="width:50%;" autocomplete="off" title="X offset from arrowhead (pixels, negative = left)">
+          <input type="number" id="polarityOffsetY" class="settings-input" value="0" step="1" style="width:50%;" autocomplete="off" title="Y offset from arrowhead (pixels, negative = up)">
         </div>
-        <div id="popForm">
+      </div>
+      <button id="clearEmphasisButton" class="setting-button">Clear All Emphasis</button>
+      <button class="setting-button" onclick="closeSettings('themePopup')">Apply Settings</button>
+    </div>
+
+    <!-- ================== Charts Popup ================== -->
+    <div id="chartsPopup" class="charts-popup hidden">
+      <div class="settings-header">
+        <h2>Create Visual</h2>
+        <button class="close-btn" onclick="closeSettings('chartsPopup')"><i class="material-symbols-outlined close-icon">close</i></button>
+      </div>
+      <div id="popForm">
         <form id="tabConfig" name = "tabConfig" onsubmit="return false"> <!-- Will not refresh page -->
           <div class="setting-group">
             <label for="tab_name">Visual Name</label>
@@ -425,89 +431,134 @@
           <p id="nameValidation" class="validation-message hidden">* Please enter a visual name.</p>
         </form>
       </div>
-      </div>
+    </div>
 
-      <!-- ================== Export Popup ================== -->
-      <div id="exportPopup" class="export-popup hidden">
-        <div class="settings-header">
-          <h2>Export Settings</h2>
-          <button class="close-btn" onclick="closeSettings('exportPopup')"><i class="material-symbols-outlined close-icon">close</i></button>
-        </div>
+    <!-- ================== Export Popup ================== -->
+    <div id="exportPopup" class="export-popup hidden">
+      <div class="settings-header">
+        <h2>Export Settings</h2>
+        <button class="close-btn" onclick="closeSettings('exportPopup')"><i class="material-symbols-outlined close-icon">close</i></button>
+      </div>
+      <div class="setting-group">
+        <label for="fileSelect">File Type</label>
+        <select id="fileSelect" class="settings-dropdown" style="width: 72%;">
+          <option selected>.luna</option>
+          <option>.png</option>
+          <option>.jpg</option>
+          <option>.tiff</option>
+        </select>
+      </div>
+      <div id="imageSettingsSection" style="display: none;">
+        <hr class="settings-divider">
         <div class="setting-group">
-          <label for="fileSelect">File Type</label>
-          <select id="fileSelect" class="settings-dropdown" style="width: 72%;">
-            <option selected>.luna</option>
-            <option>.png</option>
-            <option>.jpg</option>
-            <option>.tiff</option>
-          </select>
+          <label for="imageMargin" class="dotted-underline">Image Margin</label>
+          <input type="text" id="imageMargin" class="px-visual-input settings-input" placeholder="Enter margin..." value="15" style="width: 65%;" autocomplete="off">
         </div>
-        <div id="imageSettingsSection" style="display: none;">
-          <hr class="settings-divider">
-          <div class="setting-group">
-            <label for="imageMargin" class="dotted-underline">Image Margin</label>
-            <input type="text" id="imageMargin" class="px-visual-input settings-input" placeholder="Enter margin..." value="15" style="width: 65%;" autocomplete="off">
-          </div>
-          <button id="downloadImageButton" class="setting-button" onclick="closeSettings('exportPopup')">Download Image</button>
-        </div>
-        <button id="exportButton" class="setting-button" onclick="closeSettings('exportPopup')">Download File</button>
+        <button id="downloadImageButton" class="setting-button" onclick="closeSettings('exportPopup')">Download Image</button>
+      </div>
+      <button id="exportButton" class="setting-button" onclick="closeSettings('exportPopup')">Download File</button>
+    </div>
+
+    <!-- ================== Simulation Error Popup ================== -->
+    <div id="simErrorPopup" class="sims-popup hidden">
+      <div class="settings-header">
+        <h2 id="simErrorPopupTitle">Simulation Error!</h2>
+        <button class="close-btn" onclick="closeSettings('simErrorPopup')"><i class="material-symbols-outlined close-icon">close</i></button>
+      </div>
+      <div class="setting-group">
+        <p id="simErrorPopupDesc">This is the default popup. This should only appear during the debug process.</p>
+      </div>
+      <button id="simErrorPopupCancel" class="setting-button" onclick="closeSettings('simErrorPopup')">Dismiss</button>
+    </div>
+
+    <!-- Monte Carlo Popup -->
+    <div id="monteCarloPopup" class="settings-popup hidden">
+      <div class="settings-header">
+        <h2>Monte Carlo Settings</h2>
+        <button class="close-btn" onclick="closeSettings('monteCarloPopup')">
+          <i class="material-symbols-outlined close-icon">close</i>
+        </button>
       </div>
 
-      <!-- ================== Simulation Error Popup ================== -->
-      <div id="simErrorPopup" class="sims-popup hidden">
-        <div class="settings-header">
-          <h2 id="simErrorPopupTitle">Simulation Error!</h2>
-          <button class="close-btn" onclick="closeSettings('simErrorPopup')"><i class="material-symbols-outlined close-icon">close</i></button>
-        </div>
-        <div class="setting-group">
-          <p id="simErrorPopupDesc">This is the default popup. This should only appear during the debug process.</p>
-        </div>
-        <button id="simErrorPopupCancel" class="setting-button" onclick="closeSettings('simErrorPopup')">Dismiss</button>
+      <div class="setting-group">
+        <label>Number of Runs</label>
+        <input type="number" id="mcRuns" class="settings-input"
+               value="500" min="50" max="5000" style="width:50%">
       </div>
 
-      <!-- ================== Custom Confirmation Popup ================== -->
-      <div id="customConfirmPopup" class="sims-popup hidden">
-        <div class="settings-header">
-          <h2 id="customConfirmTitle">Are you sure?</h2>
-        </div>
-        <div class="setting-group">
-          <p id="customConfirmMessage">You are about to clear the current model.</p>
-        </div>
-        <div class="button-row">
-          <button id="customConfirmCancelBtn" class="setting-button secondary">Cancel</button>
-          <button id="customConfirmOkBtn" class="setting-button primary">Continue</button>
-        </div>
+      <div class="setting-group">
+        <label>Confidence Bands</label>
+        <select id="mcBands" class="settings-dropdown" style="width:70%">
+          <option value="both" selected>90% + 50% (both)</option>
+        </select>
       </div>
 
-      <!-- ================== Equation Editor Popup ================== -->
-      <div id="equationEditorOverlay" class="equation-editor-overlay" onclick="closePopup()"></div>
-      <div id="equationEditorPopup" class="equation-editor-popup">
-        <div class="equation-editor-popup-content">
-          <div class="equation-editor-popup-header">
-            <p class="equation-editor-title">Equation Editor</p>
-            <i class="material-symbols-outlined close-icon" onclick="closePopup()">close</i>
-          </div>
-          <div id="equationEditorPopupContent"></div>
-        </div>
-      </div>
+      <hr class="settings-divider">
+      <p style="color:white; font-weight:600; margin-bottom:0.5rem">
+        Variable Distributions
+      </p>
 
-      <!-- Weird Stuff To Deal With Later -->
-      <div class="weirdStuff">
-        <div id="simErrorPopupDismiss"></div>
-        <div id="popupNotif"><p id="popupNotifText"></p><button id="popupNotifClose"><b></b></button></div>
-        <div id="switchThemeButton"></div>
-        <div id="closeNewTabPopup"></div>
-        <button class="tablinks" id="defaultOpen">Model View</button>
-        <button class="tablinks" id="secondaryOpen">Charts/Tables</button>
-        <div id ="tabName"></div>
-        <div id="nav"><div class="webTabs"></div></div>
-        <div class="tabContent" id="chartsTables">
+      <!-- Dynamically populated by JS -->
+      <div id="mcVariableList" style="max-height:300px; overflow-y:auto;"></div>
+
+      <button class="setting-button" id="runMonteCarloBtn">
+        Run Monte Carlo
+      </button>
+
+      <!-- Progress bar -->
+      <div id="mcProgressContainer" style="display:none; margin-top:1rem;">
+        <div style="background:#1d253d; border-radius:8px; height:12px; overflow:hidden;">
+          <div id="mcProgressBar" style="height:100%; width:0%;
+                 background:#627bc0; transition:width 0.1s ease;"></div>
+        </div>
+        <p id="mcProgressText" style="color:#ccc; font-size:0.85rem;
+           text-align:center; margin-top:0.3rem">0 / 500</p>
+      </div>
+    </div>
+
+    <!-- ================== Custom Confirmation Popup ================== -->
+    <div id="customConfirmPopup" class="sims-popup hidden">
+      <div class="settings-header">
+        <h2 id="customConfirmTitle">Are you sure?</h2>
+      </div>
+      <div class="setting-group">
+        <p id="customConfirmMessage">You are about to clear the current model.</p>
+      </div>
+      <div class="button-row">
+        <button id="customConfirmCancelBtn" class="setting-button secondary">Cancel</button>
+        <button id="customConfirmOkBtn" class="setting-button primary">Continue</button>
+      </div>
+    </div>
+
+    <!-- ================== Equation Editor Popup ================== -->
+    <div id="equationEditorOverlay" class="equation-editor-overlay" onclick="closePopup()"></div>
+    <div id="equationEditorPopup" class="equation-editor-popup">
+      <div class="equation-editor-popup-content">
+        <div class="equation-editor-popup-header">
+          <p class="equation-editor-title">Equation Editor</p>
+          <i class="material-symbols-outlined close-icon" onclick="closePopup()">close</i>
+        </div>
+        <div id="equationEditorPopupContent"></div>
+      </div>
+    </div>
+
+    <!-- Weird Stuff To Deal With Later -->
+    <div class="weirdStuff">
+      <div id="simErrorPopupDismiss"></div>
+      <div id="popupNotif"><p id="popupNotifText"></p><button id="popupNotifClose"><b></b></button></div>
+      <div id="switchThemeButton"></div>
+      <div id="closeNewTabPopup"></div>
+      <button class="tablinks" id="defaultOpen">Model View</button>
+      <button class="tablinks" id="secondaryOpen">Charts/Tables</button>
+      <div id ="tabName"></div>
+      <div id="nav"><div class="webTabs"></div></div>
+      <div class="tabContent" id="chartsTables">
         <div id="tabManager"></div>
         <div id="grayEffectDiv"></div></div>
-      </div>
-
     </div>
+
   </div>
+</div>
 </div>
 <script>
   // ================== Opening the settings popup ==================
@@ -558,6 +609,7 @@
     closeSettings("exportPopup");
     closeSettings("simErrorPopup");
     closeSettings("themePopup");
+    closeSettings("monteCarloPopup");
   });
 
 
@@ -757,31 +809,31 @@
   });
 </script>
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const fileSelect = document.getElementById("fileSelect");
-  const imageSettingsSection = document.getElementById("imageSettingsSection");
-  const downloadFileButton = document.getElementById("downloadFileButton");
-  const downloadImageButton = document.getElementById("downloadImageButton");
+  document.addEventListener("DOMContentLoaded", () => {
+    const fileSelect = document.getElementById("fileSelect");
+    const imageSettingsSection = document.getElementById("imageSettingsSection");
+    const downloadFileButton = document.getElementById("downloadFileButton");
+    const downloadImageButton = document.getElementById("downloadImageButton");
 
-  function updateExportOptions() {
-    const selected = fileSelect.value;
-    if (selected === ".png" || selected === ".jpg" || selected === ".tiff") {
-      imageSettingsSection.style.display = "block";
-      downloadImageButton.style.display = "inline-block";
-      exportButton.style.display = "none";
-    } else {
-      imageSettingsSection.style.display = "none";
-      downloadImageButton.style.display = "none";
-      exportButton.style.display = "inline-block";
+    function updateExportOptions() {
+      const selected = fileSelect.value;
+      if (selected === ".png" || selected === ".jpg" || selected === ".tiff") {
+        imageSettingsSection.style.display = "block";
+        downloadImageButton.style.display = "inline-block";
+        exportButton.style.display = "none";
+      } else {
+        imageSettingsSection.style.display = "none";
+        downloadImageButton.style.display = "none";
+        exportButton.style.display = "inline-block";
+      }
     }
-  }
 
-  // Run on page load
-  updateExportOptions();
+    // Run on page load
+    updateExportOptions();
 
-  // Update when the dropdown changes
-  fileSelect.addEventListener("change", updateExportOptions);
-});
+    // Update when the dropdown changes
+    fileSelect.addEventListener("change", updateExportOptions);
+  });
 
 </script>
 <script>
@@ -966,58 +1018,58 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 </script>
-  <script>
-    const themeSelect = document.getElementById('themeSelect');
-    const themeLink = document.getElementById('theme-style');
+<script>
+  const themeSelect = document.getElementById('themeSelect');
+  const themeLink = document.getElementById('theme-style');
 
-    const savedTheme = localStorage.getItem('selectedTheme');
-    if (savedTheme) {
-      themeSelect.value = savedTheme;
-      applyTheme(savedTheme);
+  const savedTheme = localStorage.getItem('selectedTheme');
+  if (savedTheme) {
+    themeSelect.value = savedTheme;
+    applyTheme(savedTheme);
+  }
+
+  themeSelect.addEventListener('change', () => {
+    const selected = themeSelect.value.toLowerCase();
+    localStorage.setItem('selectedTheme', selected);
+    applyTheme(selected);
+  });
+
+  function applyTheme(selected) {
+    let themeHref = '';
+    if (selected === 'monochrome') {
+      themeHref = '../themes/monochrome.css';
+    } else if (selected === 'classic') {
+      themeHref = '../themes/simulationClassic.css';
+    } else if (selected === 'mlight') {
+      themeHref = '../themes/minimalLight.css';
+    } else if (selected === 'oblue') {
+      themeHref = '../themes/oceanBlue.css';
+    } else if (selected === 'sorange') {
+      themeHref = '../themes/sunsetOrange.css';
+    } else if (selected === 'fgreen') {
+      themeHref = '../themes/forestGreen.css';
+    } else if (selected === 'cpurple') {
+      themeHref = '../themes/cosmicPurple.css';
+    } else if (selected === 'bpink') {
+      themeHref = '../themes/bubblegumPink.css';
+    } else if (selected === 'cred') {
+      themeHref = '../themes/cherryRed.css';
+    } else if (selected === 'cblossom') {
+      themeHref = '../themes/cherryBlossom.css';
+    } else if (selected === 'nvoid') {
+      themeHref = '../themes/nebulaVoid.css';
+    } else if (selected === 'udark') {
+      themeHref = '../themes/ultraDark.css';
+    } else if (selected === 'rduck') {
+      themeHref = '../themes/rubberDuck.css';
+    } else if (selected === 'sred') {
+      themeHref = '../themes/sithRed.css';
+    } else {
+      themeHref = '';
     }
-
-    themeSelect.addEventListener('change', () => {
-      const selected = themeSelect.value.toLowerCase();
-      localStorage.setItem('selectedTheme', selected);
-      applyTheme(selected);
-    });
-
-    function applyTheme(selected) {
-      let themeHref = '';
-      if (selected === 'monochrome') {
-        themeHref = '../themes/monochrome.css';
-      } else if (selected === 'classic') {
-        themeHref = '../themes/simulationClassic.css';
-      } else if (selected === 'mlight') {
-        themeHref = '../themes/minimalLight.css';
-      } else if (selected === 'oblue') {
-        themeHref = '../themes/oceanBlue.css';
-      } else if (selected === 'sorange') {
-        themeHref = '../themes/sunsetOrange.css';
-      } else if (selected === 'fgreen') {
-        themeHref = '../themes/forestGreen.css';
-      } else if (selected === 'cpurple') {
-        themeHref = '../themes/cosmicPurple.css';
-      } else if (selected === 'bpink') {
-        themeHref = '../themes/bubblegumPink.css';
-      } else if (selected === 'cred') {
-        themeHref = '../themes/cherryRed.css';
-      } else if (selected === 'cblossom') {
-        themeHref = '../themes/cherryBlossom.css';
-      } else if (selected === 'nvoid') {
-        themeHref = '../themes/nebulaVoid.css';
-      } else if (selected === 'udark') {
-        themeHref = '../themes/ultraDark.css';
-      } else if (selected === 'rduck') {
-        themeHref = '../themes/rubberDuck.css';
-      } else if (selected === 'sred') {
-        themeHref = '../themes/sithRed.css';
-      } else {
-        themeHref = '';
-      }
-      themeLink.setAttribute('href', themeHref);
-    }
-  </script>
+    themeLink.setAttribute('href', themeHref);
+  }
+</script>
 <script>
   const fontSelect = document.getElementById('simulationFont');
 
@@ -1100,73 +1152,73 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 </script>
 <script>
-let holdTimer;
-let isPopupOpen = false;
-let currentToolbarButton = null;
-let activePopup = null;
+  let holdTimer;
+  let isPopupOpen = false;
+  let currentToolbarButton = null;
+  let activePopup = null;
 
-document.querySelectorAll('.variant-group').forEach(group => {
-  const toolbarButton = group.querySelector('a:not(.variant-popup a)');
-  const popup = group.querySelector('.variant-popup');
+  document.querySelectorAll('.variant-group').forEach(group => {
+    const toolbarButton = group.querySelector('a:not(.variant-popup a)');
+    const popup = group.querySelector('.variant-popup');
 
-  function attachLongPress(button) {
-    button.addEventListener('mousedown', () => {
-      if (isPopupOpen) return;
-      holdTimer = setTimeout(() => {
-        popup.classList.add('visible');
-        isPopupOpen = true;
-        activePopup = popup;
-        currentToolbarButton = button;
-      }, 200);
-    });
-
-    ['mouseup', 'mouseleave', 'click'].forEach(evt => {
-      button.addEventListener(evt, () => {
-        clearTimeout(holdTimer);
+    function attachLongPress(button) {
+      button.addEventListener('mousedown', () => {
+        if (isPopupOpen) return;
+        holdTimer = setTimeout(() => {
+          popup.classList.add('visible');
+          isPopupOpen = true;
+          activePopup = popup;
+          currentToolbarButton = button;
+        }, 200);
       });
+
+      ['mouseup', 'mouseleave', 'click'].forEach(evt => {
+        button.addEventListener(evt, () => {
+          clearTimeout(holdTimer);
+        });
+      });
+    }
+
+    attachLongPress(toolbarButton);
+
+    popup.addEventListener('click', (event) => {
+      const selectedButton = event.target.closest('a');
+      if (!selectedButton) return;
+      event.preventDefault();
+
+      popup.appendChild(currentToolbarButton);
+
+      const buttonOrder = Array.from(popup.querySelectorAll('a')).map(btn => btn.id);
+      buttonOrder.forEach(id => {
+        const btn = popup.querySelector(`#${id}`);
+        if (btn) popup.appendChild(btn);
+      });
+
+      group.insertBefore(selectedButton, popup);
+      currentToolbarButton = selectedButton;
+
+      attachLongPress(currentToolbarButton);
+
+      closeVarientPopup();
+
+      currentToolbarButton.click();
     });
-  }
-
-  attachLongPress(toolbarButton);
-
-  popup.addEventListener('click', (event) => {
-    const selectedButton = event.target.closest('a');
-    if (!selectedButton) return;
-    event.preventDefault();
-
-    popup.appendChild(currentToolbarButton);
-
-    const buttonOrder = Array.from(popup.querySelectorAll('a')).map(btn => btn.id);
-    buttonOrder.forEach(id => {
-      const btn = popup.querySelector(`#${id}`);
-      if (btn) popup.appendChild(btn);
-    });
-
-    group.insertBefore(selectedButton, popup);
-    currentToolbarButton = selectedButton;
-
-    attachLongPress(currentToolbarButton);
-
-    closeVarientPopup();
-
-    currentToolbarButton.click();
   });
-});
 
-function closeVarientPopup() {
-  if (isPopupOpen && activePopup) {
-    activePopup.classList.remove('visible');
-    isPopupOpen = false;
-    clearTimeout(holdTimer);
-    activePopup = null;
+  function closeVarientPopup() {
+    if (isPopupOpen && activePopup) {
+      activePopup.classList.remove('visible');
+      isPopupOpen = false;
+      clearTimeout(holdTimer);
+      activePopup = null;
+    }
   }
-}
 
-document.addEventListener('click', (event) => {
-  if (!event.target.closest('.variant-group')) {
-    closeVarientPopup();
-  }
-});
+  document.addEventListener('click', (event) => {
+    if (!event.target.closest('.variant-group')) {
+      closeVarientPopup();
+    }
+  });
 
 
 </script>
