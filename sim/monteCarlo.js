@@ -66,12 +66,16 @@ export function applySample(engineJson, uncertaintyMap) {
  * @returns {Promise<Object>} - { runs: Array<engineOutput>, percentiles: Object }
  */
 export function runMonteCarlo(engineJson, uncertaintyMap, N = 500, onProgress = null) {
+    N = parseInt(N);
+    if (!N || N <= 0) {
+        return Promise.reject(new Error("Invalid run count: " + N));
+    }
     return new Promise((resolve, reject) => {
         const results = [];
         let completed = 0;
 
         const BATCH_SIZE = 10; // runs per worker message
-        const numWorkers = Math.min(navigator.hardwareConcurrency || 4, 8);
+        const numWorkers = 1;
         const workers = [];
         let nextRun = 0;
 

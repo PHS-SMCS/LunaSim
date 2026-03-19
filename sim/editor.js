@@ -561,7 +561,6 @@ async function runMC() {
 
     const N = parseInt(document.getElementById("mcRuns").value) || 500;
 
-    // Build uncertainty map from UI
     const uncertaintyMap = {};
     document.querySelectorAll(".mc-dist-type").forEach(select => {
         const label = select.dataset.label;
@@ -582,13 +581,11 @@ async function runMC() {
         return;
     }
 
-    // Show progress bar
     const progressContainer = document.getElementById("mcProgressContainer");
     const progressBar = document.getElementById("mcProgressBar");
     const progressText = document.getElementById("mcProgressText");
     progressContainer.style.display = "block";
 
-    // Get engine JSON
     const lunaJson = JSON.parse(myDiagram.model.toJson());
     const engineJson = translate(lunaJson);
     engineJson.start_time = parseFloat(document.getElementById("startTime").value);
@@ -607,37 +604,17 @@ async function runMC() {
         );
         console.log(`MC Benchmark — N=${N}: ${((performance.now() - _benchStart) / 1000).toFixed(3)}s`);
 
-        closeSettings("monteCarloPopup");
-
-        // Switch to chart view and render MC results
-        document.getElementById("secondaryOpen").click();
-        renderMonteCarloChart(monteCarloResults);
-
-    } catch(err) {
-        showAlertPopup({ title: "Monte Carlo Error", message: err.message });
-    }
-    try {
-        monteCarloResults = await runMonteCarlo(engineJson, uncertaintyMap, N,
-            (done, total) => {
-                const pct = (done / total) * 100;
-                progressBar.style.width = pct + "%";
-                progressText.textContent = `${done} / ${total}`;
-            }
-        );
-
-        // Store results
         const mcId = "mc_" + Date.now();
         window._mcResultsStore = window._mcResultsStore || {};
         window._mcResultsStore[mcId] = monteCarloResults;
 
-        // Build tab name from distributions used
         const distSummary = Object.entries(uncertaintyMap)
             .map(([label, dist]) => `${label}(${dist.type})`)
             .join(", ");
 
+        const tabName = `MC N=${N} ${distSummary}`;
         const firstStock = Object.keys(monteCarloResults.percentiles)[0] || "unknown";
 
-        // Push tab exactly like a regular visual
         tabs.push({
             type: "montecarlo",
             name: tabName,
@@ -645,20 +622,16 @@ async function runMC() {
             runs: N,
             defaultVariable: firstStock,
             distributions: distSummary,
-            // These keep the existing delete/stats code from breaking
             xAxis: "time",
             yAxis: Object.keys(monteCarloResults.percentiles)
         });
-
 
         setTimeout(() => {
             const lastTab = list.lastChild;
             if (lastTab) {
                 lastTab.click();
-                // Only close the popup after the tab has been clicked and render has started
                 setTimeout(() => {
                     closeSettings("monteCarloPopup");
-                    // Reset progress bar for next run
                     progressContainer.style.display = "none";
                     progressBar.style.width = "0%";
                     progressText.textContent = "0 / 0";
@@ -668,6 +641,7 @@ async function runMC() {
 
     } catch(err) {
         showAlertPopup({ title: "Monte Carlo Error", message: err.message });
+        progressContainer.style.display = "none";
     }
 }
 
