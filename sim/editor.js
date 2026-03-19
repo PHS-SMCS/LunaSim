@@ -1932,6 +1932,8 @@ function run() {
     engineJson.integration_method = integrationMethod;
     engineJson.trigMode = trigMode;
 
+    // Store for Monte Carlo access
+    window._lastEngineJson = JSON.parse(JSON.stringify(engineJson));
 
     try {
         sim.setData(engineJson);
