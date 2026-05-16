@@ -379,6 +379,29 @@ function init() {
     });
 
     /**
+     * Refactor equations when a node label is edited directly on the diagram canvas.
+     */
+    myDiagram.addDiagramListener("TextEdited", e => {
+        const oldName = e.parameter;
+        const newName = e.subject.text;
+        if (!oldName || newName === oldName) return;
+
+        myDiagram.model.commit(() => {
+            const pattern = new RegExp("\\[" + oldName.replace(/[.*+?^${}()|[\]\\]/g, "\\\\$&") + "\\]", "g");
+            myDiagram.model.nodeDataArray.forEach(n => {
+                if (typeof n.equation === 'string') {
+                    const updated = n.equation.replace(pattern, `[${newName}]`);
+                    if (updated !== n.equation) {
+                        myDiagram.model.setDataProperty(n, 'equation', updated);
+                    }
+                }
+            });
+        }, 'Refactor equations on diagram text edit');
+        
+        updateTable(true);
+    });
+
+    /**
      * Auto-delete any flow links whose label (valve node) was deleted.
      */
     myDiagram.addDiagramListener("SelectionDeleted", e => {
@@ -2060,32 +2083,43 @@ function finalizeRename() {
         return;
     }
 
-    const tableState = {};
-    $('#eqTableBody').find('tr').each(function () {
+    // 1. Scrape current state from all possible table containers to ensure we have the latest edits.
+    const tableState = [];
+    $('#eqTableBody tr, #equationEditorPopupContent tr').each(function () {
         const rowName = $(this).find('input[name="name"]').val();
-        tableState[rowName] = {
-            equation: $(this).find('input[name="equation"]').val(),
-            checkbox: $(this).find('input[name="checkbox"]').is(':checked')
-        };
+        const rowEq = $(this).find('input[name="equation"]').val();
+        const rowCheck = $(this).find('input[name="checkbox"]').is(':checked');
+        if (rowName) {
+            tableState.push({ name: rowName, equation: rowEq, checkbox: rowCheck });
+        }
     });
 
-    const $row = $input.closest('tr');
-    const equation = $row.find('input[name="equation"]').val();
-    const checkbox = $row.find('input[name="checkbox"]').is(':checked');
-
+    // 2. Perform rename and refactor in a single transaction.
     myDiagram.model.commit(() => {
-        // Find the node being renamed
+        const pattern = new RegExp("\\[" + oldName.replace(/[.*+?^${}()|[\]\\]/g, "\\\\$&") + "\\]", "g");
+
+        // A. Rename the target node
         const nodeData = myDiagram.model.nodeDataArray.find(n => n.label === oldName);
         if (nodeData) {
             myDiagram.model.setDataProperty(nodeData, 'label', newName);
             if (nodeData.key === oldName) {
                 myDiagram.model.setDataProperty(nodeData, 'key', newName);
             }
-            myDiagram.model.setDataProperty(nodeData, 'equation', equation);
-            myDiagram.model.setDataProperty(nodeData, 'checkbox', checkbox);
         }
 
-        const pattern = new RegExp(`\\[${oldName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\]`, 'g');
+        // B. Reapply table edits while refactoring them
+        tableState.forEach(row => {
+            const targetLabel = (row.name === oldName) ? newName : row.name;
+            const node = myDiagram.model.nodeDataArray.find(n => n.label === targetLabel);
+            if (node) {
+                const eq = row.equation || "";
+                const updated = eq.replace(pattern, `[${newName}]`);
+                myDiagram.model.setDataProperty(node, 'equation', updated);
+                myDiagram.model.setDataProperty(node, 'checkbox', row.checkbox);
+            }
+        });
+
+        // C. Refactor any other equations in the model that might not be in the table
         myDiagram.model.nodeDataArray.forEach(n => {
             if (typeof n.equation === 'string') {
                 const updated = n.equation.replace(pattern, `[${newName}]`);
@@ -2094,21 +2128,9 @@ function finalizeRename() {
                 }
             }
         });
-    }, 'Rename node');
-
-    myDiagram.model.commit(() => {
-        Object.keys(tableState).forEach(origName => {
-            const targetLabel = (origName === oldName) ? newName : origName;
-            const node = myDiagram.model.nodeDataArray.find(n => n.label === targetLabel);
-            if (node) {
-                myDiagram.model.setDataProperty(node, 'equation', tableState[origName].equation);
-                myDiagram.model.setDataProperty(node, 'checkbox', tableState[origName].checkbox);
-            }
-        });
-    }, 'Reapply table edits after rename');
+    }, 'Rename and Refactor');
 
     $input.data('oldName', newName);
-
     updateTable(true);
 }
 
