@@ -249,3 +249,60 @@ body {
     line-height: 1.5;
     padding: 10px
 }
+
+/* Documentation additions -------------------------------------------------- */
+html { scroll-behavior: smooth; }
+body { min-width: 0; overflow-x: hidden; width: 100%; }
+code {
+    background: #eef3ff;
+    border: 1px solid #d7e1f5;
+    border-radius: 5px;
+    color: #263b72;
+    font-family: Consolas, "Courier New", monospace;
+    padding: 0.08rem 0.3rem;
+}
+.tutorialInfo { min-width: 0; overflow-x: auto; }
+.tutorialInfo ul, .tutorialInfo ol { color: #4c4a4a; line-height: 1.7; margin: .45rem 0 .65rem 1.35rem; }
+.tutorialInfo li { margin-bottom: .55rem; padding-left: .25rem; }
+.video-frame {
+    align-self: flex-start;
+    aspect-ratio: 16 / 9;
+    background: #b8d1e6;
+    border: 1px solid #000;
+    border-radius: 15px;
+    flex: 0 0 55%;
+    max-width: 100%;
+    overflow: hidden;
+    width: 640px;
+}
+.tutorialVideo { border: 0; border-radius: 0; display: block; height: 100% !important; width: 100% !important; }
+.tutorialInfo table { display: table; table-layout: auto; width: 100%; }
+.function-table td:first-child { min-width: 205px; }
+.sidebar { -ms-overflow-style: none; scrollbar-width: none; }
+
+@media (max-width: 1050px) {
+    .sidebar { left: 1.5vw; width: 22%; }
+    .tutorialList { margin-left: 24%; }
+    .tutorialContents, .media-layout { flex-direction: column; }
+    .tutorialImage { height: 250px; width: min(100%, 360px); }
+    .video-frame { flex: 0 0 auto; width: 100%; }
+}
+
+@media (max-width: 720px) {
+    body { display: block; }
+    .sidebar {
+        border-radius: 0;
+        height: auto;
+        left: 0;
+        max-height: 42vh;
+        position: relative;
+        top: 0;
+        width: 100%;
+    }
+    .tutorialList { margin-left: 0; }
+    .tutorialContainer { margin: 18px 10px; }
+    .tutorialBox { padding: 16px; width: 100%; }
+    .tutorialInfo { padding-left: 13px; }
+    .tutorialInfo p, .tutorialInfo table td { font-size: 15px; }
+    .tutorialInfo table th { font-size: 15px; }
+}

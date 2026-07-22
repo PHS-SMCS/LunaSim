@@ -50,6 +50,30 @@ import {translate} from "./translator.js";
  * @memberof module:editor
  */
 import {CurvedLinkReshapingTool} from "./CurvedLinkReshapingTool.js";
+import { LIVE_API_SUGGESTIONS, findLiveApiReferences, resolveEngineLiveApis, stripLiveApiReferences } from "./liveApi.js";
+
+const LIVE_API_EXPERIMENTAL_KEY = 'lunaExperimentalLiveApi';
+const INFLOW_COLOR = '#2a9d59';
+const OUTFLOW_COLOR = '#d1495b';
+function liveApiEquationsEnabled() {
+    return localStorage.getItem(LIVE_API_EXPERIMENTAL_KEY) === 'true';
+}
+
+function flowDirection(data) {
+    if (!data || !myDiagram || !myDiagram.model) return 'transfer';
+    const from = myDiagram.model.findNodeDataForKey(data.from);
+    const to = myDiagram.model.findNodeDataForKey(data.to);
+    if (from && from.category === 'cloud' && to && to.category !== 'cloud') return 'inflow';
+    if (from && from.category !== 'cloud' && to && to.category === 'cloud') return 'outflow';
+    return 'transfer';
+}
+
+function defaultFlowColor(data) {
+    const direction = flowDirection(data);
+    if (direction === 'inflow') return INFLOW_COLOR;
+    if (direction === 'outflow') return OUTFLOW_COLOR;
+    return _modelColors.flow || '#3489eb';
+}
 
 
 /**
@@ -322,6 +346,9 @@ function init() {
         }
     });
 
+    // Expose the active diagram to non-module interface helpers.
+    window.myDiagram = myDiagram;
+
     myDiagram.toolManager.mouseMoveTools.insertAt(0, new NodeLabelDraggingTool());
 
     myDiagram.toolManager.dragSelectingTool.canStart = function () {
@@ -396,6 +423,7 @@ function init() {
         const link = e.subject;
         if (link.category === "flow") {
             myDiagram.startTransaction("updateNode");
+            myDiagram.model.setDataProperty(link.data, "flowDirection", flowDirection(link.data));
             SD.nodeCounter.valve += 1;
             let newNodeId = "flow" + SD.nodeCounter.valve;
 
@@ -757,7 +785,10 @@ function buildTemplates() {
                     )
             },
             $(go.Shape, shapeStyle(),
-                new go.Binding("fill", "color").makeTwoWay(),
+                new go.Binding("fill", "", function(d, shape) {
+                    const link = shape.part ? shape.part.labeledLink : null;
+                    return d.color || defaultFlowColor(link ? link.data : null);
+                }),
                 new go.Binding("stroke", "emphasized", function(e) { return e ? "#E8000D" : null; }),
                 new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 3.5 : 1; }),
                 {
@@ -833,25 +864,19 @@ function buildTemplates() {
 
             $(go.Shape,
                 new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 11 : 5; }),
-                new go.Binding("stroke", "emphasized", function(e, shape) {
-                    if (e) return "#E8000D";
-                    var d = shape.part ? shape.part.data : null;
-                    return (d && d.flowColor) || _modelColors.flow || "#3489eb";
+                new go.Binding("stroke", "", function(d) {
+                    return d.emphasized ? "#E8000D" : (d.flowColor || defaultFlowColor(d));
                 }), {
                 stroke: _modelColors.flow || "#3489eb",
                 strokeWidth: 5
             }),
 
             $(go.Shape,
-                new go.Binding("fill", "emphasized", function(e, shape) {
-                    if (e) return "#E8000D";
-                    var d = shape.part ? shape.part.data : null;
-                    return (d && d.flowHeadColor) || _modelColors.flowhead || _modelColors.flow || "#3489eb";
+                new go.Binding("fill", "", function(d) {
+                    return d.emphasized ? "#E8000D" : (d.flowHeadColor || defaultFlowColor(d));
                 }),
-                new go.Binding("stroke", "emphasized", function(e, shape) {
-                    if (e) return "#E8000D";
-                    var d = shape.part ? shape.part.data : null;
-                    return (d && d.flowHeadColor) || _modelColors.flowhead || _modelColors.flow || "#3489eb";
+                new go.Binding("stroke", "", function(d) {
+                    return d.emphasized ? "#E8000D" : (d.flowHeadColor || defaultFlowColor(d));
                 }), {
                 fill: _modelColors.flow || "#3489eb",
                 stroke: _modelColors.flow || "#3489eb",
@@ -861,12 +886,8 @@ function buildTemplates() {
 
             $(go.Shape,
                 new go.Binding("visible", "", isBiflow),
-                new go.Binding("stroke", "", function(_, shape) {
-                    return shape.part && shape.part.isSelected ? (_modelColors.flow || "#3489eb") : "#808080";
-                }).ofObject(),
-                new go.Binding("fill", "", function(_, shape) {
-                    return shape.part && shape.part.isSelected ? (_modelColors.flow || "#3489eb") : "#808080";
-                }).ofObject(),
+                new go.Binding("stroke", "", function(d) { return d.flowHeadColor || defaultFlowColor(d); }),
+                new go.Binding("fill", "", function(d) { return d.flowHeadColor || defaultFlowColor(d); }),
                 {
                     fromArrow: "Backward",
                     scale: 2.0
@@ -882,7 +903,7 @@ function buildTemplates() {
         $(go.Link,
             {
                 toShortLength: 10,
-                layerName: "Background",
+                layerName: "Foreground",
                 selectionAdornmentTemplate:
                     $(go.Adornment,
                         $(go.Shape,
@@ -900,8 +921,8 @@ function buildTemplates() {
                 strokeWidth: 5
             },
             new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 11 : 5; }),
-            new go.Binding("stroke", "emphasized", function(e) {
-                return e ? "#E8000D" : "#555555";
+            new go.Binding("stroke", "", function(d) {
+                return d.emphasized ? "#E8000D" : (d.flowColor || "#555555");
             })),
             // Arrowhead: light red
             $(go.Shape, {
@@ -910,8 +931,8 @@ function buildTemplates() {
                 toArrow: "Standard",
                 scale: 2.0
             },
-            new go.Binding("fill", "emphasized", function(e) { return e ? "#E8000D" : "#e07070"; }),
-            new go.Binding("stroke", "emphasized", function(e) { return e ? "#E8000D" : "#e07070"; }))
+            new go.Binding("fill", "", function(d) { return d.emphasized ? "#E8000D" : (d.flowHeadColor || "#e07070"); }),
+            new go.Binding("stroke", "", function(d) { return d.emphasized ? "#E8000D" : (d.flowHeadColor || "#e07070"); }))
         )
     );
 
@@ -946,6 +967,7 @@ function buildTemplates() {
                 fromLinkable: false,
                 toLinkable: false
             },
+            new go.Binding("fill", "color", function(c) { return c || "#e07070"; }),
             new go.Binding("stroke", "emphasized", function(e) { return e ? "#E8000D" : "#c04040"; }),
             new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 3.5 : 1.5; }))
             // No TextBlock — overflow valves have no label
@@ -969,11 +991,11 @@ function buildTemplates() {
     $(go.Shape,
         new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 8 : 1.5; }),
         {strokeWidth: 1.5},
-        new go.Binding("stroke", "isSelected", function(sel) { return sel ? "#3489eb" : (_modelColors.influence || "#e3680e"); }).ofObject()),
+        new go.Binding("stroke", "", function(d) { return d.emphasized ? "#E8000D" : (d.flowColor || _modelColors.influence || "#e3680e"); })),
     $(go.Shape,
         new go.Binding("scale", "emphasized", function(e) { return e ? 2.5 : 1.5; }),
         { stroke: null, toArrow: "Standard", scale: 1.5 },
-        new go.Binding("fill", "isSelected", function(sel) { return sel ? "#3489eb" : (_modelColors.influence || "#e3680e"); }).ofObject())
+        new go.Binding("fill", "", function(d) { return d.emphasized ? "#E8000D" : (d.flowHeadColor || d.flowColor || _modelColors.influence || "#e3680e"); }))
     ));
 
     // Polarity label nodes (isLinkLabel:true) — GoJS's native mechanism for
@@ -1365,11 +1387,11 @@ function updateTable(load = false) {
             const $tr = $('<tr>');
 
             $tr.append($('<td>').append(
-                $('<input class="eqTableInputBox" readonly>').attr({ type: 'text', name: 'type', value: category })
+                $('<input class="eqTableInputBox" readonly>').attr({ type: 'text', name: 'type', value: category, autocomplete: 'new-password', 'data-form-type': 'other', 'data-lpignore': 'true' })
             ));
 
             const $nameInput = $('<input class="eqTableInputBox">')
-                .attr({ type: 'text', name: 'name', value: label })
+                .attr({ type: 'text', name: 'name', value: label, autocomplete: 'new-password', 'data-form-type': 'other', 'data-lpignore': 'true', spellcheck: 'false' })
                 .data('oldName', label)
                 .on('blur', finalizeRename)
                 .on('keydown', function (e) {
@@ -1382,7 +1404,7 @@ function updateTable(load = false) {
             $tr.append($('<td>').append($nameInput));
 
             const $eqInput = $('<input class="eqTableInputBox" style="width: inherit;">')
-                .attr({ type: 'text', name: 'equation' })
+                .attr({ type: 'text', name: 'equation', autocomplete: 'new-password', 'data-form-type': 'other', 'data-lpignore': 'true', spellcheck: 'false' })
                 .css('width', '99%')
                 .val(load ? (item.equation || "") : (item.equation || ""));
 
@@ -1392,7 +1414,7 @@ function updateTable(load = false) {
             const unitVal = (item.units && item.units.trim() !== '') ? item.units : '';
             const $unitWrapper = $('<td class="eq-col-units">').css('position', 'relative');
             const $unitInput = $('<input class="eqTableInputBox units-input">')
-                .attr({ type: 'text', name: 'units', autocomplete: 'off' })
+                .attr({ type: 'text', name: 'units', autocomplete: 'new-password', 'data-form-type': 'other', 'data-lpignore': 'true', spellcheck: 'false' })
                 .css('width', '99%')
                 .val(load ? unitVal : unitVal);
             $unitWrapper.append($unitInput);
@@ -1690,7 +1712,7 @@ function containsReference(equation, data) {
  * @function
  */
 
-function run() {
+async function run() {
     window.simulationHasRunSuccessfully_tab = false;
     loadTableToDiagram();
     if (!Array.isArray(myDiagram.model.nodeDataArray) || myDiagram.model.nodeDataArray.length === 0) {
@@ -1724,7 +1746,7 @@ function run() {
 
     for (var i = 0; i < engineJson.variables.length; i++) {
         var variable = engineJson.variables[i];
-        var references = containsReference(variable.equation);
+        var references = containsReference(stripLiveApiReferences(variable.equation));
         // [TIME] is a built-in — exclude it from influence validation
         references = references.filter(r => r !== 'TIME');
         var newReferences = [];
@@ -1788,7 +1810,7 @@ function run() {
 
     for (var i = 0; i < engineJson.valves.length; i++) {
         var valve = engineJson.valves[i];
-        var references = containsReference(valve.equation);
+        var references = containsReference(stripLiveApiReferences(valve.equation));
         // [TIME] is a built-in — exclude it from influence validation
         references = references.filter(r => r !== 'TIME');
         console.log(references);
@@ -1932,6 +1954,26 @@ function run() {
     engineJson.integration_method = integrationMethod;
     engineJson.trigMode = trigMode;
 
+    const liveApiReferences = findLiveApiReferences(JSON.stringify(engineJson));
+    if (liveApiReferences.length && !liveApiEquationsEnabled()) {
+        document.getElementById("simErrorPopupDesc").textContent = "Live API equations are experimental and currently disabled. Enable Live API Equations in Settings > Experimental, then run the model again.";
+        showSimErrorPopup();
+        window.simulationHasRunSuccessfully_tab = false;
+        return;
+    }
+    try {
+        if (liveApiReferences.length) {
+            engineJson = await resolveEngineLiveApis(engineJson, {
+                finnhubKey: sessionStorage.getItem('lunaFinnhubApiKey') || ''
+            });
+        }
+    } catch (err) {
+        document.getElementById("simErrorPopupDesc").textContent = "Live API Error: " + err.message;
+        showSimErrorPopup();
+        window.simulationHasRunSuccessfully_tab = false;
+        return;
+    }
+
     // Store for Monte Carlo access
     window._lastEngineJson = JSON.parse(JSON.stringify(engineJson));
 
@@ -1960,6 +2002,7 @@ function run() {
             chartBtn.classList.add('active');
             modelBtn.classList.remove('active');
         }
+        window.dispatchEvent(new CustomEvent('lunasim:simulation-complete'));
 
     } catch (err) {
         console.error("Simulation failed:", err);
@@ -2532,7 +2575,8 @@ function getUnitForName(name) {
 export { getUnitForName };
 const JAVA_MATH_FUNCTIONS = [
   'sin()', 'cos()', 'tan()', 'asin()', 'acos()', 'atan()', 'atan2()',
-  'sinh()', 'cosh()', 'tanh()', 'exp()', 'log()', 'log10()', 'sqrt()', 'cbrt()',
+  'sinh()', 'cosh()', 'tanh()', 'asinh()', 'acosh()', 'atanh()',
+  'exp()', 'log()', 'log10()', 'sqrt()', 'cbrt()',
   'abs()', 'ceil()', 'floor()', 'round()', 'pow()', 'max()', 'min()', 'sign()',
   'random()', 'hypot()', 'expm1()', 'log1p()', 'sec()', 'csc()', 'cot()'
 ];
@@ -2646,17 +2690,20 @@ function isCursorInsideBrackets(text, cursorPos) {
  */
 function getTopBracketMatches(fragment) {
     const lower = fragment.toLowerCase();
+    const modelCandidates = ["TIME", ...GOJS_ELEMENT_LABELS].map(label => ({
+        label,
+        insert: label,
+        kind: 'model'
+    }));
+    const apiCandidates = (liveApiEquationsEnabled() ? LIVE_API_SUGGESTIONS : []).filter(item => {
+        const apiName = item.insert.split(']')[0];
+        return !fragment || apiName.toLowerCase().startsWith(lower);
+    });
+    // Model references are the most common choice, so keep them ahead of live data.
+    const candidates = [...modelCandidates, ...apiCandidates];
 
-    // [TIME] is always a valid reference — prepend it to the candidate list
-    const candidates = ["TIME", ...GOJS_ELEMENT_LABELS];
-
-    if (fragment === "") {
-        return candidates.slice(0, 5);
-    }
-
-    return candidates
-        .filter(label => label.toLowerCase().startsWith(lower))
-        .slice(0, 5);
+    if (fragment === "") return candidates.slice(0, 8);
+    return candidates.filter(item => item.insert.toLowerCase().startsWith(lower)).slice(0, 8);
 }
 function finalizeRename() {
     const $input = $(this);
@@ -2786,7 +2833,7 @@ function setupAutocompleteForInputs() {
                 const isInBrackets = isCursorInsideBrackets(fullText, cursorPos);
                 let before = fullText.slice(0, cursorPos);
                 const after = fullText.slice(cursorPos);
-                const replacement = selected.text();
+                const replacement = selected.data('replacement') || selected.text();
                 let updated, newCursor;
 
                 if (isInBrackets) {
@@ -2937,7 +2984,15 @@ function showAutocomplete($input) {
 
     const dropdown = $('<div class="autocomplete-list"></div>');
     matches.forEach(match => {
-        const item = $('<div class="autocomplete-item"></div>').text(match);
+        const suggestion = typeof match === 'string' ? { label: match, insert: match } : match;
+        const item = $('<div class="autocomplete-item"></div>')
+            .text(suggestion.label)
+            .data('replacement', suggestion.insert);
+        if (typeof match !== 'string' && match.kind === 'model') {
+            item.addClass('model-suggestion').attr('title', 'Model element reference');
+        } else if (typeof match !== 'string' && LIVE_API_SUGGESTIONS.includes(match)) {
+            item.addClass('api-suggestion').attr('title', 'Live API reference');
+        }
         item.on('mousedown', function (e) {
             e.preventDefault();
 
@@ -2946,7 +3001,7 @@ function showAutocomplete($input) {
             let updated, newCursor;
 
             if (isInBrackets) {
-                before = before.replace(/\[([^\[\]]*)$/, `[${match}`);
+                before = before.replace(/\[([^\[\]]*)$/, `[${suggestion.insert}`);
                 if (after.trim().startsWith("]")) {
                     updated = before + after;
                     newCursor = before.length;
@@ -2956,7 +3011,7 @@ function showAutocomplete($input) {
                 }
 
             } else {
-                const funcName = match;
+                const funcName = suggestion.insert;
                 const withParens = funcName.endsWith("()") ? funcName : funcName + "()";
                 before = before.replace(/(\w+)$/, withParens);
                 updated = before + after;
@@ -3845,14 +3900,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         var sel = myDiagram.selection.first();
 
-        var ALL_ROWS = ['ecpName','ecpColorRow','ecpFlowColorRow','ecpTransitRow',
-                        'ecpCookTimeRow','ecpCapacityRow','ecpLabelColorRow','ecpLabelSizeRow'];
+        var ALL_ROWS = ['ecpName','ecpColorRow','ecpFlowColorRow','ecpFlowHeadColorRow','ecpValveColorRow','ecpTransitRow',
+                        'ecpCookTimeRow','ecpCapacityRow','ecpLabelColorRow','ecpLabelSizeRow','ecpResetAll'];
         ALL_ROWS.forEach(function(id) { setVisible(ecpEl(id), false); });
 
         if (!sel) { ecpSetPanelVisible(false); return; }
 
         var cat = resolveCategory(sel);
-        var ignoreCats = ['polarityLabel', 'influence', 'overflow', 'overflow-valve'];
+        var ignoreCats = ['polarityLabel', 'image'];
         if (ignoreCats.indexOf(cat) >= 0) { ecpSetPanelVisible(false); return; }
 
         ecpSetPanelVisible(true);
@@ -3865,7 +3920,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (vn) nodeData = vn.data;
         } else {
             nodeData = sel.data;
-            if (cat === 'flow') {
+            if (cat === 'flow' || cat === 'overflow') {
                 var fl = linkForValve(sel);
                 if (fl) linkData = fl.data;
             }
@@ -3874,7 +3929,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Name
         var nameEl = ecpEl('ecpName');
         if (nameEl) {
-            nameEl.textContent = nodeData ? (nodeData.label || '—') : '—';
+            nameEl.textContent = nodeData && nodeData.label ? nodeData.label :
+                (cat === 'influence' ? 'Influence' : (cat === 'overflow' ? 'Overflow' : '—'));
             setVisible(nameEl, true);
         }
 
@@ -3887,15 +3943,26 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Flow body color
-        if (cat === 'flow') {
+        if (cat === 'flow' || cat === 'overflow' || cat === 'influence') {
             if (!linkData && sel.data && sel.data.category === 'valve') {
                 var fl2 = linkForValve(sel);
                 if (fl2) linkData = fl2.data;
             }
             if (linkData) {
                 setVisible(ecpEl('ecpFlowColorRow'), true);
+                setVisible(ecpEl('ecpFlowHeadColorRow'), true);
                 var bp = ecpEl('ecpFlowBodyColor');
-                if (bp) bp.value = linkData.flowColor || _modelColors.flow || '#3489eb';
+                var hp = ecpEl('ecpFlowHeadColor');
+                var base = cat === 'influence' ? (_modelColors.influence || '#e3680e') :
+                           cat === 'overflow' ? '#555555' : defaultFlowColor(linkData);
+                var head = cat === 'overflow' ? '#e07070' : base;
+                if (bp) bp.value = linkData.flowColor || base;
+                if (hp) hp.value = linkData.flowHeadColor || head;
+                if ((cat === 'flow' || cat === 'overflow') && nodeData) {
+                    setVisible(ecpEl('ecpValveColorRow'), true);
+                    var vp = ecpEl('ecpValveColor');
+                    if (vp) vp.value = nodeData.color || (cat === 'overflow' ? '#e07070' : defaultFlowColor(linkData));
+                }
             }
         }
 
@@ -3932,6 +3999,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (lc) lc.value = nodeData.labelColor || defaultLabelColor;
             if (ls) ls.value = nodeData.labelSize  || labelFontSize;
         }
+        setVisible(ecpEl('ecpResetAll'), true);
     };
 
     // ── Wire after DOM ready ───────────────────────────────────────────────────
@@ -3970,27 +4038,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 }, 'set node color');
             });
         }
-        var resetBtn = ecpEl('ecpResetColor');
-        if (resetBtn) {
-            resetBtn.addEventListener('click', function () {
-                var sel = myDiagram.selection.first();
-                if (!sel || sel instanceof go.Link) return;
-                var cat = resolveCategory(sel);
-                var def = _modelColors[cat] || '#cfcfcf';
-                myDiagram.model.commit(function () {
-                    myDiagram.model.setDataProperty(sel.data, 'color', def);
-                }, 'reset node color');
-                if (cp) cp.value = def;
-            });
-        }
-
         // ── Flow body color ────────────────────────────────────────────────────
         var bp = ecpEl('ecpFlowBodyColor');
         function getActiveLinkData() {
             var sel = myDiagram.selection.first();
             if (!sel) return null;
             if (sel instanceof go.Link) return sel.data;
-            if (sel.data && sel.data.category === 'valve') {
+            if (sel.data && (sel.data.category === 'valve' || sel.data.category === 'overflow-valve')) {
                 var fl = linkForValve(sel);
                 return fl ? fl.data : null;
             }
@@ -4005,18 +4059,54 @@ document.addEventListener('DOMContentLoaded', function() {
                 }, 'set flow body color');
             });
         }
-        var flowResetBtn = ecpEl('ecpFlowResetColor');
-        if (flowResetBtn) {
-            flowResetBtn.addEventListener('click', function () {
+        var hp = ecpEl('ecpFlowHeadColor');
+        if (hp) {
+            hp.addEventListener('change', function () {
                 var ld = getActiveLinkData();
                 if (!ld) return;
-                var def = _modelColors.flow || '#3489eb';
                 myDiagram.model.commit(function () {
-                    myDiagram.model.setDataProperty(ld, 'flowColor', null);
-                }, 'reset flow color');
-                if (bp) bp.value = def;
+                    myDiagram.model.setDataProperty(ld, 'flowHeadColor', hp.value);
+                }, 'set link arrow color');
             });
         }
+        var vp = ecpEl('ecpValveColor');
+        if (vp) vp.addEventListener('change', function () {
+            var sel = myDiagram.selection.first();
+            if (!sel) return;
+            var vn = sel instanceof go.Link ? valveNodeForLink(sel) : sel;
+            if (!vn || !vn.data || ['valve','overflow-valve'].indexOf(vn.data.category) < 0) return;
+            myDiagram.model.commit(function () {
+                myDiagram.model.setDataProperty(vn.data, 'color', vp.value);
+            }, 'set valve color');
+        });
+
+        var resetAllBtn = ecpEl('ecpResetAll');
+        if (resetAllBtn) resetAllBtn.addEventListener('click', function () {
+            var sel = myDiagram.selection.first();
+            if (!sel) return;
+            var cat = resolveCategory(sel);
+            var ld = getActiveLinkData();
+            var nd = sel instanceof go.Link ? (function(){ var v = valveNodeForLink(sel); return v ? v.data : null; }()) : sel.data;
+            myDiagram.model.commit(function () {
+                if (ld) {
+                    myDiagram.model.setDataProperty(ld, 'flowColor', null);
+                    myDiagram.model.setDataProperty(ld, 'flowHeadColor', null);
+                    myDiagram.model.setDataProperty(ld, 'emphasized', false);
+                }
+                if (nd) {
+                    var defColor = cat === 'overflow' ? '#e07070' :
+                        (cat === 'flow' ? defaultFlowColor(ld) : (_modelColors[cat] || '#cfcfcf'));
+                    myDiagram.model.setDataProperty(nd, 'color', defColor);
+                    myDiagram.model.setDataProperty(nd, 'labelColor', _modelColors.labelcolor || '#000000');
+                    myDiagram.model.setDataProperty(nd, 'labelSize', labelFontSize);
+                    myDiagram.model.setDataProperty(nd, 'emphasized', false);
+                    if (cat === 'conveyor') myDiagram.model.setDataProperty(nd, 'transitTime', 1);
+                    if (cat === 'microwave') myDiagram.model.setDataProperty(nd, 'cookTime', 1);
+                    if (cat === 'queue') myDiagram.model.setDataProperty(nd, 'capacity', 100);
+                }
+            }, 'reset selected element');
+            window._ecpSync();
+        });
 
         // ── Capacity (queue) ──────────────────────────────────────────────────
         var capInp = ecpEl('ecpCapacity');
@@ -4137,6 +4227,77 @@ document.addEventListener('DOMContentLoaded', function() {
     }); // end DOMContentLoaded
 
 }()); // end ECP IIFE
+
+// Experimental feature gates. Both groups are intentionally disabled by default.
+(function () {
+    var MC_KEY = 'lunaExperimentalMonteCarlo';
+    var ELEMENTS_KEY = 'lunaExperimentalElements';
+    var LIVE_API_KEY = LIVE_API_EXPERIMENTAL_KEY;
+
+    function enabled(key) { return localStorage.getItem(key) === 'true'; }
+    function setToolVisible(id, visible) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        var wrapper = el.closest('li') || el;
+        wrapper.style.display = visible ? '' : 'none';
+    }
+    function applyExperimentalVisibility() {
+        var mcEnabled = enabled(MC_KEY);
+        var elementsEnabled = enabled(ELEMENTS_KEY);
+        var liveApiEnabled = enabled(LIVE_API_KEY);
+        var mcButton = document.getElementById('monteCarloButton');
+        if (mcButton) mcButton.style.display = mcEnabled ? '' : 'none';
+        ['conveyor_button','microwave_button','queue_button','overflow_button'].forEach(function(id) {
+            setToolVisible(id, elementsEnabled);
+        });
+        var liveApiSettings = document.getElementById('liveApiSettingsGroup');
+        if (liveApiSettings) liveApiSettings.style.display = liveApiEnabled ? '' : 'none';
+        window.dispatchEvent(new CustomEvent('lunasim-experimental-change', {
+            detail: { monteCarlo: mcEnabled, elements: elementsEnabled, liveApi: liveApiEnabled }
+        }));
+    }
+    function wireToggle(id, key, featureName) {
+        var cb = document.getElementById(id);
+        if (!cb) return;
+        cb.checked = enabled(key);
+        cb.addEventListener('change', function () {
+            if (!cb.checked) {
+                localStorage.setItem(key, 'false');
+                applyExperimentalVisibility();
+                return;
+            }
+            cb.checked = false;
+            showConfirmPopup({
+                title: 'Enable Experimental Feature?',
+                message: featureName + ' is experimental and may break parts of the software or behave unexpectedly. Are you sure you want to enable it?',
+                onConfirm: function () {
+                    cb.checked = true;
+                    localStorage.setItem(key, 'true');
+                    applyExperimentalVisibility();
+                },
+                onCancel: function () {
+                    cb.checked = false;
+                    localStorage.setItem(key, 'false');
+                    applyExperimentalVisibility();
+                }
+            });
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        wireToggle('settingExperimentalMonteCarlo', MC_KEY, 'Monte Carlo simulations');
+        wireToggle('settingExperimentalElements', ELEMENTS_KEY, 'New model elements');
+        wireToggle('settingExperimentalLiveApi', LIVE_API_KEY, 'Live API equations');
+        var finnhubInput = document.getElementById('finnhubApiKey');
+        if (finnhubInput) {
+            finnhubInput.value = sessionStorage.getItem('lunaFinnhubApiKey') || '';
+            finnhubInput.addEventListener('input', function () {
+                sessionStorage.setItem('lunaFinnhubApiKey', finnhubInput.value.trim());
+            });
+        }
+        applyExperimentalVisibility();
+    });
+}());
 
 
 

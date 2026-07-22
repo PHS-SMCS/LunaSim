@@ -1585,6 +1585,237 @@ input.settings-input.invalid:focus {
   font-weight: bold;
 }
 
+.autocomplete-item.model-suggestion {
+  color: #dce5ff;
+  background: rgba(98, 123, 192, 0.16);
+  border-left: 4px solid #627bc0;
+}
+
+.autocomplete-item.model-suggestion.selected,
+.autocomplete-item.model-suggestion:hover {
+  color: #fff;
+  background: rgba(98, 123, 192, 0.42);
+}
+
+.autocomplete-item.api-suggestion {
+  color: #ffd3e8;
+  background: rgba(219, 74, 145, 0.14);
+  border-left: 4px solid #e85a9d;
+}
+
+.autocomplete-item.api-suggestion.selected,
+.autocomplete-item.api-suggestion:hover {
+  color: #fff;
+  background: rgba(219, 74, 145, 0.42);
+}
+
+/* Responsive/zoom-safe layout ------------------------------------------------
+   Browser zoom reduces the effective CSS viewport. These flexible bases and
+   breakpoints therefore protect both ordinary window resizing and zooming. */
+html, body {
+  width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+#allSampleContent,
+#sample {
+  width: 100%;
+  min-width: 0;
+}
+
+#header {
+  position: relative;
+  min-height: 64px;
+  width: 100%;
+}
+
+.modelViewer,
+.chartViewer {
+  top: 64px;
+  min-width: 0;
+  min-height: calc(100dvh - 64px);
+  align-items: stretch;
+}
+
+.modelCanvas,
+.chartCanvas {
+  flex: 1 1 58%;
+  width: auto;
+  min-width: 280px;
+  height: calc(100dvh - 84px);
+}
+
+#eqEditor,
+.chartEditor {
+  flex: 1 1 32%;
+  min-width: 280px;
+  width: auto;
+  height: calc(100dvh - 84px);
+}
+
+.toolbar ul,
+.chartSidebar ul {
+  height: calc(100dvh - 84px);
+}
+
+.panel-resizer {
+  width: clamp(8px, 1vw, 14px);
+  min-width: clamp(8px, 1vw, 14px);
+}
+
+.equation-editor-table,
+#datatable,
+#display {
+  min-width: 0;
+}
+
+#eqTableDiv,
+.chartCanvas,
+.chartEditor-middle {
+  overscroll-behavior: contain;
+}
+
+.settings-popup,
+.charts-popup,
+.export-popup,
+.theme-popup,
+.sims-popup,
+.equation-editor-popup {
+  max-height: min(88dvh, 760px);
+  overflow: auto;
+}
+
+/* Keep the expanded equation editor at its original near-full-page width. */
+.equation-editor-popup {
+  max-width: none;
+}
+
+.elem-control-panel {
+  max-width: calc(100% - 24px);
+  overflow-x: auto;
+}
+
+@media (max-width: 1100px) {
+  #saveStatus { display: none; }
+  .actions { right: calc(1rem + min(38vw, 360px)); }
+  #model_name { width: min(36vw, 340px); }
+  .actionButton { width: auto; min-width: 46px; padding-inline: 0.65rem; }
+  #eqEditor, .chartEditor { flex-basis: 36%; }
+  .equation-editor-table th,
+  .eqTableInputBox { font-size: 0.78rem; }
+}
+
+@media (max-width: 850px) {
+  #header { min-height: 98px; }
+  .actions {
+    top: 8px;
+    left: 10px;
+    right: auto;
+  }
+  #model_name {
+    top: 8px;
+    left: 78px;
+    right: 10px;
+    width: auto;
+    height: 42px;
+  }
+  #runButton { width: 58px; height: 42px; }
+  #runButton { font-size: 0; }
+  #runButton .material-symbols-outlined { font-size: 22px; }
+  .tabBar {
+    top: 54px;
+    left: 8px;
+    height: 42px;
+  }
+  .tabButton {
+    width: auto;
+    min-width: 118px;
+    height: 42px;
+    padding: 0.45rem 0.8rem;
+    font-size: 0.88rem;
+  }
+  .tabButton.active { transform: none; }
+
+  .modelViewer,
+  .chartViewer {
+    top: 96px;
+    min-height: calc(100dvh - 96px);
+    height: auto;
+    flex-wrap: wrap;
+    overflow-y: auto;
+    padding: 10px;
+  }
+  .panel-resizer { display: none; }
+  .toolbar,
+  .chartSidebar {
+    width: 58px !important;
+    min-width: 58px;
+    max-width: 58px;
+  }
+  .toolbar ul,
+  .chartSidebar ul,
+  .modelCanvas,
+  .chartCanvas {
+    height: max(420px, 58dvh);
+  }
+  .modelCanvas,
+  .chartCanvas {
+    width: calc(100% - 58px) !important;
+    min-width: 0;
+    flex-basis: calc(100% - 58px);
+  }
+  #eqEditor,
+  .chartEditor {
+    width: 100% !important;
+    min-width: 0;
+    flex-basis: 100%;
+    height: auto;
+    min-height: 360px;
+    margin-top: 10px;
+  }
+  #eqTableDiv { overflow-x: auto; }
+  .equation-editor-table { min-width: 620px; }
+  .chartEditor-middle { overflow: auto; }
+  .elem-control-panel {
+    flex-wrap: wrap;
+    max-height: 34%;
+    gap: 6px 10px;
+  }
+  .ecp-reset-all { margin-left: auto; }
+}
+
+@media (max-width: 560px) {
+  .toolbar,
+  .chartSidebar { display: none; }
+  .modelCanvas,
+  .chartCanvas {
+    width: 100% !important;
+    flex-basis: 100%;
+    min-width: 0;
+  }
+  .modelViewer,
+  .chartViewer { padding: 7px; }
+  .tabButton { min-width: 105px; font-size: 0.8rem; }
+  .center-btn { width: 34px; height: 34px; padding: 5px; }
+  .equation-editor-title,
+  .chart-title { font-size: 1rem; }
+  .settings-popup,
+  .charts-popup,
+  .export-popup,
+  .theme-popup,
+  .sims-popup {
+    width: calc(100vw - 20px) !important;
+    padding: 1rem;
+    border-radius: 0.75rem;
+  }
+  .theme-tab-bar { overflow-x: auto; padding-bottom: 0.55rem; }
+  .theme-tab-btn { flex: 0 0 auto; padding-inline: 0.7rem; }
+  .mc-setting-group { grid-template-columns: 1fr; }
+  .model-color-grid,
+  .keybind-grid { grid-template-columns: 1fr; }
+}
+
 /* Stupid Stuff That Won't Make the Sim Run */
 
 .model-zoom-icon {
@@ -1899,6 +2130,82 @@ input.settings-input.invalid:focus {
   color: #fff;
 }
 
+.ecp-reset-all {
+  margin-left: auto;
+  display: none;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: 1px solid #4a5a8a;
+  border-radius: 5px;
+  color: #aebbe0;
+  cursor: pointer;
+  padding: 3px 8px;
+}
+.ecp-reset-all.visible { display: flex; }
+.ecp-reset-all:hover { background: #374875; color: #fff; }
+.ecp-reset-all .material-symbols-outlined { font-size: 17px; }
+
+.material-icons,
+.material-symbols-outlined {
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: inherit;
+}
+
+.experimental-warning {
+  margin: 0 0 1rem;
+  padding: 0.75rem;
+  color: #ffd9a8;
+  background: rgba(227, 104, 14, 0.12);
+  border: 1px solid rgba(227, 104, 14, 0.45);
+  border-radius: 0.5rem;
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+.live-api-settings { margin-top: 1.2rem; }
+.live-api-settings .settings-input { width: 100%; box-sizing: border-box; }
+.experimental-badge { color: #aab4d0; font-size: 0.72rem; font-weight: 400; }
+.settings-help { color: #aab4d0; font-size: 0.76rem; line-height: 1.4; margin: 0.4rem 0 0; }
+
+.monte-carlo-popup {
+  width: 90vw;
+  max-width: 580px !important;
+  max-height: 85vh;
+  overflow-y: auto;
+  gap: 0.8rem;
+}
+.mc-setting-group {
+  display: grid;
+  grid-template-columns: minmax(150px, 1fr) minmax(180px, 1.25fr);
+  align-items: center;
+  gap: 0.8rem;
+  margin: 0;
+}
+.mc-setting-group .settings-input,
+.mc-setting-group .settings-dropdown { width: 100%; box-sizing: border-box; }
+.mc-section-title { font-size: 0.9rem; margin: 0; font-weight: 600; }
+.mc-help-text { font-size: 0.78rem; color: #aab4d0; margin: -0.35rem 0 0; line-height: 1.4; }
+.mc-table-wrap { overflow-x: auto; border: 1px solid #3d5080; border-radius: 0.5rem; }
+.mc-distribution-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+.mc-distribution-table th { text-align: left; padding: 0.6rem 0.7rem; background: rgba(255,255,255,0.05); }
+.mc-distribution-table td { padding: 0.5rem 0.7rem; border-top: 1px solid rgba(255,255,255,0.08); }
+.mc-progress-wrap { display: none; margin: 0; }
+.mc-progress-wrap p { font-size: 0.76rem; margin: 0 0 0.35rem; }
+.mc-progress-track { background: rgba(255,255,255,0.15); border-radius: 4px; height: 8px; width: 100%; }
+.mc-progress-bar { background: #627bc0; height: 8px; border-radius: 4px; width: 0; transition: width 0.15s; }
+
+#mcVarSelector {
+  order: -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: var(--bg-secondary, #f4f4f4);
+  border-bottom: 1px solid var(--border, #ddd);
+}
+
 .ecp-small-input {
   background: rgba(255,255,255,0.07);
   border: 1px solid #3d5080;
@@ -2006,4 +2313,27 @@ input.settings-input.invalid:focus {
 .keybind-input.conflict {
   border-color: #e8000d;
   color: #ff6b6b;
+}
+
+/* Final narrow-screen overrides are kept last so component styles cannot undo them. */
+@media (max-width: 850px) {
+  .elem-control-panel {
+    flex-wrap: wrap;
+    max-height: 34%;
+    overflow: auto;
+  }
+}
+
+@media (max-width: 560px) {
+  .settings-popup,
+  .generic-popup,
+  .monte-carlo-popup {
+    width: calc(100vw - 20px) !important;
+    max-width: calc(100vw - 20px) !important;
+  }
+
+  .keybind-grid,
+  .model-color-grid {
+    grid-template-columns: 1fr;
+  }
 }

@@ -47,7 +47,8 @@ if(sessionStorage.tabsData)
 
 let list = document.getElementById("tabsList"); // list of tab elements
 
-var chart = new ApexCharts(document.querySelector("#chart"), {
+function createStandardChart() {
+  return new ApexCharts(document.querySelector("#chart"), {
   chart: {
     type: 'scatter',
     foreColor: (sessionStorage.getItem("darkMode") == "true" ? '#ffffff' : '#373d3f')
@@ -57,8 +58,31 @@ var chart = new ApexCharts(document.querySelector("#chart"), {
   xaxis: {
     
   },
-})
-chart.render()
+  });
+}
+var chart = createStandardChart();
+chart.render();
+
+function removeMCSelector() {
+  const selector = document.getElementById("mcVarSelector");
+  if (selector) selector.remove();
+}
+
+function ensureStandardChart() {
+  if (window._mcChartInstance) {
+    window._mcChartInstance.destroy();
+    window._mcChartInstance = null;
+    chart = null;
+  }
+  removeMCSelector();
+  if (!chart) {
+    const chartEl = document.getElementById("chart");
+    chartEl.innerHTML = "";
+    chart = createStandardChart();
+    chart.render();
+  }
+  return chart;
+}
 
 /**
  * Returns an array of available series keys from simulation data.
@@ -164,6 +188,9 @@ function openForm(){
     showPopup("Create a model first.");
     return;
   }
+  const modelType = document.getElementById("model_type");
+  modelType.value = "chart";
+  modelType.dispatchEvent(new Event("change"));
   addOptions(); // dynamically adds in the options
 
   let form = document.getElementById("popForm");
@@ -271,6 +298,8 @@ function initializeTab() {
   document.getElementById("popForm").style.display = "none"; // hide form
   document.getElementById("grayEffectDiv").style.display = "none";
   form.reset(); // reset input
+  document.getElementById("model_type").value = "chart";
+  document.getElementById("model_type").dispatchEvent(new Event("change"));
   resetOptions(); // reset options
 }
 
@@ -373,7 +402,7 @@ function configTabs() {
         chartEl.hidden = false;
         tableEl.hidden = true;
 
-        const mcData = window._mcResultsStore[i];
+        const mcData = tabInfo._mcData || window._mcResultsStore[i];
         if (!mcData) {
           // Results lost on page refresh — inform user
           chart.updateOptions({
@@ -388,6 +417,7 @@ function configTabs() {
       }
 
       if (tabInfo.type === "chart") {
+        ensureStandardChart();
         if (PERFORMANCE_MODE) console.time('Chart Render Time');
 
         const chartEl = document.getElementById('chart');
@@ -473,6 +503,7 @@ function configTabs() {
         if (PERFORMANCE_MODE) console.timeEnd('Chart Render Time');
 
       } else {
+        ensureStandardChart();
         // Table rendering
         if (PERFORMANCE_MODE) console.time('Table Render Time');
 
@@ -594,6 +625,10 @@ function renderMonteCarloChart(mcData, varName) {
     window._mcChartInstance.destroy();
     window._mcChartInstance = null;
   }
+  if (chart) {
+    chart.destroy();
+    chart = null;
+  }
 
   const chartEl = document.getElementById('chart');
   chartEl.innerHTML = "";
@@ -683,7 +718,7 @@ function renderMonteCarloChart(mcData, varName) {
   newChart.render();
   window._mcChartInstance = newChart;
 
-  // Build variable selector panel below chart
+  // Build variable selector panel above chart
   buildMCVariableSelector(mcData, varName);
 }
 
@@ -696,8 +731,7 @@ function buildMCVariableSelector(mcData, activeVar) {
   if (!panel) {
     panel = document.createElement("div");
     panel.id = "mcVarSelector";
-    panel.style.cssText = "display:flex;flex-wrap:wrap;gap:6px;padding:8px 12px;background:var(--bg-secondary,#f4f4f4);border-top:1px solid var(--border,#ddd);";
-    document.getElementById("chart").after(panel);
+    document.getElementById("chart").before(panel);
   }
   panel.innerHTML = "";
 
@@ -746,20 +780,14 @@ function openMonteCarloPopup() {
 
   buildMCDistributionTable();
 
-  const popup = document.getElementById("monteCarloPopup");
-  popup.classList.remove("hidden");
-  popup.classList.add("show");
-  document.getElementById("grayEffectDiv").style.display = "block";
+  openSettings({ preventDefault: function() {} }, "monteCarloPopup");
 }
 
 /**
  * Closes the Monte Carlo popup.
  */
 function closeMonteCarloPopup() {
-  const popup = document.getElementById("monteCarloPopup");
-  popup.classList.remove("show");
-  setTimeout(() => popup.classList.add("hidden"), 200);
-  document.getElementById("grayEffectDiv").style.display = "none";
+  closeSettings("monteCarloPopup");
 }
 
 /**
@@ -813,6 +841,9 @@ function buildMCDistributionTable() {
         lbl.style.fontSize = "10px";
         const inp = document.createElement("input");
         inp.type = "number";
+        inp.autocomplete = "new-password";
+        inp.setAttribute("data-form-type", "other");
+        inp.setAttribute("data-lpignore", "true");
         inp.step = "any";
         inp.value = defaults[pName] || 1;
         inp.dataset.param = pName;
@@ -928,6 +959,7 @@ async function runMonteCarloFromUI() {
     mcTab.name = tabName;
     mcTab.mcVariable = Object.keys(mcData.percentiles)[0];
     mcTab.bandSetting = bandSetting;
+    Object.defineProperty(mcTab, "_mcData", { value: mcData, writable: true, enumerable: false });
     tabs.push(mcTab);
 
     setTimeout(() => {
@@ -971,7 +1003,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
  // updates data and goes to default
-document.getElementById("runButton").addEventListener("click", function () {
+window.addEventListener("lunasim:simulation-complete", function () {
   tabs[0] = new Graphic("chart", "time", seriesKeys(true).splice(1));
   configTabs();
   list.firstChild.click();
@@ -1005,7 +1037,12 @@ document.getElementById("downloadGraph").addEventListener("click", function () {
   const tableVisible = tableEl && !tableEl.hidden;
 
   if (chartVisible) {
-    chart.dataURI().then(({ imgURI }) => {
+    const activeChart = window._mcChartInstance || chart;
+    if (!activeChart) {
+      showPopup("No visible chart is available to download.");
+      return;
+    }
+    activeChart.dataURI().then(({ imgURI }) => {
       const link = document.createElement("a");
       link.href = imgURI;
       link.download = "chart.png";

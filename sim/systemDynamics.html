@@ -6,19 +6,8 @@
 <html lang="en">
 <head>
   <title>LunaSim</title>
-  <meta id="vp" name="viewport" content="width=device-width">
   <meta name="description" content="Design and run powerful simulations, all in the browser with LunaSim.">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, minimum-scale=0.8, user-scalable=no">
-
-  <script>
-    // set the viewport width to no less than minimum
-    window.onload = function () {
-      if (screen.width < 600) {
-        var mvp = document.getElementById('vp');
-        mvp.setAttribute('content', 'minimum-scale=1,width=600');
-      }
-    }
-  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- ================== Styling Sheets ================== -->
   <link rel="stylesheet" href="simulation.css" id="lightThemeCSS base-style">
   <link rel="stylesheet" href="" id="theme-style">
@@ -192,7 +181,7 @@
                 <i class="material-symbols-outlined">palette</i>
               </a></li>
 
-              <li class="graphTabs" data-tooltip="Help"><a href="../UserDocs.html" class="no-active" target="_blank">
+              <li class="graphTabs" data-tooltip="Help"><a href="../UserDocs.html" target="_blank" rel="noopener" class="no-active">
                 <i class="material-symbols-outlined">help</i>
               </a></li>
 
@@ -229,14 +218,20 @@
             <div class="ecp-row ecp-detail" id="ecpColorRow">
               <label class="ecp-label">Color</label>
               <input type="color" id="ecpColorPicker" class="ecp-color-input-single">
-              <button class="ecp-reset-color" id="ecpResetColor" title="Reset to palette default">↺</button>
             </div>
 
-            <!-- Flow body color -->
+            <!-- Link colors (flow / overflow / influence) -->
             <div class="ecp-row ecp-detail" id="ecpFlowColorRow">
-              <label class="ecp-label">Arrow Color</label>
+              <label class="ecp-label">Line</label>
               <input type="color" id="ecpFlowBodyColor" class="ecp-color-input-single">
-              <button class="ecp-reset-color" id="ecpFlowResetColor" title="Reset arrow color">↺</button>
+            </div>
+            <div class="ecp-row ecp-detail" id="ecpFlowHeadColorRow">
+              <label class="ecp-label">Arrow</label>
+              <input type="color" id="ecpFlowHeadColor" class="ecp-color-input-single">
+            </div>
+            <div class="ecp-row ecp-detail" id="ecpValveColorRow">
+              <label class="ecp-label">Valve</label>
+              <input type="color" id="ecpValveColor" class="ecp-color-input-single">
             </div>
 
             <!-- Transit time (conveyors only) -->
@@ -269,6 +264,10 @@
               <input type="number" id="ecpLabelSize" class="ecp-small-input" min="4" max="72" step="0.5" placeholder="11">
               <span class="ecp-label">pt</span>
             </div>
+
+            <button class="ecp-reset-all ecp-detail" id="ecpResetAll" title="Reset this element to its defaults">
+              <i class="material-symbols-outlined">restart_alt</i><span>Reset</span>
+            </button>
           </div>
         </div>
 
@@ -313,7 +312,7 @@
             <!-- Settings Area -->
             <div class="settings-section">
               <li><a href="#" onclick="openSettings(event, 'themePopup')" class="no-active"><i class="material-symbols-outlined">palette</i><span>Theme</span></a></li>
-              <li><a href="../UserDocs.html" class="no-active"><i class="material-symbols-outlined">help</i><span>Help</span></a></li>
+              <li><a href="../UserDocs.html" target="_blank" rel="noopener" class="no-active"><i class="material-symbols-outlined">help</i><span>Help</span></a></li>
               <li><a href="#" onclick="openSettings(event, 'settingsPopup')" class="no-active"><i class="material-symbols-outlined">settings</i><span>Settings</span></a></li>
             </div>
           </ul>
@@ -379,6 +378,7 @@
           <button class="theme-tab-btn active" data-tab="stab-standard">Standard</button>
           <button class="theme-tab-btn" data-tab="stab-visual">Visual</button>
           <button class="theme-tab-btn" data-tab="stab-keybinds">Key Binds</button>
+          <button class="theme-tab-btn" data-tab="stab-experimental">Experimental</button>
         </div>
 
         <!-- ── Standard Tab ── -->
@@ -449,6 +449,29 @@
             <div class="keybind-row"><span>Polarity +</span>     <input class="keybind-input" id="kb-polarity-pos" data-action="polarity-pos" value="p" readonly></div>
             <div class="keybind-row"><span>Polarity −</span>     <input class="keybind-input" id="kb-polarity-neg" data-action="polarity-neg" value="m" readonly></div>
             <div class="keybind-row"><span>Toggle Emphasis</span><input class="keybind-input" id="kb-emphasis"   data-action="emphasis"   value="b" readonly></div>
+          </div>
+        </div>
+
+        <div id="stab-experimental" class="theme-tab-content" style="display:none;">
+          <p class="experimental-warning">Experimental features may be unstable and can affect saved models or visualizations.</p>
+          <div class="stab-visual-switches">
+            <label class="switch-label">
+              <span>Monte Carlo Simulations</span>
+              <label class="toggle-switch"><input type="checkbox" id="settingExperimentalMonteCarlo"><span class="slider"></span></label>
+            </label>
+            <label class="switch-label">
+              <span>New Elements (Conveyors, Microwaves, Queues &amp; Overflows)</span>
+              <label class="toggle-switch"><input type="checkbox" id="settingExperimentalElements"><span class="slider"></span></label>
+            </label>
+            <label class="switch-label">
+              <span>Live API Equations</span>
+              <label class="toggle-switch"><input type="checkbox" id="settingExperimentalLiveApi"><span class="slider"></span></label>
+            </label>
+          </div>
+          <div class="setting-group live-api-settings" id="liveApiSettingsGroup">
+            <label for="finnhubApiKey">Finnhub API Key <span class="experimental-badge">required for [stock][TICKER]</span></label>
+            <input type="password" id="finnhubApiKey" class="settings-input" placeholder="Stored for this browser tab only" autocomplete="new-password" data-form-type="other" data-lpignore="true">
+            <p class="settings-help">Weather and World Bank references need no key. The Finnhub key is kept in session storage and is not included in exported .luna files.</p>
           </div>
         </div>
       </div>
@@ -621,20 +644,20 @@
 
 
       <!-- ================== Monte Carlo Popup ================== -->
-      <div id="monteCarloPopup" class="settings-popup hidden" style="width:580px;max-height:85vh;overflow-y:auto;">
+      <div id="monteCarloPopup" class="settings-popup monte-carlo-popup hidden">
         <div class="settings-header">
           <h2>Monte Carlo Simulation</h2>
           <button class="close-btn" id="mcClosePopup"><i class="material-symbols-outlined close-icon">close</i></button>
         </div>
 
         <!-- Run configuration -->
-        <div class="setting-group">
+        <div class="setting-group mc-setting-group">
           <label for="mcNumRuns">Number of Runs</label>
-          <input type="number" id="mcNumRuns" class="settings-input" value="200" min="10" max="5000" style="width:60%;" />
+          <input type="number" id="mcNumRuns" class="settings-input" value="200" min="10" max="5000" autocomplete="new-password" />
         </div>
-        <div class="setting-group">
+        <div class="setting-group mc-setting-group">
           <label for="mcBandSetting">Confidence Band</label>
-          <select id="mcBandSetting" class="settings-dropdown" style="width:60%;">
+          <select id="mcBandSetting" class="settings-dropdown">
             <option value="90">90%</option>
             <option value="95">95%</option>
             <option value="99">99%</option>
@@ -643,14 +666,14 @@
         </div>
 
         <hr class="settings-divider">
-        <p style="font-size:12px;margin:4px 0 8px;font-weight:600;">Distribution Assignments</p>
-        <p style="font-size:11px;color:var(--text-secondary,#888);margin-bottom:8px;">
+        <p class="mc-section-title">Distribution Assignments</p>
+        <p class="mc-help-text">
           Set a non-fixed distribution on any parameter to include it in sampling.
           CookTime, TransitTime, and Capacity are special parameters for Microwaves, Conveyors, and Queues.
         </p>
 
-        <div style="overflow-x:auto;">
-          <table style="width:100%;border-collapse:collapse;font-size:12px;">
+        <div class="mc-table-wrap">
+          <table class="mc-distribution-table">
             <thead>
               <tr style="border-bottom:1px solid var(--border,#ddd);">
                 <th style="text-align:left;padding:4px 8px;">Parameter</th>
@@ -667,10 +690,10 @@
         <hr class="settings-divider">
 
         <!-- Progress indicator -->
-        <div id="mcProgressWrap" style="display:none;margin-bottom:8px;">
-          <p id="mcProgressText" style="font-size:11px;margin-bottom:4px;">0 / 0 runs</p>
-          <div style="background:var(--border,#ddd);border-radius:4px;height:8px;width:100%;">
-            <div id="mcProgressBar" style="background:var(--accent,#4a90e2);height:8px;border-radius:4px;width:0%;transition:width 0.15s;"></div>
+        <div id="mcProgressWrap" class="mc-progress-wrap">
+          <p id="mcProgressText">0 / 0 runs</p>
+          <div class="mc-progress-track">
+            <div id="mcProgressBar" class="mc-progress-bar"></div>
           </div>
         </div>
 
@@ -782,6 +805,7 @@
     closeSettings("exportPopup");
     closeSettings("simErrorPopup");
     closeSettings("themePopup");
+    closeSettings("monteCarloPopup");
   });
 
 
@@ -1206,11 +1230,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const themeSelect = document.getElementById('themeSelect');
     const themeLink = document.getElementById('theme-style');
 
-    const savedTheme = localStorage.getItem('selectedTheme');
-    if (savedTheme) {
-      themeSelect.value = savedTheme;
-      applyTheme(savedTheme);
-    }
+    const THEME_FILES = Object.freeze({
+      monochrome: 'monochrome.css', classic: 'simulationClassic.css',
+      mlight: 'minimalLight.css', oblue: 'oceanBlue.css',
+      sorange: 'sunsetOrange.css', fgreen: 'forestGreen.css',
+      cpurple: 'cosmicPurple.css', bpink: 'bubblegumPink.css',
+      cred: 'cherryRed.css', cblossom: 'cherryBlossom.css',
+      nvoid: 'nebulaVoid.css', udark: 'ultraDark.css',
+      rduck: 'rubberDuck.css', sred: 'sithRed.css'
+    });
+
+    const savedTheme = localStorage.getItem('selectedTheme') || 'normal';
+    themeSelect.value = Object.prototype.hasOwnProperty.call(THEME_FILES, savedTheme) ? savedTheme : 'normal';
+    applyTheme(themeSelect.value);
 
     themeSelect.addEventListener('change', () => {
       const selected = themeSelect.value.toLowerCase();
@@ -1219,40 +1251,17 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     function applyTheme(selected) {
-      let themeHref = '';
-      if (selected === 'monochrome') {
-        themeHref = '../themes/monochrome.css';
-      } else if (selected === 'classic') {
-        themeHref = '../themes/simulationClassic.css';
-      } else if (selected === 'mlight') {
-        themeHref = '../themes/minimalLight.css';
-      } else if (selected === 'oblue') {
-        themeHref = '../themes/oceanBlue.css';
-      } else if (selected === 'sorange') {
-        themeHref = '../themes/sunsetOrange.css';
-      } else if (selected === 'fgreen') {
-        themeHref = '../themes/forestGreen.css';
-      } else if (selected === 'cpurple') {
-        themeHref = '../themes/cosmicPurple.css';
-      } else if (selected === 'bpink') {
-        themeHref = '../themes/bubblegumPink.css';
-      } else if (selected === 'cred') {
-        themeHref = '../themes/cherryRed.css';
-      } else if (selected === 'cblossom') {
-        themeHref = '../themes/cherryBlossom.css';
-      } else if (selected === 'nvoid') {
-        themeHref = '../themes/nebulaVoid.css';
-      } else if (selected === 'udark') {
-        themeHref = '../themes/ultraDark.css';
-      } else if (selected === 'rduck') {
-        themeHref = '../themes/rubberDuck.css';
-      } else if (selected === 'sred') {
-        themeHref = '../themes/sithRed.css';
-      } else {
-        themeHref = '';
+      const normalized = Object.prototype.hasOwnProperty.call(THEME_FILES, selected) ? selected : 'normal';
+      document.documentElement.dataset.theme = normalized;
+      if (normalized === 'normal') {
+        themeLink.removeAttribute('href');
+        themeLink.disabled = true;
+        return;
       }
-      themeLink.setAttribute('href', themeHref);
+      themeLink.disabled = false;
+      themeLink.href = new URL('../themes/' + THEME_FILES[normalized], document.baseURI).href;
     }
+    window.applyTheme = applyTheme;
   </script>
 <script>
   const fontSelect = document.getElementById('simulationFont');
@@ -1276,8 +1285,12 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 <script>
   window.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('input').forEach(input => {
-      input.setAttribute('autocomplete', 'off');
+    document.querySelectorAll('input, textarea').forEach((input, index) => {
+      input.setAttribute('autocomplete', 'new-password');
+      input.setAttribute('data-lpignore', 'true');
+      input.setAttribute('data-form-type', 'other');
+      input.setAttribute('spellcheck', 'false');
+      if (!input.name) input.name = `lunasim-field-${index}`;
     });
   });
 </script>

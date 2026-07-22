@@ -1,438 +1,388 @@
 <!DOCTYPE html>
-<!---
-  Authors: Sienna Simms, Karthik S. Vedula, Aditya Patil, William J. Park, Ryan D. Chung, Akash Saran, Arjun M. Mujumdar, Caleb R. Wen
--->
 <html lang="en">
-
-
 <head>
-  <title>LunaSim</title>
-  <meta id="vp" name="viewport" content="width=device-width">
-  <meta name="description" content="Design and run powerful simulations, all in the browser with LunaSim.">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LunaSim Help</title>
+  <meta name="description" content="Complete documentation for building and running system dynamics models in LunaSim.">
   <link rel="stylesheet" href="docs.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  <link rel="icon" href="../img/lunaLogo.svg">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.7.2/css/all.css">
+  <link rel="icon" href="img/favicons/lunaLogo.svg">
 </head>
 <body>
-
-
-<!-- Sidebar -->
-<div class="sidebar">
-  <p>Overview</p>
-  <ul class="program-list">
-    <li><a href="#overview">Video Overview</a></li>
-    <li><a href="#systemDynamics">System Dynamics</a></li>
-    <li><a href="#eulersMethod">Euler's Method</a></li>
-    <li><a href="#websiteParts">Parts of the Website</a></li>
-    <li><a href="#nodeLinkReference">Node/Link Reference</a></li>
-  </ul>
-  <p>Features</p>
-  <ul class="program-list">
-    <li><a href="#stocks">Stocks</a></li>
-    <li><a href="#clouds">Clouds</a></li>
-    <li><a href="#variables">Variables</a></li>
-    <li><a href="#flows">Flows</a></li>
-    <li><a href="#influences">Influences</a></li>
-    <li><a href="#equations">Equation Editor</a></li>
-    <li><a href="#math">Java Math Class</a></li>
-    <li><a href="#parameters">Simulation Parameters</a></li>
-    <li><a href="#ghosting">Ghosting</a></li>
-    <li><a href="#charts">Creating Charts</a></li>
-    <li><a href="#tables">Creating Tables</a></li>
-    <li><a href="#importExport">Import/Export</a></li>
-  </ul>
-  <p>Sample Projects</p>
-  <ul class="program-list">
-    <li><a href="#sample1">Water Flow</a></li>
-    <li><a href="#sample2">Spring-Mass Oscillation</a></li>
-    <li><a href="#sample3">Heating a Metal Rod</a></li>
-    <li><a href="#sample4">Population Growth</a></li>
-  </ul>
-</div>
-
-<!-- Tutorial Description -->
-<div class="tutorialList">
-
-
-  <div class="tutorialContainer"><div id="overview" class="tutorialBox"><div class="tutorialContents">
-    <iframe class="tutorialVideo" width="560" height="315" src="https://www.youtube.com/embed/Q4zdvudTK88?si=VY32uZ90-uTuGV9i" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-    <div class="tutorialInfo">
-      <h1>Video Overview</h1>
-      <p>In this tutorial, you'll learn how to use LunaSim to build and simulate system dynamics models directly in your browser. We'll walk through creating components like stocks, flows, variables, and clouds, defining equations, setting simulation parameters, and visualizing results with charts and tables. You'll also learn how to save and load models.
-
-        Written instructions are provided below, and sample projects at the bottom of the page include both video and step-by-step guides to help you explore LunaSim's features in practice. </p>
-
-    </div>
-  </div></div></div>
-
-
-  <div class="tutorialContainer"><div id="systemDynamics" class="tutorialBox"><div class="tutorialContents">
-    <div class="tutorialInfo">
-      <h1>Introduction to System Dynamics</h1>
-      <p>
-        <i>System Dynamics</i> is a method used to model complex, dynamic systems. But what exactly does that mean?<br><br>
-
-        A <i>system</i> is a group of interacting parts with many internal connections. Examples include ecosystems, businesses, and even the human body. The term <i>dynamics</i> refers to how things change over time, such as how components grow, shrink, or move. For instance, a car driving down a road demonstrates dynamics because it changes position over time.<br><br>
-
-        When you put these ideas together, <i>System Dynamics</i> refers to modeling how different parts of a system interact and influence one another to produce changes over time.<br><br>
-
-        LunaSim is a browser-based system dynamics tool. It allows users to simulate physical situations by graphically solving sets of differential equations. System Dynamics helps users understand how complex systems evolve by focusing on the relationships between system components and how they affect each other through mathematical models. Rather than examining one cause-and-effect event at a time, system dynamics emphasizes the bigger picture, focusing on how one action influences another, and how those effects circle back to impact the original cause.<br><br>
-
-        This method is especially useful for predicting future behavior in systems based on current conditions. It often uses numerical methods such as <i>Euler's Method</i> and <i>Runge-Kutta 4</i> to approximate solutions. System Dynamics is widely used in fields such as population modeling, economics, environmental science, and the simulation of physical systems.
-      </p>
-    </div>
-  </div></div></div>
-
-
-  <div class="tutorialContainer"><div id="eulersMethod" class="tutorialBox"><div class="tutorialContents">
-    <div class="tutorialInfo">
-      <h1>Worked Example: Euler's Method</h1>
-      <p>
-        Let's say we want to model how a population grows over time.<br><br>
-
-        Imagine a town with 100 people. The number of people increases by 10% each year. We want to know: What will the population be after 5 years? As opposed to jumping to the final answer with a formula, we'll calculate it step by step using Euler's Method, a simple technique to simulate change over time through small intervals.<br><br>
-
-        In system dynamics, we break up time into small pieces. These steps are often labeled as dt, which stands for "delta time," just a fancy way of saying "a small change in time." If dt is 1, we update the system once per year. If it's 0.5, we're checking in every six months. The smaller the time step, the more detailed and accurate our simulation becomes, since we're updating the system more frequently.<br><br>
-
-        For this example, we'll keep it simple and use dt = 1, meaning we'll update the population once per year over a five-year period.<br><br>
-
-        Euler's Method helps us estimate change over time with this simple formula: New Population = Current Population + (Rate of Change x dt).<br><br>
-
-        In our case, the Current Population is whatever the population was the previous year. The Rate of Change is 10% of the current population, because the population is growing by 10% annually. And since dt = 1, we're applying that growth once per year.<br><br>
-
-        We'll now go year by year to see how the population evolves.<br><br>
-
-        At Year 0, the population starts at 100. Ten percent of 100 is 10, so after one year, the population becomes 100 + 10 = 110.<br>
-        At Year 1, we begin with 110. Ten percent of that is 11. Adding that to the current population, we get 110 + 11 = 121.<br>
-        At Year 2, we have 121 people. Ten percent of 121 is 12.1. Adding that gives 121 + 12.1 = 133.1.<br>
-        At Year 3, we start with 133.1. Ten percent of that is 13.31, so the population becomes 133.1 + 13.31 = 146.41.<br>
-        At Year 4, the population is 146.41. Ten percent of that is 14.641, so we end up with 146.41 + 14.641 = 161.05.<br><br>
-
-        After 5 years, using this step-by-step approach with dt = 1, the population is predicted to be approximately 161 people.<br><br>
-
-        This example shows how System Dynamics can be used to predict how a system works in the future over small steps, based on how it's changing at each moment. Euler's Method is one way to do this, and it's built right into LunaSim!
-      </p>
-    </div>
-  </div></div></div>
-
-
-  <div class="tutorialContainer"><div id="websiteParts" class="tutorialBox"><div class="tutorialContents">
-    <div class="tutorialInfo">
-      <h1>Website Parts</h1>
-      <p>The LunaSim interface is made up of multiple key components:</p>
-      <p>Model Builder Area: This is the main workspace where you visually create your system dynamics model by adding elements like stocks, variables, flows, etc.</p>
-      <p>Equation Editor: A table interface where you define and edit the mathematical relationships (equations) between your model elements.</p>
-      <p>Simulation Parameters: Allows you to configure the time settings and numerical method (<i>Euler's Method</i> or <i>Runge-Kutta 4</i>) for your simulation.</p>
-      <p>Charts/Tables Tab: Lets you visualize your simulation results using interactive charts and data tables.</p>
-      <p>Import/Export Buttons: Used to save or load your model files and output visualizations for later use.</p>
-    </div>
-  </div></div></div>
-
-  <div class="tutorialContainer"><div id="nodeLinkReference" class="tutorialBox"><div class="tutorialContents">
-    <div class="tutorialInfo">
-      <h1>Node/Link Reference</h1>
-      <h3>Nodes</h3>
-      <p>Stocks: Rectangular blocks representing accumulations (e.g., population, money).</p>
-      <p>Variables: Circles that represent calculated values used in your equations.</p>
-      <p>Clouds: Cloud-shaped icons that act as infinite sources or sinks for flows.</p>
-      <h3>Links</h3>
-      <p>Flows: Straight arrows showing the movement or change of values between stocks/clouds.</p>
-      <p>Influences: Curved arrows representing dependencies in your equations (e.g., [growth rate] influences [population change]).</p>
-    </div>
-  </div></div></div>
-
-  <div class="tutorialContainer"><div id="stocks" class="tutorialBox"><div class="tutorialContents">
-    <div class="tutorialImage"><img src="img/Stock.gif"></div>
-    <div class="tutorialInfo">
-      <h1>Stocks</h1>
-      <p>
-        In LunaSim system dynamics, a stock represents a quantity that accumulates or depletes over time. It’s like a container that holds something measurable (such as population, water, money, or energy) and changes based on the flows going in or out. Stocks provide the memory of the system and are essential for modeling how systems evolve over time. Equations can be used to define the values of stocks or influence how they change during the simulation. In addition, checking a stock as Uniflow/NN restricts it to change through a single flow and prevents its value from dropping below zero. This option is useful for modeling quantities like population or money, where negative values wouldn’t make sense.
-      </p>
-    </div>
-  </div></div></div>
-
-  <div class="tutorialContainer"><div id="flows" class="tutorialBox"><div class="tutorialContents">
-    <div class="tutorialImage"><img src="img/Flow.gif"></div>
-    <div class="tutorialInfo">
-      <h1>Flows</h1>
-      <p>A flow represents the rate at which a stock increases or decreases over time. Flows control how quickly quantities move into or out of stocks and can be defined using equations. They can connect stocks to other stocks or to clouds (which represent sources or sinks outside the system). The valve symbol in the middle of a flow visually represents its equation, showing that the flow’s rate is controlled by that mathematical expression. Checking a flow as Uniflow/NN means it can only act in one direction (indicated by a single arrow) and its value cannot go below zero, helping keep the model realistic by preventing negative flow rates.</p>
-    </div>
-  </div></div></div>
-
-  <div class="tutorialContainer"><div id="clouds" class="tutorialBox"><div class="tutorialContents">
-    <div class="tutorialImage"><img src="img/Cloud.gif"></div>
-    <div class="tutorialInfo">
-      <h1>Clouds</h1>
-      <p>A cloud represents a source or sink outside the system. Clouds show where quantities enter or leave the system but aren’t tracked inside as stocks. They can be connected to stocks using flows, but unlike stocks and flows, clouds have no equations and won’t appear in the equation editor. This makes them simple markers for inputs or losses coming from or going to the environment.</p>
-    </div>
-  </div></div></div>
-
-  <div class="tutorialContainer"><div id="variables" class="tutorialBox"><div class="tutorialContents">
-    <div class="tutorialImage"><img src="img/Variable.gif"></div>
-    <div class="tutorialInfo">
-      <h1>Variables</h1>
-      <p>Variables hold quantities or values that can be used throughout the model. Examples include average temperature, interest rate, birth rate, or fuel consumption rate, each representing a finite, measurable quantity. Variables can be referenced in other equations by placing their name in brackets, like [Variable1]. However, to properly link a variable to another part of the model, you must use an influence, which shows how the variable affects or controls that element. This ensures the relationships between variables and other components are clear and correctly calculated.</p>
-    </div>
-  </div></div></div>
-
-  <div class="tutorialContainer"><div id="influences" class="tutorialBox"><div class="tutorialContents">
-    <div class="tutorialImage"><img src="img/Influence.gif"></div>
-    <div class="tutorialInfo">
-      <h1>Influences</h1>
-      <p>Influences are visual indicators showing that a variable is referenced in the equation of another node or flow. They represent the dependencies between components, ensuring the model knows how values affect each other. To reference a variable in an equation, you must have the proper influence connection; otherwise, the model will throw a simulation error. Influences can connect variable-to-variable, variable-to-flow, stock-to-variable, stock-to-flow, flow-to-variable, or flow-to-flow, allowing for flexible and accurate relationships throughout the system.</p>
-    </div>
-  </div></div></div>
-
-  <div class="tutorialContainer"><div id="equations" class="tutorialBox"><div class="tutorialContents">
-    <div class="tutorialImage"><img src="img/EquationEditor.gif"></div>
-    <div class="tutorialInfo">
-      <h1>Equation Editor</h1>
-      <p>The Equation Editor is where you define how stocks, flows, and variables behave. By selecting a node and opening the editor, you can enter or edit its equation, change its name, and, for stocks and flows, check the Uniflow/NN option if needed. You can reference other nodes or links by typing their names inside brackets (e.g., [Population]), as long as a proper influence connection exists. The editor also supports logic using the ternary operator (condition ? valueIfTrue : valueIfFalse), allowing you to create conditional equations for more dynamic system behavior.</p>
-    </div>
-  </div></div></div>
-
-  <div class="tutorialContainer"> <div id="math" class="tutorialBox"><div class="tutorialContents">
-    <div class="tutorialImage"><img src="img/Math Functions.gif"></div>
-    <div class="tutorialInfo">
-      <h1>Java Math Class</h1>
-      <p>In LunaSim, you can also use Java math functions within equations to perform advanced mathematical operations:<br>Trigonometric Functions: sin(), cos(), tan(), asin(), acos(), atan(), atan2()<br>
-        Hyperbolic Functions: sinh(), cosh(), tanh()<br>
-        Exponential and Logarithmic Functions: exp(), log(), log10(), expm1(), log1p()<br>
-        Root and Power Functions: sqrt(), cbrt(), pow()<br>
-        Absolute and Rounding Functions: abs(), ceil(), floor(), round()<br>
-        Statistical and Comparison Functions: max(), min(), sign()<br>
-        Random Function: random()<br>
-      </p>
-    </div>
-  </div></div></div>
-
-  <div class="tutorialContainer"><div id="parameters" class="tutorialBox"><div class="tutorialContents">
-    <div class="tutorialImage"><img src="img/Simulation Parameters.gif"></div>
-    <div class="tutorialInfo">
-      <h1>Simulation Parameters</h1>
-      <p>Before running a simulation, you must configure:</p>
-      <p>Start Time: When the simulation begins (e.g., 0)</p>
-      <p>End Time: When the simulation ends (e.g., 100)</p>
-      <p>dt: The timestep (e.g., 1, 0.1), controls how often calculations are performed</p>
-      <p>Integration Method: Choose between Euler's Method and Runge-Kutta 4</p>
-      <p>Click "Run" to validate inputs and start the simulation. Errors (like dt &gt; simulation length) will trigger alerts.</p>
-    </div>
-  </div></div></div>
-
-  <div class="tutorialContainer"><div id="ghosting" class="tutorialBox"><div class="tutorialContents">
-    <div class="tutorialImage" style="width: 400px; height: 300px;"><img src="img/Ghosting.png"></div>
-    <div class="tutorialInfo">
-      <h1>Ghosting</h1>
-      <p>Ghosts are visual duplicates of existing elements, used to clean up complex diagrams.</p>
-      <p>Create a ghost by naming a new element $OriginalName.</p>
-      <p>Ghosts appear lighter in color and follow the behavior of the original.</p>
-      <p>Useful to prevent overlapping arrows and clarify diagrams.</p>
-    </div>
-  </div></div></div>
-
-  <div class="tutorialContainer"><div id="charts" class="tutorialBox"><div class="tutorialContents">
-    <div class="tutorialImage" style="width: 500px; height: 350px;"><img src="img/ChartViewer.png"></div>
-    <div class="tutorialInfo">
-      <h1>Creating Charts</h1>
-      <p>1. Go to the Charts/Tables tab.</p>
-      <p>2. Click the + button.</p>
-      <p>3. Choose Chart.</p>
-      <p>4. Select one variable for the x-axis (usually time).</p>
-      <p>5. Select additional series to plot on the y-axis.</p>
-      <p>6. A new chart tab will be created, click to view it.</p>
-      <p>7. Use the Export button to download the chart as a PNG.</p>
-    </div>
-  </div></div></div>
-
-  <div class="tutorialContainer"><div id="tables" class="tutorialBox"><div class="tutorialContents">
-    <div class="tutorialImage" style="width: 500px; height: 350px;"><img src="img/TableViewer.png"></div>
-    <div class="tutorialInfo">
-      <h1>Creating Tables</h1>
-      <p>1. Go to the Charts/Tables tab.</p>
-      <p>2. Click the + button.</p>
-      <p>3. Choose Table.</p>
-      <p>4. Select one variable for the x-axis.</p>
-      <p>5. Select one or more data series to display.</p>
-      <p>6. Click the new table tab to view it.</p>
-      <p>7. Use the Export button to download the table as a CSV file.</p>
-    </div>
-  </div></div></div>
-
-  <div class="tutorialContainer"><div id="importExport" class="tutorialBox"><div class="tutorialContents">
-    <div class="tutorialInfo">
-      <h1>Import/Export</h1>
-      <p>You can save your models by clicking the Save button and exporting them as .luna files, our custom file type. These files can be imported later or shared with others to continue working on the same model. From the Save menu, you can also export models with a custom margin, export charts as images, and export tables as .csv files for use in spreadsheets or reports.</p>
-    </div>
-  </div></div></div>
-
-  <div class="tutorialContainer"><div id="sample1" class="tutorialBox"><div class="tutorialContents">
-    <iframe class="tutorialVideo" width="560" height="315" src="https://www.youtube.com/embed/cswi1icE3WU?si=m-0fMhFcmzCqfO2g" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-    <div class="tutorialInfo">
-      <h1>Water Flow</h1>
-      <p>In this tutorial we will cover how to simulate the behavior of water draining from a container with a hole in its bottom.
-        The rate of water flow out of a container depends on the current water level which gives us a differential relation.
-        This differential relation (for the water outflow velocity) is given by Torricelli's Law. The tutorial steps in written form are found below. </p>
-    </div>
-  </div></div></div>
-
-  <div class="tutorialContainer"><div id="sample1content" class="tutorialBox"><div class="tutorialContents">
-    <div class="tutorialInfo">
-      <h1>Water Flow Tutorial Steps</h1>
-
-      <h3>Step 1: Define System Components</h3>
-
-      <h4>Stock(s)</h4>
-
-      <p>[Volume] = current water volume in the container</p>
-
-      <h4>Cloud(s)</h4>
-
-      <p>Create a cloud which will represent an infinite sink.</p>
-
-      <h4>Flow(s)</h4>
-
-      <p>[dV] = represents change in volume, going from [Volume] to the cloud</p>
-
-      <h4>Variable(s)</h4>
-      <p>[Height] = water level height</p>
-      <p>[V<sub>outflow</sub>] = velocity of outflowing water</p>
-      <p>[A<sub>container</sub>] = cross-sectional area of the container </p>
-      <p>[A<sub>hole</sub>] = area of the hole </p>
-      <p>[g] = gravitational acceleration </p>
-
-      <br>
-      <h3>Step 2: Add Influences</h3>
-
-      <h4>Influence(s)</h4>
-
-      <p>[Volume],[A<sub>container</sub>] to [Height]</p>
-      <p>[Height],[g] to [V<sub>outflow</sub>]</p>
-      <p>[V<sub>outflow</sub>],[A<sub>hole</sub>] to [dV]</p>
-
-      <br>
-      <h3>Step 3: Input Equations</h3>
-      <h4>Differential Equations</h4>
-      <p>[V<sub>outflow</sub>] = (2 * [g] * [Height])^(1/2)</p>
-      <p>[Height] = [Volume] / [A<sub>container</sub>]</p>
-      <p>[dV] = -[A<sub>hole</sub>] * [V<sub>outflow</sub>]</p>
-      <h4>Constants / Initial Values</h4>
-      <p>[g] = 9.8</p>
-      <p>[Volume] = initial volume</p>
-      <p>[A<sub>hole</sub>] = area of the hole</p>
-      <p>[A<sub>container</sub>] = cross-sectional area of the container</p>
-
-      <br>
-      <h3>Step 4: Generate a Chart</h3>
-
-      <p>Once the model is set up, run the simulation and plot the water height versus time. You can also change the simulation parameters if desired. </p>
-
-    </div>
-  </div></div></div>
-
-
-  <div class="tutorialContainer"><div id="sample2" class="tutorialBox"><div class="tutorialContents">
-    <iframe class="tutorialVideo" width="560" height="315" src="https://www.youtube.com/embed/8Lmd2mxV5Hg?si=NjXqEhzQeqTJeJvg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-    <div class="tutorialInfo">
-      <h1>Spring-Mass Oscillation</h1>
-      <p>This tutorial simulates the motion of a mass attached to a spring, applying Hooke's Law and Newton's Second Law to model oscillations.
-      The net force on this mass depends on the force due to the spring (proportional to its displacement) and also a damping force (proportional to its velocity).
-        This differential relation models the behavior of damped harmonic oscillators. The tutorial steps in written form are found below. </p>
-
-    </div>
-  </div></div></div>
-  <div class="tutorialContainer"><div id="sample2content" class="tutorialBox"><div class="tutorialContents">
-    <div class="tutorialInfo">
-      <h1>Spring-Mass Oscillation Tutorial Steps</h1>
-
-      <h3>Step 1: Define System Components</h3>
-
-      <h4>Stock(s)</h4>
-      <p>[Position] = displacement of the mass from equilibrium</p>
-      <p>[Velocity] = velocity of the mass</p>
-
-      <h4>Cloud(s)</h4>
-
-      <p>Create a cloud which will represent an infinite source.</p>
-
-      <h4>Flow(s)</h4>
-
-      <p>[dv] = represents change in velocity, going from the cloud to [Velocity]</p>
-      <p>[dx] = represents change in position, going from the [Velocity] to [Position]</p>
-
-      <h4>Variable(s)</h4>
-      <p>[Force] = net force on mass</p>
-      <p>[Acceleration] = acceleration of the mass</p>
-      <p>[Mass] = mass of the object</p>
-      <p>[SpringConstant] = stiffness of the spring</p>
-      <p>[Damping] = damping coefficient </p>
-
-      <br>
-      <h3>Step 2: Add Influences</h3>
-
-      <h4>Influence(s)</h4>
-      <p>[Position], [SpringConstant], [Damping], and [Velocity] to [Force]</p>
-      <p>[Force] and [Mass] to [Acceleration]</p>
-      <p>[Acceleration] to [dv]</p>
-
-      <br>
-      <h3>Step 3: Input Equations</h3>
-      <h4>Differential Equations</h4>
-      <p>[Force] = -[SpringConstant] * [Position] - [Damping] * [Velocity]</p>
-      <p>[Acceleration] = [Force] / [Mass]</p>
-      <p>[dv] = [Acceleration]</p>
-      <p>[dx] = [velocity]</p>
-
-      <h4>Constants / Initial Values</h4>
-      <p>[Mass] = mass of the object</p>
-      <p>[SpringConstant] = stiffness of the spring</p>
-      <p>[Damping] = damping coefficient</p>
-      <p>[Position] = initial position</p>
-      <p>[Velocity] = initial velocity</p>
-
-      <br>
-      <h3>Step 4: Generate a Chart</h3>
-
-      <p>
-        Once the model is set up, run the simulation and plot the position and/or velocity versus time. You can also change the simulation parameters if desired.
-      </p>
-
-    </div>
-  </div></div></div>
-
-</div>
-
-
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const OFFSET = 37;
-
-
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        const targetId = this.getAttribute('href').substring(1);
-        const targetElement = document.getElementById(targetId);
-
-
-        if (targetElement) {
-          e.preventDefault();
-
-
-          const elementPosition = targetElement.getBoundingClientRect().top + window.scrollY;
-          const offsetPosition = elementPosition - OFFSET;
-
-
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: "smooth"
-          });
-        }
-      });
-    });
-  });
-</script>
-
-
+  <nav class="sidebar" aria-label="Help topics">
+    <p>Getting Started</p>
+    <ul class="program-list">
+      <li><a href="#overview">LunaSim Overview</a></li>
+      <li><a href="#interface">The Workspace</a></li>
+      <li><a href="#first-model">Build a First Model</a></li>
+      <li><a href="#simulation">Running a Simulation</a></li>
+    </ul>
+    <p>Model Elements</p>
+    <ul class="program-list">
+      <li><a href="#stocks">Stocks</a></li>
+      <li><a href="#clouds">Clouds</a></li>
+      <li><a href="#variables">Variables</a></li>
+      <li><a href="#flows">Flows</a></li>
+      <li><a href="#influences">Influences</a></li>
+      <li><a href="#text-images">Text and Images</a></li>
+      <li><a href="#editing">Selecting and Styling</a></li>
+      <li><a href="#ghosting">Ghosting</a></li>
+      <li><a href="#emphasis">Emphasis and Polarity</a></li>
+    </ul>
+    <p>Equations and Data</p>
+    <ul class="program-list">
+      <li><a href="#equations">Equation Editor</a></li>
+      <li><a href="#references">References and TIME</a></li>
+      <li><a href="#logic">Logic and Units</a></li>
+      <li><a href="#math">Math Functions</a></li>
+    </ul>
+    <p>Results and Settings</p>
+    <ul class="program-list">
+      <li><a href="#charts">Charts</a></li>
+      <li><a href="#tables">Tables</a></li>
+      <li><a href="#settings">Simulation Settings</a></li>
+      <li><a href="#themes">Themes and Colors</a></li>
+      <li><a href="#keybinds">Key Binds</a></li>
+      <li><a href="#files">Save, Load, and Export</a></li>
+    </ul>
+    <p>Experimental Features</p>
+    <ul class="program-list">
+      <li><a href="#experimental">Enabling Features</a></li>
+      <li><a href="#live-api">Live APIs</a></li>
+      <li><a href="#monte-carlo">Monte Carlo</a></li>
+      <li><a href="#conveyors">Conveyors</a></li>
+      <li><a href="#microwaves">Microwaves</a></li>
+      <li><a href="#queues">Queues and Overflows</a></li>
+    </ul>
+    <p>Example Models</p>
+    <ul class="program-list">
+      <li><a href="#water-flow">Water Flow</a></li>
+      <li><a href="#spring-mass">Spring-Mass Oscillation</a></li>
+    </ul>
+  </nav>
+
+  <main class="tutorialList">
+    <section class="tutorialContainer"><div id="overview" class="tutorialBox"><div class="tutorialContents media-layout">
+      <div class="video-frame"><iframe class="tutorialVideo" src="https://www.youtube.com/embed/Q4zdvudTK88?si=VY32uZ90-uTuGV9i" title="LunaSim overview" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+      <div class="tutorialInfo"><h1>LunaSim Overview</h1>
+        <p>LunaSim is a browser-based system dynamics modeling tool. It combines a visual model canvas, an equation editor, numerical simulation, and result visualization in one workspace. A model can represent any system where quantities change over time, including population, inventory, money, water, energy, temperature, production, transportation, disease, and ecological systems.</p>
+        <p>The diagram describes the structure of the system. Stocks hold quantities, flows increase or decrease stocks, variables calculate supporting values, and influences show which elements are used by other equations. The equation editor provides the mathematical definition of those relationships. Running the model calculates each value from the selected start time to the selected end time, and charts or tables make the resulting behavior easier to inspect.</p>
+        <p>A useful system dynamics model does more than produce numbers. It records assumptions in a form that another person can read, test, and change. Clear names, visible influences, sensible units, and a well-chosen timestep make results easier to understand and defend.</p>
+      </div>
+    </div></div></section>
+
+    <section class="tutorialContainer"><div id="interface" class="tutorialBox"><div class="tutorialContents"><div class="tutorialInfo">
+      <h1>The Workspace</h1>
+      <h3>Header controls</h3>
+      <p>Run validates the model and starts the simulation. Load opens an existing <code>.luna</code> project. Save opens the export menu, where the project can be saved in an editable format or exported as an image or report. Clear removes the current model after confirmation. The project name field identifies the current model.</p>
+      <h3>Model toolbar and canvas</h3>
+      <p>The left toolbar contains the pointer, stock, cloud, variable, flow, influence, text, and image tools. Theme, Help, and Settings are located at the bottom. The large center canvas is where elements are placed and connected. The Home button recenters the model when it has moved outside the visible area.</p>
+      <h3>Equation editor</h3>
+      <p>The equation editor lists every calculating element in the model. Each row includes its type, name, equation, units, and the NN/Uni option when that option is supported. The expand button opens the editor at nearly the full width of the browser, which is helpful when equations or names are long.</p>
+      <h3>Charts and tables</h3>
+      <p>The Charts/Tables view stores visual tabs created from the latest simulation. A project can contain several charts and tables, each focused on different variables or questions. Visual settings are kept with the project, while simulation results are regenerated by running the model.</p>
+    </div></div></div></section>
+
+    <section class="tutorialContainer"><div id="first-model" class="tutorialBox"><div class="tutorialContents"><div class="tutorialInfo">
+      <h1>Build a First Model</h1>
+      <p>This short population model demonstrates the relationship between a stock, a variable, a flow, and influences.</p>
+      <ol>
+        <li>Select Stock and click the canvas. Rename <code>stock1</code> to <code>Population</code>. Enter <code>100</code> as its initial equation and <code>people</code> as its units.</li>
+        <li>Create a variable named <code>Growth Rate</code>. Enter <code>0.1</code> as its equation and <code>1/year</code> as its units.</li>
+        <li>Create an inflow from a cloud into Population. Rename the valve <code>Births</code>.</li>
+        <li>Draw influences from Population and Growth Rate to Births. Enter <code>[Population] * [Growth Rate]</code> as the Births equation and <code>people/year</code> as its units.</li>
+        <li>Open Settings. Use a start time of <code>0</code>, end time of <code>10</code>, and dt of <code>0.1</code>. Run the simulation.</li>
+        <li>Create a chart with TIME on the x-axis and Population on the y-axis. The upward curve shows exponential growth because a larger population produces a larger number of births.</li>
+      </ol>
+      <p>To turn this into a more realistic model, add a Death Rate variable, create an outflow named Deaths, and use <code>[Population] * [Death Rate]</code>. Births form a reinforcing process, while deaths form a balancing process. Their competition determines whether population grows, declines, or approaches equilibrium.</p>
+    </div></div></div></section>
+
+    <section class="tutorialContainer"><div id="simulation" class="tutorialBox"><div class="tutorialContents"><div class="tutorialInfo">
+      <h1>Running a Simulation</h1>
+      <p>Open Settings and select the Standard tab. Start Time is the first time reported, End Time is the final time, and dt is the interval between calculations. For a run from 0 to 10 with dt 0.1, LunaSim calculates approximately 100 steps. Smaller steps provide more frequent updates and often improve accuracy, but they require more processing and produce more data.</p>
+      <table><thead><tr><th>Method</th><th>Description</th><th>Recommended use</th></tr></thead><tbody>
+        <tr><td>Runge-Kutta 4</td><td>Evaluates the rate several times during each timestep and combines those estimates.</td><td>Use as the general default for smooth feedback, physical, population, economic, and environmental models.</td></tr>
+        <tr><td>Euler</td><td>Uses the current rate to advance the model by one complete timestep.</td><td>Use for teaching numerical integration, simple step-based models, or comparisons where Euler behavior is intentional.</td></tr>
+      </tbody></table>
+      <p>If a result oscillates, grows unrealistically, or becomes invalid, reduce dt and compare the result. A stable result should not change dramatically after a modest reduction in timestep. Enable High Step Count Simulations only when a long duration or very small dt is necessary, since large runs use more memory and take longer to visualize.</p>
+    </div></div></div></section>
+
+    <section class="tutorialContainer"><div id="stocks" class="tutorialBox"><div class="tutorialContents">
+      <div class="tutorialImage"><img src="img/Stock.gif" alt="Creating a stock"></div><div class="tutorialInfo"><h1>Stocks</h1>
+        <p>A stock stores a quantity and gives the model memory. Its equation defines the initial quantity at the start of the simulation. During the run, LunaSim adds every inflow and subtracts every outflow. A stock therefore changes because of its connected flows, not because its initial equation is recalculated at every timestep.</p>
+        <p>Common stocks include Population, Bank Balance, Inventory, Water Volume, Stored Energy, Soil Carbon, Infected People, Employees, and Project Backlog. A useful test is to imagine pausing the system. If the quantity would still exist at that moment, it is probably a stock.</p>
+        <h3>Example stock definitions</h3>
+        <p><code>Inventory = 500</code> starts a warehouse with 500 items. An Orders Received inflow and Shipments outflow change it over time. <code>Bank Balance = 10000</code> starts an account with ten thousand dollars. Deposits and Expenses become its flows. <code>Infected = 10</code> starts an epidemic model with ten infected people. New Infections add to it and Recoveries remove from it.</p>
+        <p>The NN/Uni option prevents a stock from falling below zero. Use it for physical quantities such as people, items, or liters. Leave it off when negative values have a real interpretation, such as debt, temperature relative to a reference point, or net position.</p>
+      </div>
+    </div></div></section>
+
+    <section class="tutorialContainer"><div id="clouds" class="tutorialBox"><div class="tutorialContents">
+      <div class="tutorialImage"><img src="img/Cloud.gif" alt="Creating a cloud"></div><div class="tutorialInfo"><h1>Clouds</h1>
+        <p>A cloud marks a source or destination outside the boundary of the model. A flow from a cloud introduces material into a tracked stock. A flow to a cloud removes material from the tracked system. LunaSim does not calculate or display the amount held by a cloud, so clouds do not appear in the equation editor.</p>
+        <p>Use a cloud for rainfall entering a reservoir, customers arriving from the general population, raw materials supplied by an outside vendor, waste leaving a factory, deaths leaving a population model, or heat escaping to the environment. Replace the cloud with another stock when the outside quantity can be depleted, when its value affects later behavior, or when it needs to appear in results.</p>
+        <p>For example, a constant inflow equation of <code>25</code> from a cloud to a Water Tank adds 25 liters per time unit. An outflow equation of <code>[Water Tank] * 0.08</code> to a cloud removes eight percent of the current amount per time unit.</p>
+      </div>
+    </div></div></section>
+
+    <section class="tutorialContainer"><div id="variables" class="tutorialBox"><div class="tutorialContents">
+      <div class="tutorialImage"><img src="img/Variable.gif" alt="Creating a variable"></div><div class="tutorialInfo"><h1>Variables</h1>
+        <p>A variable calculates a value but does not accumulate it. It can represent a constant assumption, a rate, a ratio, a threshold, a policy choice, an intermediate calculation, or a value derived from stocks and other variables. Variables are recalculated as their referenced inputs change.</p>
+        <h3>Detailed example: desired inventory</h3>
+        <p>Use <code>Desired Inventory = [Expected Sales] * [Coverage Time]</code> in a supply model. If Expected Sales is 40 items/week and Coverage Time is 3 weeks, Desired Inventory evaluates to 120 items. Draw influences from both source variables to Desired Inventory because both references participate in its equation. The units also explain the calculation: items/week multiplied by weeks produces items. Desired Inventory does not hold products or change by integration. It is recalculated whenever the sales forecast or coverage policy changes, and another equation, such as an ordering flow, can compare it with the Inventory stock. Keeping this calculation in a named variable makes the policy visible on the canvas and lets every dependent equation use the same definition.</p>
+      </div>
+    </div></div></section>
+
+    <section class="tutorialContainer"><div id="flows" class="tutorialBox"><div class="tutorialContents">
+      <div class="tutorialImage"><img src="img/Flow.gif" alt="Creating a flow"></div><div class="tutorialInfo"><h1>Flows</h1>
+        <p>A flow is a rate that changes a stock. Select Flow, click the source, and click the destination. Sources and destinations can be stocks or clouds. When one end is placed on empty canvas, LunaSim creates a cloud. The circular valve on the link holds the flow name and equation.</p>
+        <p>Flow units should match the connected stock units divided by time. A stock measured in people needs flows such as people/year. A stock measured in liters needs flows such as liters/minute. Dimensional consistency makes mistakes easier to spot.</p>
+        <h3>Detailed example: controlled shipments</h3>
+        <p>Use <code>Shipments = min([Inventory], [Demand])</code> as an outflow from an Inventory stock to a customer cloud. If Inventory contains 30 items while Demand is 50 items/time, the equation returns 30, so the model cannot attempt to ship more than is available during that calculation. If Inventory is 100 and Demand is 50, it returns 50 and fulfills the requested rate. Draw influences from Inventory and Demand to the Shipments valve, set Inventory to items, and set Shipments and Demand to items/time. Enable NN/Uni because physical shipments should not reverse and add items back to inventory. In a detailed logistics model, the equation may also include a fulfillment time or capacity limit, but this version clearly demonstrates how a flow uses the current stock and a requested rate to control accumulation.</p>
+        <p>NN/Uni clamps a flow to non-negative values and prevents reverse movement. Without it, a negative flow can act as a biflow and move material in the opposite direction. The element control panel changes the flow line, arrow, valve, label color, and label size independently.</p>
+      </div>
+    </div></div></section>
+
+    <section class="tutorialContainer"><div id="influences" class="tutorialBox"><div class="tutorialContents">
+      <div class="tutorialImage"><img src="img/Influence.gif" alt="Creating an influence"></div><div class="tutorialInfo"><h1>Influences</h1>
+        <p>An influence shows that the source element is used by the destination equation. If Births uses <code>[Population]</code> and <code>[Birth Rate]</code>, influences should run from Population and Birth Rate to the Births valve. LunaSim uses these links to validate model structure, so every normal element reference should have the corresponding influence.</p>
+        <p>Influences help reveal feedback loops. Population influencing Births, with Births flowing back into Population, creates a reinforcing loop. Inventory influencing Shipments, with Shipments reducing Inventory, creates a balancing relationship. Use the positive polarity label when an increase in the source tends to increase the destination. Use the negative polarity label when an increase in the source tends to decrease the destination, assuming other inputs remain unchanged.</p>
+        <p>Influences can connect stocks, variables, and flow valves in the combinations needed by an equation. Drag a curved influence to route it around other parts of the model. Select it to change its line and arrow colors.</p>
+      </div>
+    </div></div></section>
+
+    <section class="tutorialContainer"><div id="text-images" class="tutorialBox"><div class="tutorialContents"><div class="tutorialInfo">
+      <h1>Text and Images</h1>
+      <h3>Text notes</h3>
+      <p>Select Text and click the canvas to add a note. Text does not participate in calculations. Use it to label feedback loops, record assumptions, identify model boundaries, explain data sources, or add instructions for another user. Text color and size can be changed when the note is selected.</p>
+      <h3>Images</h3>
+      <p>Select Image and choose a PNG or JPEG. LunaSim places it in the center of the visible canvas and returns to the pointer tool. Images can provide a map, process diagram, organizational layout, or visual reference behind a model. They have no equation and do not show the element control panel. Embedded images are stored with the project, so large files increase the size of the saved model. LunaSim warns when an image exceeds 2 MB.</p>
+    </div></div></div></section>
+
+    <section class="tutorialContainer"><div id="editing" class="tutorialBox"><div class="tutorialContents"><div class="tutorialInfo">
+      <h1>Selecting, Moving, and Styling Elements</h1>
+      <p>Use Pointer to select and move model parts. Click one element for a single selection. Hold Ctrl and drag across empty canvas to draw a blue selection rectangle around several elements. A selected group can be moved or deleted together. Delete and Backspace remove the current selection.</p>
+      <p>Selecting an editable element opens the element control panel at the bottom of the canvas. The available controls depend on what is selected. Stocks and variables expose fill and label styling. Flows expose line, arrow, valve, and label styling. Influences expose link colors. Conveyors, microwaves, and queues also expose transit time, cook time, or capacity. The Reset button on the far right restores every editable property of the selected element.</p>
+      <p>Theme, Model Colors defines defaults for newly created elements. Apply to All repaints existing model elements with the current defaults. Use the element control panel when only one element should look different, such as highlighting an important stock or separating two kinds of flow by color.</p>
+    </div></div></div></section>
+
+    <section class="tutorialContainer"><div id="ghosting" class="tutorialBox"><div class="tutorialContents"><div class="tutorialInfo">
+      <h1>Ghosting Large Models</h1>
+      <p>A ghost is another visual copy of an existing element. It allows a stock, variable, valve, conveyor, microwave, or queue to appear in a second area of a large diagram without creating a second calculation. Ghosts shorten long influence lines and make separate sectors of a model easier to read.</p>
+      <p>Create a new element of the same type and rename it with a dollar sign followed by the original name. For example, create another stock and rename it <code>$Population</code> after the real Population stock exists. The ghost uses the original value and does not receive a separate equation row. Equations continue to reference <code>[Population]</code>, not the dollar-prefixed display copy.</p>
+      <p>A ghost depends on its original element. Deleting the original removes the orphaned ghost and related ghost flow structure. Ghosting is useful in a national economy model where the same Population stock affects labor, housing, and consumption sectors located far apart on the canvas.</p>
+    </div></div></div></section>
+
+    <section class="tutorialContainer"><div id="emphasis" class="tutorialBox"><div class="tutorialContents"><div class="tutorialInfo">
+      <h1>Emphasis and Polarity</h1>
+      <p>Emphasis gives selected nodes or links a thick red outline. It changes only the presentation of the diagram and has no effect on equations or results. Use it to identify a feedback loop during a presentation, show which assumptions are being reviewed, compare the active path through a process, or direct attention to the elements responsible for a particular result.</p>
+      <p>Select one or more model parts and press B, which is the default Toggle Emphasis key. Press B again to remove it. Theme, Appearance, Clear All Emphasis removes every highlight. The key can be reassigned under Settings, Key Binds.</p>
+      <p>Selected influences can receive positive or negative polarity labels. P applies or removes positive polarity, and M applies or removes negative polarity by default. Polarity describes the direction of the relationship, not whether the relationship is desirable. More pollution increasing illness is positive polarity because both move in the same direction, even though the outcome is harmful.</p>
+    </div></div></div></section>
+
+    <section class="tutorialContainer"><div id="equations" class="tutorialBox"><div class="tutorialContents">
+      <div class="tutorialImage"><img src="img/EquationEditor.gif" alt="Using the equation editor"></div><div class="tutorialInfo"><h1>Equation Editor</h1>
+        <p>The equation editor is the mathematical definition of the model. Type identifies the element category. Name provides the label used on the diagram and in references. Equation defines the initial value of a stock or the current calculation for a flow or variable. Units document dimensional meaning. NN/Uni enables non-negative or unidirectional behavior where supported.</p>
+        <p>Names must be unique and should describe the modeled concept. <code>Average Processing Time</code> communicates more than <code>variable3</code>. Renaming an element updates the visible diagram and should be done before a model contains many references.</p>
+        <p>Typing the beginning of a math function opens function autocomplete. Typing <code>[</code> opens reference autocomplete. Model elements and TIME are listed first in blue. When experimental Live API Equations are enabled, live references follow in pink. Use the arrow keys and Enter or select an item with the mouse. Equation and units inputs disable ordinary browser autofill so address and password suggestions do not cover LunaSim suggestions.</p>
+      </div>
+    </div></div></section>
+
+    <section class="tutorialContainer"><div id="references" class="tutorialBox"><div class="tutorialContents"><div class="tutorialInfo">
+      <h1>Referencing Elements and Time</h1>
+      <p>Place an element name inside square brackets to use its current value. Examples include <code>[Population]</code>, <code>[Birth Rate]</code>, and <code>[Inventory]</code>. Spaces are allowed inside names. Draw an influence from the referenced element to the element whose equation uses it.</p>
+      <table><thead><tr><th>Equation</th><th>Purpose</th></tr></thead><tbody>
+        <tr><td><code>[Population] * [Birth Rate]</code></td><td>Calculates births from a population and fractional rate.</td></tr>
+        <tr><td><code>[Revenue] - [Operating Costs]</code></td><td>Calculates profit from two supporting variables.</td></tr>
+        <tr><td><code>min([Inventory], [Demand])</code></td><td>Limits shipments to the smaller of available inventory or requested demand.</td></tr>
+        <tr><td><code>TIME</code></td><td>Returns the current simulation time. TIME does not require brackets or an influence.</td></tr>
+        <tr><td><code>10 + 2 * TIME</code></td><td>Creates a linear ramp that starts at 10 and rises by 2 per time unit.</td></tr>
+        <tr><td><code>TIME &lt; 5 ? 0 : 100</code></td><td>Creates a step that changes from 0 to 100 at time 5.</td></tr>
+      </tbody></table>
+      <p>TIME is useful for policy start dates, scheduled interventions, ramps, periodic forcing, and comparisons between early and late behavior. It is reserved and cannot be used as an ordinary element name.</p>
+    </div></div></div></section>
+
+    <section class="tutorialContainer"><div id="logic" class="tutorialBox"><div class="tutorialContents"><div class="tutorialInfo">
+      <h1>Logic, Operators, and Units</h1>
+      <p>Equations support addition, subtraction, multiplication, division, parentheses, comparisons, and the math functions listed below. Comparisons use <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code>, <code>==</code>, and <code>!=</code>.</p>
+      <p>Conditional equations use <code>condition ? valueWhenTrue : valueWhenFalse</code>. For example, <code>[Inventory] &gt; 0 ? [Demand] : 0</code> stops demand fulfillment when inventory is empty. <code>TIME &lt; [Launch Time] ? 0 : [Planned Production]</code> delays production until a selected time. When a condition becomes complicated, calculate its pieces in named variables so the model remains readable.</p>
+      <p>Units document the model but do not automatically convert values. A stock in people needs flows in people per time. A price in dollars/item multiplied by sales in items/month produces revenue in dollars/month. A fractional rate such as 0.05/year multiplied by a stock in dollars produces dollars/year. The units field suggests common units, but custom text is allowed.</p>
+    </div></div></div></section>
+
+    <section class="tutorialContainer"><div id="math" class="tutorialBox"><div class="tutorialContents"><div class="tutorialInfo">
+      <h1>Math Functions</h1>
+      <p>LunaSim accepts the short function names below, so the <code>Math.</code> prefix is not required. Function names are case-insensitive. Separate multiple arguments with commas.</p>
+      <table class="function-table"><thead><tr><th>Function</th><th>Description</th><th>Example</th></tr></thead><tbody>
+        <tr><td><code>sin(x)</code>, <code>cos(x)</code>, <code>tan(x)</code></td><td>Primary trigonometric functions.</td><td><code>sin(TIME)</code></td></tr>
+        <tr><td><code>sec(x)</code>, <code>csc(x)</code>, <code>cot(x)</code></td><td>Reciprocal trigonometric functions.</td><td><code>sec(pi/3)</code></td></tr>
+        <tr><td><code>asin(x)</code>, <code>acos(x)</code>, <code>atan(x)</code></td><td>Inverse trigonometric functions.</td><td><code>atan(1)</code></td></tr>
+        <tr><td><code>atan2(y,x)</code></td><td>Returns an angle while preserving the quadrant of the point.</td><td><code>atan2(1,-1)</code></td></tr>
+        <tr><td><code>sinh(x)</code>, <code>cosh(x)</code>, <code>tanh(x)</code></td><td>Hyperbolic functions.</td><td><code>tanh([Signal])</code></td></tr>
+        <tr><td><code>asinh(x)</code>, <code>acosh(x)</code>, <code>atanh(x)</code></td><td>Inverse hyperbolic functions.</td><td><code>asinh(2)</code></td></tr>
+        <tr><td><code>exp(x)</code>, <code>expm1(x)</code></td><td>Calculates e raised to x, or exp(x) minus 1 with better precision near zero.</td><td><code>exp([Rate]*TIME)</code></td></tr>
+        <tr><td><code>log(x)</code>, <code>log10(x)</code>, <code>log1p(x)</code></td><td>Natural logarithm, base-10 logarithm, and log(1+x).</td><td><code>log([Population])</code></td></tr>
+        <tr><td><code>sqrt(x)</code>, <code>cbrt(x)</code></td><td>Square root and cube root.</td><td><code>sqrt([Area])</code></td></tr>
+        <tr><td><code>pow(x,y)</code></td><td>Raises x to the power y.</td><td><code>pow([Radius],2)</code></td></tr>
+        <tr><td><code>abs(x)</code>, <code>sign(x)</code></td><td>Returns magnitude or sign.</td><td><code>abs([Error])</code></td></tr>
+        <tr><td><code>ceil(x)</code>, <code>floor(x)</code>, <code>round(x)</code></td><td>Rounds upward, downward, or to the nearest integer.</td><td><code>ceil([Orders]/12)</code></td></tr>
+        <tr><td><code>min(a,b,...)</code>, <code>max(a,b,...)</code></td><td>Returns the smallest or largest supplied value.</td><td><code>min([Demand],[Inventory])</code></td></tr>
+        <tr><td><code>hypot(a,b,...)</code></td><td>Returns the square root of the sum of squared arguments.</td><td><code>hypot([X],[Y])</code></td></tr>
+        <tr><td><code>random()</code></td><td>Returns a pseudo-random value from 0 inclusive to 1 exclusive.</td><td><code>random()*10</code></td></tr>
+        <tr><td><code>pi</code>, <code>e</code></td><td>Mathematical constants pi and Euler's number.</td><td><code>2*pi*[Radius]</code></td></tr>
+      </tbody></table>
+      <p>Settings, Standard, Trigonometry Mode controls the inputs to sin, cos, tan, sec, csc, and cot. In Radians mode, <code>sin(pi/2)</code> equals 1. In Degrees mode, <code>sin(90)</code> equals 1. This setting does not change model time or ordinary units.</p>
+    </div></div></div></section>
+
+    <section class="tutorialContainer"><div id="live-api" class="tutorialBox"><div class="tutorialContents"><div class="tutorialInfo">
+      <h1>Live API Equations (Experimental)</h1>
+      <p>Live API Equations are off by default. Open Settings, select Experimental, turn on Live API Equations, and confirm the warning. Enabling the feature reveals the pink Live API suggestions and the Finnhub key field. When disabled, LunaSim keeps API syntax out of autocomplete and stops a model containing a live reference before it can make a request.</p>
+      <p>A live API reference requests a current external value before the simulation starts and substitutes the returned number into the equation. Type <code>[</code> in an equation to open autocomplete. Model references appear first in blue, and experimental live API references appear afterward in pink. Select a pink entry and replace its placeholder with the required ZIP code, country code, or ticker.</p>
+      <table><thead><tr><th>Syntax</th><th>Returned value</th><th>Parameter requirement</th></tr></thead><tbody>
+        <tr><td><code>[temp][10001]</code></td><td>Current temperature in degrees Celsius</td><td>Five-digit United States ZIP code</td></tr>
+        <tr><td><code>[wind][10001]</code></td><td>Current wind speed in kilometers per hour</td><td>Five-digit United States ZIP code</td></tr>
+        <tr><td><code>[humidity][10001]</code></td><td>Current relative humidity percentage</td><td>Five-digit United States ZIP code</td></tr>
+        <tr><td><code>[precip][10001]</code></td><td>Current precipitation in millimeters</td><td>Five-digit United States ZIP code</td></tr>
+        <tr><td><code>[aq][10001]</code></td><td>Current United States Air Quality Index</td><td>Five-digit United States ZIP code</td></tr>
+        <tr><td><code>[gdp][US]</code></td><td>Latest GDP in current United States dollars</td><td>Two-letter ISO country code</td></tr>
+        <tr><td><code>[inflation][US]</code></td><td>Latest annual consumer-price inflation percentage</td><td>Two-letter ISO country code</td></tr>
+        <tr><td><code>[unemployment][US]</code></td><td>Latest total unemployment percentage</td><td>Two-letter ISO country code</td></tr>
+        <tr><td><code>[population][US]</code></td><td>Latest population</td><td>Two-letter ISO country code</td></tr>
+        <tr><td><code>[gnipc][US]</code></td><td>Latest GNI per capita in current United States dollars</td><td>Two-letter ISO country code</td></tr>
+        <tr><td><code>[trade balance][US]</code></td><td>Latest trade in goods and services as a percentage of GDP</td><td>Two-letter ISO country code</td></tr>
+        <tr><td><code>[stock][AAPL]</code></td><td>Current Finnhub quote price</td><td>Market ticker and Finnhub API key</td></tr>
+      </tbody></table>
+      <h3>Using live values in a model</h3>
+      <p>Weather and World Bank references do not need a key. Stock quotes require a Finnhub key entered under Settings, Experimental, Finnhub API Key. The key stays in session storage for the current browser tab and is not included in exported project files.</p>
+      <p>Country parameters use two-letter ISO codes such as US, CA, GB, JP, and IN. Weather parameters require five numeric ZIP-code digits. A live value can be combined with model values, such as <code>[temp][10001] - [Indoor Temperature]</code> for a temperature difference or <code>[population][US] * [Adoption Fraction]</code> for a market-size estimate.</p>
+      <p>Each unique reference is fetched once per normal run and reused wherever it appears. The value remains constant during that simulation. Run the model again to retrieve a newer value. Monte Carlo uses the live values resolved by the preceding normal run as fixed inputs across all sampled runs. Because live values can change, record the retrieved value or export a report when a result must be reproduced later.</p>
+    </div></div></div></section>
+
+    <section class="tutorialContainer"><div id="charts" class="tutorialBox"><div class="tutorialContents"><div class="tutorialInfo">
+      <h1>Charts</h1>
+      <p>Run the model, open Charts/Tables, and choose Create New Visual. Chart is selected by default. Enter a clear visual name, choose the x-axis, and select one or more y-axis series. TIME is normally the x-axis because it shows how model values change through the simulation.</p>
+      <p>Use one chart to compare related quantities, such as Inventory and Desired Inventory, or Births and Deaths. Use separate charts when variables have very different scales, since a large series can make a smaller series difficult to see. A phase-style chart can use one model variable as the x-axis to examine the relationship between two changing values.</p>
+      <p>The chart editor changes the visual configuration after creation. Download Visual exports the current result, and Delete Visual removes the selected tab. Running the model again refreshes standard chart data while preserving the visual definition.</p>
+    </div></div></div></section>
+
+    <section class="tutorialContainer"><div id="tables" class="tutorialBox"><div class="tutorialContents"><div class="tutorialInfo">
+      <h1>Tables</h1>
+      <p>Select Table in Create New Visual and choose the columns to display. Tables show exact values at every recorded timestep. They are useful for checking initial conditions, finding when a threshold was crossed, comparing close values, confirming that a flow is zero at the expected time, or copying a small result set into another analysis.</p>
+      <p>A population table might contain TIME, Population, Births, and Deaths. An inventory table might contain TIME, Inventory, Orders, Shipments, and Backorders. Limit columns to the values needed for the current question so the result remains readable.</p>
+      <p>Each time Create New Visual opens, it returns to Chart with x-axis and y-axis controls. Table column selection does not carry into the next new visual.</p>
+    </div></div></div></section>
+
+    <section class="tutorialContainer"><div id="settings" class="tutorialBox"><div class="tutorialContents"><div class="tutorialInfo">
+      <h1>Simulation Settings</h1>
+      <table><thead><tr><th>Tab</th><th>Available controls</th><th>When they matter</th></tr></thead><tbody>
+        <tr><td>Standard</td><td>Start time, end time, dt, integration method, trigonometry mode, and high step count permission.</td><td>Defines the numerical experiment and how equations are evaluated.</td></tr>
+        <tr><td>Visual</td><td>Show Element Control Panel and Show Center Button.</td><td>Controls whether editing and recentering controls appear on the canvas.</td></tr>
+        <tr><td>Key Binds</td><td>Single-key assignments for tools, polarity, and emphasis.</td><td>Speeds up repeated editing and allows preferred shortcuts.</td></tr>
+        <tr><td>Experimental</td><td>Monte Carlo, new element types, Live API Equations, and the Finnhub API key shown when Live APIs are enabled.</td><td>Enables features that are off by default and configures experimental live data.</td></tr>
+      </tbody></table>
+      <p>The Trigonometry Mode setting changes how direct trigonometric inputs are interpreted. Use Radians for conventional mathematical and programming formulas. Use Degrees when model inputs are naturally expressed as degree values, such as an angle measured from a map or mechanical design.</p>
+    </div></div></div></section>
+
+    <section class="tutorialContainer"><div id="themes" class="tutorialBox"><div class="tutorialContents"><div class="tutorialInfo">
+      <h1>Themes, Fonts, and Model Colors</h1>
+      <p>Theme, Appearance changes the interface theme, application font, default label size, and influence-polarity label offset. It also includes Clear All Emphasis. A polarity offset is useful when a plus or minus label overlaps an arrowhead or nearby text.</p>
+      <p>Theme, Model Colors defines default colors for stocks, conveyors, variables, clouds, flows, influences, microwaves, queues, labels, and the canvas. New elements use these defaults. Apply to All repaints existing model elements. Reset restores the standard LunaSim palette.</p>
+      <p>Model color can communicate structure. For example, use one color for financial stocks, another for physical inventory, and a third for workforce quantities. Keep the scheme consistent and avoid using too many similar colors. Individual elements can be changed through the element control panel without changing project-wide defaults.</p>
+    </div></div></div></section>
+
+    <section class="tutorialContainer"><div id="keybinds" class="tutorialBox"><div class="tutorialContents"><div class="tutorialInfo">
+      <h1>Key Binds</h1>
+      <p>Open Settings, Key Binds, select a field, and press the replacement key. LunaSim warns when an assignment conflicts with another tool action. Shortcuts do not activate while an input or text area has focus.</p>
+      <table><thead><tr><th>Action</th><th>Default</th><th>Action</th><th>Default</th></tr></thead><tbody>
+        <tr><td>Pointer</td><td>P</td><td>Stock</td><td>S</td></tr>
+        <tr><td>Cloud</td><td>C</td><td>Variable</td><td>V</td></tr>
+        <tr><td>Flow</td><td>F</td><td>Influence</td><td>I</td></tr>
+        <tr><td>Text</td><td>T</td><td>Conveyor</td><td>N</td></tr>
+        <tr><td>Microwave</td><td>W</td><td>Queue</td><td>Q</td></tr>
+        <tr><td>Positive polarity</td><td>P</td><td>Negative polarity</td><td>M</td></tr>
+        <tr><td>Toggle emphasis</td><td>B</td><td>Delete selection</td><td>Delete or Backspace</td></tr>
+      </tbody></table>
+    </div></div></div></section>
+
+    <section class="tutorialContainer"><div id="files" class="tutorialBox"><div class="tutorialContents"><div class="tutorialInfo">
+      <h1>Save, Load, and Export</h1>
+      <p>The <code>.luna</code> format preserves the editable model, settings, and visual definitions. Use it for backups, continued editing, or sharing with another LunaSim user. The header status indicates whether the current model contains changes made after the last export.</p>
+      <p>PNG, JPG, and TIFF create static images of the model diagram. Image Margin adds blank space around the exported diagram. PDF creates a report with an optional description and selected sections for the diagram, stocks and special elements, flows, variables, queues, and simulation settings. Download Visual exports the currently displayed chart or table separately.</p>
+      <p>Loading replaces the current project, so save important edits first. Live API keys are not included in <code>.luna</code> files or reports. A recipient who uses stock quote references must enter a Finnhub key in their own browser session.</p>
+    </div></div></div></section>
+
+    <section class="tutorialContainer"><div id="experimental" class="tutorialBox"><div class="tutorialContents"><div class="tutorialInfo">
+      <h1>Enabling Experimental Features</h1>
+      <p>Open Settings and select Experimental. Monte Carlo Simulations, New Elements, and Live API Equations are all off by default. Turning any option on displays a confirmation warning. After confirmation, its controls appear immediately. The selection is stored in the browser.</p>
+      <p>New Elements enables Conveyors, Microwaves, Queues, and Overflows as one group. Turning the setting off hides their toolbar buttons but does not automatically delete experimental elements already present in a saved model. Save a backup before using experimental features in an important project because their behavior and saved-data representation may continue to change.</p>
+      <p>Live API Equations enables pink API suggestions in the equation editor and reveals the Finnhub API Key field. Weather and World Bank references do not require a key. Turning the option off prevents live requests and leaves ordinary blue model references unchanged. The complete syntax table appears in the next section.</p>
+    </div></div></div></section>
+
+    <section class="tutorialContainer"><div id="monte-carlo" class="tutorialBox"><div class="tutorialContents"><div class="tutorialInfo">
+      <h1>Monte Carlo Simulations</h1>
+      <p>A standard LunaSim run uses one value for every assumption and produces one trajectory. Monte Carlo analysis represents uncertain assumptions with probability distributions and repeats the simulation many times. Each run receives a new sample. LunaSim then summarizes all completed runs with a median, mean, standard deviation, and percentile bands for every stock and variable at every timestep.</p>
+      <h3>When Monte Carlo is useful</h3>
+      <p>Use it when an important input is uncertain rather than merely unknown. Examples include uncertain demand growth, variable processing time, a range of disease transmission rates, future commodity prices, project completion times, rainfall, or manufacturing yield. It helps answer questions such as: How wide is the plausible outcome range? Which variables remain robust under uncertainty? Does a policy still work in unfavorable cases? At what time does uncertainty become large?</p>
+      <h3>Running the analysis</h3>
+      <ol>
+        <li>Enable Monte Carlo under Settings, Experimental.</li>
+        <li>Run the ordinary simulation first. This validates the model and stores the base data used by the ensemble.</li>
+        <li>Open Charts/Tables and select Monte Carlo.</li>
+        <li>Choose the number of runs from 10 through 5000. Start with 100 or 200 while building the model, then use more runs for a final analysis.</li>
+        <li>Select a confidence display. The combined 90% and 50% view shows both a broad outcome range and the denser central region.</li>
+        <li>Assign at least one non-fixed distribution. Enter parameters in model units and check that their ranges are physically meaningful.</li>
+        <li>Run Monte Carlo. The progress indicator reports completed runs. A new Monte Carlo tab opens when processing finishes.</li>
+        <li>Use the Variables control at the top of the visualization to switch among stocks and variables without rerunning the ensemble.</li>
+      </ol>
+      <table><thead><tr><th>Distribution</th><th>Parameters</th><th>Interpretation and example</th></tr></thead><tbody>
+        <tr><td>Fixed</td><td>Value</td><td>The parameter is not sampled. Use it for assumptions intentionally held constant.</td></tr>
+        <tr><td>Normal</td><td>Mean and standard deviation</td><td>Values cluster symmetrically around a mean and can extend beyond any bound. Suitable for measurement error or aggregated variation. Do not use it when negative samples would be impossible unless the mean is safely above zero.</td></tr>
+        <tr><td>Uniform</td><td>Minimum and maximum</td><td>Every value in the range is equally likely. Suitable when only defensible lower and upper bounds are known.</td></tr>
+        <tr><td>Triangular</td><td>Minimum, mode, and maximum</td><td>Values stay within bounds while favoring one most likely value. Suitable for expert estimates, task duration, and cost assumptions.</td></tr>
+      </tbody></table>
+      <h3>Reading the result</h3>
+      <p>The median is the middle simulated result and is often more resistant to extreme runs than the mean. A 90 percent band spans the 5th through 95th percentiles. A 95 percent band spans the 2.5th through 97.5th percentiles. A 99 percent band spans the 0.5th through 99.5th percentiles. These are ranges produced by the selected model and distributions. They are not proof that the real world has the same probability unless the assumptions and distributions are well supported.</p>
+      <p>Wide bands indicate that parameter uncertainty has a large effect on the result. Bands that widen over time show uncertainty accumulating through feedback. Compare policy alternatives using the same distributions and number of runs. A policy with a slightly lower median may still be preferable if it greatly reduces harmful tail outcomes.</p>
+      <p>Regular stock initial values and variables can be sampled. With New Elements enabled, conveyor transit time, microwave cook time, and queue capacity can also be sampled. LunaSim uses up to eight browser workers. More runs create smoother percentile estimates but require more time and memory. Live API values are resolved during the preceding normal run and remain fixed across the ensemble.</p>
+    </div></div></div></section>
+
+    <section class="tutorialContainer"><div id="conveyors" class="tutorialBox"><div class="tutorialContents"><div class="tutorialInfo">
+      <h1>Conveyors</h1>
+      <p>A conveyor is a fixed-delay pipeline. Material entering it remains in transit for the configured Transit Time and then becomes available at its outflow. Unlike a regular stock, the conveyor represents age or position along a process rather than a freely mixed accumulation.</p>
+      <p>Use a conveyor for shipping lead time, product curing, employee training, pregnancy, crop maturation, paperwork processing, or any process where an input emerges after a known delay. Place it like a stock, attach inflow and outflow links, and set Transit Time in the element control panel. Equations can reference <code>[Conveyor Name]</code> to obtain the current total in transit.</p>
+      <p>For example, Orders entering a Shipping Pipeline with Transit Time 3 represent orders that take three time units to arrive. The downstream inventory receives completed transit rather than the full incoming order rate immediately. A longer transit time increases the amount held on the conveyor when the entry rate is sustained.</p>
+    </div></div></div></section>
+
+    <section class="tutorialContainer"><div id="microwaves" class="tutorialBox"><div class="tutorialContents"><div class="tutorialInfo">
+      <h1>Microwaves</h1>
+      <p>A microwave represents batch processing. Incoming material is held as a batch and released when the configured Cook Time is complete. This differs from a conveyor, where items progress continuously and emerge according to when they entered.</p>
+      <p>Use a microwave for an oven cycle, chemical reactor batch, laboratory test, data-processing batch, scheduled cleaning cycle, or manufacturing operation that completes a group together. Place it like a stock, connect flows, and set Cook Time through the element control panel. Its equation supplies the initial contents.</p>
+      <p>A bakery model could send prepared trays into an Oven microwave with Cook Time 0.5 hours. Finished trays leave after each cooking cycle. If the incoming rate exceeds the batch process capacity represented elsewhere in the model, material may accumulate upstream.</p>
+    </div></div></div></section>
+
+    <section class="tutorialContainer"><div id="queues" class="tutorialBox"><div class="tutorialContents"><div class="tutorialInfo">
+      <h1>Queues and Overflows</h1>
+      <p>A queue is a capacity-limited accumulation. Inflows add material, normal outflows drain it according to their equations, and Capacity defines the maximum intended content. Use a queue for customers waiting for service, jobs waiting for a machine, cars in parking, packets in a network buffer, orders awaiting fulfillment, or patients waiting for treatment.</p>
+      <p>An overflow is a special outflow that automatically carries away material above capacity. Select Overflow, click the queue, and then select a destination. The dark line and red arrow distinguish it from a normal flow. Overflow does not use an ordinary user-controlled valve equation.</p>
+      <p>A clinic queue with Capacity 40 can receive Patient Arrivals while Treatment Completions remove patients. When arrivals would push the queue above 40, an overflow can represent patients turned away. Connect it to a cloud when rejected patients leave the modeled system, or connect it to another queue when they are redirected to a different facility.</p>
+    </div></div></div></section>
+
+    <section class="tutorialContainer"><div id="water-flow" class="tutorialBox"><div class="tutorialContents media-layout">
+      <div class="video-frame"><iframe class="tutorialVideo" src="https://www.youtube.com/embed/cswi1icE3WU?si=m-0fMhFcmzCqfO2g" title="Water flow model tutorial" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+      <div class="tutorialInfo"><h1>Example Model: Water Flow</h1>
+        <p>This tutorial models water draining through a hole in the bottom of a container. Water Volume is the stock. Drainage is the outflow to a cloud. The outflow slows as the water level falls, so the model demonstrates a nonlinear balancing process.</p>
+        <p>Create a stock named Water Volume and give it an initial equation such as <code>1000</code> liters. Create variables for Tank Area, Outlet Area, Gravity, and Discharge Coefficient. Water Height can be calculated as <code>[Water Volume] / [Tank Area]</code>. A simplified Torricelli-style drainage equation is <code>[Discharge Coefficient] * [Outlet Area] * sqrt(2 * [Gravity] * [Water Height])</code>. Draw influences from every referenced variable and the stock to the Drainage valve.</p>
+        <p>Run the model and chart Water Volume, Water Height, and Drainage against TIME. Water Volume falls quickly at first because the pressure head is high. As the tank empties, height and drainage decrease. If the numerical result passes below zero, enable NN/Uni or use a flow equation that limits drainage to the available amount. Experiment with outlet area and tank area to see how geometry changes the emptying time.</p>
+      </div>
+    </div></div></section>
+
+    <section class="tutorialContainer"><div id="spring-mass" class="tutorialBox"><div class="tutorialContents media-layout">
+      <div class="video-frame"><iframe class="tutorialVideo" src="https://www.youtube.com/embed/8Lmd2mxV5Hg?si=NjXqEhzQeqTJeJvg" title="Spring mass oscillation model tutorial" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+      <div class="tutorialInfo"><h1>Example Model: Spring-Mass Oscillation</h1>
+        <p>This tutorial models a mass attached to a spring with damping. Position and Velocity are stocks because both describe the current state of the system. Velocity changes Position, and Acceleration changes Velocity. The feedback between displacement, spring force, velocity, and damping produces oscillation.</p>
+        <p>Create Position and Velocity stocks. Use Velocity as the flow that changes Position. Create Mass, Spring Constant, and Damping Coefficient variables. Calculate Spring Force as <code>-[Spring Constant] * [Position]</code> and Damping Force as <code>-[Damping Coefficient] * [Velocity]</code>. Calculate Acceleration as <code>([Spring Force] + [Damping Force]) / [Mass]</code>, then use Acceleration as the flow changing Velocity.</p>
+        <p>Start with a nonzero Position and zero Velocity. Chart Position and Velocity against TIME. With no damping, the model continues oscillating. Positive damping removes energy, causing the peaks to shrink until the mass approaches equilibrium. Increasing mass generally slows the response, increasing spring constant raises the natural frequency, and increasing damping reduces oscillation. Use RK4 and reduce dt until the waveform remains stable when dt is reduced again.</p>
+      </div>
+    </div></div></section>
+  </main>
 </body>
 </html>

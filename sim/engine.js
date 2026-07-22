@@ -63,6 +63,7 @@ export class Simulation {
             // Inverse trig
             .replaceAll(/(?<!Math\.)\basin\b/gi, 'Math.asin')
             .replaceAll(/(?<!Math\.)\bacos\b/gi, 'Math.acos')
+            .replaceAll(/(?<!Math\.)\batan2\b/gi, 'Math.atan2')
             .replaceAll(/(?<!Math\.)\batan\b/gi, 'Math.atan')
             // Basic trig
             .replaceAll(/(?<!Math\.)\bsin\b/gi, 'Math.sin')

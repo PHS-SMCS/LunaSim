@@ -425,11 +425,11 @@
     max-width: 1200px;
     margin: 0 auto 50px auto;
     padding: 40px;
-    background: var(--box-background);
-    backdrop-filter: blur(20px);
+    background: #ffffff;
+    backdrop-filter: none;
     border-radius: 20px;
-    box-shadow: 0 15px 30px var(--box-shadow);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: none;
+    border: 2px solid var(--primary-dark);
     opacity: 0;
     transform: translateY(30px);
     transition: all 0.8s ease;
@@ -463,9 +463,9 @@
 
   /* Redesigned features section to be more elegant */
   .features-section {
-    background: linear-gradient(135deg, rgba(30, 58, 95, 0.05) 0%, rgba(79, 107, 184, 0.05) 100%);
-    border-radius: 25px;
-    padding: 40px;
+    background: transparent;
+    border-radius: 0;
+    padding: 0;
     margin-top: 30px;
   }
 
@@ -507,17 +507,16 @@
     display: flex;
     align-items: flex-start;
     gap: clamp(1rem, 2.5vw, 1.2rem);
-    background: rgba(255, 255, 255, 0.6);
+    background: #f2f5fb;
     padding: 20px;
     border-radius: 15px;
     transition: all 0.3s ease;
-    border: 1px solid rgba(30, 58, 95, 0.1);
+    border: none;
   }
 
   /* Removed hover animations from features list items */
   .features-list li:hover {
-    /*box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);*/
-    background: rgba(255, 255, 255, 0.8);
+    background: #e9eef8;
   }
 
   /* Removed gradients from icons in features section */
@@ -532,7 +531,7 @@
     color: white;
     font-size: clamp(1rem, 2.2vw, 1.3rem);
     flex-shrink: 0;
-    box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
+    box-shadow: none;
   }
 
   .feature-text {
@@ -564,10 +563,10 @@
 
   /* Removed box shadow from team section and styled similar to references */
   .team-card {
-    background: rgba(255, 255, 255, 0.8);
+    background: #f2f5fb;
     border-radius: 15px;
     padding: 30px;
-    border: 1px solid rgba(30, 58, 95, 0.1);
+    border: none;
     transition: all 0.3s ease;
     opacity: 0;
     transform: translateY(30px);
@@ -583,8 +582,8 @@
 
   /* Replaced dropshadows with blue borders for team cards */
   .team-card:hover {
-    border: 1px solid var(--primary-color);
-    background: rgba(255, 255, 255, 0.05);
+    border: none;
+    background: #e9eef8;
   }
 
   .team-photo {
@@ -658,30 +657,43 @@
   /* Timeline Styles */
   .timeline {
     position: relative;
-    max-width: 1400px;
+    max-width: 900px;
     margin: 0 auto;
-    padding: 0 2rem;
+    padding: 0 1.5rem 0 4.75rem;
   }
 
   .timeline::before {
     content: '';
     position: absolute;
-    left: 50%;
+    left: 1.75rem;
     top: 0;
     bottom: 0;
     width: 4px;
-    background: white;
-    transform: translateX(-50%);
+    background: #ffffff;
+    transform: none;
     border-radius: 2px;
   }
 
   .timeline-item {
     position: relative;
-    margin: 4rem 0;
-    width: 50%;
+    margin: 0 0 2.25rem;
+    width: 100%;
     opacity: 0;
     transform: translateY(50px);
     transition: all 0.8s ease;
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -3.3125rem;
+    top: 2.1rem;
+    width: 14px;
+    height: 14px;
+    box-sizing: border-box;
+    border: 3px solid #ffffff;
+    border-radius: 50%;
+    background: var(--primary-color);
   }
 
   .timeline-item.visible {
@@ -689,23 +701,13 @@
     transform: translateY(0);
   }
 
-  .timeline-item:nth-child(odd) {
-    left: 0;
-    padding-right: 4rem;
-  }
-
-  .timeline-item:nth-child(even) {
-    left: 50%;
-    padding-left: 4rem;
-  }
-
   .timeline-content {
-    background: var(--box-background);
-    backdrop-filter: blur(20px);
+    background: #ffffff;
+    backdrop-filter: none;
     border-radius: 20px;
     padding: 30px;
-    box-shadow: 0 15px 30px var(--box-shadow);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: none;
+    border: 2px solid var(--primary-dark);
     position: relative;
   }
 
@@ -725,10 +727,17 @@
 
   .timeline-image-container {
     margin: 20px 0;
+    text-align: center;
   }
 
   .timeline-image {
-    width: 100%;
+    display: block;
+    width: auto;
+    max-width: min(100%, 560px);
+    max-height: 360px;
+    object-fit: contain;
+    margin-left: auto;
+    margin-right: auto;
     border-radius: 12px;
     margin-bottom: 10px;
   }
@@ -772,8 +781,8 @@
 
   .pdf-download-link:hover {
     background: var(--primary-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transform: none;
+    box-shadow: none;
   }
 
   /* Updated references section to 2 rows with 4 columns */
@@ -783,11 +792,11 @@
     max-width: 1200px;
     margin: 0 auto 50px auto;
     padding: 40px;
-    background: var(--box-background);
-    backdrop-filter: blur(20px);
+    background: #ffffff;
+    backdrop-filter: none;
     border-radius: 20px;
-    box-shadow: 0 15px 30px var(--box-shadow);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: none;
+    border: 2px solid var(--primary-dark);
     opacity: 0;
     transform: translateY(30px);
     transition: all 0.8s ease;
@@ -816,12 +825,12 @@
 
   /* Made entire reference boxes clickable */
   .reference-card {
-    background: rgba(255, 255, 255, 0.8);
+    background: #f2f5fb;
     border-radius: 15px;
     padding: 25px;
     text-align: center;
     transition: all 0.3s ease;
-    border: 1px solid rgba(30, 58, 95, 0.1);
+    border: none;
     cursor: pointer;
     text-decoration: none;
     color: inherit;
@@ -830,8 +839,8 @@
 
   /* Replaced dropshadows with blue borders for reference boxes */
   .reference-card:hover {
-    border: 1px solid var(--primary-color);
-    background: rgba(255, 255, 255, 0.05);
+    border: none;
+    background: #e9eef8;
   }
 
   .reference-icon {
@@ -900,14 +909,26 @@
     }
 
     .timeline::before {
-      left: 20px;
+      left: 18px;
+    }
+
+    .timeline {
+      padding: 0 12px 0 48px;
     }
 
     .timeline-item {
       width: 100%;
       left: 0 !important;
-      padding-left: 60px !important;
-      padding-right: 20px !important;
+      padding: 0 !important;
+      margin-bottom: 1.25rem;
+    }
+
+    .timeline-item::before {
+      left: -35px;
+    }
+
+    .timeline-content {
+      padding: 24px;
     }
 
     .references-grid {
@@ -1066,60 +1087,81 @@
                       <li>
                           <div class="icon-circle"><span class="material-symbols-outlined">account_tree</span></div>
                           <div class="feature-text">
-                              <strong>Nodes</strong>
-                              <p>Stocks, Variables, Clouds</p>
+                              <strong>Reservoirs</strong>
+                              <p>Stocks, conveyors, microwaves, and queues</p>
                           </div>
                       </li>
                       <li>
                           <div class="icon-circle"><span class="material-symbols-outlined">swap_horiz</span></div>
                           <div class="feature-text">
                               <strong>Links</strong>
-                              <p>Flows, Influences</p>
+                              <p>Flows, influences, and overflows</p>
                           </div>
                       </li>
                       <li>
                           <div class="icon-circle"><span class="material-symbols-outlined">functions</span></div>
                           <div class="feature-text">
                               <strong>Equations</strong>
-                              <p>Arithmetic, Trigonometry, Node/Link References</p>
+                              <p>Arithmetic, trigonometry, and Java Math</p>
+                          </div>
+                      </li>
+                      <li>
+                          <div class="icon-circle"><span class="material-symbols-outlined">link</span></div>
+                          <div class="feature-text">
+                              <strong>References</strong>
+                              <p>Node/link references and time references</p>
                           </div>
                       </li>
                       <li>
                           <div class="icon-circle"><span class="material-symbols-outlined">integration_instructions</span></div>
                           <div class="feature-text">
                               <strong>Integration Methods</strong>
-                              <p>Euler's Method, Runge-Kutta 4</p>
+                              <p>Euler's method and Runge-Kutta 4</p>
+                          </div>
+                      </li>
+                      <li>
+                          <div class="icon-circle"><span class="material-symbols-outlined">query_stats</span></div>
+                          <div class="feature-text">
+                              <strong>Visuals</strong>
+                              <p>Charts and tables</p>
                           </div>
                       </li>
                   </ul>
 
                   <ul class="features-list">
                       <li>
-                          <div class="icon-circle"><span class="material-symbols-outlined">query_stats</span></div>
-                          <div class="feature-text">
-                              <strong>Visuals</strong>
-                              <p>Charts, Tables</p>
-                          </div>
-                      </li>
-                      <li>
                           <div class="icon-circle"><span class="material-symbols-outlined">save</span></div>
                           <div class="feature-text">
                               <strong>Import/Export</strong>
-                              <p>Save and Reuse Models, Download Models</p>
+                              <p>Save, reuse, and download models</p>
                           </div>
                       </li>
                       <li>
                           <div class="icon-circle"><span class="material-symbols-outlined">palette</span></div>
                           <div class="feature-text">
                               <strong>Customization</strong>
-                              <p>Custom Themes, Custom Fonts</p>
+                              <p>Themes, fonts, and keybinds</p>
+                          </div>
+                      </li>
+                      <li>
+                          <div class="icon-circle"><span class="material-symbols-outlined">casino</span></div>
+                          <div class="feature-text">
+                              <strong>Uncertainty Analysis</strong>
+                              <p>Monte Carlo simulation support</p>
+                          </div>
+                      </li>
+                      <li>
+                          <div class="icon-circle"><span class="material-symbols-outlined">cloud_sync</span></div>
+                          <div class="feature-text">
+                              <strong>Live APIs</strong>
+                              <p>Stock market, weather, and economics data</p>
                           </div>
                       </li>
                       <li>
                           <div class="icon-circle"><span class="material-symbols-outlined">auto_awesome</span></div>
                           <div class="feature-text">
                               <strong>And Much More!</strong>
-                              <p>Ghosting, Logic, Docs, etc.</p>
+                              <p>Ghosting, logic, emphasis, polarity, and more</p>
                           </div>
                       </li>
                   </ul>
@@ -1444,9 +1486,21 @@
 
     <div class="content-box" data-scroll="80" id="changelog">
         <h2>Recent Changelog:</h2>
-        <p>
-          v1.01: Added ability for user to select between degrees and radians mode in simulation settings 
-        </p>
+        <div class="changelog-list">
+          <p><strong>v1.0:</strong> Added the ability for users to add their own text boxes to the model canvas.</p>
+          <p><strong>v1.1:</strong> Added the ability for users to select between degrees and radians mode in simulation settings.</p>
+          <p><strong>v1.2:</strong> Added negative and positive polarity for influences and emphasis for selected nodes, which can be toggled by pressing B on the keyboard.</p>
+          <p><strong>v1.3:</strong> Added keybinds that can be modified within settings.</p>
+          <p><strong>v2.0:</strong> Added new reservoirs under Experimental Features: conveyors, queues, and microwaves, plus a new link called the overflow.</p>
+          <p><strong>v2.01:</strong> Added the ability to insert images within the model canvas.</p>
+          <p><strong>v2.1:</strong> Added the ability to adjust model-element colors and change the sizes and colors of label text.</p>
+          <p><strong>v2.1.1:</strong> Added the ability to reference <code>[TIME]</code> in the equation editor.</p>
+          <p><strong>v2.2:</strong> Added PDF as an additional export option when saving a model.</p>
+          <p><strong>v2.3:</strong> Added selectable units within the equation editor. Units are preserved when downloading or uploading a model and appear in charts and visuals.</p>
+          <p><strong>v2.4:</strong> Added experimental Live API equations for weather conditions, the stock market, and economics.</p>
+          <p><strong>v2.5:</strong> Added experimental Monte Carlo simulation support for uncertainty analysis across model parameters.</p>
+          <p><strong>v2.5.1:</strong> Updated the user documentation with all experimental features and added easier Live API references within the equation editor.</p>
+        </div>
     </div>
 
 </div>
@@ -1462,6 +1516,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function initializeWebsite() {
+    orderTeamCards();
     // Check if this is the first visit to the website
     const isFirstVisit = !sessionStorage.getItem("lunasim-visited");
 
@@ -1488,6 +1543,21 @@ function initializeWebsite() {
         initializeScrollAnimations();
         startBackgroundSlider();
     }
+}
+
+function orderTeamCards() {
+    const desiredOrder = [
+        'Ryan Chung', 'Akash Saran', 'Arjun Mujumdar', 'Caleb Wen',
+        'Karthik Vedula', 'William Park', 'Aditya Patil', 'Sienna Simms',
+        'Ben Ross', 'Ishan Kheterpal', 'Mark Estep', 'Kevin Lee'
+    ];
+    const grid = document.querySelector('.team-grid');
+    if (!grid) return;
+    const cards = Array.from(grid.querySelectorAll('.team-card'));
+    desiredOrder.forEach(name => {
+        const card = cards.find(item => item.querySelector('h3')?.textContent.trim() === name);
+        if (card) grid.appendChild(card);
+    });
 }
 
 function hideLoadingScreen() {
