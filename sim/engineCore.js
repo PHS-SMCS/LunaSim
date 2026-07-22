@@ -1,43 +1,27 @@
 /**
- * @fileoverview Handles parsing and calculations for LunaSim
- * @module engine
- * @author Authors: Karthik S. Vedula, Ryan Chung, Arjun Mujumdar, Akash Saran
+ * @fileoverview Pure simulation engine — no DOM dependencies.
+ * Includes full support for conveyor, microwave, and queue stock types.
+ * Safe to import in Web Workers.
  */
-
-
-/**
- * Displays the simulation error popup and dims the background.
- * Triggered when an equation or model setup fails validation.
- * @function
- * @memberOf module:engine
- */
-
-function showSimErrorPopup() {
-    document.getElementById("simErrorPopup").style.display = "block";
-    document.getElementById("grayEffectDiv").style.display = "block";
-}
-document.getElementById("simErrorPopupDismiss").addEventListener("click", closeSimErrorPopup);
-
-/**
- * Hides the simulation error popup and restores background visibility.
- * @function
- * @memberOf module:engine
- */
-
-function closeSimErrorPopup() {
-    document.getElementById("simErrorPopup").style.display = "none";
-    document.getElementById("grayEffectDiv").style.display = "none";
-}
 
 export class Simulation {
     constructor() {
-        this.data;
-        this.dt;
-        this.startTime;
-        this.endTime;
+        this.data = null;
+        this.dt = null;
+        this.startTime = null;
+        this.endTime = null;
+        this.currentTime = 0;
+        this.trigMode = "radian";
+        this._onError = null; // injectable error handler — set by worker
     }
 
-    /**
+    _reportError(msg) {
+        if (this._onError) this._onError(msg);
+        throw new Error(msg);
+    }
+
+
+/**
      * Safely evaluates a mathematical expression string using JavaScript's `eval`,
      * while replacing known mathematical terms and correcting syntax patterns.
      *
@@ -63,7 +47,6 @@ export class Simulation {
             // Inverse trig
             .replaceAll(/(?<!Math\.)\basin\b/gi, 'Math.asin')
             .replaceAll(/(?<!Math\.)\bacos\b/gi, 'Math.acos')
-            .replaceAll(/(?<!Math\.)\batan2\b/gi, 'Math.atan2')
             .replaceAll(/(?<!Math\.)\batan\b/gi, 'Math.atan')
             // Basic trig
             .replaceAll(/(?<!Math\.)\bsin\b/gi, 'Math.sin')
@@ -105,8 +88,7 @@ export class Simulation {
         Math.csc = x => 1 / Math.sin(x);
         Math.cot = x => 1 / Math.tan(x);
 
-        const trigModeElement = document.getElementById("trigMode");
-        const trigMode = trigModeElement ? trigModeElement.value : "radian";
+        const trigMode = this.trigMode || "radian";
 
         if (trigMode === "degree") {
             expression = expression
@@ -329,9 +311,7 @@ export class Simulation {
         // Check for circular definitions
         if (history.includes(equation)) {
             history.push(equation);
-            document.getElementById("simErrorPopupDesc").innerHTML = "Circular Definition Detected:<br>" + equation + "<br><br>Stack Trace:<br>" + history.join("<br> -> ") + "<br><br>Please check your equations and try again.";
-            showSimErrorPopup();
-            throw new Error("Circular Definition Detected:<br>" + equation + "<br><br>Stack Trace:<br>" + history.join("<br> -> ") + "<br><br>Please check your equations and try again.");
+            this._reportError("Circular Definition Detected: " + equation + " | Stack: " + history.join(" -> "));
         }
         history.push(equation);
 
@@ -340,9 +320,7 @@ export class Simulation {
         var res = this.safeEval(parsedEquation);
 
         if (isNaN(res)) {
-            document.getElementById("simErrorPopupDesc").innerHTML = "Invalid equation:<br>" + equation + "<br><br>Parsed equation:<br>" + parsedEquation + "<br><br>Please check your equations and try again.";
-            showSimErrorPopup();
-            throw new Error("Invalid equation:<br>" + equation + "<br><br>Parsed equation:<br>" + parsedEquation + "<br><br>Please check your equations and try again.");
+            this._reportError("Invalid equation: " + equation + " | Parsed: " + parsedEquation);
         } else {
             return res;
         }
@@ -458,32 +436,24 @@ export class Simulation {
             let stock = this.data.stocks[stockName];
 
             if (stock["values"][0] == null) {
-                document.getElementById("simErrorPopupDesc").innerHTML = "Invalid equation (maybe circular definition):<br>" + stock["equation"] + "<br><br>Please check your equations and try again.";
-                showSimErrorPopup();
-                throw new Error("Invalid equation (maybe circular definition):<br>" + stock["equation"] + "<br><br>Please check your equations and try again.");
+                this._reportError("Invalid equation (maybe circular definition): " + stock["equation"]);
             }
 
             for (var flowName in stock["inflows"]) {
                 if (stock["inflows"][flowName]["values"][0] == null) {
-                    document.getElementById("simErrorPopupDesc").innerHTML = "Invalid equation (maybe circular definition):<br>" + stock["inflows"][flowName]["equation"] + "<br><br>Please check your equations and try again.";
-                    showSimErrorPopup();
-                    throw new Error("Invalid equation (maybe circular definition):<br>" + stock["inflows"][flowName]["equation"] + "<br><br>Please check your equations and try again.");
+                    this._reportError("Invalid equation (maybe circular definition): " + stock["inflows"][flowName]["equation"]);
                 }
             }
             for (var flowName in stock["outflows"]) {
                 if (stock["outflows"][flowName]["values"][0] == null) {
-                    document.getElementById("simErrorPopupDesc").innerHTML = "Invalid equation (maybe circular definition):<br>" + stock["outflows"][flowName]["equation"] + "<br><br>Please check your equations and try again.";
-                    showSimErrorPopup();
-                    throw new Error("Invalid equation (maybe circular definition):<br>" + stock["outflows"][flowName]["equation"] + "<br><br>Please check your equations and try again.");
+                    this._reportError("Invalid equation (maybe circular definition): " + stock["outflows"][flowName]["equation"]);
                 }
             }
         }
 
         for (var converterName in this.data.converters) {
             if (this.data.converters[converterName]["values"][0] == null) {
-                document.getElementById("simErrorPopupDesc").innerHTML = "Invalid equation (maybe circular definition):<br>" + this.data.converters[converterName]["equation"] + "<br><br>Please check your equations and try again.";
-                showSimErrorPopup();
-                throw new Error("Invalid equation (maybe circular definition):<br>" + this.data.converters[converterName]["equation"] + "<br><br>Please check your equations and try again.");
+                this._reportError("Invalid equation (maybe circular definition): " + this.data.converters[converterName]["equation"]);
             }
         }
     }
@@ -1091,4 +1061,5 @@ export class Simulation {
         // return a copy of this.data
         return JSON.parse(JSON.stringify(this.data));
     }
+
 }

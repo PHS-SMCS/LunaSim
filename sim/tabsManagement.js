@@ -7,9 +7,15 @@
 
 import {data} from './editor.js';
 import { PERFORMANCE_MODE } from "./editor.js";
+import { getUnitForName } from "./editor.js";
+import { runMonteCarlo, sampleDistribution } from './monteCarlo.js';
 
 
 var TESTING_MODE = false;
+
+// ── Monte Carlo results store ─────────────────────────────────────────────────
+// Keyed by tab index. Cleared when a new MC run is pushed.
+window._mcResultsStore = window._mcResultsStore || {};
 
 /**
  * Displays a popup notification with a given message.
@@ -41,7 +47,8 @@ if(sessionStorage.tabsData)
 
 let list = document.getElementById("tabsList"); // list of tab elements
 
-var chart = new ApexCharts(document.querySelector("#chart"), {
+function createStandardChart() {
+  return new ApexCharts(document.querySelector("#chart"), {
   chart: {
     type: 'scatter',
     foreColor: (sessionStorage.getItem("darkMode") == "true" ? '#ffffff' : '#373d3f')
@@ -51,8 +58,31 @@ var chart = new ApexCharts(document.querySelector("#chart"), {
   xaxis: {
     
   },
-})
-chart.render()
+  });
+}
+var chart = createStandardChart();
+chart.render();
+
+function removeMCSelector() {
+  const selector = document.getElementById("mcVarSelector");
+  if (selector) selector.remove();
+}
+
+function ensureStandardChart() {
+  if (window._mcChartInstance) {
+    window._mcChartInstance.destroy();
+    window._mcChartInstance = null;
+    chart = null;
+  }
+  removeMCSelector();
+  if (!chart) {
+    const chartEl = document.getElementById("chart");
+    chartEl.innerHTML = "";
+    chart = createStandardChart();
+    chart.render();
+  }
+  return chart;
+}
 
 /**
  * Returns an array of available series keys from simulation data.
@@ -158,6 +188,9 @@ function openForm(){
     showPopup("Create a model first.");
     return;
   }
+  const modelType = document.getElementById("model_type");
+  modelType.value = "chart";
+  modelType.dispatchEvent(new Event("change"));
   addOptions(); // dynamically adds in the options
 
   let form = document.getElementById("popForm");
@@ -265,6 +298,8 @@ function initializeTab() {
   document.getElementById("popForm").style.display = "none"; // hide form
   document.getElementById("grayEffectDiv").style.display = "none";
   form.reset(); // reset input
+  document.getElementById("model_type").value = "chart";
+  document.getElementById("model_type").dispatchEvent(new Event("change"));
   resetOptions(); // reset options
 }
 
@@ -320,7 +355,7 @@ function configTabs() {
     icon.className = "material-symbols-outlined"; // Google Material Symbols
 
     // Set the appropriate icon text for each type
-    icon.textContent = (tabs[j].type === "table") ? "table" : "bar_chart_4_bars";
+    icon.textContent = (tabs[j].type === "table") ? "table" : (tabs[j].type === "montecarlo") ? "casino" : "bar_chart_4_bars";
 
     const label = document.createElement("span");
     const chartName = tabs[j].name || ((j === 0) ? "Default" : "Chart " + j);
@@ -360,7 +395,29 @@ function configTabs() {
       list.querySelectorAll("li").forEach(t => t.classList.remove("graphTabsActive"));
       this.classList.add("graphTabsActive");
 
+      // ── Monte Carlo tab ──────────────────────────────────────────────────
+      if (tabInfo.type === "montecarlo") {
+        const chartEl = document.getElementById('chart');
+        const tableEl = document.getElementById('datatable');
+        chartEl.hidden = false;
+        tableEl.hidden = true;
+
+        const mcData = tabInfo._mcData || window._mcResultsStore[i];
+        if (!mcData) {
+          // Results lost on page refresh — inform user
+          chart.updateOptions({
+            series: [],
+            title: { text: "Monte Carlo results not available. Please re-run the simulation.", align: 'center' },
+            chart: { type: 'rangeArea', height: "100%", width: "100%" }
+          }, true);
+          return;
+        }
+        renderMonteCarloChart(mcData, tabInfo.mcVariable || Object.keys(mcData.percentiles)[0]);
+        return;
+      }
+
       if (tabInfo.type === "chart") {
+        ensureStandardChart();
         if (PERFORMANCE_MODE) console.time('Chart Render Time');
 
         const chartEl = document.getElementById('chart');
@@ -389,7 +446,12 @@ function configTabs() {
             labels: {
               formatter: val => parseFloat(val).toFixed(1)
             },
-            title: { text: tabInfo.xAxis }
+            title: {
+              text: (() => {
+                const xUnit = getUnitForName(tabInfo.xAxis);
+                return xUnit ? `${tabInfo.xAxis} (${xUnit})` : tabInfo.xAxis;
+              })()
+            }
           },
           yaxis: {
             forceNiceScale: false,
@@ -424,8 +486,11 @@ function configTabs() {
             if (val < minyValue) minyValue = val;
           });
 
+          const yUnit = getUnitForName(yName);
+          const yDisplayName = yUnit ? `${yName} (${yUnit})` : yName;
+
           options.series.push({
-            name: yName,
+            name: yDisplayName,
             data: yValues.map((y, idx) => [xValues[idx], y])
           });
         }
@@ -438,6 +503,7 @@ function configTabs() {
         if (PERFORMANCE_MODE) console.timeEnd('Chart Render Time');
 
       } else {
+        ensureStandardChart();
         // Table rendering
         if (PERFORMANCE_MODE) console.time('Table Render Time');
 
@@ -475,7 +541,9 @@ function configTabs() {
             tableData[i][yName] = val;
           });
 
-          tableColumns.push({ title: yName, field: yName });
+          const yUnit = getUnitForName(yName);
+          const yColTitle = yUnit ? `${yName} (${yUnit})` : yName;
+          tableColumns.push({ title: yColTitle, field: yName });
         }
 
         window.tableInstance = new Tabulator("#datatable", {
@@ -531,6 +599,386 @@ function getAllValues(name, data) {
 }
 
 
+
+// ══════════════════════════════════════════════════════════════════════════════
+// MONTE CARLO RENDERING AND UI
+// ══════════════════════════════════════════════════════════════════════════════
+
+/**
+ * Renders a Monte Carlo confidence band chart for a given variable.
+ * Destroys the existing ApexCharts instance before rebuilding to avoid
+ * the silent-fail bug when switching between MC and standard tabs.
+ *
+ * @param {Object} mcData    - { percentiles, timesteps, bandSetting }
+ * @param {string} varName   - The variable to display
+ */
+function renderMonteCarloChart(mcData, varName) {
+  const { percentiles, timesteps, bandSetting } = mcData;
+  const pct = percentiles[varName];
+  if (!pct) {
+    showPopup("Monte Carlo data not found for: " + varName);
+    return;
+  }
+
+  // Destroy old chart instance before clearing innerHTML to avoid ApexCharts bug
+  if (window._mcChartInstance) {
+    window._mcChartInstance.destroy();
+    window._mcChartInstance = null;
+  }
+  if (chart) {
+    chart.destroy();
+    chart = null;
+  }
+
+  const chartEl = document.getElementById('chart');
+  chartEl.innerHTML = "";
+
+  // Build series based on band setting
+  const series = [];
+
+  if (bandSetting === "90" || bandSetting === "90+50") {
+    series.push({
+      name: "90% Band",
+      type: "rangeArea",
+      data: timesteps.map((t, i) => ({ x: t, y: [pct.p5[i], pct.p95[i]] }))
+    });
+  }
+  if (bandSetting === "95") {
+    series.push({
+      name: "95% Band",
+      type: "rangeArea",
+      data: timesteps.map((t, i) => ({ x: t, y: [pct.p2_5[i], pct.p97_5[i]] }))
+    });
+  }
+  if (bandSetting === "99") {
+    series.push({
+      name: "99% Band",
+      type: "rangeArea",
+      data: timesteps.map((t, i) => ({ x: t, y: [pct.p0_5[i], pct.p99_5[i]] }))
+    });
+  }
+  if (bandSetting === "90+50") {
+    series.push({
+      name: "50% Band",
+      type: "rangeArea",
+      data: timesteps.map((t, i) => ({ x: t, y: [pct.p25[i], pct.p75[i]] }))
+    });
+  }
+
+  // Always add the median line
+  series.push({
+    name: "Median (p50)",
+    type: "line",
+    data: timesteps.map((t, i) => ({ x: t, y: pct.p50[i] }))
+  });
+
+  const isDark = sessionStorage.getItem("darkMode") === "true";
+  const foreColor = isDark ? "#ffffff" : "#373d3f";
+
+  const newChart = new ApexCharts(chartEl, {
+    series,
+    chart: {
+      type: "rangeArea",
+      height: "100%",
+      width: "100%",
+      foreColor,
+      toolbar: { show: true },
+      zoom: { enabled: true, type: "x" }
+    },
+    stroke: {
+      curve: "straight",
+      width: series.map(s => s.type === "line" ? 2 : 0)
+    },
+    fill: {
+      opacity: series.map(s => s.type === "rangeArea" ? 0.3 : 1)
+    },
+    dataLabels: { enabled: false },
+    legend: { show: true },
+    xaxis: {
+      type: "numeric",
+      tickAmount: 10,
+      title: { text: "Time" },
+      labels: { formatter: val => parseFloat(val).toFixed(1) }
+    },
+    yaxis: {
+      labels: { formatter: val => parseFloat(val).toFixed(2) },
+      title: { text: varName }
+    },
+    tooltip: {
+      shared: true,
+      x: { formatter: val => "t = " + parseFloat(val).toFixed(4) }
+    },
+    title: {
+      text: "Monte Carlo: " + varName + "  [" + bandSetting + "% confidence]",
+      align: "left",
+      style: { fontSize: "13px" }
+    }
+  });
+
+  newChart.render();
+  window._mcChartInstance = newChart;
+
+  // Build variable selector panel above chart
+  buildMCVariableSelector(mcData, varName);
+}
+
+/**
+ * Builds the variable-selector panel so users can switch the displayed
+ * variable without re-running Monte Carlo.
+ */
+function buildMCVariableSelector(mcData, activeVar) {
+  let panel = document.getElementById("mcVarSelector");
+  if (!panel) {
+    panel = document.createElement("div");
+    panel.id = "mcVarSelector";
+    document.getElementById("chart").before(panel);
+  }
+  panel.innerHTML = "";
+
+  const label = document.createElement("span");
+  label.textContent = "Variable: ";
+  label.style.cssText = "font-size:12px;font-weight:600;align-self:center;";
+  panel.appendChild(label);
+
+  for (const varName of Object.keys(mcData.percentiles)) {
+    const btn = document.createElement("button");
+    btn.textContent = varName;
+    btn.style.cssText = "font-size:11px;padding:3px 8px;border-radius:4px;border:1px solid var(--border,#ccc);cursor:pointer;";
+    if (varName === activeVar) {
+      btn.style.background = "var(--accent,#4a90e2)";
+      btn.style.color = "#fff";
+      btn.style.borderColor = "var(--accent,#4a90e2)";
+    }
+    btn.addEventListener("click", () => {
+      // Update the active tab's mcVariable
+      const activeTabEl = document.querySelector(".graphTabsActive");
+      if (activeTabEl) {
+        const idx = Number(activeTabEl.dataset.index);
+        if (tabs[idx] && tabs[idx].type === "montecarlo") {
+          tabs[idx].mcVariable = varName;
+        }
+      }
+      renderMonteCarloChart(mcData, varName);
+    });
+    panel.appendChild(btn);
+  }
+}
+
+/**
+ * Opens the Monte Carlo configuration popup.
+ * Checks that the simulation has been run first.
+ */
+function openMonteCarloPopup() {
+  if (!data) {
+    showPopup("Run the simulation first.");
+    return;
+  }
+  if (!data.stocks || Object.keys(data.stocks).length === 0) {
+    showPopup("Create a model first.");
+    return;
+  }
+
+  buildMCDistributionTable();
+
+  openSettings({ preventDefault: function() {} }, "monteCarloPopup");
+}
+
+/**
+ * Closes the Monte Carlo popup.
+ */
+function closeMonteCarloPopup() {
+  closeSettings("monteCarloPopup");
+}
+
+/**
+ * Builds the distribution assignment table in the MC popup.
+ * Lists all stocks, converters, and special stock-type parameters
+ * (cookTime for microwaves, transitTime for conveyors, capacity for queues).
+ */
+function buildMCDistributionTable() {
+  const tbody = document.getElementById("mcDistTable");
+  tbody.innerHTML = "";
+
+  const addRow = (key, displayName) => {
+    const tr = document.createElement("tr");
+
+    // Variable name cell
+    const tdName = document.createElement("td");
+    tdName.textContent = displayName;
+    tdName.style.cssText = "padding:4px 8px;font-size:12px;font-weight:500;";
+    tr.appendChild(tdName);
+
+    // Distribution type selector
+    const tdType = document.createElement("td");
+    tdType.style.padding = "4px 8px";
+    const sel = document.createElement("select");
+    sel.className = "settings-dropdown mc-dist-type";
+    sel.dataset.key = key;
+    sel.style.cssText = "font-size:11px;width:100%;";
+    ["fixed", "normal", "uniform", "triangular"].forEach(opt => {
+      const o = document.createElement("option");
+      o.value = opt;
+      o.textContent = opt.charAt(0).toUpperCase() + opt.slice(1);
+      sel.appendChild(o);
+    });
+    tdType.appendChild(sel);
+    tr.appendChild(tdType);
+
+    // Parameters cell (changes based on dist type)
+    const tdParams = document.createElement("td");
+    tdParams.style.padding = "4px 8px";
+    tdParams.id = "mc-params-" + key.replace(/\./g, "_");
+
+    const buildParams = (type) => {
+      tdParams.innerHTML = "";
+      const inputs = { fixed: ["value"], normal: ["mean", "stddev"], uniform: ["min", "max"], triangular: ["min", "mode", "max"] };
+      const defaults = { value: 1, mean: 1, stddev: 0.1, min: 0.5, max: 1.5, mode: 1 };
+      (inputs[type] || []).forEach(pName => {
+        const wrap = document.createElement("span");
+        wrap.style.cssText = "display:inline-flex;align-items:center;gap:3px;margin-right:6px;";
+        const lbl = document.createElement("label");
+        lbl.textContent = pName + ":";
+        lbl.style.fontSize = "10px";
+        const inp = document.createElement("input");
+        inp.type = "number";
+        inp.autocomplete = "new-password";
+        inp.setAttribute("data-form-type", "other");
+        inp.setAttribute("data-lpignore", "true");
+        inp.step = "any";
+        inp.value = defaults[pName] || 1;
+        inp.dataset.param = pName;
+        inp.dataset.key = key;
+        inp.style.cssText = "width:58px;font-size:11px;padding:2px 4px;";
+        inp.className = "settings-input mc-param-input";
+        wrap.appendChild(lbl);
+        wrap.appendChild(inp);
+        tdParams.appendChild(wrap);
+      });
+    };
+
+    buildParams("fixed");
+    sel.addEventListener("change", () => buildParams(sel.value));
+    tr.appendChild(tdParams);
+
+    tbody.appendChild(tr);
+  };
+
+  // Regular stocks
+  for (const stockName of Object.keys(data.stocks)) {
+    addRow(stockName, stockName + " (initial)");
+    const stock = data.stocks[stockName];
+    if (stock.isMicrowave) addRow(stockName + ".__cookTime__", stockName + ".cookTime");
+    if (stock.isConveyor)  addRow(stockName + ".__transitTime__", stockName + ".transitTime");
+    if (stock.isQueue)     addRow(stockName + ".__capacity__", stockName + ".capacity");
+  }
+
+  // Converters
+  for (const convName of Object.keys(data.converters)) {
+    addRow(convName, convName + " (variable)");
+  }
+}
+
+/**
+ * Reads the MC popup form, builds the uncertaintyMap, and runs Monte Carlo.
+ */
+async function runMonteCarloFromUI() {
+  const N          = parseInt(document.getElementById("mcNumRuns").value) || 200;
+  const bandSetting = document.getElementById("mcBandSetting").value;
+
+  // Build uncertaintyMap from all rows that are NOT set to "fixed" OR
+  // are "fixed" but the user explicitly included them.
+  // We include ALL rows — fixed is effectively a no-op sampler (value stays constant).
+  const uncertaintyMap = {};
+  const rows = document.querySelectorAll("#mcDistTable tr");
+  rows.forEach(row => {
+    const sel = row.querySelector(".mc-dist-type");
+    if (!sel) return;
+    const key  = sel.dataset.key;
+    const type = sel.value;
+    if (type === "fixed") return; // skip fixed rows — no sampling needed
+
+    const dist = { type };
+    row.querySelectorAll(".mc-param-input").forEach(inp => {
+      dist[inp.dataset.param] = parseFloat(inp.value) || 0;
+    });
+    uncertaintyMap[key] = dist;
+  });
+
+  if (Object.keys(uncertaintyMap).length === 0) {
+    showPopup("Assign at least one non-fixed distribution before running.");
+    return;
+  }
+
+  // Get current engine JSON from the last run
+  // We re-translate to get a fresh base — editor.js exposes lastEngineJson
+  const engineJson = window._lastEngineJson;
+  if (!engineJson) {
+    showPopup("Run the simulation first to generate engine data.");
+    return;
+  }
+
+  // Update progress bar
+  const progressWrap = document.getElementById("mcProgressWrap");
+  const progressBar  = document.getElementById("mcProgressBar");
+  const progressText = document.getElementById("mcProgressText");
+  const runBtn       = document.getElementById("mcRunButton");
+  progressWrap.style.display = "block";
+  runBtn.disabled = true;
+  runBtn.textContent = "Running...";
+
+  try {
+    const mcData = await runMonteCarlo(
+      engineJson,
+      uncertaintyMap,
+      N,
+      (completed, total) => {
+        const pct = Math.round((completed / total) * 100);
+        progressBar.style.width = pct + "%";
+        progressText.textContent = completed + " / " + total + " runs";
+      },
+      bandSetting
+    );
+
+    // Store results
+    const tabIndex = tabs.length;
+    window._mcResultsStore[tabIndex] = mcData;
+
+    // Build a descriptive tab name
+    const distSummary = Object.entries(uncertaintyMap)
+      .map(([k, d]) => {
+        const shortKey = k.replace(".__cookTime__", ".cookTime")
+                          .replace(".__transitTime__", ".transitTime")
+                          .replace(".__capacity__", ".capacity");
+        return shortKey + "-" + d.type;
+      })
+      .join(" ");
+    const tabName = "MC " + bandSetting + "% " + distSummary;
+
+    // Push new MC tab
+    const mcTab = new Graphic("montecarlo", "time", []);
+    mcTab.name = tabName;
+    mcTab.mcVariable = Object.keys(mcData.percentiles)[0];
+    mcTab.bandSetting = bandSetting;
+    Object.defineProperty(mcTab, "_mcData", { value: mcData, writable: true, enumerable: false });
+    tabs.push(mcTab);
+
+    setTimeout(() => {
+      closeMonteCarloPopup();
+      list.lastChild.click();
+    }, 100);
+
+  } catch(err) {
+    showPopup("Monte Carlo failed: " + err.message);
+    console.error(err);
+  } finally {
+    progressBar.style.width = "0%";
+    progressWrap.style.display = "none";
+    runBtn.disabled = false;
+    runBtn.textContent = "Run Monte Carlo";
+  }
+}
+
+
 // Updates tabs buttons on side when the array is changed
 listenChangesinArray(tabs, configTabs);
 
@@ -555,7 +1003,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
  // updates data and goes to default
-document.getElementById("runButton").addEventListener("click", function () {
+window.addEventListener("lunasim:simulation-complete", function () {
   tabs[0] = new Graphic("chart", "time", seriesKeys(true).splice(1));
   configTabs();
   list.firstChild.click();
@@ -589,7 +1037,12 @@ document.getElementById("downloadGraph").addEventListener("click", function () {
   const tableVisible = tableEl && !tableEl.hidden;
 
   if (chartVisible) {
-    chart.dataURI().then(({ imgURI }) => {
+    const activeChart = window._mcChartInstance || chart;
+    if (!activeChart) {
+      showPopup("No visible chart is available to download.");
+      return;
+    }
+    activeChart.dataURI().then(({ imgURI }) => {
       const link = document.createElement("a");
       link.href = imgURI;
       link.download = "chart.png";
@@ -681,3 +1134,12 @@ function updateChartStats(index) {
     <p><strong>Trigonometry Mode:</strong> ${trigDisplay}</p>
   `;
 }
+
+// Monte Carlo button listener
+const mcBtn = document.getElementById("monteCarloButton");
+if (mcBtn) mcBtn.addEventListener("click", openMonteCarloPopup);
+const mcRunBtn = document.getElementById("mcRunButton");
+if (mcRunBtn) mcRunBtn.addEventListener("click", runMonteCarloFromUI);
+const mcCloseBtn = document.getElementById("mcClosePopup");
+if (mcCloseBtn) mcCloseBtn.addEventListener("click", closeMonteCarloPopup);
+
