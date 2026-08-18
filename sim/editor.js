@@ -478,15 +478,32 @@ function init() {
 
     buildTemplates();
 
-    // ── Diagram keyboard shortcuts: B = emphasis, P = polarity +, M = polarity - ──
+    // ── Diagram keyboard shortcuts: B = emphasis, + / - = polarity on selected influences ──
+    // GoJS normalises the +/= and - keys (main row and numpad) to "Add" / "Subtract"
+    // and, by default, uses them for increaseZoom / decreaseZoom.  We only intercept
+    // them when at least one influence link is selected; otherwise they fall through
+    // to the default CommandHandler behaviour (zoom).
+    function keyMatchesBind(gojsKey, bindKey) {
+        var k = String(gojsKey || "").toLowerCase();
+        var b = String(bindKey || "").toLowerCase();
+        if (b === "+" || b === "=" || b === "add") return k === "add" || k === "+" || k === "=";
+        if (b === "-" || b === "_" || b === "subtract") return k === "subtract" || k === "-" || k === "_";
+        return k === b;
+    }
+    function selectedInfluences() {
+        var out = [];
+        myDiagram.selection.each(function(part) {
+            if (part instanceof go.Link && part.data.category === "influence") out.push(part);
+        });
+        return out;
+    }
     myDiagram.commandHandler.doKeyDown = (function(original) {
         return function() {
             const e = myDiagram.lastInput;
             const tag = document.activeElement ? document.activeElement.tagName.toLowerCase() : "";
             if (tag !== "input" && tag !== "textarea" && !e.control && !e.meta && !e.alt) {
                 var kb = window._keyBinds || {};
-                var kdown = e.key.toLowerCase();
-                if (kdown === (kb.emphasis || 'b')) {
+                if (keyMatchesBind(e.key, kb.emphasis || 'b')) {
                     myDiagram.model.startTransaction("toggle emphasis");
                     myDiagram.selection.each(function(part) {
                         if (part instanceof go.Node || part instanceof go.Link) {
@@ -496,27 +513,21 @@ function init() {
                     myDiagram.model.commitTransaction("toggle emphasis");
                     return;
                 }
-                if (kdown === (kb['polarity-pos'] || 'p')) {
-                    myDiagram.model.startTransaction("set polarity +");
-                    myDiagram.selection.each(function(part) {
-                        if (part instanceof go.Link && part.data.category === "influence") {
+                var isPos = keyMatchesBind(e.key, kb['polarity-pos'] || '+');
+                var isNeg = !isPos && keyMatchesBind(e.key, kb['polarity-neg'] || '-');
+                if (isPos || isNeg) {
+                    var infl = selectedInfluences();
+                    if (infl.length > 0) {
+                        var pol = isPos ? "+" : "-";
+                        myDiagram.model.startTransaction("set polarity " + pol);
+                        infl.forEach(function(part) {
                             const cur = getPolarityLabelData(part);
-                            setPolarityLabel(part, cur && cur.polarity === "+" ? null : "+");
-                        }
-                    });
-                    myDiagram.model.commitTransaction("set polarity +");
-                    return;
-                }
-                if (kdown === (kb['polarity-neg'] || 'm')) {
-                    myDiagram.model.startTransaction("set polarity -");
-                    myDiagram.selection.each(function(part) {
-                        if (part instanceof go.Link && part.data.category === "influence") {
-                            const cur = getPolarityLabelData(part);
-                            setPolarityLabel(part, cur && cur.polarity === "-" ? null : "-");
-                        }
-                    });
-                    myDiagram.model.commitTransaction("set polarity -");
-                    return;
+                            setPolarityLabel(part, cur && cur.polarity === pol ? null : pol);
+                        });
+                        myDiagram.model.commitTransaction("set polarity " + pol);
+                        return;
+                    }
+                    // No influence selected → fall through (default: zoom in / out)
                 }
             }
             original.call(this);
@@ -4316,8 +4327,8 @@ document.addEventListener('DOMContentLoaded', function() {
         conveyor:     'n',
         microwave:    'w',
         queue:        'q',
-        'polarity-pos': 'p',
-        'polarity-neg': 'm',
+        'polarity-pos': '+',
+        'polarity-neg': '-',
         emphasis:     'b'
     };
 
