@@ -443,9 +443,9 @@
             <div class="keybind-row"><span>Flow</span>           <input class="keybind-input" id="kb-flow"       data-action="flow"       value="f" readonly></div>
             <div class="keybind-row"><span>Influence</span>      <input class="keybind-input" id="kb-influence"  data-action="influence"  value="i" readonly></div>
             <div class="keybind-row"><span>Text</span>           <input class="keybind-input" id="kb-text"       data-action="text"       value="t" readonly></div>
-            <div class="keybind-row"><span>Conveyor</span>       <input class="keybind-input" id="kb-conveyor"   data-action="conveyor"   value="n" readonly></div>
-            <div class="keybind-row"><span>Microwave</span>      <input class="keybind-input" id="kb-microwave"  data-action="microwave"  value="w" readonly></div>
-            <div class="keybind-row"><span>Queue</span>          <input class="keybind-input" id="kb-queue"      data-action="queue"      value="q" readonly></div>
+            <div class="keybind-row experimental-elements-only"><span>Conveyor</span>       <input class="keybind-input" id="kb-conveyor"   data-action="conveyor"   value="n" readonly></div>
+            <div class="keybind-row experimental-elements-only"><span>Microwave</span>      <input class="keybind-input" id="kb-microwave"  data-action="microwave"  value="w" readonly></div>
+            <div class="keybind-row experimental-elements-only"><span>Queue</span>          <input class="keybind-input" id="kb-queue"      data-action="queue"      value="q" readonly></div>
             <div class="keybind-row"><span>Polarity +</span>     <input class="keybind-input" id="kb-polarity-pos" data-action="polarity-pos" value="+" readonly></div>
             <div class="keybind-row"><span>Polarity −</span>     <input class="keybind-input" id="kb-polarity-neg" data-action="polarity-neg" value="-" readonly></div>
             <div class="keybind-row"><span>Toggle Emphasis</span><input class="keybind-input" id="kb-emphasis"   data-action="emphasis"   value="b" readonly></div>
@@ -518,6 +518,26 @@
               <option value="Lexend" style="font-family: 'Lexend';">Lexend</option>
               <option value="Comic Sans MS" style="font-family: 'Comic Sans MS';">Comic Sans</option>
               <option value="Wingdings" style="font-family: 'Wingdings';">Wingdings</option>
+              <option value="Segoe UI" style="font-family:'Segoe UI';">Segoe UI</option>
+              <option value="Georgia" style="font-family:Georgia;">Georgia</option>
+              <option value="Palatino Linotype" style="font-family:'Palatino Linotype';">Palatino</option>
+              <option value="Garamond" style="font-family:Garamond;">Garamond</option>
+              <option value="Baskerville" style="font-family:Baskerville;">Baskerville</option>
+              <option value="Cambria" style="font-family:Cambria;">Cambria</option>
+              <option value="Century Gothic" style="font-family:'Century Gothic';">Century Gothic</option>
+              <option value="Candara" style="font-family:Candara;">Candara</option>
+              <option value="Corbel" style="font-family:Corbel;">Corbel</option>
+              <option value="Tahoma" style="font-family:Tahoma;">Tahoma</option>
+              <option value="Verdana" style="font-family:Verdana;">Verdana</option>
+              <option value="Franklin Gothic Medium" style="font-family:'Franklin Gothic Medium';">Franklin Gothic</option>
+              <option value="Gill Sans" style="font-family:'Gill Sans';">Gill Sans</option>
+              <option value="Optima" style="font-family:Optima;">Optima</option>
+              <option value="Futura" style="font-family:Futura;">Futura</option>
+              <option value="Avenir" style="font-family:Avenir;">Avenir</option>
+              <option value="Calibri" style="font-family:Calibri;">Calibri</option>
+              <option value="Lucida Sans Unicode" style="font-family:'Lucida Sans Unicode';">Lucida Sans</option>
+              <option value="Book Antiqua" style="font-family:'Book Antiqua';">Book Antiqua</option>
+              <option value="Consolas" style="font-family:Consolas;">Consolas</option>
             </select>
             <label for="labelFontSizeInput">Label Font Size</label>
             <input type="number" id="labelFontSizeInput" class="settings-input" value="11" min="6" max="36" step="1" style="width: 60%;" autocomplete="off">
@@ -535,13 +555,13 @@
           <p style="font-size:0.82rem;color:#aab4d0;margin:0 0 0.9rem 0;">Set default colors for new elements. Use "Apply to All" to repaint existing nodes.</p>
           <div class="model-color-grid">
             <div class="color-row"><label>Stock</label><input type="color" id="mc-stock" class="mc-color-single"></div>
-            <div class="color-row"><label>Conveyor</label><input type="color" id="mc-conveyor" class="mc-color-single"></div>
+            <div class="color-row experimental-elements-only"><label>Conveyor</label><input type="color" id="mc-conveyor" class="mc-color-single"></div>
             <div class="color-row"><label>Variable</label><input type="color" id="mc-variable" class="mc-color-single"></div>
             <div class="color-row"><label>Cloud</label><input type="color" id="mc-cloud" class="mc-color-single"></div>
             <div class="color-row"><label>Flow</label><input type="color" id="mc-flow" class="mc-color-single"></div>
             <div class="color-row"><label>Influence</label><input type="color" id="mc-influence" class="mc-color-single"></div>
-            <div class="color-row"><label>Microwave</label><input type="color" id="mc-microwave" class="mc-color-single"></div>
-            <div class="color-row"><label>Queue</label><input type="color" id="mc-queue" class="mc-color-single"></div>
+            <div class="color-row experimental-elements-only"><label>Microwave</label><input type="color" id="mc-microwave" class="mc-color-single"></div>
+            <div class="color-row experimental-elements-only"><label>Queue</label><input type="color" id="mc-queue" class="mc-color-single"></div>
             <div class="color-row"><label>Label</label><input type="color" id="mc-labelcolor" class="mc-color-single" value="#000000"></div>
             <div class="color-row"><label>Canvas</label><input type="color" id="mc-canvasbg" class="mc-color-single" value="#ffffff"></div>
           </div>
@@ -619,9 +639,30 @@
           <div class="setting-group">
             <label for="pdfFont">Font</label>
             <select id="pdfFont" class="settings-dropdown" style="width: 63%;">
-              <option value="helvetica">Helvetica</option>
-              <option value="times">Times New Roman</option>
-              <option value="courier">Courier</option>
+              <option value="helvetica|normal">Helvetica</option>
+              <option value="helvetica|bold">Helvetica Bold</option>
+              <option value="times|normal">Times New Roman</option>
+              <option value="times|italic">Times New Roman Italic</option>
+              <option value="courier|normal">Courier</option>
+              <option value="courier|bold">Courier Bold</option>
+              <option value="courier|italic">Courier Oblique</option>
+            </select>
+          </div>
+          <div class="setting-group">
+            <label for="pdfAuthor">Author</label>
+            <input type="text" id="pdfAuthor" class="settings-input" style="width: 63%;" placeholder="Your name (optional)" autocomplete="name">
+          </div>
+          <div class="setting-group">
+            <label for="pdfTheme">PDF Theme</label>
+            <select id="pdfTheme" class="settings-dropdown" style="width: 63%;">
+              <option value="normal">Normal</option><option value="classic">Classic</option>
+              <option value="monochrome">Monochrome</option><option value="nvoid">Nebula Void</option>
+              <option value="cred">Cherry Red</option><option value="cblossom">Cherry Blossom</option>
+              <option value="sorange">Channel Orange</option><option value="fgreen">Forest Green</option>
+              <option value="oblue">Ocean Blue</option><option value="cpurple">Cosmic Purple</option>
+              <option value="bpink">Bubblegum Pink</option><option value="sred">Sith Red</option>
+              <option value="mlight">Minimal Light</option><option value="rduck">Rubber Duck</option>
+              <option value="udark">Ultra Dark</option>
             </select>
           </div>
           <div class="setting-group pdf-desc-group">
@@ -631,10 +672,10 @@
           <p class="pdf-sections-label">Include sections:</p>
           <div class="pdf-checkboxes">
             <label class="pdf-check-row"><input type="checkbox" id="pdfIncludeDiagram" checked> Model Diagram</label>
-            <label class="pdf-check-row"><input type="checkbox" id="pdfIncludeStocks" checked> Stocks, Conveyors &amp; Microwaves</label>
+            <label class="pdf-check-row"><input type="checkbox" id="pdfIncludeStocks" checked> <span id="pdfStocksLabel">Stocks</span></label>
             <label class="pdf-check-row"><input type="checkbox" id="pdfIncludeFlows" checked> Flows</label>
             <label class="pdf-check-row"><input type="checkbox" id="pdfIncludeVariables" checked> Variables</label>
-            <label class="pdf-check-row"><input type="checkbox" id="pdfIncludeQueues" checked> Queues</label>
+            <label class="pdf-check-row experimental-elements-only"><input type="checkbox" id="pdfIncludeQueues" checked> Queues</label>
             <label class="pdf-check-row"><input type="checkbox" id="pdfIncludeSimSettings" checked> Simulation Settings</label>
           </div>
           <button id="downloadPdfButton" class="setting-button">Download PDF</button>
@@ -1256,10 +1297,12 @@ document.addEventListener("DOMContentLoaded", () => {
       if (normalized === 'normal') {
         themeLink.removeAttribute('href');
         themeLink.disabled = true;
+        document.dispatchEvent(new CustomEvent('lunasim-theme-change', { detail: { theme: normalized } }));
         return;
       }
       themeLink.disabled = false;
       themeLink.href = new URL('../themes/' + THEME_FILES[normalized], document.baseURI).href;
+      document.dispatchEvent(new CustomEvent('lunasim-theme-change', { detail: { theme: normalized } }));
     }
     window.applyTheme = applyTheme;
   </script>

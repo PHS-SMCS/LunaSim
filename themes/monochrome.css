@@ -397,3 +397,59 @@ a.active {
 .setting-button.secondary:hover {
   background-color: #4c5570;
 }
+
+/* LunaSim complete theme coverage. Keep new and existing UI components in this theme's palette. */
+:root {
+ --ls-bg: #4b5059; --ls-surface: #36393f; --ls-panel: #2f3136; --ls-elevated: #43464d;
+ --ls-border: #8b93a1; --ls-accent: #b7bec8; --ls-hover: #555b65; --ls-text: #ffffff;
+ --ls-muted: #d5d9df; --ls-input-text: #ffffff; --ls-accent-text: #111318; --ls-toolbar-text: #ffffff;
+}
+#logoImage { filter: grayscale(1) brightness(1.9); }
+body { background-color: var(--ls-bg); color: var(--ls-text); }
+.toolbar ul, .chartSidebar ul { background-color: var(--ls-panel); border-color: var(--ls-border); }
+.toolbar a, .toolbar i, .toolbar .material-icons, .toolbar .material-symbols-outlined,
+.chartSidebar a, .chartSidebar i, .chartSidebar .material-icons, .chartSidebar .material-symbols-outlined { color: var(--ls-toolbar-text) !important; }
+.toolbar a:hover, .toolbar a:focus, .toolbar a.active, .toolbar .graphTabsActive,
+.chartSidebar a:hover, .chartSidebar a:focus, .chartSidebar a.active { background-color: var(--ls-hover) !important; color: var(--ls-toolbar-text) !important; }
+.elem-control-panel, .settings-popup, .theme-popup, .charts-popup, .export-popup,
+.equation-editor-popup, .popup-content, #customConfirmPopup, .monte-carlo-popup { background-color: var(--ls-panel); border-color: var(--ls-border); color: var(--ls-text); box-shadow: none; }
+.ecp-name, .ecp-label, .keybind-row span, .color-row label, .settings-header h2, .setting-group,
+.close-btn, .close-icon, .close-popup, .mc-section-title, .mc-distribution-table, .theme-tab-btn { color: var(--ls-text); }
+.settings-help, .mc-help-text, .stab-keybinds-hint, .experimental-badge { color: var(--ls-muted); }
+.ecp-small-input, .keybind-input, .settings-input, .settings-dropdown, .eqTableInputBox,
+#xAxis, #submitModel, .autocomplete-list, #mcVarSelector, .mc-table-wrap { background-color: var(--ls-surface); border-color: var(--ls-border); color: var(--ls-input-text); }
+.ecp-divider, .theme-tab-bar, .settings-divider, .chartEditor hr, .mc-distribution-table td { border-color: var(--ls-border); }
+.ecp-reset-all, .ecp-reset-color, .setting-button, .chart-btn { background-color: var(--ls-elevated); border-color: var(--ls-border); color: var(--ls-text); }
+.ecp-reset-all:hover, .ecp-reset-color:hover, .setting-button:hover, .chart-btn:hover,
+.theme-tab-btn:hover, .theme-tab-btn.active, .autocomplete-item:hover, .autocomplete-item.selected { background-color: var(--ls-hover); color: var(--ls-text); }
+.setting-button.primary, .mc-progress-bar { background-color: var(--ls-accent); border-color: var(--ls-accent); color: var(--ls-accent-text); }
+.slider, .mc-progress-track { background-color: var(--ls-elevated); }
+.toggle-switch input:checked + .slider, .ecp-checkbox { accent-color: var(--ls-accent); }
+.mc-distribution-table th, .tabulator-header, .tabulator-row, .tabulator-cell,
+.tabulator-footer, .tabulator-footer-contents, .tabulator-page { background-color: var(--ls-elevated); border-color: var(--ls-border); color: var(--ls-text); }
+.tabulator-row.tabulator-row-even { background-color: var(--ls-surface); }
+.tabulator-row.tabulator-selected, .tabulator-row.tabulator-row-hover, .tabulator-page:hover { background-color: var(--ls-hover); color: var(--ls-text); }
+.tabulator-page.active { background-color: var(--ls-accent); color: var(--ls-accent-text); }
+.experimental-warning { background-color: var(--ls-elevated); border-color: var(--ls-accent); color: var(--ls-text); }
+
+
+/* Theme-colored settings tabs. */
+.theme-tab-btn { border-color: var(--ls-border) !important; }
+.theme-tab-btn:hover, .theme-tab-btn.active { border-color: var(--ls-accent) !important; }
+/* End LunaSim complete theme coverage. */
+/* Explicit dialog contrast: specific enough to override the base modal rules. */
+#customConfirmPopup .settings-header h2,
+#customConfirmPopup .setting-group p,
+#customConfirmPopup .close-btn,
+.popup-content h1, .popup-content h2, .popup-content h3,
+.popup-content p, .popup-content label { color: var(--ls-text) !important; }
+#customConfirmPopup .setting-button.secondary {
+  background-color: var(--ls-elevated) !important;
+  border-color: var(--ls-border) !important;
+  color: var(--ls-text) !important;
+}
+#customConfirmPopup .setting-button.primary {
+  background-color: var(--ls-accent) !important;
+  border-color: var(--ls-accent) !important;
+  color: var(--ls-accent-text) !important;
+}

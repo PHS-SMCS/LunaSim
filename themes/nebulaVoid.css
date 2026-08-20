@@ -389,3 +389,16 @@ a.active {
 .setting-button.secondary:hover {
   background-color: #4e46a3;
 }
+
+/* Theme-colored settings tabs; preserve the original Nebula Void palette. */
+.theme-tab-btn { border-color: #5e4fa2 !important; }
+.theme-tab-btn:hover, .theme-tab-btn.active { border-color: #7c63c9 !important; }
+
+/* Explicit dialog contrast; retain the original Nebula Void colors. */
+#customConfirmPopup .settings-header h2,
+#customConfirmPopup .setting-group p,
+#customConfirmPopup .close-btn,
+.popup-content h1, .popup-content h2, .popup-content h3,
+.popup-content p, .popup-content label { color: #f0e6ff !important; }
+#customConfirmPopup .setting-button.secondary { background-color: #383568 !important; border-color: #c38cdf !important; color: #f0e6ff !important; }
+#customConfirmPopup .setting-button.primary { background-color: #6a4c93 !important; border-color: #6a4c93 !important; color: #ffffff !important; }

@@ -1,6 +1,6 @@
 /* Star Wars Sith Theme - Final */
 body {
-    background: #1a1a1a; /* Gray background */
+    background: #303030; /* Gray background */
     box-shadow: none;
 }
 
@@ -65,7 +65,7 @@ body {
 }
 
 .modelViewer {
-    background: #1a1a1a; /* Gray background */
+    background: #303030; /* Gray background */
 }
 
 /* Toolbar - Dark with red accents */
@@ -170,7 +170,7 @@ a.active {
 }
 
 .eqTableInputBox {
-    background-color: #1a1a1a; /* Gray background */
+    background-color: #303030; /* Gray background */
     border: 1px solid #aa3333; /* Slightly darker main red */
     color: #aa3333; /* Slightly darker main red text */
 }
@@ -195,7 +195,7 @@ a.active {
 .nncheckbox,
 .yAxisCheckbox {
     accent-color: #aa3333; /* Slightly darker main red */
-    background-color: #1a1a1a; /* Gray background */
+    background-color: #303030; /* Gray background */
     border: 2px solid #aa3333; /* Slightly darker main red */
 }
 
@@ -212,7 +212,7 @@ a.active {
 
 /* Charts - Dark with red accents */
 .chartViewer {
-    background: #000000; /* Gray background */
+    background: #242424; /* Gray background */
 }
 
 .chartCanvas {
@@ -234,7 +234,7 @@ a.active {
 }
 
 .chart-btn {
-    background-color: #1a1a1a; /* Gray background */
+    background-color: #303030; /* Gray background */
     border: 1px solid #aa3333; /* Slightly darker main red */
     color: #aa3333; /* Slightly darker main red */
 }
@@ -248,7 +248,7 @@ a.active {
 .apexcharts-svg,
 .apexcharts-inner,
 .apexcharts-graphical {
-    background-color: #1a1a1a !important;
+    background-color: #303030 !important;
     border: none !important;
     outline: none !important;
     box-shadow: none !important;
@@ -279,7 +279,7 @@ a.active {
 /* Fix chart container and wrapper */
 .apexcharts-chart,
 .apexcharts-chart-wrapper {
-    background-color: #1a1a1a !important;
+    background-color: #303030 !important;
     border: none !important;
     box-shadow: none !important;
 }
@@ -336,7 +336,7 @@ a.active {
 
 /* Tooltip styling */
 .apexcharts-tooltip {
-    background-color: #1a1a1a !important;
+    background-color: #303030 !important;
     border: 1px solid #aa3333 !important;
     color: #aa3333 !important;
 }
@@ -351,14 +351,14 @@ a.active {
 .apexcharts-tooltip-text,
 .apexcharts-tooltip-text-label,
 .apexcharts-tooltip-text-value {
-    background-color: #1a1a1a !important;
+    background-color: #303030 !important;
     color: #aa3333 !important;
 }
 
 /* Crosshair labels */
 .apexcharts-xaxistooltip,
 .apexcharts-yaxistooltip {
-    background-color: #1a1a1a !important;
+    background-color: #303030 !important;
     color: #aa3333 !important;
     border: 1px solid #aa3333 !important;
 }
@@ -372,7 +372,7 @@ a.active {
 /* Background rects */
 .apexcharts-canvas rect[fill="#ffffff"],
 .apexcharts-svg rect[fill="#ffffff"] {
-    fill: #1a1a1a !important;
+    fill: #303030 !important;
     stroke: none !important;
 }
 
@@ -384,16 +384,16 @@ a.active {
 }
 
 .tabulator-header {
-    background-color: #1a1a1a !important; /* Gray background */
+    background-color: #303030 !important; /* Gray background */
     border-bottom: 2px solid #aa3333 !important; /* Slightly darker main red border */
 }
 
 .tabulator-header-contents {
-    background-color: #1a1a1a !important; /* Gray background */
+    background-color: #303030 !important; /* Gray background */
 }
 
 .tabulator-col {
-    background-color: #1a1a1a !important; /* Gray background */
+    background-color: #303030 !important; /* Gray background */
     border-right: 1px solid #444444 !important;
 }
 
@@ -402,7 +402,7 @@ a.active {
 }
 
 .tabulator-col-content {
-    background-color: #1a1a1a !important; /* Gray background */
+    background-color: #303030 !important; /* Gray background */
 }
 
 .tabulator-row {
@@ -428,12 +428,12 @@ a.active {
 }
 
 .tabulator-footer {
-    background-color: #1a1a1a !important; /* Gray background */
+    background-color: #303030 !important; /* Gray background */
     border-top: 1px solid #444444 !important;
 }
 
 .tabulator-footer-contents {
-    background-color: #1a1a1a !important; /* Gray background */
+    background-color: #303030 !important; /* Gray background */
     color: #ffffff !important; /* White text */
 }
 
@@ -472,7 +472,7 @@ a.active {
 
 .settings-input,
 .settings-dropdown {
-    background-color: #1a1a1a; /* Gray background */
+    background-color: #303030; /* Gray background */
     border: 1px solid #aa3333; /* Slightly darker main red */
     color: #aa3333; /* Slightly darker main red */
 }
@@ -482,7 +482,7 @@ a.active {
 }
 
 .slider {
-    background-color: #1a1a1a; /* Gray background */
+    background-color: #303030; /* Gray background */
 }
 
 .slider:before {
@@ -494,7 +494,7 @@ a.active {
 }
 
 .setting-button {
-    background-color: #1a1a1a; /* Gray background */
+    background-color: #303030; /* Gray background */
     border: 1px solid #aa3333; /* Slightly darker main red */
     color: #aa3333; /* Slightly darker main red */
 }
@@ -556,7 +556,7 @@ a.active {
 }
 
 #xAxis {
-    background-color: #1a1a1a; /* Gray background */
+    background-color: #303030; /* Gray background */
     border: 1px solid #aa3333; /* Slightly darker main red */
     color: #aa3333; /* Slightly darker main red */
 }
@@ -567,7 +567,7 @@ a.active {
 }
 
 #submitModel {
-    background-color: #1a1a1a; /* Gray background */
+    background-color: #303030; /* Gray background */
     border: 1px solid #aa3333; /* Slightly darker main red */
     color: #aa3333; /* Slightly darker main red */
 }
@@ -577,7 +577,7 @@ a.active {
 }
 
 .autocomplete-list {
-    background-color: #1a1a1a; /* Gray background */
+    background-color: #303030; /* Gray background */
     border: 1px solid #aa3333; /* Slightly darker main red */
     color: #aa3333; /* Slightly darker main red */
 }
@@ -619,12 +619,12 @@ a.active {
 }
 
 .graphTabs::after {
-    background-color: #1a1a1a;
+    background-color: #303030;
     color: #aa3333;
 }
 
 #customConfirmPopup {
-    background: #1a1a1a;
+    background: #303030;
     border: 1px solid #aa3333;
     color: #aa3333;
 }
@@ -645,4 +645,62 @@ a.active {
 }
 .setting-button.secondary:hover {
     background-color: #442222;
+}
+
+/* LunaSim complete theme coverage. Keep new and existing UI components in this theme's palette. */
+:root {
+ --ls-bg: #242424; --ls-surface: #292929; --ls-panel: #303030; --ls-elevated: #3a3a3a;
+ --ls-border: #ff3b35; --ls-accent: #ff160d; --ls-hover: #ff332b; --ls-text: #ffffff;
+ --ls-muted: #ffc0bd; --ls-input-text: #ffffff; --ls-accent-text: #ffffff; --ls-toolbar-text: #ffffff;
+}
+#logoImage { filter: brightness(0) saturate(100%) invert(18%) sepia(96%) saturate(5540%) hue-rotate(356deg) brightness(104%); }
+body { background-color: var(--ls-bg); color: var(--ls-text); }
+.toolbar ul, .chartSidebar ul { background-color: var(--ls-panel); border-color: var(--ls-border); }
+.toolbar a, .toolbar i, .toolbar .material-icons, .toolbar .material-symbols-outlined,
+.chartSidebar a, .chartSidebar i, .chartSidebar .material-icons, .chartSidebar .material-symbols-outlined { color: var(--ls-toolbar-text) !important; }
+.toolbar a:hover, .toolbar a:focus, .toolbar a.active, .toolbar .graphTabsActive,
+.chartSidebar a:hover, .chartSidebar a:focus, .chartSidebar a.active { background-color: var(--ls-hover) !important; color: var(--ls-toolbar-text) !important; }
+.elem-control-panel, .settings-popup, .theme-popup, .charts-popup, .export-popup,
+.equation-editor-popup, .popup-content, #customConfirmPopup, .monte-carlo-popup { background-color: var(--ls-panel); border-color: var(--ls-border); color: var(--ls-text); box-shadow: none; }
+.ecp-name, .ecp-label, .keybind-row span, .color-row label, .settings-header h2, .setting-group,
+.close-btn, .close-icon, .close-popup, .mc-section-title, .mc-distribution-table, .theme-tab-btn { color: var(--ls-text); }
+.settings-help, .mc-help-text, .stab-keybinds-hint, .experimental-badge { color: var(--ls-muted); }
+.ecp-small-input, .keybind-input, .settings-input, .settings-dropdown, .eqTableInputBox,
+#xAxis, #submitModel, .autocomplete-list, #mcVarSelector, .mc-table-wrap { background-color: var(--ls-surface); border-color: var(--ls-border); color: var(--ls-input-text); }
+.ecp-divider, .theme-tab-bar, .settings-divider, .chartEditor hr, .mc-distribution-table td { border-color: var(--ls-border); }
+.ecp-reset-all, .ecp-reset-color, .setting-button, .chart-btn { background-color: var(--ls-elevated); border-color: var(--ls-border); color: var(--ls-text); }
+.ecp-reset-all:hover, .ecp-reset-color:hover, .setting-button:hover, .chart-btn:hover,
+.theme-tab-btn:hover, .theme-tab-btn.active, .autocomplete-item:hover, .autocomplete-item.selected { background-color: var(--ls-hover); color: var(--ls-text); }
+.setting-button.primary, .mc-progress-bar { background-color: var(--ls-accent); border-color: var(--ls-accent); color: var(--ls-accent-text); }
+.slider, .mc-progress-track { background-color: var(--ls-elevated); }
+.toggle-switch input:checked + .slider, .ecp-checkbox { accent-color: var(--ls-accent); }
+.mc-distribution-table th, .tabulator-header, .tabulator-row, .tabulator-cell,
+.tabulator-footer, .tabulator-footer-contents, .tabulator-page { background-color: var(--ls-elevated); border-color: var(--ls-border); color: var(--ls-text); }
+.tabulator-row.tabulator-row-even { background-color: var(--ls-surface); }
+.tabulator-row.tabulator-selected, .tabulator-row.tabulator-row-hover, .tabulator-page:hover { background-color: var(--ls-hover); color: var(--ls-text); }
+.tabulator-page.active { background-color: var(--ls-accent); color: var(--ls-accent-text); }
+.experimental-warning { background-color: var(--ls-elevated); border-color: var(--ls-accent); color: var(--ls-text); }
+.modelCanvas, #myDiagram { background: #242424 !important; color: #ffffff !important; box-shadow: none; }
+#eqEditor, .chartEditor, .chartCanvas { background-color: var(--ls-surface); color: #ffffff; border-color: var(--ls-border); }
+
+/* Theme-colored settings tabs. */
+.theme-tab-btn { border-color: var(--ls-border) !important; }
+.theme-tab-btn:hover, .theme-tab-btn.active { border-color: var(--ls-accent) !important; }
+/* End LunaSim complete theme coverage. */
+
+/* Explicit dialog contrast: specific enough to override the base modal rules. */
+#customConfirmPopup .settings-header h2,
+#customConfirmPopup .setting-group p,
+#customConfirmPopup .close-btn,
+.popup-content h1, .popup-content h2, .popup-content h3,
+.popup-content p, .popup-content label { color: var(--ls-text) !important; }
+#customConfirmPopup .setting-button.secondary {
+  background-color: var(--ls-elevated) !important;
+  border-color: var(--ls-border) !important;
+  color: var(--ls-text) !important;
+}
+#customConfirmPopup .setting-button.primary {
+  background-color: var(--ls-accent) !important;
+  border-color: var(--ls-accent) !important;
+  color: var(--ls-accent-text) !important;
 }

@@ -121,7 +121,7 @@ let GOJS_ELEMENT_LABELS_SET = new Set();
 // Defined here so buildTemplates() can reference it at init time.
 var _MC_DEFAULTS = {
     stock: '#cfcfcf', conveyor: '#cfcfcf', variable: '#cfcfcf',
-    cloud: '#d4e4f7', flow: '#3489eb', influence: '#e3680e',
+    cloud: '#cfcfcf', flow: '#3489eb', influence: '#e3680e',
     microwave: '#cfcfcf', queue: '#cfcfcf', labelcolor: '#000000'
 };
 var _modelColors = (function() {
@@ -130,6 +130,32 @@ var _modelColors = (function() {
         return s ? Object.assign({}, _MC_DEFAULTS, JSON.parse(s)) : Object.assign({}, _MC_DEFAULTS);
     } catch(e) { return Object.assign({}, _MC_DEFAULTS); }
 }());
+
+function usesDarkDiagramTheme() {
+    var theme = document.documentElement.dataset.theme;
+    return theme === 'sred' || theme === 'udark';
+}
+
+function themeElementLabelColor(color) {
+    return usesDarkDiagramTheme() ? '#ffffff' : (color || _modelColors.labelcolor || '#000000');
+}
+
+function themeTextboxBackground(color) {
+    return usesDarkDiagramTheme() ? '#ffffff' : (color || '#ffffff');
+}
+
+function themeTextboxTextColor(color) {
+    return usesDarkDiagramTheme() ? '#000000' : (color || '#000000');
+}
+
+function themeTextboxBorderColor(color) {
+    return document.documentElement.dataset.theme === 'udark' ? '#ffffff' : (color || '#cccccc');
+}
+
+function themeElementStroke(emphasized, normalColor) {
+    if (emphasized) return '#E8000D';
+    return document.documentElement.dataset.theme === 'udark' ? '#ffffff' : normalColor;
+}
 
 /**
  * Tracks whether the simulation has successfully run using the "Run" button.
@@ -655,13 +681,13 @@ function buildTemplates() {
         if (data.label && data.label.startsWith('$')) return "white";
         return data.color || _modelColors.stock || '#cfcfcf';
     }).makeTwoWay(),
-    new go.Binding("stroke", "emphasized", function(e) { return e ? "#E8000D" : "black"; }),
+    new go.Binding("stroke", "emphasized", function(e) { return themeElementStroke(e, "black"); }),
     new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 4 : 1; }), {
         desiredSize: new go.Size(50, 30)
     }), $(go.TextBlock, textStyle(), {
         _isNodeLabel: true, alignment: new go.Spot(0.5, 0.5, 0, 30), isMultiline: false, textValidation: labelValidator
     }, new go.Binding("alignment", "label_offset", go.Spot.parse).makeTwoWay(go.Spot.stringify),
-    new go.Binding("stroke", "labelColor").makeTwoWay(),
+    new go.Binding("stroke", "labelColor", themeElementLabelColor).makeTwoWay(),
     new go.Binding("font", "labelSize", function(sz) {
         var pt = parseFloat(sz) || labelFontSize;
         return "bold " + pt + "pt helvetica, bold arial, sans-serif";
@@ -701,7 +727,7 @@ function buildTemplates() {
                 if (data.label && data.label.startsWith("$")) return "white";
                 return data.color || _modelColors.conveyor || '#cfcfcf';
             }).makeTwoWay(),
-            new go.Binding("stroke", "emphasized", function(e) { return e ? "#E8000D" : "black"; }),
+            new go.Binding("stroke", "emphasized", function(e) { return themeElementStroke(e, "black"); }),
             new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 4 : 1; })
             ),
             // Divider lines drawn as a Position panel laid over the rectangle.
@@ -746,7 +772,7 @@ function buildTemplates() {
             textValidation: labelValidator
         },
         new go.Binding("alignment", "label_offset", go.Spot.parse).makeTwoWay(go.Spot.stringify),
-    new go.Binding("stroke", "labelColor").makeTwoWay(),
+    new go.Binding("stroke", "labelColor", themeElementLabelColor).makeTwoWay(),
     new go.Binding("font", "labelSize", function(sz) {
         var pt = parseFloat(sz) || labelFontSize;
         return "bold " + pt + "pt helvetica, bold arial, sans-serif";
@@ -768,9 +794,9 @@ function buildTemplates() {
             desiredSize: new go.Size(30, 30)
         }), $(go.Placeholder))
     }, $(go.Shape, shapeStyle(), new go.Binding("fill", "", function(data) {
-        return data.color || _modelColors.cloud || '#d4e4f7';
+        return data.color || _modelColors.cloud || '#cfcfcf';
     }).makeTwoWay(),
-    new go.Binding("stroke", "emphasized", function(e) { return e ? "#E8000D" : "black"; }),
+    new go.Binding("stroke", "emphasized", function(e) { return themeElementStroke(e, "black"); }),
     new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 4 : 1; }), {
         figure: "Cloud", desiredSize: new go.Size(30, 30)
     })));
@@ -816,7 +842,7 @@ function buildTemplates() {
                     textValidation: labelValidator
                 },
                 new go.Binding("alignment", "label_offset", go.Spot.parse).makeTwoWay(go.Spot.stringify),
-    new go.Binding("stroke", "labelColor").makeTwoWay(),
+    new go.Binding("stroke", "labelColor", themeElementLabelColor).makeTwoWay(),
     new go.Binding("font", "labelSize", function(sz) {
         var pt = parseFloat(sz) || labelFontSize;
         return "bold " + pt + "pt helvetica, bold arial, sans-serif";
@@ -836,13 +862,13 @@ function buildTemplates() {
         if (data.label && data.label.startsWith('$')) return "white";
         return data.color || _modelColors.variable || '#cfcfcf';
     }).makeTwoWay(),
-    new go.Binding("stroke", "emphasized", function(e) { return e ? "#E8000D" : "black"; }),
+    new go.Binding("stroke", "emphasized", function(e) { return themeElementStroke(e, "black"); }),
     new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 4 : 1; }), {
         figure: "Ellipse", desiredSize: new go.Size(25, 25)
     }), $(go.TextBlock, textStyle(), {
         _isNodeLabel: true, alignment: new go.Spot(0.5, 0.5, 0, 30), isMultiline: false, textValidation: labelValidator
     }, new go.Binding("alignment", "label_offset", go.Spot.parse).makeTwoWay(go.Spot.stringify),
-    new go.Binding("stroke", "labelColor").makeTwoWay(),
+    new go.Binding("stroke", "labelColor", themeElementLabelColor).makeTwoWay(),
     new go.Binding("font", "labelSize", function(sz) {
         var pt = parseFloat(sz) || labelFontSize;
         return "bold " + pt + "pt helvetica, bold arial, sans-serif";
@@ -897,8 +923,12 @@ function buildTemplates() {
 
             $(go.Shape,
                 new go.Binding("visible", "", isBiflow),
-                new go.Binding("stroke", "", function(d) { return d.flowHeadColor || defaultFlowColor(d); }),
-                new go.Binding("fill", "", function(d) { return d.flowHeadColor || defaultFlowColor(d); }),
+                new go.Binding("stroke", "isSelected", function(selected) {
+                    return selected ? (_modelColors.flow || "#3489eb") : "#808080";
+                }).ofObject(),
+                new go.Binding("fill", "isSelected", function(selected) {
+                    return selected ? (_modelColors.flow || "#3489eb") : "#808080";
+                }).ofObject(),
                 {
                     fromArrow: "Backward",
                     scale: 2.0
@@ -1067,7 +1097,7 @@ function buildTemplates() {
                 if (data.label && data.label.startsWith("$")) return "white";
                 return data.color || _modelColors.microwave || '#cfcfcf';
             }).makeTwoWay(),
-            new go.Binding("stroke", "emphasized", function(e) { return e ? "#E8000D" : "black"; }),
+            new go.Binding("stroke", "emphasized", function(e) { return themeElementStroke(e, "black"); }),
             new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 4 : 1; })
             ),
             // Inner inscribed rectangle (decorative, not interactive)
@@ -1087,7 +1117,7 @@ function buildTemplates() {
             textValidation: labelValidator
         },
         new go.Binding("alignment", "label_offset", go.Spot.parse).makeTwoWay(go.Spot.stringify),
-        new go.Binding("stroke", "labelColor").makeTwoWay(),
+        new go.Binding("stroke", "labelColor", themeElementLabelColor).makeTwoWay(),
         new go.Binding("font", "labelSize", function(sz) {
             var pt = parseFloat(sz) || labelFontSize;
             return "bold " + pt + "pt helvetica, bold arial, sans-serif";
@@ -1131,7 +1161,7 @@ function buildTemplates() {
                 if (data.label && data.label.startsWith("$")) return "white";
                 return data.color || _modelColors.queue || '#cfcfcf';
             }).makeTwoWay(),
-            new go.Binding("stroke", "emphasized", function(e) { return e ? "#E8000D" : "black"; }),
+            new go.Binding("stroke", "emphasized", function(e) { return themeElementStroke(e, "black"); }),
             new go.Binding("strokeWidth", "emphasized", function(e) { return e ? 4 : 1; })
             ),
             // Two horizontal divider lines at 1/3 and 2/3 height
@@ -1161,7 +1191,7 @@ function buildTemplates() {
             textValidation: labelValidator
         },
         new go.Binding("alignment", "label_offset", go.Spot.parse).makeTwoWay(go.Spot.stringify),
-        new go.Binding("stroke", "labelColor").makeTwoWay(),
+        new go.Binding("stroke", "labelColor", themeElementLabelColor).makeTwoWay(),
         new go.Binding("font", "labelSize", function(sz) {
             var pt = parseFloat(sz) || labelFontSize;
             return "bold " + pt + "pt helvetica, bold arial, sans-serif";
@@ -1230,8 +1260,8 @@ function buildTemplates() {
                     strokeWidth: 1,
                     name: "SHAPE"
                 },
-                new go.Binding("fill", "tbBg").makeTwoWay(),
-                new go.Binding("stroke", "tbBorder").makeTwoWay()
+                new go.Binding("fill", "tbBg", themeTextboxBackground).makeTwoWay(),
+                new go.Binding("stroke", "tbBorder", themeTextboxBorderColor).makeTwoWay()
                 ),
                 $(go.TextBlock, textStyle(),
                     {
@@ -1242,7 +1272,7 @@ function buildTemplates() {
                         editable: true
                     },
                     new go.Binding("text", "label").makeTwoWay(),
-                    new go.Binding("stroke", "tbLabelColor").makeTwoWay(),
+                    new go.Binding("stroke", "tbLabelColor", themeTextboxTextColor).makeTwoWay(),
                     new go.Binding("font", "tbLabelSize", function(sz) {
                         var pt = parseFloat(sz) || labelFontSize;
                         return "bold " + pt + "pt helvetica, bold arial, sans-serif";
@@ -2433,6 +2463,7 @@ document.getElementById("defaultOpen").addEventListener("click", function () {
 });
 document.getElementById("secondaryOpen").addEventListener("click", function () {
     opentab(event, "chartsTables");
+    window.dispatchEvent(new CustomEvent('lunasim-open-active-visualization'));
 });
 document.getElementById("defaultOpen").click();
 
@@ -3193,22 +3224,38 @@ function generatePDF() {
     const { jsPDF } = window.jspdf;
 
     const modelName    = (document.getElementById("model_name").value || "LunaSim Model").trim();
-    const fontChoice   = document.getElementById("pdfFont").value || "helvetica";
+    const fontParts    = (document.getElementById("pdfFont").value || "helvetica|normal").split("|");
+    const fontChoice   = fontParts[0];
+    const fontStyle    = fontParts[1] || "normal";
+    const author       = document.getElementById("pdfAuthor").value.trim();
+    const pdfTheme     = document.getElementById("pdfTheme").value || "normal";
     const description  = document.getElementById("pdfDescription").value.trim();
     const inclDiagram  = document.getElementById("pdfIncludeDiagram").checked;
     const inclStocks   = document.getElementById("pdfIncludeStocks").checked;
     const inclFlows    = document.getElementById("pdfIncludeFlows").checked;
     const inclVars     = document.getElementById("pdfIncludeVariables").checked;
-    const inclQueues   = document.getElementById("pdfIncludeQueues").checked;
+    const elementsEnabled = localStorage.getItem('lunaExperimentalElements') === 'true';
+    const inclQueues   = elementsEnabled && document.getElementById("pdfIncludeQueues").checked;
     const inclSim      = document.getElementById("pdfIncludeSimSettings").checked;
 
-    // Colour palette
-    const C_HEADER_BG  = [40, 52, 88];    // dark navy
+    // Theme accents are applied to a consistently white PDF page.
+    const PDF_THEMES = {
+        normal: [[40,52,88],[98,123,192]], classic: [[45,45,45],[53,130,159]],
+        monochrome: [[47,49,54],[139,147,161]], nvoid: [[34,32,73],[124,99,201]],
+        cred: [[92,18,18],[229,57,53]], cblossom: [[122,9,57],[194,24,91]],
+        sorange: [[122,45,0],[255,122,0]], fgreen: [[25,61,30],[95,174,88]],
+        oblue: [[15,40,70],[45,90,135]], cpurple: [[55,28,82],[142,99,204]],
+        bpink: [[91,22,79],[236,64,122]], sred: [[70,70,70],[255,22,13]],
+        mlight: [[52,58,64],[108,117,125]], rduck: [[113,48,0],[230,81,0]],
+        udark: [[20,20,20],[100,100,100]]
+    };
+    const selectedPalette = PDF_THEMES[pdfTheme] || PDF_THEMES.normal;
+    const C_HEADER_BG  = selectedPalette[0];
     const C_HEADER_FG  = [255, 255, 255];
-    const C_ROW_ALT    = [240, 244, 255];  // light blue-grey
+    const C_ROW_ALT    = [244, 244, 244];
     const C_ROW_NORM   = [255, 255, 255];
-    const C_ACCENT     = [98, 123, 192];   // LunaSim blue
-    const C_TEXT       = [30,  40,  70];
+    const C_ACCENT     = selectedPalette[1];
+    const C_TEXT       = [28, 28, 28];
 
     const PAGE_W = 210;  // A4 mm
     const MARGIN = 15;
@@ -3220,9 +3267,9 @@ function generatePDF() {
     const nodes = modelJson.nodeDataArray || [];
 
     const stocks    = nodes.filter(n => n.category === "stock");
-    const queues    = nodes.filter(n => n.category === "queue");
-    const conveyors = nodes.filter(n => n.category === "conveyor");
-    const microwaves= nodes.filter(n => n.category === "microwave");
+    const queues    = elementsEnabled ? nodes.filter(n => n.category === "queue") : [];
+    const conveyors = elementsEnabled ? nodes.filter(n => n.category === "conveyor") : [];
+    const microwaves= elementsEnabled ? nodes.filter(n => n.category === "microwave") : [];
     const flows     = nodes.filter(n => n.category === "valve" && !String(n.label).startsWith("$"));
     const variables = nodes.filter(n => n.category === "variable" && !String(n.label).startsWith("$"));
 
@@ -3251,18 +3298,37 @@ function generatePDF() {
 
     function buildPDF(diagramDataUrl) {
         const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
-        doc.setFont(fontChoice);
+        doc.setFont(fontChoice, fontStyle);
+        doc.setProperties({ title: modelName, author: author || "LunaSim", creator: "LunaSim" });
+
+        let logoDataUrl = null;
+        try {
+            const logo = document.getElementById('logoImage');
+            const logoCanvas = document.createElement('canvas');
+            logoCanvas.width = 128;
+            logoCanvas.height = 128;
+            logoCanvas.getContext('2d').drawImage(logo, 0, 0, 128, 128);
+            logoDataUrl = logoCanvas.toDataURL('image/png');
+        } catch (e) { console.warn('PDF logo could not be embedded.', e); }
 
         let y = MARGIN;
 
         // ── Title bar ────────────────────────────────────────────────────────
         doc.setFillColor(...C_HEADER_BG);
-        doc.roundedRect(MARGIN, y, CONTENT_W, 14, 3, 3, "F");
+        doc.rect(MARGIN, y, CONTENT_W, 14, "F");
         doc.setTextColor(...C_HEADER_FG);
         doc.setFontSize(16);
         doc.setFont(fontChoice, "bold");
         doc.text(modelName, MARGIN + CONTENT_W / 2, y + 9.5, { align: "center" });
-        y += 18;
+        y += 22;
+
+        if (author) {
+            doc.setFont(fontChoice, "normal");
+            doc.setFontSize(9);
+            doc.setTextColor(...C_TEXT);
+            doc.text(`Prepared by ${author}`, MARGIN, y);
+            y += 7;
+        }
 
         // ── Description ──────────────────────────────────────────────────────
         if (description) {
@@ -3276,7 +3342,7 @@ function generatePDF() {
 
         // ── Section heading helper ────────────────────────────────────────────
         function sectionHeading(title) {
-            if (y > 260) { doc.addPage(); y = MARGIN; }
+            if (y > 265) { doc.addPage(); y = MARGIN; }
             doc.setFillColor(...C_ACCENT);
             doc.rect(MARGIN, y, CONTENT_W, 0.5, "F");
             y += 3;
@@ -3292,7 +3358,7 @@ function generatePDF() {
             if (body.length === 0) body = [Array(head[0].length).fill("—")];
             doc.autoTable({
                 startY: y,
-                margin: { left: MARGIN, right: MARGIN },
+                margin: { left: MARGIN, right: MARGIN, top: MARGIN, bottom: 18 },
                 head: head,
                 body: body,
                 styles: {
@@ -3335,7 +3401,7 @@ function generatePDF() {
         }
 
         // ── Queues table ──────────────────────────────────────────────────────
-        if (inclQueues && queues.length > 0) {
+        if (elementsEnabled && inclQueues && queues.length > 0) {
             sectionHeading("Queues");
             addTable(
                 [["Name", "Initial Value", "Capacity", "Units", "Non-Negative"]],
@@ -3364,7 +3430,7 @@ function generatePDF() {
                 );
             }
 
-            if (conveyors.length > 0) {
+            if (elementsEnabled && conveyors.length > 0) {
                 sectionHeading("Conveyors");
                 addTable(
                     [["Name", "Initial Value", "Transit Time", "Units", "Non-Negative"]],
@@ -3378,7 +3444,7 @@ function generatePDF() {
                 );
             }
 
-            if (microwaves.length > 0) {
+            if (elementsEnabled && microwaves.length > 0) {
                 sectionHeading("Microwaves");
                 addTable(
                     [["Name", "Initial Value", "Cook Time", "Units", "Non-Negative"]],
@@ -3393,7 +3459,7 @@ function generatePDF() {
             }
 
             if (stocks.length === 0 && conveyors.length === 0 && microwaves.length === 0) {
-                sectionHeading("Stocks, Conveyors & Microwaves");
+                sectionHeading(elementsEnabled ? "Stocks, Conveyors & Microwaves" : "Stocks");
                 doc.setFont(fontChoice, "italic");
                 doc.setFontSize(9);
                 doc.setTextColor(160, 160, 160);
@@ -3450,11 +3516,13 @@ function generatePDF() {
             doc.setPage(i);
             doc.setFont(fontChoice, "normal");
             doc.setFontSize(8);
-            doc.setTextColor(160, 170, 200);
-            doc.text(
-                `Generated by LunaSim  •  Page ${i} of ${pageCount}`,
-                PAGE_W / 2, 295, { align: "center" }
-            );
+            doc.setFillColor(235, 235, 235);
+            doc.roundedRect(PAGE_W / 2 - 35, 288.5, 70, 6, 1, 1, "F");
+            doc.setTextColor(90, 90, 90);
+            doc.text("This model was exported from LunaSim", PAGE_W / 2, 292.4, { align: "center" });
+            doc.setTextColor(130, 130, 130);
+            doc.text(`${i} / ${pageCount}`, MARGIN, 292.4);
+            if (logoDataUrl) doc.addImage(logoDataUrl, "PNG", 196, 286.5, 9, 9);
         }
 
         doc.save(`${modelName}.pdf`);
@@ -3716,7 +3784,7 @@ var MC_DEFAULTS = {
     stock:      '#cfcfcf',
     conveyor:   '#cfcfcf',
     variable:   '#cfcfcf',
-    cloud:      '#d4e4f7',
+    cloud:      '#cfcfcf',
     flow:       '#3489eb',
     influence:  '#e3680e',
     microwave:  '#cfcfcf',
@@ -4261,6 +4329,13 @@ document.addEventListener('DOMContentLoaded', function() {
         ['conveyor_button','microwave_button','queue_button','overflow_button'].forEach(function(id) {
             setToolVisible(id, elementsEnabled);
         });
+        document.querySelectorAll('.experimental-elements-only').forEach(function(el) {
+            el.style.display = elementsEnabled ? '' : 'none';
+        });
+        var pdfStocksLabel = document.getElementById('pdfStocksLabel');
+        if (pdfStocksLabel) {
+            pdfStocksLabel.textContent = elementsEnabled ? 'Stocks, Conveyors & Microwaves' : 'Stocks';
+        }
         var liveApiSettings = document.getElementById('liveApiSettingsGroup');
         if (liveApiSettings) liveApiSettings.style.display = liveApiEnabled ? '' : 'none';
         window.dispatchEvent(new CustomEvent('lunasim-experimental-change', {
@@ -4347,6 +4422,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ── Canvas background persistence ─────────────────────────────────────────
     function applyCanvasBg(color) {
+        var theme = document.documentElement.dataset.theme;
+        color = theme === 'udark' ? '#000000' : (theme === 'sred' ? '#242424' : color);
         var el = document.getElementById('myDiagram');
         if (el) el.style.backgroundColor = color;
         if (window.myDiagram) {
@@ -4360,6 +4437,24 @@ document.addEventListener('DOMContentLoaded', function() {
         var mc = mcLoad();
         if (mc.canvasbg) applyCanvasBg(mc.canvasbg);
     }
+
+    function applyDiagramThemeContrast() {
+        var mc = mcLoad();
+        applyCanvasBg(mc.canvasbg || '#ffffff');
+        if (!window.myDiagram) return;
+        myDiagram.model.nodeDataArray.forEach(function(node) {
+            myDiagram.model.updateTargetBindings(node, 'emphasized');
+            myDiagram.model.updateTargetBindings(node, 'labelColor');
+            if (node.category === 'textbox') {
+                myDiagram.model.updateTargetBindings(node, 'tbBg');
+                myDiagram.model.updateTargetBindings(node, 'tbLabelColor');
+                myDiagram.model.updateTargetBindings(node, 'tbBorder');
+            }
+        });
+        myDiagram.requestUpdate();
+    }
+
+    document.addEventListener('lunasim-theme-change', applyDiagramThemeContrast);
 
     // ── Textbox defaults: apply to all textbox nodes that have no override ────
     function applyTextboxDefaults(mc) {

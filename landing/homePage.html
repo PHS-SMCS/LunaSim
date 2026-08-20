@@ -3,6 +3,17 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="LunaSim is free, open-source, browser-based system dynamics modeling software for students, educators, and researchers. Build stock-and-flow models, run simulations, create charts, and analyze uncertainty with Monte Carlo methods." />
+<meta name="keywords" content="system dynamics software, system dynamics modeling, simulation software, stock and flow diagrams, Monte Carlo simulation, educational modeling software, open source simulation" />
+<meta name="robots" content="index, follow" />
+<meta name="author" content="LunaSim" />
+<link rel="canonical" href="https://lunasim.org/" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://lunasim.org/" />
+<meta property="og:title" content="LunaSim" />
+<meta property="og:description" content="Build, simulate, and visualize system dynamics models for free in your browser." />
+<meta property="og:image" content="https://lunasim.org/img/ModelSimView.png" />
+<meta name="twitter:card" content="summary_large_image" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <!-- web app manifest -->
@@ -23,10 +34,23 @@
 <!-- svg favicon -->
 <link rel="icon" type="image/svg+xml" href="../img/favicons/lunaLogo.svg">
 
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-<title>LunaSim Launch</title>
+<title>LunaSim</title>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "LunaSim",
+  "url": "https://lunasim.org/",
+  "applicationCategory": "EducationalApplication",
+  "operatingSystem": "Any operating system with a modern web browser",
+  "description": "Free, open-source, browser-based system dynamics modeling and simulation software for students, educators, and researchers.",
+  "isAccessibleForFree": true,
+  "license": "https://github.com/PHS-SMCS/LunaSim",
+  "featureList": "Stock-and-flow diagrams, Euler and Runge-Kutta integration, charts, tables, model import and export, live data APIs, and Monte Carlo uncertainty analysis"
+}
+</script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@300;400;500;600;700;800;900&display=swap');
 
@@ -967,13 +991,386 @@
       grid-template-rows: repeat(8, 1fr);
     }
   }
+
+  /* Compact homepage spacing while preserving the original design. */
+  .hero-section { height: 100vh; height: 100svh; min-height: 640px; }
+  .hero-content h1 { font-size: clamp(2.8rem, 6vw, 5rem); margin-bottom: 12px; }
+  .hero-content p { font-size: clamp(1.05rem, 2.3vw, 1.5rem); margin-bottom: 22px; }
+  .button-container { margin-top: 1rem; }
+  .launch-btn, .feedback-btn { padding: 12px 28px; font-size: 1rem; }
+  .scroll-indicator {
+    bottom: 24px;
+    transform: translateX(-50%);
+    animation: none;
+  }
+  .scroll-indicator .material-symbols-outlined {
+    display: block;
+    animation: arrowFloat 1.7s cubic-bezier(.45, 0, .25, 1) infinite;
+  }
+  @keyframes arrowFloat {
+    0%, 100% { transform: translateY(0); opacity: .72; }
+    50% { transform: translateY(8px); opacity: 1; }
+  }
+  .content-wrapper { padding-top: 22px; }
+  .content-box, .references-section {
+    box-sizing: border-box;
+    max-width: 1120px;
+    margin-top: 18px;
+    margin-bottom: 24px;
+    padding: 26px 30px;
+    border-radius: 15px;
+  }
+  .content-box h2, .references-section h2 {
+    margin-top: 0;
+    margin-bottom: 13px;
+    font-size: clamp(1.2rem, 2.4vw, 1.5rem);
+  }
+  .content-box p {
+    margin-bottom: 12px;
+    font-size: clamp(.92rem, 1.65vw, 1.04rem);
+    line-height: 1.48;
+  }
+  .features-section { margin-top: 18px; }
+  .features-intro { margin-bottom: 16px; }
+  .features-intro h3 { margin: 0; font-size: clamp(1.15rem, 2vw, 1.45rem); }
+  .features-columns { gap: 16px; margin-top: 12px; }
+  .features-list { gap: 9px; }
+  .features-list li { gap: 11px; padding: 12px 14px; border-radius: 10px; }
+  .icon-circle { width: 36px; height: 36px; font-size: 1rem; }
+  .feature-text strong { margin-bottom: 2px; font-size: .98rem; }
+  .feature-text p { font-size: .86rem; line-height: 1.3; }
+  .team-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+  }
+  .team-card { gap: 13px; padding: 14px; border-radius: 11px; }
+  .team-photo { width: 72px; height: 72px; border-radius: 9px; }
+  .team-info h3 { font-size: 1.1rem; }
+  .team-info h4 { font-size: .9rem; }
+  .team-school, .team-years { font-size: .78rem; }
+  .timeline-section { padding: 24px 0; }
+  .timeline-header { margin-bottom: 18px; }
+  .timeline-header h2 { margin: 0; font-size: clamp(1.7rem, 3.5vw, 2.35rem); }
+  .timeline { max-width: 860px; }
+  .timeline-item { margin-bottom: 17px; }
+  .timeline-content { padding: 19px 22px; border-radius: 14px; }
+  .timeline-date { margin-bottom: 5px; font-size: .92rem; }
+  .timeline-title { margin-bottom: 9px; font-size: 1.25rem; }
+  .timeline-image-container { margin: 11px 0; }
+  .timeline-image { max-height: 235px; margin-bottom: 5px; border-radius: 9px; }
+  .timeline-caption { margin-bottom: 8px; font-size: .78rem; }
+  .timeline-description { font-size: .9rem; line-height: 1.48; }
+  .challenge-image-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    align-items: start;
+  }
+  .timeline-photo { margin: 0; min-width: 0; }
+  .challenge-image-grid .timeline-image {
+    width: 100%;
+    height: 210px;
+    object-fit: cover;
+  }
+  .references-section h2 { margin-bottom: 16px; }
+  .references-grid { gap: 11px; }
+  .reference-card { padding: 14px; border-radius: 10px; }
+  .reference-icon { margin-bottom: 7px; }
+  .reference-icon .material-symbols-outlined { font-size: 34px !important; }
+  .reference-card h4 { margin: 0 0 5px; font-size: 1rem; }
+  .reference-card p { font-size: .82rem; line-height: 1.35; }
+  .reference-group + .reference-group { margin-top: 26px; }
+  .reference-group h3 {
+    margin: 0 0 8px;
+    color: var(--text-primary);
+    font-size: 1.08rem;
+    font-weight: 650;
+  }
+  .papers-list,
+  .reference-list {
+    border-bottom: 1px solid #d9e1ee;
+  }
+  .editorial-reference {
+    display: grid;
+    grid-template-columns: 115px minmax(0, 1fr) 26px;
+    gap: 18px;
+    align-items: center;
+    min-height: 62px;
+    padding: 13px 8px;
+    border-top: 1px solid #d9e1ee;
+    color: inherit;
+    text-decoration: none;
+    transition: background-color .2s ease, padding-left .2s ease;
+  }
+  .editorial-reference:hover {
+    padding-left: 13px;
+    background: #f2f5fb;
+  }
+  .reference-year,
+  .reference-type {
+    color: var(--primary-color);
+    font-size: .76rem;
+    font-weight: 750;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+  .reference-row-content { min-width: 0; }
+  .reference-row-content strong {
+    display: block;
+    color: var(--text-primary);
+    font-size: .97rem;
+    line-height: 1.3;
+  }
+  .reference-row-content small {
+    display: block;
+    margin-top: 3px;
+    color: var(--text-secondary);
+    font-size: .76rem;
+    line-height: 1.3;
+  }
+  .reference-row-arrow {
+    color: var(--primary-color);
+    font-size: 1.12rem;
+    text-align: right;
+  }
+  .paper-reference .reference-row-content strong { font-size: 1.02rem; }
+  #changelog { padding-top: 22px; padding-bottom: 22px; }
+  .changelog-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 24px;
+  }
+  #changelog .changelog-list p {
+    margin: 0;
+    padding: 7px 0;
+    border-top: 1px solid #dce3ef;
+    font-size: .82rem;
+    line-height: 1.35;
+  }
+  .content-box,
+  .references-section,
+  .timeline-header,
+  .timeline-item,
+  .team-card {
+    transform: translateY(15px);
+    transition: opacity .42s ease-out, transform .42s cubic-bezier(.22, .72, .24, 1);
+    will-change: opacity, transform;
+  }
+  .content-box.visible,
+  .references-section.visible,
+  .timeline-header.visible,
+  .timeline-item.visible,
+  .team-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  @media (max-width: 900px) {
+    .team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 600px) {
+    .hero-section { height: 100vh; height: 100svh; min-height: 560px; }
+    .content-box, .references-section { padding: 20px 18px; margin-bottom: 18px; }
+    .team-grid, .changelog-list { grid-template-columns: 1fr; }
+    .team-card { flex-direction: row; text-align: left; }
+    .references-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto; }
+    .challenge-image-grid { grid-template-columns: 1fr; }
+    .challenge-image-grid .timeline-image { height: auto; }
+    .editorial-reference {
+      grid-template-columns: 1fr 24px;
+      gap: 5px 12px;
+    }
+    .reference-year, .reference-type { grid-column: 1 / -1; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-indicator .material-symbols-outlined { animation: none; }
+    .content-box, .references-section, .timeline-header, .timeline-item, .team-card {
+      transition-duration: .01ms;
+      transform: none;
+    }
+  }
+
+  /* Slightly roomier reading scale with a distinctly LunaSim references layout. */
+  .content-box,
+  .references-section {
+    width: calc(100% - 48px);
+    max-width: 1240px;
+    padding: 32px 36px;
+  }
+  .content-box h2,
+  .references-section h2 {
+    font-size: clamp(1.35rem, 2.5vw, 1.72rem);
+  }
+  .content-box p {
+    font-size: clamp(.98rem, 1.7vw, 1.1rem);
+    line-height: 1.55;
+  }
+  .features-list li { padding: 14px 16px; }
+  .feature-text strong { font-size: 1.03rem; }
+  .feature-text p { font-size: .9rem; }
+  .team-card { padding: 17px; gap: 15px; }
+  .team-photo { width: 84px; height: 84px; }
+  .team-info h3 { font-size: 1.2rem; }
+  .team-info h4 { font-size: .97rem; }
+  .team-school, .team-years { font-size: .84rem; }
+  .timeline { max-width: 940px; }
+  .timeline-content { padding: 22px 26px; }
+  .timeline-title { font-size: 1.34rem; }
+  .timeline-description { font-size: .96rem; line-height: 1.55; }
+  .timeline-image { max-height: 260px; }
+
+  .papers-list,
+  .reference-list {
+    display: block;
+    border-bottom: 1px solid #d9e1ee;
+  }
+  .editorial-reference,
+  .editorial-reference:hover {
+    box-sizing: border-box;
+    min-height: 68px;
+    padding: 14px 10px;
+    grid-template-columns: minmax(0, 1fr) 24px;
+    gap: 18px;
+    background: transparent;
+    border: 0;
+    border-top: 1px solid #d9e1ee;
+    border-radius: 0;
+    transition: none;
+  }
+  .paper-reference,
+  .paper-reference:hover {
+    min-height: 76px;
+    grid-template-columns: 92px minmax(0, 1fr) 24px;
+    grid-template-rows: auto;
+    align-content: center;
+  }
+  .paper-reference .reference-year {
+    grid-column: auto;
+    width: auto;
+    padding: 0;
+    background: transparent;
+    border-radius: 0;
+    color: var(--primary-color);
+    font-family: "Golos Text", sans-serif;
+    font-size: .84rem;
+    letter-spacing: .05em;
+  }
+  .reference-row-content strong,
+  .paper-reference .reference-row-content strong {
+    font-family: "Golos Text", sans-serif;
+    font-size: 1.02rem;
+    font-weight: 620;
+    line-height: 1.38;
+  }
+  .reference-row-arrow { align-self: center; }
+
+  @media (max-width: 900px) {
+    .paper-reference, .paper-reference:hover { min-height: 0; }
+  }
+  @media (max-width: 650px) {
+    .content-box, .references-section { width: calc(100% - 28px); padding: 23px 20px; }
+    .paper-reference, .paper-reference:hover {
+      grid-template-columns: 58px minmax(0, 1fr) 20px;
+      gap: 10px;
+    }
+  }
+
+  /* References use the same soft boxed language as features and team members. */
+  .reference-group h3 {
+    margin-bottom: 10px;
+    color: var(--primary-dark);
+    font-size: 1.12rem;
+  }
+  .papers-list,
+  .reference-list {
+    border-bottom: 0;
+  }
+  .editorial-reference,
+  .editorial-reference:hover {
+    margin: 8px 0;
+    padding: 16px 18px;
+    background: #f2f5fb;
+    border: 0;
+    border-radius: 11px;
+    box-shadow: none;
+    transform: none;
+    transition: none;
+  }
+  .editorial-reference,
+  .editorial-reference:visited,
+  .reference-row-content strong,
+  .paper-reference .reference-year,
+  .reference-row-arrow {
+    color: var(--primary-dark);
+  }
+  .reference-row-content strong {
+    font-weight: 650;
+  }
+  .reference-row-arrow {
+    display: block;
+    width: auto;
+    height: auto;
+    background: transparent;
+    border-radius: 0;
+    font-size: 1.12rem;
+    text-align: right;
+    transform: none;
+    transition: none;
+  }
+  .editorial-reference:hover .reference-row-arrow {
+    background: transparent;
+    color: var(--primary-dark);
+    transform: none;
+  }
+  .paper-reference,
+  .paper-reference:hover,
+  .metadata-reference,
+  .metadata-reference:hover {
+    grid-template-columns: 190px minmax(0, 1fr) 24px;
+  }
+  .reference-entry-meta {
+    min-width: 0;
+    color: var(--primary-dark);
+    line-height: 1.25;
+  }
+  .reference-entry-meta strong {
+    display: block;
+    color: var(--primary-dark);
+    font-size: .86rem;
+    font-weight: 750;
+  }
+  .reference-entry-meta small {
+    display: block;
+    margin-top: 4px;
+    color: #536b88;
+    font-size: .78rem;
+    font-weight: 500;
+  }
+  .paper-authors {
+    display: block;
+    margin-top: 5px;
+    color: #536b88;
+    font-size: .8rem;
+    font-weight: 500;
+    line-height: 1.35;
+  }
+  @media (max-width: 650px) {
+    .paper-reference,
+    .paper-reference:hover,
+    .metadata-reference,
+    .metadata-reference:hover {
+      grid-template-columns: minmax(0, 1fr) 20px;
+      gap: 8px 12px;
+    }
+    .reference-entry-meta { grid-column: 1 / -1; }
+  }
 </style>
 </head>
 <body data-theme="default">
 
 <div class="container" id="mainContainer">
     <!-- Navigation Bar -->
-    <nav class="navbar">
+    <nav class="navbar" aria-label="Primary navigation">
         <div class="nav-container">
             <a href="#" class="nav-logo">
                 <img src="../img/favicons/lunaLogo.svg" alt="LunaSim Logo" style="height: 1.2em; width: auto;">
@@ -1040,7 +1437,7 @@
     <div class="hero-section">
       <div class="hero-content">
           <h1>
-              <img src="../img/favicons/lunaLogo.svg" alt="LunaSim Logo" class="luna-logo"> 
+              <img src="../img/favicons/lunaLogo.svg" alt="LunaSim Logo" class="luna-logo">
               LunaSim
           </h1>
           <p>Design and Run All-Powerful Simulations</p>
@@ -1056,20 +1453,10 @@
       <div class="scroll-indicator" onclick="scrollToContent()">
           <span class="material-symbols-outlined">keyboard_double_arrow_down</span>
       </div>
-  </div>
+    </div>
 
     <!-- Content Wrapper -->
     <div class="content-wrapper">
-
-        <div class="content-box" data-scroll="100" id="why-created">
-            <h2>Why Was LunaSim Created?</h2>
-            <p>
-                "System dynamics modeling software allows the user to graphically describe and run simulations of real-world systems. My school's 9th Grade Foundations of Computer Science class uses this kind of software, where students learn about how modeling and simulation works and how it can be applied to the fields of engineering, physics, and biology.<br><br>
-                Previously, my school used licensed, commercial (and expensive) software for systems modeling. A system-wide software upgrade made the previous modeling software at our school inoperable on Windows and school-issued Chromebooks, upending students' curriculum.<br><br>
-                This motivated me to propose and lead the development of our app LunaSim, a free, open-source alternative that can be accessed from any computer with a standard browser, allowing students to use both the desktop computers and Chromebooks to build their simulations."<br><br>
-            </p>
-            <p class="highlight">- Karthik Vedula, Original Co-Creator of LunaSim</p>
-        </div>
 
         <!-- Combined "What is LunaSim" and features sections -->
         <div class="content-box" data-scroll="200" id="about">
@@ -1119,21 +1506,14 @@
                               <p>Euler's method and Runge-Kutta 4</p>
                           </div>
                       </li>
+                  </ul>
+
+                  <ul class="features-list">
                       <li>
                           <div class="icon-circle"><span class="material-symbols-outlined">query_stats</span></div>
                           <div class="feature-text">
                               <strong>Visuals</strong>
                               <p>Charts and tables</p>
-                          </div>
-                      </li>
-                  </ul>
-
-                  <ul class="features-list">
-                      <li>
-                          <div class="icon-circle"><span class="material-symbols-outlined">save</span></div>
-                          <div class="feature-text">
-                              <strong>Import/Export</strong>
-                              <p>Save, reuse, and download models</p>
                           </div>
                       </li>
                       <li>
@@ -1167,6 +1547,16 @@
                   </ul>
                 </div>
             </div>
+        </div>
+
+        <div class="content-box" data-scroll="300" id="why-created">
+            <h2>Why Was LunaSim Created?</h2>
+            <p>
+                "System dynamics modeling software allows the user to graphically describe and run simulations of real-world systems. My school's 9th Grade Foundations of Computer Science class uses this kind of software, where students learn about how modeling and simulation works and how it can be applied to the fields of engineering, physics, and biology.<br><br>
+                Previously, my school used licensed, commercial (and expensive) software for systems modeling. A system-wide software upgrade made the previous modeling software at our school inoperable on Windows and school-issued Chromebooks, upending students' curriculum.<br><br>
+                This motivated me to propose and lead the development of our app LunaSim, a free, open-source alternative that can be accessed from any computer with a standard browser, allowing students to use both the desktop computers and Chromebooks to build their simulations."<br><br>
+            </p>
+            <p class="highlight">- Karthik Vedula, Original Co-Creator of LunaSim</p>
         </div>
 
         <!-- Our Team Section -->
@@ -1373,11 +1763,15 @@
                 <div class="timeline-content">
                     <div class="timeline-date">April 2024</div>
                     <div class="timeline-title">Congressional App Design Challenge</div>
-                    <div class="timeline-image-container">
-                        <img src="CongressionalChallenge.jpg" alt="Congressional App Design Challenge Presentation" class="timeline-image">
-                        <div class="timeline-caption">Team presenting LunaSim at Capitol Hill</div>
-                        <img src="withdavidtrone.jpg" alt="Photo with Congressman Trone" class="timeline-image">
-                        <div class="timeline-caption">Photo with Congressman David Trone</div>
+                    <div class="timeline-image-container challenge-image-grid">
+                        <figure class="timeline-photo">
+                            <img src="CongressionalChallenge.jpg" alt="Congressional App Design Challenge Presentation" class="timeline-image">
+                            <figcaption class="timeline-caption">Team presenting LunaSim at Capitol Hill</figcaption>
+                        </figure>
+                        <figure class="timeline-photo">
+                            <img src="withdavidtrone.jpg" alt="Photo with Congressman Trone" class="timeline-image">
+                            <figcaption class="timeline-caption">Photo with Congressman David Trone</figcaption>
+                        </figure>
                     </div>
                     <div class="timeline-description">
                         LunaSim's momentum continued into April 2024, when the project was recognized at the national level. The team had the honor of presenting LunaSim at the U.S. Capitol as part of the Congressional App Challenge event. There, team members met Congressman David Trone and showcased how LunaSim is reshaping STEM education at our high school. The app was then named the winner of the 2023 Congressional App Challenge for Maryland's 6th District!
@@ -1387,11 +1781,24 @@
 
             <div class="timeline-item" data-scroll="1300">
                 <div class="timeline-content">
+                    <div class="timeline-date">August 2024</div>
+                    <div class="timeline-title">International System Dynamics Conference</div>
+                    <div class="timeline-image-container">
+                        <img src="ISDC.jpg" alt="LunaSim representatives at the 2024 International System Dynamics Conference in Bergen, Norway" class="timeline-image" loading="lazy">
+                        <div class="timeline-caption">LunaSim at the 2024 International System Dynamics Conference in Bergen, Norway</div>
+                    </div>
+                    <div class="timeline-description">
+                        LunaSim was presented to the international system dynamics community at ISDC 2024 in Bergen, Norway. The accompanying paper, <em>LunaSim: A Lightweight, Web-Based, Open-Source System Dynamics Modeling Software</em>, documented the platform's classroom origins, browser-based architecture, and mission to make system dynamics education more accessible.
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item" data-scroll="1350">
+                <div class="timeline-content">
                     <div class="timeline-date">March 2025</div>
                     <div class="timeline-title">LunaSim Copilot</div>
                     <div class="timeline-description">
-                        <!-- Replaced button with link -->
-                        LunaSim Copilot was developed by Karthik Vedula and William Park (a developer who previously rewrote LunaSim's interface in early 2024). It is an AI-powered assistant, aiding with system dynamics models. This tool uses large language models (LLMs) to interpret user instructions and automatically generate various models, enhancing productivity. The study also evaluated four LLMs, including reasoning models like OpenAI's o3-mini and DeepSeek's R1, demonstrating their capability to create complex models from user instructions with impressive accuracy rates. <a href="lunasimCopilot.pdf" download>Learn more about LunaSim Copilot and download the research paper</a>.
+                        LunaSim Copilot was developed by Karthik Vedula and William Park (a developer who previously rewrote LunaSim's interface in early 2024). It is an AI-powered assistant that helps create system dynamics models. The project used large language models to interpret user instructions and automatically generate models, and evaluated four LLMs—including reasoning models such as OpenAI's o3-mini and DeepSeek's R1—on their ability to build complex models accurately. The team presented this research at the 2025 International System Dynamics Conference in Boston, Massachusetts, USA.
                     </div>
                 </div>
             </div>
@@ -1419,68 +1826,87 @@
                     </div>
                 </div>
             </div>
+
+            <div class="timeline-item" data-scroll="1600">
+                <div class="timeline-content">
+                    <div class="timeline-date">June 2026</div>
+                    <div class="timeline-title">Monte Carlo Simulation Support</div>
+                    <div class="timeline-description">
+                        LunaSim added Monte Carlo simulation support for uncertainty and sensitivity analysis. Users can define distributions for model parameters, run repeated simulations, and explore confidence bands and outcome ranges in interactive visualizations. The team presented LunaSim again at the 2026 International System Dynamics Conference in Delft, Netherlands, sharing how browser-based Monte Carlo analysis expands LunaSim's value for education and research.
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- Updated references section with LunaSim Copilot and 2x4 grid -->
     <section class="references-section" data-scroll="1700" id="references">
-        <h2>References & Recognition</h2>
-        <div class="references-grid">
-            <a href="https://www.youtube.com/watch?v=luRWuwhCkec&t=14s&ab_channel=LunaSim" target="_blank" class="reference-card">
-                <div class="reference-icon">
-                    <span class="material-symbols-outlined" style="font-size: 50px;">youtube_searched_for</span>
-                </div>
-                <h4>Congressional App Video</h4>
-                <p>Watch our presentation video on YouTube</p>
-            </a>
+        <h2>References &amp; Recognition</h2>
 
-            <a href="https://www.congressionalappchallenge.us/23-md06/" target="_blank" class="reference-card">
-                <div class="reference-icon">
-                    <span class="material-symbols-outlined" style="font-size: 50px;">emoji_events</span>
-                </div>
-                <h4>Congressional App Winner</h4>
-                <p>MD-06 District Winner of Congressional App Challenge</p>
-            </a>
+        <div class="reference-group">
+            <h3>Papers</h3>
+            <div class="papers-list">
+                <a class="editorial-reference paper-reference" href="https://proceedings.systemdynamics.org/2024/papers/P1049.pdf" target="_blank" rel="noopener">
+                    <span class="reference-entry-meta"><strong>System Dynamics Society</strong><small>June 2024</small></span>
+                    <span class="reference-row-content">
+                        <strong>LunaSim: A Lightweight, Web-Based, Open-Source System Dynamics Modeling Software</strong>
+                        <span class="paper-authors">Karthik S. Vedula, Sienna Simms, Aditya Patil, Ishan Khetarpal, and Mark R. Estep</span>
+                    </span>
+                    <span class="reference-row-arrow" aria-hidden="true">↗</span>
+                </a>
+                <a class="editorial-reference paper-reference" href="https://proceedings.systemdynamics.org/2025/papers/P1167.pdf" target="_blank" rel="noopener">
+                    <span class="reference-entry-meta"><strong>System Dynamics Society</strong><small>June 2025</small></span>
+                    <span class="reference-row-content">
+                        <strong>LunaSim Copilot: An Integrated AI Assistant for System Dynamics Modeling</strong>
+                        <span class="paper-authors">William J. Park, Karthik S. Vedula, Ishan Khetarpal, and Mark R. Estep</span>
+                    </span>
+                    <span class="reference-row-arrow" aria-hidden="true">↗</span>
+                </a>
+                <a class="editorial-reference paper-reference" href="https://proceedings.systemdynamics.org/2026/papers/P1550.pdf" target="_blank" rel="noopener">
+                    <span class="reference-entry-meta"><strong>System Dynamics Society</strong><small>June 2026</small></span>
+                    <span class="reference-row-content">
+                        <strong>Monte Carlo Simulation Support in LunaSim: A Browser-Based System Dynamics Modeling Platform for Sensitivity Analysis</strong>
+                        <span class="paper-authors">Akash Saran, Arjun Mujumdar, Ryan Chung, Caleb Wen, Ishan Khetarpal, and Mark R. Estep</span>
+                    </span>
+                    <span class="reference-row-arrow" aria-hidden="true">↗</span>
+                </a>
+            </div>
+        </div>
 
-            <a href="https://poolesvillepulse.org/5585/technology/smcs-juniors-developed-working-software-for-9th-grade-class/" target="_blank" class="reference-card">
-                <div class="reference-icon">
-                    <span class="material-symbols-outlined" style="font-size: 50px;">newspaper</span>
-                </div>
-                <h4>Poolesville Pulse</h4>
-                <p>SMCS Juniors Develop Software for 9th Grade Class</p>
-            </a>
+        <div class="reference-group">
+            <h3>Media</h3>
+            <div class="reference-list">
+                <a class="editorial-reference metadata-reference" href="https://www.youtube.com/watch?v=luRWuwhCkec&t=14s&ab_channel=LunaSim" target="_blank" rel="noopener">
+                    <span class="reference-entry-meta"><strong>YouTube</strong><small>November 2023</small></span>
+                    <span class="reference-row-content"><strong>Congressional App Challenge presentation</strong></span>
+                    <span class="reference-row-arrow" aria-hidden="true">↗</span>
+                </a>
+                <a class="editorial-reference metadata-reference" href="https://www.congressionalappchallenge.us/23-md06/" target="_blank" rel="noopener">
+                    <span class="reference-entry-meta"><strong>Congressional App Challenge</strong><small>January 2024</small></span>
+                    <span class="reference-row-content"><strong>Congressional App Challenge — Maryland District 6 Winner</strong></span>
+                    <span class="reference-row-arrow" aria-hidden="true">↗</span>
+                </a>
+                <a class="editorial-reference metadata-reference" href="https://poolesvillepulse.org/5585/technology/smcs-juniors-developed-working-software-for-9th-grade-class/" target="_blank" rel="noopener">
+                    <span class="reference-entry-meta"><strong>Poolesville Pulse</strong><small>January 2024</small></span>
+                    <span class="reference-row-content"><strong>SMCS juniors develop working software for a ninth-grade class</strong></span>
+                    <span class="reference-row-arrow" aria-hidden="true">↗</span>
+                </a>
+                <a class="editorial-reference metadata-reference" href="https://karthikvedula.com/2024/04/14/congressional-app-challenge-house-of-code/" target="_blank" rel="noopener">
+                    <span class="reference-entry-meta"><strong>Karthik's Blog</strong><small>April 2024</small></span>
+                    <span class="reference-row-content"><strong>Congressional App Challenge — House of Code</strong></span>
+                    <span class="reference-row-arrow" aria-hidden="true">↗</span>
+                </a>
+            </div>
+        </div>
 
-            <a href="https://karthikvedula.com/2024/04/14/congressional-app-challenge-house-of-code/" target="_blank" class="reference-card">
-                <div class="reference-icon">
-                    <span class="material-symbols-outlined" style="font-size: 50px;">person</span>
-                </div>
-                <h4>Karthik's Blog</h4>
-                <p>Congressional App Challenge – House of Code</p>
-            </a>
-
-            <a href="https://proceedings.systemdynamics.org/2024/papers/P1049.pdf" target="_blank" class="reference-card">
-                <div class="reference-icon">
-                    <span class="material-symbols-outlined" style="font-size: 50px;">picture_as_pdf</span>
-                </div>
-                <h4>Research Paper</h4>
-                <p>LunaSim: A Lightweight, Web-Based, Open-Source System Dynamics Modeling Software</p>
-            </a>
-
-            <a href="https://github.com/PHS-SMCS/LunaSim" target="_blank" class="reference-card">
-                <div class="reference-icon">
-                    <span class="material-symbols-outlined" style="font-size: 50px;">code</span>
-                </div>
-                <h4>Source Code</h4>
-                <p>LunaSim GitHub Repository</p>
-            </a>
-
-            <a href="lunasimCopilot.pdf" download target="_blank" class="reference-card">
-                <div class="reference-icon">
-                    <span class="material-symbols-outlined" style="font-size: 50px;">smart_toy</span>
-                </div>
-                <h4>LunaSim Copilot</h4>
-                <p>AI-Powered System Dynamics Assistant</p>
-            </a>
+        <div class="reference-group">
+            <h3>GitHub Repository</h3>
+            <div class="reference-list repository-list">
+                <a class="editorial-reference" href="https://github.com/PHS-SMCS/LunaSim" target="_blank" rel="noopener">
+                    <span class="reference-row-content"><strong>PHS-SMCS: LunaSim GitHub Repository</strong></span>
+                    <span class="reference-row-arrow" aria-hidden="true">↗</span>
+                </a>
+            </div>
         </div>
     </section>
 
@@ -1517,11 +1943,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function initializeWebsite() {
     orderTeamCards();
-    // Check if this is the first visit to the website
     const isFirstVisit = !sessionStorage.getItem("lunasim-visited");
 
     if (isFirstVisit) {
-        // Show loading screen only on first visit
         sessionStorage.setItem("lunasim-visited", "true");
         setTimeout(() => {
             hideLoadingScreen();
@@ -1530,15 +1954,10 @@ function initializeWebsite() {
             startBackgroundSlider();
         }, 1500);
     } else {
-        // Skip loading screen for subsequent page visits
         const loadingScreen = document.getElementById("loadingScreen");
-        if (loadingScreen) {
-            loadingScreen.style.display = "none";
-        }
+        if (loadingScreen) loadingScreen.style.display = "none";
         const mainContainer = document.getElementById("mainContainer");
-        if (mainContainer) {
-            mainContainer.classList.add("loaded");
-        }
+        if (mainContainer) mainContainer.classList.add("loaded");
         createStars();
         initializeScrollAnimations();
         startBackgroundSlider();
@@ -1639,8 +2058,8 @@ function startBackgroundSlider() {
 
 function initializeScrollAnimations() {
     const observerOptions = {
-        threshold: 0.1,
-        rootMargin: "0px 0px -50px 0px"
+        threshold: 0.03,
+        rootMargin: "0px 0px 90px 0px"
     };
 
     const observer = new IntersectionObserver((entries) => {

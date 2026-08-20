@@ -51,7 +51,13 @@ function createStandardChart() {
   return new ApexCharts(document.querySelector("#chart"), {
   chart: {
     type: 'scatter',
-    foreColor: (sessionStorage.getItem("darkMode") == "true" ? '#ffffff' : '#373d3f')
+    foreColor: (sessionStorage.getItem("darkMode") == "true" ? '#ffffff' : '#373d3f'),
+    animations: {
+      enabled: true,
+      speed: 700,
+      animateGradually: { enabled: true, delay: 55 },
+      dynamicAnimation: { enabled: true, speed: 500 }
+    }
   },
   series: [{
   }],
@@ -62,6 +68,17 @@ function createStandardChart() {
 }
 var chart = createStandardChart();
 chart.render();
+let chartAnimationRequest = 0;
+
+function renderStandardChartWithAnimation(options) {
+  const requestId = ++chartAnimationRequest;
+  const animatedSeries = options.series;
+  const stagedOptions = { ...options, series: [] };
+  return chart.updateOptions(stagedOptions, true, false).then(function () {
+    if (requestId !== chartAnimationRequest || !chart) return;
+    return chart.updateSeries(animatedSeries, true);
+  });
+}
 
 function removeMCSelector() {
   const selector = document.getElementById("mcVarSelector");
@@ -437,7 +454,13 @@ function configTabs() {
             type: 'scatter',
             zoom: { enabled: true, type: 'xy' },
             height: "100%",
-            width: "100%"
+            width: "100%",
+            animations: {
+              enabled: true,
+              speed: 700,
+              animateGradually: { enabled: true, delay: 55 },
+              dynamicAnimation: { enabled: true, speed: 500 }
+            }
           },
           dataLabels: { enabled: false },
           legend: { showForSingleSeries: true },
@@ -498,7 +521,9 @@ function configTabs() {
         options.yaxis.min = minyValue;
         options.yaxis.max = maxyValue;
 
-        chart.updateOptions(options, true);
+        // Stage from an empty series so ApexCharts always replays the
+        // left-to-right point sweep, even when the data has not changed.
+        renderStandardChartWithAnimation(options);
 
         if (PERFORMANCE_MODE) console.timeEnd('Chart Render Time');
 
@@ -558,6 +583,19 @@ function configTabs() {
     });
   }
 }
+
+// Re-render the selected ApexCharts visualization whenever the Charts/Tables
+// workspace is opened. Tables are intentionally left alone.
+window.addEventListener('lunasim-open-active-visualization', function () {
+  window.requestAnimationFrame(function () {
+    const activeTab = document.querySelector('#tabsList .graphTabsActive');
+    if (!activeTab) return;
+    const tabInfo = tabs[Number(activeTab.dataset.index)];
+    if (tabInfo && (tabInfo.type === 'chart' || tabInfo.type === 'montecarlo')) {
+      activeTab.click();
+    }
+  });
+});
 
 /**
  * Retrieves all values for a given variable or flow name from the simulation data.
@@ -683,7 +721,13 @@ function renderMonteCarloChart(mcData, varName) {
       width: "100%",
       foreColor,
       toolbar: { show: true },
-      zoom: { enabled: true, type: "x" }
+      zoom: { enabled: true, type: "x" },
+      animations: {
+        enabled: true,
+        speed: 700,
+        animateGradually: { enabled: true, delay: 55 },
+        dynamicAnimation: { enabled: true, speed: 500 }
+      }
     },
     stroke: {
       curve: "straight",
