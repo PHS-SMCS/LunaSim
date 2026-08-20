@@ -41,3 +41,10 @@ _Tables in LunaSim_
 
 ![Image](./img/SpringView.png)
 _Graphs in LunaSim_
+
+### Papers
+
+Read more about us here:
+- [LunaSim: A Lightweight, Web-Based, Open-Source System Dynamics Modeling Software](https://proceedings.systemdynamics.org/2024/papers/P1049.pdf)
+- [LunaSim Copilot: An Integrated AI Assistant for System Dynamics Modeling](https://proceedings.systemdynamics.org/2025/papers/P1167.pdf)
+- [Monte Carlo Simulation Support in LunaSim: A Browser-Based System Dynamics Modeling Platform for Sensitivity Analysis](https://proceedings.systemdynamics.org/2026/papers/P1550.pdf)
