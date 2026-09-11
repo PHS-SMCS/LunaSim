@@ -5,6 +5,17 @@
 
 <html lang="en">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-W1SPPC3YBV"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    if (location.protocol !== 'file:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+      gtag('config', 'G-W1SPPC3YBV');
+    }
+  </script>
   <title>LunaSim</title>
   <meta name="description" content="Design and run powerful simulations, all in the browser with LunaSim.">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
